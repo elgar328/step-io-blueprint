@@ -104,8 +104,10 @@ root_supertypes = [
     "shape_data_quality_value_limit",
     "shape_data_quality_value_range",
     "shape_inspection_result_representation_with_accuracy",
-    # default tolerance table (representation 자손이지만 PMI 도메인)
+    # default tolerance table + cells (compound_representation_item 자손이라
+    # geometry_3d 가 흡수)
     "default_tolerance_table",
+    "default_tolerance_table_cell",
     # data_quality_report_request 자손 (config_mgmt 의 `*_request*` pattern 이
     # detailed_report_request 등 흡수하는 것 방지)
     "data_quality_report_request",
@@ -126,9 +128,9 @@ patterns = [
 root_supertypes = [
     "expression", "generic_expression", "variable_semantics", "atomic_formula",
     "environment", "expression_extension_to_select",
-    # simple_clause 자손 (literal_conjunction, literal_disjunction) — `*_clause`
-    # pattern 이 simple_clause 만 잡고 자손은 못 잡음
-    "simple_clause",
+    # simple_clause / complex_clause 자손 — compound_representation_item 자손이라
+    # geometry_3d 가 흡수. clauses 는 param_expr 도메인.
+    "simple_clause", "complex_clause",
 ]
 exclude_root = []
 
@@ -144,10 +146,17 @@ patterns = [
 ]
 # csg_solid (solid_model wrapper around csg_primitive tree) + swept_*_solid
 # (parametric primitives 와 같은 family) 도 여기 포함.
+# csg_primitive 는 SELECT type 이라 block / sphere / cylinder 등은 SUBTYPE 이
+# 아니므로 entity name 별로 직접 root 청구 필요.
 root_supertypes = [
     "csg_primitive",
     "csg_solid",
     "swept_area_solid", "swept_disk_solid", "swept_face_solid",
+    "block", "sphere", "ellipsoid", "torus",
+    "rectangular_pyramid", "eccentric_cone",
+    "right_circular_cone", "right_circular_cylinder", "right_angular_wedge",
+    "half_space_solid", "half_space_2d", "boxed_half_space",
+    "boolean_result",
 ]
 exclude_root = ["manifold_solid_brep", "brep_with_voids", "shell_based_surface_model"]
 
@@ -341,6 +350,18 @@ root_supertypes = [
     "defined_symbol", "symbol_target",
     "included_text_block",
     "fill_area_style_tile_symbol_with_style",
+    # fill_area_style_* (geometric_representation_item 자손이라 geometry_3d 가 흡수)
+    "fill_area_style_hatching", "fill_area_style_tiles",
+    "fill_area_style_tile_coloured_region",
+    "fill_area_style_tile_curve_with_style",
+    # picture_representation_item tree (bytes_representation_item 자손)
+    "picture_representation_item",
+    # camera_image / camera_model (representation_item 자손, 의미는 visualization)
+    "camera_image", "camera_model",
+    # camera_model_d3_multi_clipping_intersection/union 은 camera_model_d3_multi_clipping
+    # 자손이 아니라 geometric_representation_item 직접 자손 (이름과 달리 별개 트리)
+    "camera_model_d3_multi_clipping_intersection",
+    "camera_model_d3_multi_clipping_union",
 ]
 # founded_item 자손 중 geometry/kinematic 영역은 visualization 이 아님.
 # externally_defined_item 자손 중 visualization 외 영역도 push-out.
@@ -417,7 +438,13 @@ patterns = [
     "geometrically_bounded_*_shape_representation",
     "constructive_geometry_representation_relationship",
 ]
-root_supertypes = ["representation", "representation_relationship", "representation_context", "representation_item_relationship"]
+root_supertypes = [
+    "representation", "representation_relationship", "representation_context",
+    "representation_item_relationship",
+    # procedural_shape_representation_sequence (geometric_representation_item +
+    # procedural_representation_sequence 다중상속이라 geometry_3d 가 흡수)
+    "procedural_shape_representation_sequence",
+]
 # Don't claim styled_item / draughting / tessellated subtrees (handled elsewhere)
 exclude_root = ["styled_item", "draughting_callout", "tessellated_item"]
 
@@ -543,6 +570,8 @@ root_supertypes = [
     "document",
     # document_identifier (group descendant) 는 의미상 metadata
     "document_identifier", "document_identifier_assignment",
+    # date_time_representation_item — date_and_time 다중상속, 의미는 metadata
+    "date_time_representation_item",
 ]
 exclude_root = []
 
