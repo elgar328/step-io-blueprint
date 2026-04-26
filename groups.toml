@@ -376,6 +376,9 @@ root_supertypes = [
     "text_string_representation",
     # defined_character_glyph (geometric_representation_item 자손, 의미는 vis)
     "defined_character_glyph",
+    # draughting_model_item_association (item_identified_representation_usage
+    # 자손이지만 draughting / annotation 도메인)
+    "draughting_model_item_association",
 ]
 # founded_item 자손 중 geometry/kinematic 영역은 visualization 이 아님.
 # externally_defined_item 자손 중 visualization 외 영역도 push-out.

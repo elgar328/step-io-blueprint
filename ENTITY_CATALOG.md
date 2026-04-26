@@ -11,7 +11,7 @@ step-io processes: **58** entities
 | group | description | count | step-io |
 |---|---|---:|---:|
 | `_unclassified` | no rule matched (manual review needed) | 0 | 0 |
-| `assembly_product` | PRODUCT chain, definitions, assemblies, transforms, application context | 134 | 6 |
+| `assembly_product` | PRODUCT chain, definitions, assemblies, transforms, application context | 133 | 6 |
 | `config_mgmt` | Configuration / change / action / effectivity / resource / change-element management | 92 | 0 |
 | `csg_primitives` | Constructive solid geometry primitives (Block, Sphere, Cylinder, Cone, Torus, ...) | 31 | 0 |
 | `geometry_3d` | 3D points, directions, vectors, axis placements, curves, surfaces | 202 | 24 |
@@ -25,11 +25,11 @@ step-io processes: **58** entities
 | `tessellation` | Triangulated / tessellated surface mesh | 19 | 0 |
 | `topology` | Vertices, edges, face bounds, faces, shells, solids (BREP) | 36 | 8 |
 | `units` | SI / CBU unit leaves, dimensional exponents, derived units | 103 | 1 |
-| `visualization` | Color, fill / surface / curve styles, presentation, MDGPR, camera, drawing, font, 2D annotation | 208 | 9 |
+| `visualization` | Color, fill / surface / curve styles, presentation, MDGPR, camera, drawing, font, 2D annotation | 209 | 9 |
 
 ## Entities by group
 
-### `assembly_product` — PRODUCT chain, definitions, assemblies, transforms, application context (134 entities, 6 step-io)
+### `assembly_product` — PRODUCT chain, definitions, assemblies, transforms, application context (133 entities, 6 step-io)
 
 -   [M] `application_context` (root: application_context, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `application_context_element` (root: application_context_element, schemas: ap203/ap203e2/ap214e3/ap242)
@@ -69,7 +69,6 @@ step-io processes: **58** entities
 -   [M] `conditional_concept_feature` (root: product_concept_feature, schemas: ap203e2/ap214e3/ap242)
 -   [M] `design_context` (root: application_context_element, schemas: ap203/ap203e2/ap242)
 -   [L] `design_make_from_relationship` (root: product_definition_relationship, schemas: ap203/ap203e2/ap242)
--   [L] `draughting_model_item_association` (root: item_identified_representation_usage, schemas: ap203e2/ap214e3/ap242)
 -   [H] `evaluation_product_definition` (root: product_definition, schemas: ap203e2/ap242)
 -   [H] `exclusive_product_concept_feature_category` (root: group, schemas: ap203e2/ap214e3/ap242)
 -   [L] `externally_defined_class` (root: group, schemas: ap203e2/ap214e3/ap242)
@@ -1643,7 +1642,7 @@ step-io processes: **58** entities
 -   [M] `volume_measure_with_unit` (root: measure_with_unit, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `volume_unit` (root: named_unit, schemas: ap203/ap203e2/ap214e3/ap242)
 
-### `visualization` — Color, fill / surface / curve styles, presentation, MDGPR, camera, drawing, font, 2D annotation (208 entities, 9 step-io)
+### `visualization` — Color, fill / surface / curve styles, presentation, MDGPR, camera, drawing, font, 2D annotation (209 entities, 9 step-io)
 
 -   [L] `angular_dimension` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [H] `annotation_curve_occurrence` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
@@ -1717,6 +1716,7 @@ step-io processes: **58** entities
 -   [H] `draughting_callout_relationship` (root: draughting_callout_relationship, schemas: ap203e2/ap214e3/ap242)
 -   [H] `draughting_elements` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [H] `draughting_model` (root: representation, schemas: ap203e2/ap214e3/ap242)
+-   [H] `draughting_model_item_association` (root: item_identified_representation_usage, schemas: ap203e2/ap214e3/ap242)
 -   [H] `draughting_pre_defined_colour` (root: pre_defined_item, schemas: ap203e2/ap214e3/ap242)
 -   [H] `draughting_pre_defined_curve_font` (root: pre_defined_item, schemas: ap203e2/ap214e3/ap242)
 -   [H] `draughting_pre_defined_text_font` (root: pre_defined_item, schemas: ap203e2/ap214e3/ap242)
