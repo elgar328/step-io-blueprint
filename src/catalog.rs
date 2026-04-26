@@ -41,7 +41,6 @@ pub struct EntityRecord {
     pub matched_pattern: Option<String>,
     pub schemas_present: Vec<String>,
     pub effective_attr_count: HashMap<String, usize>,
-    pub step_io_supports: bool,
 }
 
 #[derive(Debug, Clone, Copy, Serialize)]
@@ -65,14 +64,12 @@ pub struct Catalog {
 pub struct GroupSummary {
     pub description: String,
     pub count: usize,
-    pub step_io_count: usize,
     pub entities: Vec<String>,
 }
 
 pub fn build_catalog(
     schemas: &[Schema],
     groups_toml_path: &Path,
-    step_io_entities: &BTreeSet<String>,
 ) -> Result<Catalog, String> {
     let toml_text = fs::read_to_string(groups_toml_path)
         .map_err(|e| format!("read {groups_toml_path:?}: {e}"))?;
@@ -118,8 +115,6 @@ pub fn build_catalog(
         let (group, confidence, matched_pattern) =
             classify(name, root.as_deref(), &anc, &config);
 
-        let step_io_supports = step_io_entities.contains(&name.to_uppercase());
-
         entities.insert(
             name.clone(),
             EntityRecord {
@@ -130,7 +125,6 @@ pub fn build_catalog(
                 matched_pattern,
                 schemas_present: schemas_present.iter().cloned().collect(),
                 effective_attr_count: effective,
-                step_io_supports,
             },
         );
     }
@@ -148,7 +142,6 @@ pub fn build_catalog(
             GroupSummary {
                 description: rule.description.clone(),
                 count: 0,
-                step_io_count: 0,
                 entities: Vec::new(),
             },
         );
@@ -159,7 +152,6 @@ pub fn build_catalog(
         GroupSummary {
             description: "no rule matched (manual review needed)".to_string(),
             count: 0,
-            step_io_count: 0,
             entities: Vec::new(),
         },
     );
@@ -169,14 +161,10 @@ pub fn build_catalog(
             .or_insert_with(|| GroupSummary {
                 description: String::new(),
                 count: 0,
-                step_io_count: 0,
                 entities: Vec::new(),
             });
         summary.count += 1;
         summary.entities.push(name.clone());
-        if rec.step_io_supports {
-            summary.step_io_count += 1;
-        }
     }
 
     let parser_warnings = schemas
@@ -295,27 +283,18 @@ pub fn write_markdown(catalog: &Catalog, path: &Path) -> std::io::Result<()> {
         "Total unique entities: **{}**\n\n",
         catalog.entities.len()
     ));
-    let step_io_total = catalog
-        .entities
-        .values()
-        .filter(|e| e.step_io_supports)
-        .count();
-    out.push_str(&format!(
-        "step-io processes: **{}** entities\n\n",
-        step_io_total
-    ));
 
     // Group distribution.
     out.push_str("## Group distribution\n\n");
-    out.push_str("| group | description | count | step-io |\n");
-    out.push_str("|---|---|---:|---:|\n");
+    out.push_str("| group | description | count |\n");
+    out.push_str("|---|---|---:|\n");
     for (gname, summary) in &catalog.groups {
         if summary.count == 0 && gname != "_unclassified" {
             continue;
         }
         out.push_str(&format!(
-            "| `{}` | {} | {} | {} |\n",
-            gname, summary.description, summary.count, summary.step_io_count
+            "| `{}` | {} | {} |\n",
+            gname, summary.description, summary.count
         ));
     }
     out.push('\n');
@@ -327,8 +306,8 @@ pub fn write_markdown(catalog: &Catalog, path: &Path) -> std::io::Result<()> {
             continue;
         }
         out.push_str(&format!(
-            "### `{}` — {} ({} entities, {} step-io)\n\n",
-            gname, summary.description, summary.count, summary.step_io_count
+            "### `{}` — {} ({} entities)\n\n",
+            gname, summary.description, summary.count
         ));
         for entity_name in &summary.entities {
             let rec = catalog.entities.get(entity_name).unwrap();
@@ -337,10 +316,8 @@ pub fn write_markdown(catalog: &Catalog, path: &Path) -> std::io::Result<()> {
                 Confidence::Medium => "M",
                 Confidence::Low => "L",
             };
-            let marker = if rec.step_io_supports { "✓" } else { " " };
             out.push_str(&format!(
-                "- {} [{}] `{}` (root: {}, schemas: {})\n",
-                marker,
+                "- [{}] `{}` (root: {}, schemas: {})\n",
                 conf,
                 rec.name,
                 rec.root_supertype.as_deref().unwrap_or("?"),

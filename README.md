@@ -1,6 +1,6 @@
 # step-io-schema-check
 
-EXPRESS schema 분석 도구 — step-io 프로젝트의 entity 그룹 분류 ground truth.
+EXPRESS schema 분석 도구 — entity 그룹 분류의 ground truth 를 schema 만으로 결정.
 
 ## Modes
 
@@ -11,16 +11,16 @@ cargo run --release                  # default: check (placeholder, 미구현)
 
 ### `catalog` sub-command
 
-`schemas/*.exp` 4개 STEP schema (AP203, AP203e2, AP214e3, AP242) 와 `groups.toml` 의 group 정의를 읽어 모든 entity 를 분류.
+`schemas/*.exp` 4개 STEP schema (AP203, AP203e2, AP214e3, AP242) 와 `groups.toml` 의 group 정의를 읽어 모든 entity 를 분류. **schema-only** — 외부 코드베이스 스캔 없음.
 
 산출물:
-- **ENTITY_CATALOG.md** — 인간 검토용. group 분포, 각 entity 의 분류 근거 (root supertype, schema 분포, step-io 처리 여부, confidence).
+- **ENTITY_CATALOG.md** — 인간 검토용. group 분포, 각 entity 의 분류 근거 (root supertype, schema 분포, confidence).
 - **entity_catalog.json** — machine-readable. 미래 트레잇 마이그레이션 시 entity → group 매핑 import.
 
 ### Iterative refinement
 
 1. `cargo run --release -- catalog` 실행 → catalog 생성
-2. ENTITY_CATALOG.md 검토 (`_unclassified` 갯수, group 분포 균형, step-io 처리 entity 의 group 매핑)
+2. ENTITY_CATALOG.md 검토 (`_unclassified` 갯수, group 분포 균형, low-confidence 엔트리)
 3. **`groups.toml` 갱신** — group 추가/제거/병합/패턴 보강. 코드 변경 X, recompile 불필요.
 4. catalog 재실행 → 변경된 분류 결과
 5. 분포 안정 (12~15 group 수렴) 까지 반복
@@ -59,9 +59,8 @@ src/
 ├── express.rs        EXPRESS schema parser (.exp → EntitySchema)
 ├── inheritance.rs    SUBTYPE chain resolution (effective_attr_count, root_supertype, ancestors)
 ├── catalog.rs        groups.toml 읽고 자동 분류 + markdown / JSON 출력
-├── check.rs          default mode placeholder (미래 trait introspection)
-└── step_io_scan.rs   step-io 의 check_count grep — "step-io supports" 컬럼 입력
-groups.toml           18 baseline group 정의 (iterative refinement 의 변경 대상)
+└── check.rs          default mode placeholder (미래 trait introspection)
+groups.toml           15 group 정의 (iterative refinement 결과)
 schemas/              4 STEP schema (.exp 파일)
 ```
 

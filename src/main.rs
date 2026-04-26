@@ -4,7 +4,7 @@
 //! - default (no args, or `check`): trait-introspection mismatch report
 //!   (currently unimplemented — pending step-io trait refactor).
 //! - `catalog` sub-command: regenerate ENTITY_CATALOG.md + entity_catalog.json
-//!   from `schemas/*.exp` and `groups.toml`.
+//!   from `schemas/*.exp` and `groups.toml`. Schema-only — no external code scan.
 //!
 //! Run from the project root:
 //!     cargo run --release -- catalog       # one-time entity classification
@@ -17,7 +17,6 @@ mod catalog;
 mod check;
 mod express;
 mod inheritance;
-mod step_io_scan;
 
 fn main() {
     match env::args().nth(1).as_deref() {
@@ -53,22 +52,8 @@ fn run_catalog() {
         );
     }
 
-    // step-io repo path — relative from this tool.
-    let step_io_root = Path::new("../step-io");
-    let step_io_entities = if step_io_root.exists() {
-        let names = step_io_scan::scan(step_io_root);
-        println!(
-            "step-io check_count sites: {} unique entity names",
-            names.len()
-        );
-        names
-    } else {
-        println!("step-io repo not found at {step_io_root:?} — proceeding without step-io coverage column");
-        std::collections::BTreeSet::new()
-    };
-
     let groups_toml = Path::new("groups.toml");
-    let catalog = match catalog::build_catalog(&schemas, groups_toml, &step_io_entities) {
+    let catalog = match catalog::build_catalog(&schemas, groups_toml) {
         Ok(c) => c,
         Err(e) => {
             eprintln!("build catalog failed: {e}");
@@ -96,9 +81,6 @@ fn run_catalog() {
         if summary.count == 0 {
             continue;
         }
-        println!(
-            "  {:<26} {:>5} entities ({:>3} step-io)",
-            name, summary.count, summary.step_io_count
-        );
+        println!("  {:<26} {:>5} entities", name, summary.count);
     }
 }
