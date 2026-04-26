@@ -14,18 +14,18 @@ step-io processes: **58** entities
 | `assembly_product` | PRODUCT chain, definitions, assemblies, transforms, application context | 134 | 6 |
 | `config_mgmt` | Configuration / change / action / effectivity / resource / change-element management | 92 | 0 |
 | `csg_primitives` | Constructive solid geometry primitives (Block, Sphere, Cylinder, Cone, Torus, ...) | 31 | 0 |
-| `geometry_3d` | 3D points, directions, vectors, axis placements, curves, surfaces | 210 | 24 |
+| `geometry_3d` | 3D points, directions, vectors, axis placements, curves, surfaces | 202 | 24 |
 | `kinematic` | Kinematic mechanism: pairs, joints, links, mechanisms, motion | 124 | 1 |
 | `manufacturing_features` | Manufacturing features: solid_with_*, modified_solid tree, characterized_object features (hole, slot, pocket, bead, boss, rib) | 83 | 0 |
 | `metadata` | Organization, person, document, approval, classification, contract, address, material designation | 121 | 0 |
 | `param_expr` | Parametric expression / formula entities (mostly numeric and functional) | 175 | 0 |
 | `pmi` | PMI: shape aspects, tolerances, datums, dimensions, GD&T, data quality | 312 | 1 |
 | `property` | Property / measure representation items + value wrappers / qualifiers | 41 | 3 |
-| `shape_rep` | ABSR / MSSR / SR / GBWSR / GBSSR / SDR — shape representation wrappers | 102 | 5 |
+| `shape_rep` | ABSR / MSSR / SR / GBWSR / GBSSR / SDR — shape representation wrappers | 99 | 5 |
 | `tessellation` | Triangulated / tessellated surface mesh | 19 | 0 |
 | `topology` | Vertices, edges, face bounds, faces, shells, solids (BREP) | 36 | 8 |
 | `units` | SI / CBU unit leaves, dimensional exponents, derived units | 103 | 1 |
-| `visualization` | Color, fill / surface / curve styles, presentation, MDGPR, camera, drawing, font, 2D annotation | 197 | 9 |
+| `visualization` | Color, fill / surface / curve styles, presentation, MDGPR, camera, drawing, font, 2D annotation | 208 | 9 |
 
 ## Entities by group
 
@@ -295,7 +295,7 @@ step-io processes: **58** entities
 -   [H] `swept_face_solid` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [H] `torus` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 
-### `geometry_3d` — 3D points, directions, vectors, axis placements, curves, surfaces (210 entities, 24 step-io)
+### `geometry_3d` — 3D points, directions, vectors, axis placements, curves, surfaces (202 entities, 24 step-io)
 
 -   [L] `agc_with_dimension` (root: representation_item, schemas: ap242)
 -   [M] `angle_geometric_constraint` (root: representation_item, schemas: ap242)
@@ -341,11 +341,6 @@ step-io processes: **58** entities
 -   [H] `composite_curve_on_surface` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
 - ✓ [H] `composite_curve_segment` (root: founded_item, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `composite_curve_transition_locator` (root: founded_item, schemas: ap242)
--   [M] `composite_text` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
--   [H] `composite_text_with_associated_curves` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
--   [M] `composite_text_with_blanking_box` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
--   [M] `composite_text_with_delineation` (root: representation_item, schemas: ap203e2/ap242)
--   [M] `composite_text_with_extent` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [H] `compound_representation_item` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [M] `conic` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [M] `conical_stepped_hole_transition` (root: representation_item, schemas: ap203e2/ap242)
@@ -360,7 +355,6 @@ step-io processes: **58** entities
 -   [M] `curve_smoothness_geometric_constraint` (root: representation_item, schemas: ap242)
 -   [M] `cyclide_segment_solid` (root: representation_item, schemas: ap242)
 - ✓ [H] `cylindrical_surface` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
--   [M] `defined_character_glyph` (root: representation_item, schemas: ap214e3/ap242)
 -   [M] `defined_constraint` (root: representation_item, schemas: ap242)
 -   [M] `degenerate_pcurve` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `degenerate_toroidal_surface` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
@@ -474,7 +468,6 @@ step-io processes: **58** entities
 -   [L] `simultaneous_constraint_group` (root: representation_item, schemas: ap242)
 -   [M] `skew_line_distance_geometric_constraint` (root: representation_item, schemas: ap242)
 - ✓ [H] `spherical_surface` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
--   [M] `structured_text_composition` (root: representation_item, schemas: ap203e2/ap242)
 -   [M] `su_parameters` (root: representation_item, schemas: ap242)
 -   [M] `subsketch` (root: representation_item, schemas: ap242)
 -   [M] `surface` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
@@ -492,7 +485,6 @@ step-io processes: **58** entities
 -   [M] `symbol` (root: representation_item, schemas: ap203e2/ap242)
 -   [M] `symmetry_geometric_constraint` (root: representation_item, schemas: ap242)
 -   [M] `table_representation_item` (root: representation_item, schemas: ap203e2/ap242)
--   [M] `tagged_text_item` (root: representation_item, schemas: ap203e2/ap242)
 -   [M] `tangent_geometric_constraint` (root: representation_item, schemas: ap242)
 -   [M] `tetrahedron` (root: representation_item, schemas: ap242)
 - ✓ [H] `toroidal_surface` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
@@ -1382,7 +1374,7 @@ step-io processes: **58** entities
 -   [H] `value_range` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [H] `value_representation_item` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 
-### `shape_rep` — ABSR / MSSR / SR / GBWSR / GBSSR / SDR — shape representation wrappers (102 entities, 5 step-io)
+### `shape_rep` — ABSR / MSSR / SR / GBWSR / GBSSR / SDR — shape representation wrappers (99 entities, 5 step-io)
 
 - ✓ [H] `advanced_brep_shape_representation` (root: representation, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [L] `angle_assembly_constraint_with_dimension` (root: representation_item, schemas: ap242)
@@ -1474,14 +1466,11 @@ step-io processes: **58** entities
 -   [H] `shell_based_wireframe_shape_representation` (root: representation, schemas: ap203/ap203e2/ap242)
 -   [H] `single_area_csg_2d_shape_representation` (root: representation, schemas: ap242)
 -   [H] `single_boundary_csg_2d_shape_representation` (root: representation, schemas: ap242)
--   [M] `structured_text_representation` (root: representation, schemas: ap203e2/ap242)
 -   [L] `surface_distance_assembly_constraint_with_dimension` (root: representation_item, schemas: ap242)
 -   [M] `surface_texture_representation` (root: representation, schemas: ap203e2/ap214e3/ap242)
 -   [M] `tactile_appearance_representation` (root: representation, schemas: ap203e2/ap214e3/ap242)
--   [M] `tagged_text_format` (root: representation_context, schemas: ap203e2/ap242)
 -   [L] `tangent_assembly_constraint` (root: representation_item, schemas: ap242)
 -   [L] `tessellated_shape_representation` (root: representation, schemas: ap242)
--   [M] `text_string_representation` (root: representation, schemas: ap203e2/ap214e3/ap242)
 -   [L] `uncertainty_assigned_representation` (root: representation, schemas: ap203e2/ap214e3/ap242)
 -   [M] `variational_current_representation_relationship` (root: representation_relationship, schemas: ap242)
 -   [M] `variational_representation` (root: representation, schemas: ap242)
@@ -1654,7 +1643,7 @@ step-io processes: **58** entities
 -   [M] `volume_measure_with_unit` (root: measure_with_unit, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `volume_unit` (root: named_unit, schemas: ap203/ap203e2/ap214e3/ap242)
 
-### `visualization` — Color, fill / surface / curve styles, presentation, MDGPR, camera, drawing, font, 2D annotation (197 entities, 9 step-io)
+### `visualization` — Color, fill / surface / curve styles, presentation, MDGPR, camera, drawing, font, 2D annotation (208 entities, 9 step-io)
 
 -   [L] `angular_dimension` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [H] `annotation_curve_occurrence` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
@@ -1694,6 +1683,11 @@ step-io processes: **58** entities
 -   [H] `colour` (root: colour, schemas: ap203e2/ap214e3/ap242)
 - ✓ [H] `colour_rgb` (root: colour, schemas: ap203e2/ap214e3/ap242)
 -   [H] `colour_specification` (root: colour, schemas: ap203e2/ap214e3/ap242)
+-   [M] `composite_text` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
+-   [L] `composite_text_with_associated_curves` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
+-   [M] `composite_text_with_blanking_box` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
+-   [M] `composite_text_with_delineation` (root: representation_item, schemas: ap203e2/ap242)
+-   [M] `composite_text_with_extent` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [L] `context_dependent_invisibility` (root: invisibility, schemas: ap203e2/ap214e3/ap242)
 -   [L] `context_dependent_over_riding_styled_item` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [L] `curve_dimension` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
@@ -1706,6 +1700,7 @@ step-io processes: **58** entities
 -   [M] `curve_style_rendering` (root: curve_style_rendering, schemas: ap203e2/ap214e3/ap242)
 -   [M] `datum_feature_callout` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [M] `datum_target_callout` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
+-   [M] `defined_character_glyph` (root: representation_item, schemas: ap214e3/ap242)
 -   [H] `defined_symbol` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [L] `diameter_dimension` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [M] `dimension_callout` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
@@ -1811,6 +1806,8 @@ step-io processes: **58** entities
 -   [H] `representation_map` (root: representation_map, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [L] `solid_curve_font` (root: pre_defined_item, schemas: ap203e2/ap242)
 -   [L] `structured_dimension_callout` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
+-   [M] `structured_text_composition` (root: representation_item, schemas: ap203e2/ap242)
+-   [M] `structured_text_representation` (root: representation, schemas: ap203e2/ap242)
 - ✓ [H] `styled_item` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [M] `surface_condition_callout` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [H] `surface_rendering_properties` (root: surface_rendering_properties, schemas: ap203e2/ap214e3/ap242)
@@ -1833,6 +1830,8 @@ step-io processes: **58** entities
 -   [H] `symbol_representation_map` (root: representation_map, schemas: ap203e2/ap214e3/ap242)
 -   [H] `symbol_style` (root: founded_item, schemas: ap203e2/ap214e3/ap242)
 -   [H] `symbol_target` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
+-   [M] `tagged_text_format` (root: representation_context, schemas: ap203e2/ap242)
+-   [M] `tagged_text_item` (root: representation_item, schemas: ap203e2/ap242)
 -   [H] `terminator_symbol` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [L] `tessellated_annotation_occurrence` (root: representation_item, schemas: ap242)
 -   [H] `text_font` (root: text_font, schemas: ap203e2/ap242)
@@ -1843,6 +1842,7 @@ step-io processes: **58** entities
 -   [H] `text_literal_with_blanking_box` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [H] `text_literal_with_delineation` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [H] `text_literal_with_extent` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
+-   [M] `text_string_representation` (root: representation, schemas: ap203e2/ap214e3/ap242)
 -   [H] `text_style` (root: founded_item, schemas: ap203e2/ap214e3/ap242)
 -   [M] `text_style_for_defined_font` (root: text_style_for_defined_font, schemas: ap203e2/ap214e3/ap242)
 -   [H] `text_style_with_box_characteristics` (root: founded_item, schemas: ap203e2/ap214e3/ap242)

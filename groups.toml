@@ -364,6 +364,15 @@ root_supertypes = [
     # 자손이 아니라 geometric_representation_item 직접 자손 (이름과 달리 별개 트리)
     "camera_model_d3_multi_clipping_intersection",
     "camera_model_d3_multi_clipping_union",
+    # text composite / structured / tagged 엔티티들 (geometric_representation_item /
+    # compound_representation_item / representation / representation_context /
+    # descriptive_representation_item 다양한 root 자손이지만 의미는 visualization 텍스트)
+    "composite_text",
+    "structured_text_composition", "structured_text_representation",
+    "tagged_text_item", "tagged_text_format",
+    "text_string_representation",
+    # defined_character_glyph (geometric_representation_item 자손, 의미는 vis)
+    "defined_character_glyph",
 ]
 # founded_item 자손 중 geometry/kinematic 영역은 visualization 이 아님.
 # externally_defined_item 자손 중 visualization 외 영역도 push-out.
