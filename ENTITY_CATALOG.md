@@ -15,13 +15,13 @@ step-io processes: **58** entities
 | `config_mgmt` | Configuration / change / action / effectivity / resource / change-element management | 92 | 0 |
 | `csg_primitives` | Constructive solid geometry primitives (Block, Sphere, Cylinder, Cone, Torus, ...) | 31 | 0 |
 | `geometry_3d` | 3D points, directions, vectors, axis placements, curves, surfaces | 202 | 24 |
-| `kinematic` | Kinematic mechanism: pairs, joints, links, mechanisms, motion | 124 | 1 |
+| `kinematic` | Kinematic mechanism: pairs, joints, links, mechanisms, motion | 125 | 1 |
 | `manufacturing_features` | Manufacturing features: solid_with_*, modified_solid tree, characterized_object features (hole, slot, pocket, bead, boss, rib) | 83 | 0 |
 | `metadata` | Organization, person, document, approval, classification, contract, address, material designation | 121 | 0 |
 | `param_expr` | Parametric expression / formula entities (mostly numeric and functional) | 175 | 0 |
 | `pmi` | PMI: shape aspects, tolerances, datums, dimensions, GD&T, data quality | 312 | 1 |
 | `property` | Property / measure representation items + value wrappers / qualifiers | 41 | 3 |
-| `shape_rep` | ABSR / MSSR / SR / GBWSR / GBSSR / SDR — shape representation wrappers | 99 | 5 |
+| `shape_rep` | ABSR / MSSR / SR / GBWSR / GBSSR / SDR — shape representation wrappers | 98 | 5 |
 | `tessellation` | Triangulated / tessellated surface mesh | 19 | 0 |
 | `topology` | Vertices, edges, face bounds, faces, shells, solids (BREP) | 36 | 8 |
 | `units` | SI / CBU unit leaves, dimensional exponents, derived units | 103 | 1 |
@@ -500,7 +500,7 @@ step-io processes: **58** entities
 - ✓ [H] `vector` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [M] `volume` (root: representation_item, schemas: ap242)
 
-### `kinematic` — Kinematic mechanism: pairs, joints, links, mechanisms, motion (124 entities, 1 step-io)
+### `kinematic` — Kinematic mechanism: pairs, joints, links, mechanisms, motion (125 entities, 1 step-io)
 
 -   [H] `actuated_kinematic_pair` (root: representation_item, schemas: ap242)
 -   [M] `circular_path` (root: founded_item, schemas: ap242)
@@ -524,6 +524,7 @@ step-io processes: **58** entities
 -   [H] `high_order_kinematic_pair` (root: representation_item, schemas: ap242)
 -   [H] `homokinetic_pair` (root: item_defined_transformation, schemas: ap214e3/ap242)
 -   [H] `initial_state` (root: initial_state, schemas: ap214e3)
+-   [M] `interpolated_configuration_representation` (root: representation, schemas: ap242)
 -   [M] `interpolated_configuration_segment` (root: founded_item, schemas: ap242)
 -   [H] `interpolated_configuration_sequence` (root: interpolated_configuration_sequence, schemas: ap214e3/ap242)
 - ✓ [L] `item_defined_transformation` (root: item_defined_transformation, schemas: ap203/ap203e2/ap214e3/ap242)
@@ -1374,7 +1375,7 @@ step-io processes: **58** entities
 -   [H] `value_range` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [H] `value_representation_item` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 
-### `shape_rep` — ABSR / MSSR / SR / GBWSR / GBSSR / SDR — shape representation wrappers (99 entities, 5 step-io)
+### `shape_rep` — ABSR / MSSR / SR / GBWSR / GBSSR / SDR — shape representation wrappers (98 entities, 5 step-io)
 
 - ✓ [H] `advanced_brep_shape_representation` (root: representation, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [L] `angle_assembly_constraint_with_dimension` (root: representation_item, schemas: ap242)
@@ -1421,7 +1422,6 @@ step-io processes: **58** entities
 -   [M] `hardness_representation` (root: representation, schemas: ap203e2/ap214e3/ap242)
 -   [M] `implicit_explicit_positioned_sketch_relationship` (root: representation_item_relationship, schemas: ap242)
 -   [L] `incidence_assembly_constraint` (root: representation_item, schemas: ap242)
--   [M] `interpolated_configuration_representation` (root: representation, schemas: ap242)
 -   [M] `item_link_motion_relationship` (root: representation_relationship, schemas: ap242)
 -   [M] `link_motion_relationship` (root: representation_relationship, schemas: ap242)
 -   [M] `link_motion_representation_along_path` (root: representation, schemas: ap242)

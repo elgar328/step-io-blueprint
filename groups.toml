@@ -213,6 +213,9 @@ root_supertypes = [
     "kinematic_topology_directed_structure",
     "kinematic_topology_network_structure",
     "kinematic_topology_tree_structure",
+    # interpolated_configuration_representation (representation 자손이지만
+    # interpolated_configuration_segment/sequence 와 같은 kinematic family)
+    "interpolated_configuration_representation",
 ]
 # cartesian_transformation_operator 는 item_defined_transformation 의 다중상속
 # 자손이지만 의미상 geometry_3d (전역 transform). draped/laid 는 composite ply
