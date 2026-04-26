@@ -12,14 +12,14 @@ step-io processes: **58** entities
 |---|---|---:|---:|
 | `_unclassified` | no rule matched (manual review needed) | 0 | 0 |
 | `assembly_product` | PRODUCT chain, definitions, assemblies, transforms, application context | 135 | 6 |
-| `config_mgmt` | Configuration / change / action / effectivity / resource / change-element management | 96 | 0 |
+| `config_mgmt` | Configuration / change / action / effectivity / resource / change-element management | 92 | 0 |
 | `csg_primitives` | Constructive solid geometry primitives (Block, Sphere, Cylinder, Cone, Torus, ...) | 16 | 0 |
 | `geometry_3d` | 3D points, directions, vectors, axis placements, curves, surfaces | 252 | 25 |
 | `kinematic` | Kinematic mechanism: pairs, joints, links, mechanisms, motion | 124 | 1 |
 | `manufacturing_features` | Manufacturing features: solid_with_*, modified_solid tree, characterized_object features (hole, slot, pocket, bead, boss, rib) | 83 | 0 |
 | `metadata` | Organization, person, document, approval, classification, contract, address, material designation | 119 | 0 |
 | `param_expr` | Parametric expression / formula entities (mostly numeric and functional) | 172 | 0 |
-| `pmi` | PMI: shape aspects, tolerances, datums, dimensions, GD&T, data quality | 306 | 1 |
+| `pmi` | PMI: shape aspects, tolerances, datums, dimensions, GD&T, data quality | 310 | 1 |
 | `property` | Property / measure representation items + value wrappers / qualifiers | 38 | 2 |
 | `shape_rep` | ABSR / MSSR / SR / GBWSR / GBSSR / SDR — shape representation wrappers | 102 | 5 |
 | `tessellation` | Triangulated / tessellated surface mesh | 19 | 0 |
@@ -167,7 +167,7 @@ step-io processes: **58** entities
 -   [M] `thickness_laminate_table` (root: product_definition, schemas: ap203e2/ap242)
 -   [M] `zone_structural_makeup` (root: product_definition, schemas: ap203e2/ap242)
 
-### `config_mgmt` — Configuration / change / action / effectivity / resource / change-element management (96 entities, 0 step-io)
+### `config_mgmt` — Configuration / change / action / effectivity / resource / change-element management (92 entities, 0 step-io)
 
 -   [H] `action` (root: action, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `action_assignment` (root: action_assignment, schemas: ap203/ap203e2/ap214e3/ap242)
@@ -216,8 +216,6 @@ step-io processes: **58** entities
 -   [L] `current_change_element_assignment` (root: group_assignment, schemas: ap242)
 -   [H] `dated_effectivity` (root: effectivity, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `delete_element` (root: group, schemas: ap242)
--   [M] `detailed_report_request` (root: data_quality_report_request, schemas: ap242)
--   [M] `detailed_report_request_with_number_of_data` (root: data_quality_report_request, schemas: ap242)
 -   [H] `directed_action` (root: action, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `effectivity` (root: effectivity, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `effectivity_assignment` (root: effectivity_assignment, schemas: ap203e2/ap214e3/ap242)
@@ -257,10 +255,8 @@ step-io processes: **58** entities
 -   [L] `rule_superseded_assignment` (root: action_assignment, schemas: ap203e2/ap242)
 -   [M] `rule_supersedence` (root: action, schemas: ap203e2/ap242)
 -   [H] `serial_numbered_effectivity` (root: effectivity, schemas: ap203/ap203e2/ap214e3/ap242)
--   [M] `shape_summary_request_with_representative_value` (root: data_quality_report_request, schemas: ap242)
 -   [H] `start_request` (root: action_request_assignment, schemas: ap203/ap203e2/ap242)
 -   [M] `start_work` (root: action_assignment, schemas: ap203/ap203e2/ap242)
--   [M] `summary_report_request` (root: data_quality_report_request, schemas: ap242)
 -   [H] `time_interval_based_effectivity` (root: effectivity, schemas: ap203e2/ap214e3/ap242)
 -   [M] `usage_association` (root: action_method_relationship, schemas: ap203e2/ap242)
 -   [M] `versioned_action_request` (root: versioned_action_request, schemas: ap203/ap203e2/ap214e3/ap242)
@@ -1050,7 +1046,7 @@ step-io processes: **58** entities
 -   [M] `variational_parameter` (root: representation_item, schemas: ap242)
 -   [H] `xor_expression` (root: generic_expression, schemas: ap214e3/ap242)
 
-### `pmi` — PMI: shape aspects, tolerances, datums, dimensions, GD&T, data quality (306 entities, 1 step-io)
+### `pmi` — PMI: shape aspects, tolerances, datums, dimensions, GD&T, data quality (310 entities, 1 step-io)
 
 -   [L] `abrupt_change_of_surface_normal` (root: representation_item, schemas: ap242)
 -   [H] `all_around_shape_aspect` (root: shape_aspect, schemas: ap242)
@@ -1108,7 +1104,7 @@ step-io processes: **58** entities
 -   [H] `data_quality_inspection_result_with_judgement` (root: representation_item, schemas: ap242)
 -   [H] `data_quality_measurement_requirement` (root: representation_item, schemas: ap242)
 -   [H] `data_quality_report_measurement_association` (root: representation_item_relationship, schemas: ap242)
--   [M] `data_quality_report_request` (root: data_quality_report_request, schemas: ap242)
+-   [H] `data_quality_report_request` (root: data_quality_report_request, schemas: ap242)
 -   [M] `datum` (root: shape_aspect, schemas: ap203e2/ap214e3/ap242)
 -   [M] `datum_feature` (root: shape_aspect, schemas: ap203e2/ap214e3/ap242)
 -   [H] `datum_reference` (root: datum_reference, schemas: ap203e2/ap214e3/ap242)
@@ -1119,6 +1115,8 @@ step-io processes: **58** entities
 -   [M] `datum_target` (root: shape_aspect, schemas: ap203e2/ap214e3/ap242)
 -   [H] `default_tolerance_table` (root: representation, schemas: ap203e2/ap214e3/ap242)
 -   [H] `derived_shape_aspect` (root: shape_aspect, schemas: ap203e2/ap214e3/ap242)
+-   [L] `detailed_report_request` (root: data_quality_report_request, schemas: ap242)
+-   [L] `detailed_report_request_with_number_of_data` (root: data_quality_report_request, schemas: ap242)
 -   [M] `dimension_related_tolerance_zone_element` (root: dimension_related_tolerance_zone_element, schemas: ap203e2/ap214e3/ap242)
 -   [H] `dimensional_characteristic_representation` (root: dimensional_characteristic_representation, schemas: ap203e2/ap214e3/ap242)
 -   [M] `dimensional_location` (root: shape_aspect_relationship, schemas: ap203e2/ap214e3/ap242)
@@ -1314,6 +1312,7 @@ step-io processes: **58** entities
 -   [H] `shape_inspection_result_accuracy_association` (root: shape_inspection_result_accuracy_association, schemas: ap242)
 -   [H] `shape_inspection_result_representation_with_accuracy` (root: representation, schemas: ap242)
 -   [H] `shape_measurement_accuracy` (root: shape_measurement_accuracy, schemas: ap242)
+-   [L] `shape_summary_request_with_representative_value` (root: data_quality_report_request, schemas: ap242)
 -   [L] `short_length_curve` (root: representation_item, schemas: ap242)
 -   [L] `short_length_curve_segment` (root: representation_item, schemas: ap242)
 -   [M] `short_length_edge` (root: representation_item, schemas: ap242)
@@ -1330,6 +1329,7 @@ step-io processes: **58** entities
 -   [L] `steep_angle_between_adjacent_faces` (root: representation_item, schemas: ap242)
 -   [M] `steep_geometry_transition_across_edge` (root: representation_item, schemas: ap242)
 -   [H] `straightness_tolerance` (root: geometric_tolerance, schemas: ap203e2/ap214e3/ap242)
+-   [L] `summary_report_request` (root: data_quality_report_request, schemas: ap242)
 -   [H] `surface_profile_tolerance` (root: geometric_tolerance, schemas: ap203e2/ap214e3/ap242)
 -   [M] `surface_with_excessive_patches_in_one_direction` (root: representation_item, schemas: ap242)
 -   [M] `surface_with_small_curvature_radius` (root: representation_item, schemas: ap242)

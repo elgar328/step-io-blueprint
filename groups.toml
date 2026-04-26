@@ -106,6 +106,9 @@ root_supertypes = [
     "shape_inspection_result_representation_with_accuracy",
     # default tolerance table (representation 자손이지만 PMI 도메인)
     "default_tolerance_table",
+    # data_quality_report_request 자손 (config_mgmt 의 `*_request*` pattern 이
+    # detailed_report_request 등 흡수하는 것 방지)
+    "data_quality_report_request",
 ]
 exclude_root = []
 
