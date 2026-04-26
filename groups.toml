@@ -99,11 +99,14 @@ patterns = [
     "block", "right_*_cone", "right_*_cylinder", "right_*_pyramid",
     "sphere", "ellipsoid", "torus", "eccentric_cone",
     "rectangular_pyramid", "cyclide", "swept_*_solid",
-    "csg_*", "boolean_result", "half_space_*", "solid_*",
+    "csg_*", "boolean_result", "half_space_*",
     "extruded_*", "revolved_*",
 ]
-root_supertypes = ["solid_model", "csg_primitive"]
-exclude_root = []
+# solid_model root 는 BREP 자손 (manifold_solid_brep 등) 도 흡수해서 부정확.
+# CSG 전용 root 는 csg_primitive 만. solid_*, *_solid 같은 광범위 name pattern
+# 도 BREP 흡수 위험이라 제외.
+root_supertypes = ["csg_primitive"]
+exclude_root = ["manifold_solid_brep", "brep_with_voids", "shell_based_surface_model"]
 
 [[group]]
 name = "ap_features"
@@ -128,6 +131,13 @@ root_supertypes = [
     "interpolated_configuration_sequence",
     "rotation_about_direction",
     "functionally_defined_transformation",
+    # modified_solid 자손 (chamfer/blend/pocket/protrusion/slot/groove 등 manufacturing feature)
+    "modified_solid", "edge_blended_solid",
+    "solid_with_shape_element_pattern", "solid_with_protrusion",
+    "solid_with_depression", "solid_with_pocket",
+    "solid_with_chamfered_edges", "solid_with_groove", "solid_with_slot",
+    "solid_with_through_depression",
+    "solid_replica",
 ]
 # Don't claim PRODUCT_DEFINITION_RELATIONSHIP descendants (assembly territory)
 exclude_root = ["product_definition_relationship"]
@@ -229,16 +239,30 @@ exclude_root = ["styled_item", "draughting_callout", "tessellated_item"]
 
 [[group]]
 name = "topology"
-description = "Vertices, edges, face bounds, faces, shells, solids"
+description = "Vertices, edges, face bounds, faces, shells, solids (BREP)"
 patterns = [
     "vertex_*", "edge_*", "oriented_*",
     "*_loop", "face_*", "*_face*",
-    "*_shell*", "*_brep*",
+    "*_shell*", "*brep*",
+    "manifold_solid_brep", "brep_with_voids",
     "manifold_*", "shell_based_*",
     "connected_*",
 ]
-root_supertypes = ["topological_representation_item"]
-exclude_root = []
+# solid_model root 추가: manifold_solid_brep / brep_with_voids 가 topology 영역
+# (csg_primitives 가 csg_primitive 만 매칭, modified_solid 자손은 ap_features 매칭).
+root_supertypes = ["topological_representation_item", "solid_model"]
+# manifold_solid_brep 자손 외 다른 solid_model 자손 (csg_solid 자손 + modified_solid
+# 자손 + swept_*_solid) 은 다른 group 의 root match 가 우선. exclude 명시.
+exclude_root = [
+    "csg_primitive", "csg_solid",
+    "modified_solid", "edge_blended_solid",
+    "solid_with_shape_element_pattern", "solid_with_protrusion",
+    "solid_with_depression", "solid_with_pocket",
+    "solid_with_chamfered_edges", "solid_with_groove", "solid_with_slot",
+    "solid_with_through_depression",
+    "solid_replica",
+    "swept_face_solid", "swept_area_solid", "swept_disk_solid",
+]
 
 # material (4 entities) 은 org_people_document (metadata) 로 흡수.
 # 패턴 + root 는 org_people_document 에 합쳐졌음.
