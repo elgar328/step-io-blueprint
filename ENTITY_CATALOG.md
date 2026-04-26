@@ -14,14 +14,14 @@ step-io processes: **58** entities
 | `assembly_product` | PRODUCT chain, definitions, assemblies, transforms, application context | 135 | 6 |
 | `config_mgmt` | Configuration / change / action / effectivity / resource / change-element management | 92 | 0 |
 | `csg_primitives` | Constructive solid geometry primitives (Block, Sphere, Cylinder, Cone, Torus, ...) | 31 | 0 |
-| `geometry_3d` | 3D points, directions, vectors, axis placements, curves, surfaces | 213 | 25 |
+| `geometry_3d` | 3D points, directions, vectors, axis placements, curves, surfaces | 210 | 24 |
 | `kinematic` | Kinematic mechanism: pairs, joints, links, mechanisms, motion | 124 | 1 |
 | `manufacturing_features` | Manufacturing features: solid_with_*, modified_solid tree, characterized_object features (hole, slot, pocket, bead, boss, rib) | 83 | 0 |
 | `metadata` | Organization, person, document, approval, classification, contract, address, material designation | 120 | 0 |
 | `param_expr` | Parametric expression / formula entities (mostly numeric and functional) | 175 | 0 |
-| `pmi` | PMI: shape aspects, tolerances, datums, dimensions, GD&T, data quality | 311 | 1 |
-| `property` | Property / measure representation items + value wrappers / qualifiers | 38 | 2 |
-| `shape_rep` | ABSR / MSSR / SR / GBWSR / GBSSR / SDR — shape representation wrappers | 103 | 5 |
+| `pmi` | PMI: shape aspects, tolerances, datums, dimensions, GD&T, data quality | 312 | 1 |
+| `property` | Property / measure representation items + value wrappers / qualifiers | 41 | 3 |
+| `shape_rep` | ABSR / MSSR / SR / GBWSR / GBSSR / SDR — shape representation wrappers | 102 | 5 |
 | `tessellation` | Triangulated / tessellated surface mesh | 19 | 0 |
 | `topology` | Vertices, edges, face bounds, faces, shells, solids (BREP) | 36 | 8 |
 | `units` | SI / CBU unit leaves, dimensional exponents, derived units | 103 | 1 |
@@ -296,7 +296,7 @@ step-io processes: **58** entities
 -   [H] `swept_face_solid` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [H] `torus` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 
-### `geometry_3d` — 3D points, directions, vectors, axis placements, curves, surfaces (213 entities, 25 step-io)
+### `geometry_3d` — 3D points, directions, vectors, axis placements, curves, surfaces (210 entities, 24 step-io)
 
 -   [L] `agc_with_dimension` (root: representation_item, schemas: ap242)
 -   [M] `angle_geometric_constraint` (root: representation_item, schemas: ap242)
@@ -413,7 +413,6 @@ step-io processes: **58** entities
 - ✓ [H] `line` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [M] `location_in_aggregate_representation_item` (root: representation_item, schemas: ap242)
 -   [M] `mapped_item` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
-- ✓ [L] `measure_representation_item` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [M] `null_representation_item` (root: representation_item, schemas: ap203e2/ap242)
 -   [H] `offset_curve_2d` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [H] `offset_curve_3d` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
@@ -506,8 +505,6 @@ step-io processes: **58** entities
 -   [H] `uniform_surface` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [M] `user_selected_elements` (root: representation_item, schemas: ap203e2/ap242)
 -   [M] `user_selected_shape_elements` (root: representation_item, schemas: ap203e2/ap242)
--   [L] `value_range` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
--   [L] `value_representation_item` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [M] `variational_representation_item` (root: representation_item, schemas: ap203e2/ap242)
 - ✓ [H] `vector` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [M] `volume` (root: representation_item, schemas: ap242)
@@ -1026,7 +1023,7 @@ step-io processes: **58** entities
 -   [M] `variational_parameter` (root: representation_item, schemas: ap242)
 -   [H] `xor_expression` (root: generic_expression, schemas: ap214e3/ap242)
 
-### `pmi` — PMI: shape aspects, tolerances, datums, dimensions, GD&T, data quality (311 entities, 1 step-io)
+### `pmi` — PMI: shape aspects, tolerances, datums, dimensions, GD&T, data quality (312 entities, 1 step-io)
 
 -   [L] `abrupt_change_of_surface_normal` (root: representation_item, schemas: ap242)
 -   [H] `all_around_shape_aspect` (root: shape_aspect, schemas: ap242)
@@ -1290,6 +1287,7 @@ step-io processes: **58** entities
 -   [H] `shape_data_quality_value_limit` (root: representation_item, schemas: ap242)
 -   [H] `shape_data_quality_value_range` (root: representation_item, schemas: ap242)
 -   [H] `shape_defining_relationship` (root: shape_aspect_relationship, schemas: ap214e3/ap242)
+-   [H] `shape_dimension_representation` (root: representation, schemas: ap203e2/ap214e3/ap242)
 -   [H] `shape_inspection_result_accuracy_association` (root: shape_inspection_result_accuracy_association, schemas: ap242)
 -   [H] `shape_inspection_result_representation_with_accuracy` (root: representation, schemas: ap242)
 -   [H] `shape_measurement_accuracy` (root: shape_measurement_accuracy, schemas: ap242)
@@ -1340,7 +1338,7 @@ step-io processes: **58** entities
 -   [M] `wrongly_placed_void` (root: representation_item, schemas: ap242)
 -   [L] `zero_surface_normal` (root: representation_item, schemas: ap242)
 
-### `property` — Property / measure representation items + value wrappers / qualifiers (38 entities, 2 step-io)
+### `property` — Property / measure representation items + value wrappers / qualifiers (41 entities, 3 step-io)
 
 -   [L] `abstract_variable` (root: property_definition, schemas: ap203e2/ap242)
 -   [M] `action_property` (root: action_property, schemas: ap203e2/ap214e3/ap242)
@@ -1364,6 +1362,7 @@ step-io processes: **58** entities
 -   [L] `kinematic_property_definition` (root: property_definition, schemas: ap214e3)
 -   [H] `material_property` (root: property_definition, schemas: ap203e2/ap214e3/ap242)
 -   [H] `measure_qualification` (root: measure_qualification, schemas: ap203e2/ap214e3/ap242)
+- ✓ [H] `measure_representation_item` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [H] `precision_qualifier` (root: precision_qualifier, schemas: ap203e2/ap214e3/ap242)
 -   [L] `product_definition_kinematics` (root: property_definition, schemas: ap242)
 -   [L] `product_definition_relationship_kinematics` (root: property_definition, schemas: ap242)
@@ -1380,8 +1379,10 @@ step-io processes: **58** entities
 -   [H] `type_qualifier` (root: type_qualifier, schemas: ap203e2/ap214e3/ap242)
 -   [L] `uncertainty_qualifier` (root: uncertainty_qualifier, schemas: ap203e2/ap214e3/ap242)
 -   [M] `value_format_type_qualifier` (root: value_format_type_qualifier, schemas: ap242)
+-   [H] `value_range` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
+-   [H] `value_representation_item` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 
-### `shape_rep` — ABSR / MSSR / SR / GBWSR / GBSSR / SDR — shape representation wrappers (103 entities, 5 step-io)
+### `shape_rep` — ABSR / MSSR / SR / GBWSR / GBSSR / SDR — shape representation wrappers (102 entities, 5 step-io)
 
 - ✓ [H] `advanced_brep_shape_representation` (root: representation, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [L] `angle_assembly_constraint_with_dimension` (root: representation_item, schemas: ap242)
@@ -1467,7 +1468,6 @@ step-io processes: **58** entities
 -   [H] `representative_shape_representation` (root: representation, schemas: ap242)
 -   [M] `resulting_path` (root: representation_relationship, schemas: ap214e3/ap242)
 - ✓ [M] `shape_definition_representation` (root: property_definition_representation, schemas: ap203/ap203e2/ap214e3/ap242)
--   [L] `shape_dimension_representation` (root: representation, schemas: ap203e2/ap214e3/ap242)
 - ✓ [H] `shape_representation` (root: representation, schemas: ap203/ap203e2/ap214e3/ap242)
 - ✓ [H] `shape_representation_relationship` (root: representation_relationship, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `shape_representation_with_parameters` (root: representation, schemas: ap203e2/ap214e3/ap242)

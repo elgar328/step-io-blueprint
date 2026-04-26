@@ -111,6 +111,8 @@ root_supertypes = [
     # data_quality_report_request 자손 (config_mgmt 의 `*_request*` pattern 이
     # detailed_report_request 등 흡수하는 것 방지)
     "data_quality_report_request",
+    # shape_dimension_representation (representation 자손이지만 PMI dimensional 도메인)
+    "shape_dimension_representation",
 ]
 exclude_root = []
 
@@ -420,6 +422,11 @@ root_supertypes = [
     # value_wrapper 흡수
     "uncertainty_qualifier", "precision_qualifier",
     "type_qualifier", "measure_qualification",
+    # measure / value representation items — pattern 매칭은 되지만 representation_item
+    # root 가 geometry_3d 로 끌어감
+    "measure_representation_item",
+    "value_representation_item",
+    "value_range",
 ]
 # product_definition 다중상속 entity (assembly_component 등) 는 assembly_product 영역.
 exclude_root = [
