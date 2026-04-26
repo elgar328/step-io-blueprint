@@ -104,6 +104,8 @@ root_supertypes = [
     "shape_data_quality_value_limit",
     "shape_data_quality_value_range",
     "shape_inspection_result_representation_with_accuracy",
+    # default tolerance table (representation 자손이지만 PMI 도메인)
+    "default_tolerance_table",
 ]
 exclude_root = []
 
@@ -121,6 +123,9 @@ patterns = [
 root_supertypes = [
     "expression", "generic_expression", "variable_semantics", "atomic_formula",
     "environment", "expression_extension_to_select",
+    # simple_clause 자손 (literal_conjunction, literal_disjunction) — `*_clause`
+    # pattern 이 simple_clause 만 잡고 자손은 못 잡음
+    "simple_clause",
 ]
 exclude_root = []
 
@@ -304,6 +309,35 @@ root_supertypes = [
     "draughting_callout", "annotation_curve_occurrence",
     "draughting_callout_relationship",
     "annotation_occurrence_relationship",
+    # text_literal tree (geometric_representation_item 자손이지만 의미는
+    # 2D draughting/annotation text)
+    "text_literal",
+    # representation 자손이지만 visualization 도메인 (draughting / drawing /
+    # MDGPR / character_glyph_symbol / curve_style_parameters / symbol_*)
+    "draughting_model", "draughting_subfigure_representation",
+    "draughting_symbol_representation",
+    "drawing_sheet_layout", "drawing_sheet_revision",
+    "drawing_sheet_revision_sequence",
+    "mechanical_design_geometric_presentation_area",
+    "mechanical_design_geometric_presentation_representation",
+    "mechanical_design_presentation_representation_with_draughting",
+    "mechanical_design_shaded_presentation_area",
+    "mechanical_design_shaded_presentation_representation",
+    "mechanical_design_and_draughting_relationship",
+    "character_glyph_symbol", "generic_character_glyph_symbol",
+    "symbol_representation",
+    "closed_curve_style_parameters",
+    "curve_style_parameters_representation",
+    "curve_style_parameters_with_ends",
+    # presentation_representation tree
+    "presentation_representation",
+    # annotation_* entities (geometric_representation_item / mapped_item 자손이지만
+    # 의미는 2D annotation/symbol)
+    "annotation_fill_area", "annotation_symbol", "annotation_text",
+    "annotation_text_character",
+    "defined_symbol", "symbol_target",
+    "included_text_block",
+    "fill_area_style_tile_symbol_with_style",
 ]
 # founded_item 자손 중 geometry/kinematic 영역은 visualization 이 아님.
 # externally_defined_item 자손 중 visualization 외 영역도 push-out.
