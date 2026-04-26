@@ -579,6 +579,8 @@ root_supertypes = [
     "document_identifier", "document_identifier_assignment",
     # date_time_representation_item — date_and_time 다중상속, 의미는 metadata
     "date_time_representation_item",
+    # language (group 자손이지만 의미는 natural language metadata)
+    "language",
 ]
 exclude_root = []
 

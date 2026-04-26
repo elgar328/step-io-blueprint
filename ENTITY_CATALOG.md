@@ -11,13 +11,13 @@ step-io processes: **58** entities
 | group | description | count | step-io |
 |---|---|---:|---:|
 | `_unclassified` | no rule matched (manual review needed) | 0 | 0 |
-| `assembly_product` | PRODUCT chain, definitions, assemblies, transforms, application context | 135 | 6 |
+| `assembly_product` | PRODUCT chain, definitions, assemblies, transforms, application context | 134 | 6 |
 | `config_mgmt` | Configuration / change / action / effectivity / resource / change-element management | 92 | 0 |
 | `csg_primitives` | Constructive solid geometry primitives (Block, Sphere, Cylinder, Cone, Torus, ...) | 31 | 0 |
 | `geometry_3d` | 3D points, directions, vectors, axis placements, curves, surfaces | 210 | 24 |
 | `kinematic` | Kinematic mechanism: pairs, joints, links, mechanisms, motion | 124 | 1 |
 | `manufacturing_features` | Manufacturing features: solid_with_*, modified_solid tree, characterized_object features (hole, slot, pocket, bead, boss, rib) | 83 | 0 |
-| `metadata` | Organization, person, document, approval, classification, contract, address, material designation | 120 | 0 |
+| `metadata` | Organization, person, document, approval, classification, contract, address, material designation | 121 | 0 |
 | `param_expr` | Parametric expression / formula entities (mostly numeric and functional) | 175 | 0 |
 | `pmi` | PMI: shape aspects, tolerances, datums, dimensions, GD&T, data quality | 312 | 1 |
 | `property` | Property / measure representation items + value wrappers / qualifiers | 41 | 3 |
@@ -29,7 +29,7 @@ step-io processes: **58** entities
 
 ## Entities by group
 
-### `assembly_product` — PRODUCT chain, definitions, assemblies, transforms, application context (135 entities, 6 step-io)
+### `assembly_product` — PRODUCT chain, definitions, assemblies, transforms, application context (134 entities, 6 step-io)
 
 -   [M] `application_context` (root: application_context, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `application_context_element` (root: application_context_element, schemas: ap203/ap203e2/ap214e3/ap242)
@@ -86,7 +86,6 @@ step-io processes: **58** entities
 -   [M] `interfaced_group_component` (root: product_definition, schemas: ap242)
 -   [M] `item_identified_representation_usage` (root: item_identified_representation_usage, schemas: ap203e2/ap214e3/ap242)
 -   [M] `laminate_table` (root: product_definition, schemas: ap203e2/ap242)
--   [M] `language` (root: group, schemas: ap203e2/ap214e3/ap242)
 -   [H] `linear_array_component_definition_link` (root: product_definition, schemas: ap242)
 -   [M] `linear_array_placement_group_component` (root: product_definition, schemas: ap242)
 -   [L] `make_from_usage_option` (root: product_definition_relationship, schemas: ap203e2/ap214e3/ap242)
@@ -722,7 +721,7 @@ step-io processes: **58** entities
 -   [H] `track_blended_solid_with_end_conditions` (root: representation_item, schemas: ap203e2/ap242)
 -   [H] `turned_knurl` (root: characterized_object, schemas: ap242)
 
-### `metadata` — Organization, person, document, approval, classification, contract, address, material designation (120 entities, 0 step-io)
+### `metadata` — Organization, person, document, approval, classification, contract, address, material designation (121 entities, 0 step-io)
 
 -   [H] `address` (root: address, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `applied_approval_assignment` (root: approval_assignment, schemas: ap203e2/ap214e3/ap242)
@@ -806,6 +805,7 @@ step-io processes: **58** entities
 -   [M] `id_attribute` (root: id_attribute, schemas: ap203e2/ap214e3/ap242)
 -   [H] `identification_assignment` (root: identification_assignment, schemas: ap203e2/ap214e3/ap242)
 -   [M] `identification_role` (root: identification_role, schemas: ap203e2/ap214e3/ap242)
+-   [M] `language` (root: group, schemas: ap203e2/ap214e3/ap242)
 -   [H] `language_assignment` (root: classification_assignment, schemas: ap214e3)
 -   [M] `local_time` (root: local_time, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `material_designation` (root: material_designation, schemas: ap203e2/ap214e3/ap242)
