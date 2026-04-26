@@ -1,0 +1,216 @@
+# Group definitions — 18 baseline (16 group 에서 5 개선 반영).
+#
+# Each [[group]] defines:
+#   - name             : snake_case identifier (Rust module path / 디렉토리)
+#   - description      : 1-line semantic
+#   - patterns         : glob-like name matchers (`*` wildcard)
+#   - root_supertypes  : SUBTYPE chain root that this group claims
+#   - exclude_root     : sub-trees to push out (e.g. PMI within representation_item)
+#
+# Classifier 우선순위:
+#   1. SUBTYPE root match (semantic) — 1순위
+#   2. Name pattern match (syntactic) — 2순위
+#   3. 충돌 또는 모호 → confidence = low, 수동 검토
+#
+# Iterative refinement: 이 file 만 수정하고 catalog 재실행 (코드 변경 X).
+
+[[group]]
+name = "units"
+description = "SI / CBU unit leaves and uncertainty"
+patterns = ["*_unit", "named_unit", "si_unit", "conversion_based_unit", "uncertainty_*"]
+root_supertypes = ["named_unit"]
+exclude_root = []
+
+[[group]]
+name = "geometry_3d"
+description = "3D points, directions, vectors, axis placements, curves, surfaces"
+patterns = [
+    "cartesian_point", "direction", "vector",
+    "axis*_placement_*",
+    "*_curve*", "*_surface*",
+    "line", "circle", "ellipse", "plane",
+    "*_spline_*",
+]
+root_supertypes = ["geometric_representation_item"]
+exclude_root = ["shape_aspect", "draughting_callout"]
+
+[[group]]
+name = "geometry_2d_pcurve"
+description = "PCURVE parametric-space 2D geometry"
+patterns = ["pcurve", "*_2d"]
+root_supertypes = []
+exclude_root = []
+
+[[group]]
+name = "topology"
+description = "Vertices, edges, face bounds, faces, shells, solids"
+patterns = [
+    "vertex_*", "edge_*", "oriented_*",
+    "*_loop", "face_*", "*_face*",
+    "*_shell*", "*_brep*",
+    "manifold_*", "shell_based_*",
+]
+root_supertypes = ["topological_representation_item"]
+exclude_root = []
+
+[[group]]
+name = "shape_rep"
+description = "ABSR / MSSR / SR / GBWSR / GBSSR / SDR — shape representation wrappers"
+patterns = [
+    "*shape_representation*",
+    "shape_definition_representation",
+    "shape_representation_relationship",
+    "manifold_solid_brep",
+    "geometric_*_set",
+    "geometrically_bounded_*_shape_representation",
+]
+root_supertypes = ["representation"]
+exclude_root = []
+
+[[group]]
+name = "assembly_product"
+description = "PRODUCT chain, definitions, assemblies, transforms"
+patterns = [
+    "product*", "*product_*",
+    "*_definition*", "*_formation*",
+    "next_assembly_usage_occurrence", "context_dependent_*",
+    "item_defined_transformation",
+    "*_category*",
+    "*application_context*",
+]
+root_supertypes = []
+exclude_root = []
+
+[[group]]
+name = "csg_primitives"
+description = "Constructive solid geometry primitives (Block, Sphere, Cylinder, Cone, Torus, ...)"
+patterns = ["block", "right_*", "sphere", "*_cone", "torus", "ellipsoid", "*_cylinder", "*_pyramid", "csg_*", "boolean_result", "half_space_*"]
+root_supertypes = ["solid_model"]
+exclude_root = []
+
+[[group]]
+name = "pmi"
+description = "PMI: shape aspects, tolerances, datums, dimensions, GD&T"
+patterns = [
+    "*_aspect*", "*_tolerance*", "*_datum*",
+    "*_dimension*", "shape_dimension*",
+    "geometric_tolerance*", "tolerance_*",
+    "feature_*", "*_modifier*",
+]
+root_supertypes = ["shape_aspect"]
+exclude_root = []
+
+[[group]]
+name = "tessellation"
+description = "Triangulated / tessellated surface mesh"
+patterns = ["tessellated_*", "*_triangulated*", "triangulated_*", "coordinates_list", "complex_triangulated_*"]
+root_supertypes = ["tessellated_item"]
+exclude_root = []
+
+[[group]]
+name = "visualization"
+description = "Color, fill / surface / curve styles, presentation, MDGPR"
+patterns = [
+    "colour_*", "*_colour", "color_*",
+    "*_style_*", "*_style", "fill_area_*",
+    "presentation_*", "mechanical_design_*",
+    "styled_item",
+    "*_pre_defined_*",
+]
+root_supertypes = ["styled_item", "presentation_style_assignment", "founded_item"]
+exclude_root = []
+
+[[group]]
+name = "property"
+description = "Property definitions and measure representation items"
+patterns = [
+    "property_*", "*_property",
+    "measure_representation_item",
+    "descriptive_representation_item",
+]
+root_supertypes = ["property_definition"]
+exclude_root = []
+
+[[group]]
+name = "org_people_document"
+description = "Organization, person, document, approval, certification, classification"
+patterns = [
+    "organization*", "person*", "person_and_organization*",
+    "approval*", "certification*", "classification*",
+    "document*", "*_document*",
+    "address", "calendar_date", "date_*", "time_*",
+    "name_*", "id_*", "identification_*",
+    "security_classification*",
+]
+root_supertypes = []
+exclude_root = []
+
+[[group]]
+name = "config_mgmt"
+description = "Configuration / change management entities"
+patterns = [
+    "configuration_*", "*_configuration",
+    "change_*", "*_change", "specification*",
+    "alternative_*", "design_make_*",
+    "supplied_part_relationship", "make_*",
+    "*_action*", "executed_action*", "directed_action*",
+]
+root_supertypes = []
+exclude_root = []
+
+[[group]]
+name = "material"
+description = "Material designations and product material properties"
+patterns = ["material_*", "*_material", "product_material*"]
+root_supertypes = []
+exclude_root = []
+
+[[group]]
+name = "param_expr"
+description = "Parametric expression / formula entities (mostly numeric and functional)"
+patterns = [
+    "*_expression*", "*_function*", "*_variable*",
+    "binary_*", "unary_*", "boolean_*",
+    "real_literal", "integer_literal", "string_literal",
+    "*_environment", "comparison_*", "expression",
+]
+root_supertypes = ["expression", "generic_expression"]
+exclude_root = []
+
+[[group]]
+name = "ap_features"
+description = "AP-specific features: kinematic, weld, bead, hole, rib, etc."
+patterns = [
+    "kinematic_*", "*_kinematic*",
+    "joint_*", "*_joint",
+    "pair_*", "kinematic_pair*",
+    "weld_*", "bead_*", "hole_*", "rib_*",
+    "applied_*",
+]
+root_supertypes = []
+exclude_root = []
+
+[[group]]
+name = "value_wrapper"
+description = "Value / measure wrapper types"
+patterns = [
+    "*_measure_with_unit", "*_measure",
+    "measure_value", "value_*",
+    "length_measure", "area_measure", "volume_measure",
+    "plane_angle_measure", "solid_angle_measure",
+]
+root_supertypes = []
+exclude_root = []
+
+[[group]]
+name = "annotation_2d"
+description = "2D annotation / draughting"
+patterns = [
+    "draughting_*", "*_draughting*",
+    "annotation_*", "*_annotation",
+    "leader_*", "callout_*",
+    "text_*", "*_text",
+    "symbol_*", "*_symbol",
+]
+root_supertypes = ["draughting_callout", "annotation_curve_occurrence"]
+exclude_root = []
