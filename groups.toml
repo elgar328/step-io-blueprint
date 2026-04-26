@@ -76,6 +76,34 @@ root_supertypes = [
     "dimensional_characteristic_representation",
     # tolerance_zone_definition tree (PMI domain — projected/non_uniform/runout zone)
     "tolerance_zone_definition",
+    # geometric_tolerance tree (units pattern `*_unit` 가 *_with_defined_unit
+    # 자손 흡수하는 것 방지)
+    "geometric_tolerance", "geometric_tolerance_relationship",
+    # data_quality / shape_data_quality / shape_inspection 자손 — representation /
+    # representation_item / representation_relationship 다중상속이라 shape_rep /
+    # geometry_3d 가 흡수. 모두 PMI 도메인.
+    "data_quality_criterion",
+    "data_quality_criteria_representation",
+    "data_quality_criterion_measurement_association",
+    "data_quality_inspection_report",
+    "data_quality_inspection_criterion_report_item",
+    "data_quality_inspection_instance_report_item",
+    "data_quality_inspection_result",
+    "data_quality_inspection_result_representation",
+    "data_quality_inspection_result_with_judgement",
+    "data_quality_measurement_requirement",
+    "data_quality_report_measurement_association",
+    "shape_data_quality_criterion",
+    "shape_data_quality_criteria_representation",
+    "shape_data_quality_inspected_shape_and_result_relationship",
+    "shape_data_quality_inspection_criterion_report",
+    "shape_data_quality_inspection_instance_report",
+    "shape_data_quality_inspection_instance_report_item",
+    "shape_data_quality_inspection_result",
+    "shape_data_quality_inspection_result_representation",
+    "shape_data_quality_value_limit",
+    "shape_data_quality_value_range",
+    "shape_inspection_result_representation_with_accuracy",
 ]
 exclude_root = []
 
@@ -275,6 +303,7 @@ root_supertypes = [
     # annotation_2d 흡수
     "draughting_callout", "annotation_curve_occurrence",
     "draughting_callout_relationship",
+    "annotation_occurrence_relationship",
 ]
 # founded_item 자손 중 geometry/kinematic 영역은 visualization 이 아님.
 # externally_defined_item 자손 중 visualization 외 영역도 push-out.
