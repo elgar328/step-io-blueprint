@@ -209,11 +209,14 @@ fn classify(
     let mut root_match: Option<&GroupRule> = None;
     for rule in &config.group {
         let claims_root = rule.root_supertypes.iter().any(|r| {
-            // Matches if root is exactly this rule's root, or any ancestor is.
-            root == Some(r.as_str()) || ancestors_list.iter().any(|a| a == r)
+            // Matches if entity itself, root, or any ancestor equals this rule's claim.
+            r == &lower || root == Some(r.as_str()) || ancestors_list.iter().any(|a| a == r)
         });
         let excluded = rule.exclude_root.iter().any(|r| {
-            ancestors_list.iter().any(|a| a == r) || root == Some(r.as_str())
+            // Excludes when entity itself, root, or any ancestor equals an excluded root.
+            r == &lower
+                || ancestors_list.iter().any(|a| a == r)
+                || root == Some(r.as_str())
         });
         if claims_root && !excluded {
             root_match = Some(rule);
