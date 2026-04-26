@@ -147,6 +147,25 @@ root_supertypes = [
     "curve_based_path_with_orientation_and_parameters",
     "kinematic_path_segment", "path_node",
     "interpolated_configuration_segment",
+    # kinematic loop / joint (representation_item 다중상속, 의미는 kinematic)
+    "kinematic_loop", "oriented_joint",
+    # kinematic-specific representations (representation_relationship 자손이지만
+    # 의미는 kinematic motion / link / frame)
+    "constrained_kinematic_motion_representation",
+    "free_kinematic_motion_representation",
+    "kinematic_frame_background_representation",
+    "kinematic_frame_background_representation_association",
+    "kinematic_ground_representation",
+    "kinematic_link_representation",
+    "kinematic_link_representation_association",
+    # kinematic path entities (representation_item 다중상속, 의미는 kinematic motion)
+    "kinematic_path", "kinematic_path_defined_by_curves",
+    "kinematic_path_defined_by_nodes", "founded_kinematic_path",
+    # kinematic topology structure
+    "kinematic_topology_structure", "kinematic_topology_substructure",
+    "kinematic_topology_directed_structure",
+    "kinematic_topology_network_structure",
+    "kinematic_topology_tree_structure",
 ]
 # cartesian_transformation_operator 는 item_defined_transformation 의 다중상속
 # 자손이지만 의미상 geometry_3d (전역 transform). draped/laid 는 composite ply
@@ -205,7 +224,6 @@ exclude_root = [
     "product_identification",
     "product_specification",
     "requirement_assignment",
-    "externally_defined_feature_definition",
     # change_element CRUD ops — multi-supertype OF (group, characterized_object).
     # Semantically CRUD on assembly groups → config_mgmt domain.
     "change_element",
@@ -259,7 +277,15 @@ root_supertypes = [
     "draughting_callout_relationship",
 ]
 # founded_item 자손 중 geometry/kinematic 영역은 visualization 이 아님.
+# externally_defined_item 자손 중 visualization 외 영역도 push-out.
 exclude_root = [
+    # externally_defined_item 자손이지만 다른 도메인
+    "externally_defined_class",                 # → assembly_product (group)
+    "externally_defined_feature_definition",    # → manufacturing_features
+    "externally_defined_general_property",      # → property
+    "externally_defined_representation",        # → shape_rep
+    "externally_defined_representation_item",   # → geometry_3d
+    "externally_defined_string",                # → geometry_3d
     # geometric path / patch / segment
     "box_domain", "surface_patch",
     "b_spline_curve_segment", "b_spline_curve_knot_locator",
@@ -393,6 +419,11 @@ root_supertypes = [
     # 의미는 CRUD on assembly groups → config_mgmt 영역.
     "change_element",
     "add_element", "delete_element", "modify_element",
+    # change-tracking groups (group / group_assignment / group_relationship 자손이지만
+    # 의미는 변경 관리)
+    "change_group", "change_group_assignment",
+    "change_composition_relationship", "change_element_sequence",
+    "current_change_element_assignment", "previous_change_element_assignment",
 ]
 exclude_root = []
 
@@ -444,6 +475,8 @@ root_supertypes = [
     "document_usage_constraint_assignment",
     # document tree
     "document",
+    # document_identifier (group descendant) 는 의미상 metadata
+    "document_identifier", "document_identifier_assignment",
 ]
 exclude_root = []
 

@@ -11,25 +11,25 @@ step-io processes: **58** entities
 | group | description | count | step-io |
 |---|---|---:|---:|
 | `_unclassified` | no rule matched (manual review needed) | 0 | 0 |
-| `assembly_product` | PRODUCT chain, definitions, assemblies, transforms, application context | 142 | 6 |
-| `config_mgmt` | Configuration / change / action / effectivity / resource / change-element management | 90 | 0 |
+| `assembly_product` | PRODUCT chain, definitions, assemblies, transforms, application context | 135 | 6 |
+| `config_mgmt` | Configuration / change / action / effectivity / resource / change-element management | 96 | 0 |
 | `csg_primitives` | Constructive solid geometry primitives (Block, Sphere, Cylinder, Cone, Torus, ...) | 16 | 0 |
-| `geometry_3d` | 3D points, directions, vectors, axis placements, curves, surfaces | 418 | 25 |
-| `kinematic` | Kinematic mechanism: pairs, joints, links, mechanisms, motion | 104 | 1 |
-| `manufacturing_features` | Manufacturing features: solid_with_*, modified_solid tree, characterized_object features (hole, slot, pocket, bead, boss, rib) | 82 | 0 |
-| `metadata` | Organization, person, document, approval, classification, contract, address, material designation | 117 | 0 |
+| `geometry_3d` | 3D points, directions, vectors, axis placements, curves, surfaces | 417 | 25 |
+| `kinematic` | Kinematic mechanism: pairs, joints, links, mechanisms, motion | 124 | 1 |
+| `manufacturing_features` | Manufacturing features: solid_with_*, modified_solid tree, characterized_object features (hole, slot, pocket, bead, boss, rib) | 83 | 0 |
+| `metadata` | Organization, person, document, approval, classification, contract, address, material designation | 119 | 0 |
 | `param_expr` | Parametric expression / formula entities (mostly numeric and functional) | 169 | 0 |
 | `pmi` | PMI: shape aspects, tolerances, datums, dimensions, GD&T, data quality | 146 | 1 |
-| `property` | Property / measure representation items + value wrappers / qualifiers | 37 | 2 |
-| `shape_rep` | ABSR / MSSR / SR / GBWSR / GBSSR / SDR — shape representation wrappers | 152 | 5 |
+| `property` | Property / measure representation items + value wrappers / qualifiers | 38 | 2 |
+| `shape_rep` | ABSR / MSSR / SR / GBWSR / GBSSR / SDR — shape representation wrappers | 138 | 5 |
 | `tessellation` | Triangulated / tessellated surface mesh | 19 | 0 |
-| `topology` | Vertices, edges, face bounds, faces, shells, solids (BREP) | 38 | 8 |
+| `topology` | Vertices, edges, face bounds, faces, shells, solids (BREP) | 36 | 8 |
 | `units` | SI / CBU unit leaves, dimensional exponents, derived units | 105 | 1 |
-| `visualization` | Color, fill / surface / curve styles, presentation, MDGPR, camera, drawing, font, 2D annotation | 145 | 9 |
+| `visualization` | Color, fill / surface / curve styles, presentation, MDGPR, camera, drawing, font, 2D annotation | 139 | 9 |
 
 ## Entities by group
 
-### `assembly_product` — PRODUCT chain, definitions, assemblies, transforms, application context (142 entities, 6 step-io)
+### `assembly_product` — PRODUCT chain, definitions, assemblies, transforms, application context (135 entities, 6 step-io)
 
 -   [M] `application_context` (root: application_context, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `application_context_element` (root: application_context_element, schemas: ap203/ap203e2/ap214e3/ap242)
@@ -51,10 +51,6 @@ step-io processes: **58** entities
 -   [H] `breakdown_of` (root: product_definition_relationship, schemas: ap203e2/ap242)
 -   [M] `chain_based_geometric_item_specific_usage` (root: item_identified_representation_usage, schemas: ap242)
 -   [M] `chain_based_item_identified_representation_usage` (root: item_identified_representation_usage, schemas: ap242)
--   [L] `change_composition_relationship` (root: group_relationship, schemas: ap242)
--   [L] `change_element_sequence` (root: group_relationship, schemas: ap242)
--   [L] `change_group` (root: group, schemas: ap242)
--   [L] `change_group_assignment` (root: group_assignment, schemas: ap242)
 -   [H] `characteristic_type` (root: group, schemas: ap203e2/ap242)
 -   [M] `characterized_chain_based_item_within_representation` (root: characterized_object, schemas: ap242)
 -   [H] `characterized_class` (root: characterized_object, schemas: ap203e2/ap214e3/ap242)
@@ -71,14 +67,12 @@ step-io processes: **58** entities
 -   [H] `concept_feature_relationship` (root: concept_feature_relationship, schemas: ap203e2/ap214e3/ap242)
 -   [H] `concept_feature_relationship_with_condition` (root: concept_feature_relationship, schemas: ap203e2/ap214e3/ap242)
 -   [M] `conditional_concept_feature` (root: product_concept_feature, schemas: ap203e2/ap214e3/ap242)
--   [L] `current_change_element_assignment` (root: group_assignment, schemas: ap242)
 -   [M] `design_context` (root: application_context_element, schemas: ap203/ap203e2/ap242)
 -   [L] `design_make_from_relationship` (root: product_definition_relationship, schemas: ap203/ap203e2/ap242)
--   [L] `document_identifier` (root: group, schemas: ap203e2/ap242)
--   [L] `document_identifier_assignment` (root: group_assignment, schemas: ap203e2/ap242)
 -   [L] `draughting_model_item_association` (root: item_identified_representation_usage, schemas: ap203e2/ap214e3/ap242)
 -   [H] `evaluation_product_definition` (root: product_definition, schemas: ap203e2/ap242)
 -   [H] `exclusive_product_concept_feature_category` (root: group, schemas: ap203e2/ap214e3/ap242)
+-   [L] `externally_defined_class` (root: group, schemas: ap203e2/ap214e3/ap242)
 -   [M] `forward_chaining_rule` (root: product_definition, schemas: ap203e2/ap242)
 -   [H] `functional_breakdown_context` (root: product_definition_relationship, schemas: ap203e2/ap242)
 -   [M] `functional_element_usage` (root: product_definition_relationship, schemas: ap203e2/ap242)
@@ -111,7 +105,6 @@ step-io processes: **58** entities
 -   [H] `ply_laminate_definition` (root: product_definition, schemas: ap203e2)
 -   [H] `ply_laminate_sequence_definition` (root: product_definition, schemas: ap203e2/ap242)
 -   [M] `ply_laminate_table` (root: product_definition, schemas: ap203e2/ap242)
--   [L] `previous_change_element_assignment` (root: group_assignment, schemas: ap242)
 -   [M] `process_product_association` (root: process_product_association, schemas: ap214e3/ap242)
 - ✓ [M] `product` (root: product, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [M] `product_as_planned` (root: product_definition_formation, schemas: ap242)
@@ -174,7 +167,7 @@ step-io processes: **58** entities
 -   [M] `thickness_laminate_table` (root: product_definition, schemas: ap203e2/ap242)
 -   [M] `zone_structural_makeup` (root: product_definition, schemas: ap203e2/ap242)
 
-### `config_mgmt` — Configuration / change / action / effectivity / resource / change-element management (90 entities, 0 step-io)
+### `config_mgmt` — Configuration / change / action / effectivity / resource / change-element management (96 entities, 0 step-io)
 
 -   [H] `action` (root: action, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `action_assignment` (root: action_assignment, schemas: ap203/ap203e2/ap214e3/ap242)
@@ -202,7 +195,11 @@ step-io processes: **58** entities
 -   [L] `applied_ineffectivity_assignment` (root: effectivity_assignment, schemas: ap214e3/ap242)
 -   [M] `applied_usage_right` (root: action_assignment, schemas: ap203e2/ap242)
 -   [M] `change` (root: action_assignment, schemas: ap203/ap203e2/ap242)
+-   [H] `change_composition_relationship` (root: group_relationship, schemas: ap242)
 -   [H] `change_element` (root: group, schemas: ap242)
+-   [H] `change_element_sequence` (root: group_relationship, schemas: ap242)
+-   [H] `change_group` (root: group, schemas: ap242)
+-   [H] `change_group_assignment` (root: group_assignment, schemas: ap242)
 -   [H] `change_request` (root: action_request_assignment, schemas: ap203/ap203e2/ap242)
 -   [H] `class_usage_effectivity_context_assignment` (root: effectivity_context_assignment, schemas: ap203e2/ap214e3/ap242)
 -   [M] `configurable_item` (root: configuration_item, schemas: ap203e2/ap214e3/ap242)
@@ -216,6 +213,7 @@ step-io processes: **58** entities
 -   [M] `configuration_item_revision_sequence` (root: configuration_item_relationship, schemas: ap203e2/ap242)
 -   [H] `configured_effectivity_assignment` (root: effectivity_assignment, schemas: ap203e2/ap214e3/ap242)
 -   [H] `configured_effectivity_context_assignment` (root: effectivity_context_assignment, schemas: ap203e2/ap214e3/ap242)
+-   [L] `current_change_element_assignment` (root: group_assignment, schemas: ap242)
 -   [H] `dated_effectivity` (root: effectivity, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `delete_element` (root: group, schemas: ap242)
 -   [M] `detailed_report_request` (root: data_quality_report_request, schemas: ap242)
@@ -238,6 +236,7 @@ step-io processes: **58** entities
 -   [M] `information_usage_right` (root: action_method, schemas: ap203e2/ap242)
 -   [H] `lot_effectivity` (root: effectivity, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `modify_element` (root: group, schemas: ap242)
+-   [L] `previous_change_element_assignment` (root: group_assignment, schemas: ap242)
 -   [M] `process_operation` (root: action_method, schemas: ap214e3/ap242)
 -   [M] `process_plan` (root: action, schemas: ap214e3/ap242)
 -   [H] `process_property_association` (root: process_property_association, schemas: ap214e3/ap242)
@@ -286,7 +285,7 @@ step-io processes: **58** entities
 -   [H] `swept_disk_solid` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [H] `swept_face_solid` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 
-### `geometry_3d` — 3D points, directions, vectors, axis placements, curves, surfaces (418 entities, 25 step-io)
+### `geometry_3d` — 3D points, directions, vectors, axis placements, curves, surfaces (417 entities, 25 step-io)
 
 -   [H] `abrupt_change_of_surface_normal` (root: representation_item, schemas: ap242)
 -   [L] `agc_with_dimension` (root: representation_item, schemas: ap242)
@@ -432,6 +431,8 @@ step-io processes: **58** entities
 -   [M] `externally_conditioned_data_quality_inspection_instance_report_item` (root: representation_item, schemas: ap242)
 -   [M] `externally_conditioned_data_quality_inspection_result` (root: representation_item, schemas: ap242)
 -   [L] `externally_defined_picture_representation_item` (root: representation_item, schemas: ap203e2/ap242)
+-   [L] `externally_defined_representation_item` (root: representation_item, schemas: ap203e2/ap242)
+-   [L] `externally_defined_string` (root: representation_item, schemas: ap203e2/ap242)
 -   [M] `extreme_patch_width_variation` (root: representation_item, schemas: ap242)
 -   [L] `face_based_surface_model` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [L] `face_surface_with_excessive_patches_in_one_direction` (root: representation_item, schemas: ap242)
@@ -507,9 +508,6 @@ step-io processes: **58** entities
 -   [L] `intersecting_loops_in_face` (root: representation_item, schemas: ap242)
 -   [L] `intersecting_shells_in_solid` (root: representation_item, schemas: ap242)
 -   [H] `intersection_curve` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
--   [L] `kinematic_path` (root: representation_item, schemas: ap214e3/ap242)
--   [L] `kinematic_path_defined_by_curves` (root: representation_item, schemas: ap242)
--   [L] `kinematic_path_defined_by_nodes` (root: representation_item, schemas: ap242)
 -   [M] `laid_defined_transformation` (root: item_defined_transformation, schemas: ap203e2/ap242)
 -   [M] `light_source` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [M] `light_source_ambient` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
@@ -707,10 +705,11 @@ step-io processes: **58** entities
 -   [M] `wrongly_placed_void` (root: representation_item, schemas: ap242)
 -   [H] `zero_surface_normal` (root: representation_item, schemas: ap242)
 
-### `kinematic` — Kinematic mechanism: pairs, joints, links, mechanisms, motion (104 entities, 1 step-io)
+### `kinematic` — Kinematic mechanism: pairs, joints, links, mechanisms, motion (124 entities, 1 step-io)
 
 -   [H] `actuated_kinematic_pair` (root: representation_item, schemas: ap242)
 -   [M] `circular_path` (root: founded_item, schemas: ap242)
+-   [H] `constrained_kinematic_motion_representation` (root: representation_relationship, schemas: ap242)
 -   [H] `context_dependent_kinematic_link_representation` (root: context_dependent_kinematic_link_representation, schemas: ap242)
 -   [M] `curve_based_path` (root: founded_item, schemas: ap242)
 -   [M] `curve_based_path_with_orientation` (root: founded_item, schemas: ap242)
@@ -719,6 +718,8 @@ step-io processes: **58** entities
 -   [H] `cylindrical_pair_range` (root: simple_pair_range, schemas: ap214e3)
 -   [H] `cylindrical_pair_value` (root: pair_value, schemas: ap214e3/ap242)
 -   [H] `cylindrical_pair_with_range` (root: representation_item, schemas: ap242)
+-   [H] `founded_kinematic_path` (root: representation, schemas: ap214e3)
+-   [H] `free_kinematic_motion_representation` (root: representation_relationship, schemas: ap242)
 -   [H] `fully_constrained_pair` (root: item_defined_transformation, schemas: ap214e3/ap242)
 -   [M] `functionally_defined_transformation` (root: functionally_defined_transformation, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `gear_pair` (root: item_defined_transformation, schemas: ap214e3/ap242)
@@ -734,19 +735,34 @@ step-io processes: **58** entities
 -   [H] `kinematic_analysis_consistency` (root: kinematic_analysis_consistency, schemas: ap214e3/ap242)
 -   [H] `kinematic_analysis_result` (root: kinematic_analysis_result, schemas: ap214e3/ap242)
 -   [H] `kinematic_control` (root: kinematic_control, schemas: ap214e3/ap242)
+-   [H] `kinematic_frame_background_representation` (root: representation, schemas: ap214e3)
+-   [H] `kinematic_frame_background_representation_association` (root: representation_relationship, schemas: ap214e3)
 -   [H] `kinematic_frame_based_transformation` (root: representation_item, schemas: ap214e3)
+-   [H] `kinematic_ground_representation` (root: representation, schemas: ap214e3)
 -   [H] `kinematic_joint` (root: kinematic_joint, schemas: ap214e3/ap242)
 -   [H] `kinematic_link` (root: kinematic_link, schemas: ap214e3/ap242)
+-   [H] `kinematic_link_representation` (root: representation, schemas: ap214e3/ap242)
+-   [H] `kinematic_link_representation_association` (root: representation_relationship, schemas: ap214e3/ap242)
 -   [H] `kinematic_link_representation_relation` (root: kinematic_link_representation_relation, schemas: ap214e3)
+-   [H] `kinematic_loop` (root: representation_item, schemas: ap242)
 -   [H] `kinematic_pair` (root: item_defined_transformation, schemas: ap214e3/ap242)
+-   [H] `kinematic_path` (root: representation_item, schemas: ap214e3/ap242)
+-   [H] `kinematic_path_defined_by_curves` (root: representation_item, schemas: ap242)
+-   [H] `kinematic_path_defined_by_nodes` (root: representation_item, schemas: ap242)
 -   [H] `kinematic_path_segment` (root: founded_item, schemas: ap242)
 -   [M] `kinematic_property_definition_representation` (root: property_definition_representation, schemas: ap242)
 -   [M] `kinematic_property_mechanism_representation` (root: property_definition_representation, schemas: ap242)
 -   [M] `kinematic_property_representation_relation` (root: property_definition_representation, schemas: ap214e3)
 -   [M] `kinematic_property_topology_representation` (root: property_definition_representation, schemas: ap242)
 -   [H] `kinematic_structure` (root: kinematic_structure, schemas: ap214e3)
+-   [H] `kinematic_topology_directed_structure` (root: representation, schemas: ap242)
+-   [H] `kinematic_topology_network_structure` (root: representation, schemas: ap242)
+-   [H] `kinematic_topology_structure` (root: representation, schemas: ap242)
+-   [H] `kinematic_topology_substructure` (root: representation, schemas: ap242)
+-   [H] `kinematic_topology_tree_structure` (root: representation, schemas: ap242)
 -   [H] `linear_flexible_and_pinion_pair` (root: representation_item, schemas: ap242)
 -   [H] `linear_flexible_and_planar_curve_pair` (root: representation_item, schemas: ap242)
+-   [M] `linear_flexible_link_representation` (root: representation, schemas: ap242)
 -   [M] `linear_path` (root: founded_item, schemas: ap242)
 -   [M] `link_motion_transformation` (root: item_defined_transformation, schemas: ap242)
 -   [H] `low_order_kinematic_pair` (root: representation_item, schemas: ap242)
@@ -754,6 +770,7 @@ step-io processes: **58** entities
 -   [H] `low_order_kinematic_pair_with_motion_coupling` (root: representation_item, schemas: ap242)
 -   [H] `low_order_kinematic_pair_with_range` (root: representation_item, schemas: ap242)
 -   [H] `mechanism` (root: mechanism, schemas: ap214e3)
+-   [H] `oriented_joint` (root: representation_item, schemas: ap242)
 -   [H] `pair_actuator` (root: pair_actuator, schemas: ap214e3)
 -   [M] `pair_value` (root: pair_value, schemas: ap214e3/ap242)
 -   [M] `path_node` (root: founded_item, schemas: ap242)
@@ -784,6 +801,7 @@ step-io processes: **58** entities
 -   [H] `revolute_pair_range` (root: simple_pair_range, schemas: ap214e3)
 -   [H] `revolute_pair_value` (root: pair_value, schemas: ap214e3/ap242)
 -   [H] `revolute_pair_with_range` (root: representation_item, schemas: ap242)
+-   [M] `rigid_link_representation` (root: representation, schemas: ap242)
 -   [H] `rolling_curve_pair` (root: item_defined_transformation, schemas: ap214e3/ap242)
 -   [H] `rolling_curve_pair_value` (root: pair_value, schemas: ap214e3/ap242)
 -   [H] `rolling_surface_pair` (root: item_defined_transformation, schemas: ap214e3/ap242)
@@ -814,7 +832,7 @@ step-io processes: **58** entities
 -   [H] `universal_pair_value` (root: pair_value, schemas: ap214e3/ap242)
 -   [H] `universal_pair_with_range` (root: representation_item, schemas: ap242)
 
-### `manufacturing_features` — Manufacturing features: solid_with_*, modified_solid tree, characterized_object features (hole, slot, pocket, bead, boss, rib) (82 entities, 0 step-io)
+### `manufacturing_features` — Manufacturing features: solid_with_*, modified_solid tree, characterized_object features (hole, slot, pocket, bead, boss, rib) (83 entities, 0 step-io)
 
 -   [H] `barring_hole` (root: characterized_object, schemas: ap214e3/ap242)
 -   [H] `bead` (root: characterized_object, schemas: ap214e3/ap242)
@@ -827,6 +845,7 @@ step-io processes: **58** entities
 -   [H] `double_offset_shelled_solid` (root: representation_item, schemas: ap203e2/ap242)
 -   [H] `edge_blended_solid` (root: representation_item, schemas: ap203e2/ap242)
 -   [H] `extent` (root: characterized_object, schemas: ap203e2/ap242)
+-   [L] `externally_defined_feature_definition` (root: characterized_object, schemas: ap214e3/ap242)
 -   [L] `feature_component_definition` (root: characterized_object, schemas: ap214e3/ap242)
 -   [L] `feature_definition` (root: characterized_object, schemas: ap214e3/ap242)
 -   [L] `feature_definition_with_connection_area` (root: characterized_object, schemas: ap242)
@@ -899,7 +918,7 @@ step-io processes: **58** entities
 -   [H] `track_blended_solid_with_end_conditions` (root: representation_item, schemas: ap203e2/ap242)
 -   [H] `turned_knurl` (root: characterized_object, schemas: ap242)
 
-### `metadata` — Organization, person, document, approval, classification, contract, address, material designation (117 entities, 0 step-io)
+### `metadata` — Organization, person, document, approval, classification, contract, address, material designation (119 entities, 0 step-io)
 
 -   [H] `address` (root: address, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `applied_approval_assignment` (root: approval_assignment, schemas: ap203e2/ap214e3/ap242)
@@ -959,6 +978,8 @@ step-io processes: **58** entities
 -   [M] `date_time_role` (root: date_time_role, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `document` (root: document, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `document_file` (root: document, schemas: ap203e2/ap214e3/ap242)
+-   [H] `document_identifier` (root: group, schemas: ap203e2/ap242)
+-   [H] `document_identifier_assignment` (root: group_assignment, schemas: ap203e2/ap242)
 -   [M] `document_product_association` (root: document_product_association, schemas: ap203e2/ap214e3/ap242)
 -   [M] `document_product_equivalence` (root: document_product_association, schemas: ap203e2/ap214e3/ap242)
 -   [H] `document_reference` (root: document_reference, schemas: ap203/ap203e2/ap214e3/ap242)
@@ -1340,7 +1361,7 @@ step-io processes: **58** entities
 -   [M] `unequally_disposed_geometric_tolerance` (root: geometric_tolerance, schemas: ap242)
 -   [M] `vee_profile` (root: shape_aspect, schemas: ap214e3/ap242)
 
-### `property` — Property / measure representation items + value wrappers / qualifiers (37 entities, 2 step-io)
+### `property` — Property / measure representation items + value wrappers / qualifiers (38 entities, 2 step-io)
 
 -   [L] `abstract_variable` (root: property_definition, schemas: ap203e2/ap242)
 -   [M] `action_property` (root: action_property, schemas: ap203e2/ap214e3/ap242)
@@ -1353,6 +1374,7 @@ step-io processes: **58** entities
 -   [H] `description_attribute` (root: description_attribute, schemas: ap203e2/ap214e3/ap242)
 -   [M] `entity_assertion` (root: property_definition, schemas: ap203e2/ap242)
 -   [M] `expanded_uncertainty` (root: uncertainty_qualifier, schemas: ap203e2/ap242)
+-   [H] `externally_defined_general_property` (root: general_property, schemas: ap203e2/ap214e3/ap242)
 -   [M] `fact_type` (root: property_definition, schemas: ap203e2/ap242)
 -   [M] `featured_shape` (root: property_definition, schemas: ap214e3)
 -   [M] `forward_chaining_rule_premise` (root: property_definition, schemas: ap203e2/ap242)
@@ -1380,7 +1402,7 @@ step-io processes: **58** entities
 -   [L] `uncertainty_qualifier` (root: uncertainty_qualifier, schemas: ap203e2/ap214e3/ap242)
 -   [M] `value_format_type_qualifier` (root: value_format_type_qualifier, schemas: ap242)
 
-### `shape_rep` — ABSR / MSSR / SR / GBWSR / GBSSR / SDR — shape representation wrappers (152 entities, 5 step-io)
+### `shape_rep` — ABSR / MSSR / SR / GBWSR / GBSSR / SDR — shape representation wrappers (138 entities, 5 step-io)
 
 - ✓ [H] `advanced_brep_shape_representation` (root: representation, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [L] `angle_assembly_constraint_with_dimension` (root: representation_item, schemas: ap242)
@@ -1395,7 +1417,6 @@ step-io processes: **58** entities
 -   [L] `coaxial_assembly_constraint` (root: representation_item, schemas: ap242)
 -   [M] `composite_sheet_representation` (root: representation, schemas: ap203e2/ap242)
 -   [H] `compound_shape_representation` (root: representation, schemas: ap203e2/ap214e3/ap242)
--   [L] `constrained_kinematic_motion_representation` (root: representation_relationship, schemas: ap242)
 -   [M] `constructive_geometry_representation` (root: representation, schemas: ap203e2/ap214e3/ap242)
 -   [H] `constructive_geometry_representation_relationship` (root: representation_relationship, schemas: ap203e2/ap214e3/ap242)
 -   [M] `contact_ratio_representation` (root: representation, schemas: ap203e2/ap214e3/ap242)
@@ -1430,12 +1451,11 @@ step-io processes: **58** entities
 -   [H] `explicit_procedural_shape_representation_relationship` (root: representation_relationship, schemas: ap203e2/ap242)
 -   [M] `externally_conditioned_data_quality_criteria_representation` (root: representation, schemas: ap242)
 -   [M] `externally_conditioned_data_quality_inspection_result_representation` (root: representation, schemas: ap242)
+-   [L] `externally_defined_representation` (root: representation, schemas: ap242)
 -   [H] `face_shape_representation` (root: representation, schemas: ap214e3/ap242)
 -   [H] `face_shape_representation_relationship` (root: representation_relationship, schemas: ap242)
 -   [H] `faceted_brep_shape_representation` (root: representation, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [M] `flat_pattern_ply_representation_relationship` (root: representation_relationship, schemas: ap203e2/ap242)
--   [L] `founded_kinematic_path` (root: representation, schemas: ap214e3)
--   [L] `free_kinematic_motion_representation` (root: representation_relationship, schemas: ap242)
 -   [L] `generic_character_glyph_symbol` (root: representation, schemas: ap203e2/ap214e3/ap242)
 -   [M] `geometric_model_element_relationship` (root: representation_item, schemas: ap203e2/ap242)
 -   [M] `geometric_representation_context` (root: representation_context, schemas: ap203/ap203e2/ap214e3/ap242)
@@ -1451,17 +1471,6 @@ step-io processes: **58** entities
 -   [L] `incidence_assembly_constraint` (root: representation_item, schemas: ap242)
 -   [M] `interpolated_configuration_representation` (root: representation, schemas: ap242)
 -   [M] `item_link_motion_relationship` (root: representation_relationship, schemas: ap242)
--   [L] `kinematic_frame_background_representation` (root: representation, schemas: ap214e3)
--   [L] `kinematic_frame_background_representation_association` (root: representation_relationship, schemas: ap214e3)
--   [L] `kinematic_ground_representation` (root: representation, schemas: ap214e3)
--   [L] `kinematic_link_representation` (root: representation, schemas: ap214e3/ap242)
--   [L] `kinematic_link_representation_association` (root: representation_relationship, schemas: ap214e3/ap242)
--   [L] `kinematic_topology_directed_structure` (root: representation, schemas: ap242)
--   [L] `kinematic_topology_network_structure` (root: representation, schemas: ap242)
--   [L] `kinematic_topology_structure` (root: representation, schemas: ap242)
--   [L] `kinematic_topology_substructure` (root: representation, schemas: ap242)
--   [L] `kinematic_topology_tree_structure` (root: representation, schemas: ap242)
--   [M] `linear_flexible_link_representation` (root: representation, schemas: ap242)
 -   [M] `link_motion_relationship` (root: representation_relationship, schemas: ap242)
 -   [M] `link_motion_representation_along_path` (root: representation, schemas: ap242)
 -   [H] `location_shape_representation` (root: representation, schemas: ap214e3/ap242)
@@ -1507,7 +1516,6 @@ step-io processes: **58** entities
 -   [M] `representation_relationship_with_transformation` (root: representation_relationship, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `representative_shape_representation` (root: representation, schemas: ap242)
 -   [M] `resulting_path` (root: representation_relationship, schemas: ap214e3/ap242)
--   [M] `rigid_link_representation` (root: representation, schemas: ap242)
 -   [M] `shape_criteria_representation_with_accuracy` (root: representation, schemas: ap242)
 -   [L] `shape_data_quality_criteria_representation` (root: representation, schemas: ap242)
 -   [L] `shape_data_quality_inspected_shape_and_result_relationship` (root: representation_relationship, schemas: ap242)
@@ -1557,7 +1565,7 @@ step-io processes: **58** entities
 -   [H] `triangulated_face` (root: representation_item, schemas: ap242)
 -   [H] `triangulated_surface_set` (root: representation_item, schemas: ap242)
 
-### `topology` — Vertices, edges, face bounds, faces, shells, solids (BREP) (38 entities, 8 step-io)
+### `topology` — Vertices, edges, face bounds, faces, shells, solids (BREP) (36 entities, 8 step-io)
 
 -   [H] `advanced_face` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
 - ✓ [H] `brep_with_voids` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
@@ -1573,14 +1581,12 @@ step-io processes: **58** entities
 -   [H] `face_outer_bound` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `face_surface` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `faceted_brep` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
--   [L] `kinematic_loop` (root: representation_item, schemas: ap242)
 -   [M] `loop` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
 - ✓ [L] `manifold_solid_brep` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `open_shell` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
 - ✓ [H] `oriented_closed_shell` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
 - ✓ [H] `oriented_edge` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `oriented_face` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
--   [L] `oriented_joint` (root: representation_item, schemas: ap242)
 -   [H] `oriented_open_shell` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `oriented_path` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [M] `path` (root: representation_item, schemas: ap203/ap203e2/ap214e3/ap242)
@@ -1706,7 +1712,7 @@ step-io processes: **58** entities
 -   [M] `volume_measure_with_unit` (root: measure_with_unit, schemas: ap203/ap203e2/ap214e3/ap242)
 -   [H] `volume_unit` (root: named_unit, schemas: ap203/ap203e2/ap214e3/ap242)
 
-### `visualization` — Color, fill / surface / curve styles, presentation, MDGPR, camera, drawing, font, 2D annotation (145 entities, 9 step-io)
+### `visualization` — Color, fill / surface / curve styles, presentation, MDGPR, camera, drawing, font, 2D annotation (139 entities, 9 step-io)
 
 -   [L] `angular_dimension` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
 -   [H] `annotation_curve_occurrence` (root: representation_item, schemas: ap203e2/ap214e3/ap242)
@@ -1757,18 +1763,12 @@ step-io processes: **58** entities
 -   [H] `drawing_revision` (root: presentation_set, schemas: ap203e2/ap214e3/ap242)
 -   [H] `drawing_revision_sequence` (root: drawing_revision_sequence, schemas: ap203e2/ap214e3/ap242)
 -   [L] `externally_defined_character_glyph` (root: externally_defined_item, schemas: ap214e3/ap242)
--   [L] `externally_defined_class` (root: group, schemas: ap203e2/ap214e3/ap242)
 -   [H] `externally_defined_colour` (root: colour, schemas: ap203e2/ap242)
 -   [L] `externally_defined_curve_font` (root: externally_defined_item, schemas: ap203e2/ap214e3/ap242)
--   [L] `externally_defined_feature_definition` (root: characterized_object, schemas: ap214e3/ap242)
--   [L] `externally_defined_general_property` (root: general_property, schemas: ap203e2/ap214e3/ap242)
 -   [H] `externally_defined_hatch_style` (root: externally_defined_item, schemas: ap203e2/ap214e3/ap242)
 -   [L] `externally_defined_item` (root: externally_defined_item, schemas: ap203e2/ap214e3/ap242)
 -   [L] `externally_defined_item_with_multiple_references` (root: externally_defined_item, schemas: ap242)
 -   [L] `externally_defined_marker` (root: externally_defined_item, schemas: ap203e2/ap242)
--   [L] `externally_defined_representation` (root: representation, schemas: ap242)
--   [L] `externally_defined_representation_item` (root: representation_item, schemas: ap203e2/ap242)
--   [L] `externally_defined_string` (root: representation_item, schemas: ap203e2/ap242)
 -   [H] `externally_defined_style` (root: externally_defined_item, schemas: ap214e3/ap242)
 -   [H] `externally_defined_symbol` (root: externally_defined_item, schemas: ap203e2/ap214e3/ap242)
 -   [H] `externally_defined_terminator_symbol` (root: externally_defined_item, schemas: ap203e2/ap242)
