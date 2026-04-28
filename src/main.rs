@@ -13,6 +13,7 @@ use std::env;
 use std::process::ExitCode;
 
 mod express;
+mod infer;
 mod inheritance;
 
 fn main() -> ExitCode {
