@@ -10,6 +10,7 @@
 //! 본 repo 의 plan 파일 참조.
 
 use std::env;
+use std::path::Path;
 use std::process::ExitCode;
 
 mod express;
@@ -19,7 +20,7 @@ mod inheritance;
 fn main() -> ExitCode {
     let mut args = env::args().skip(1);
     match (args.next().as_deref(), args.next().as_deref()) {
-        (Some("infer"), Some("variant")) => stub("infer variant"),
+        (Some("infer"), Some("variant")) => run_variant(),
         (Some("infer"), Some("arena")) => stub("infer arena"),
         (Some("infer"), Some("pool")) => stub("infer pool"),
         (Some("infer"), Some(stage)) => {
@@ -39,6 +40,35 @@ fn main() -> ExitCode {
         (Some(other), _) => {
             eprintln!("unknown sub-command: {other}");
             print_usage();
+            ExitCode::from(2)
+        }
+    }
+}
+
+fn run_variant() -> ExitCode {
+    let schemas_dir = Path::new("schemas");
+    if !schemas_dir.exists() {
+        eprintln!("schemas/ not found in cwd — run from project root.");
+        return ExitCode::from(2);
+    }
+    let schemas = express::load_all_schemas(schemas_dir);
+    if schemas.is_empty() {
+        eprintln!("no schemas loaded — check schemas/*.exp.");
+        return ExitCode::from(2);
+    }
+    for s in &schemas {
+        eprintln!(
+            "  loaded {}: {} entities, {} types, {} parser warnings",
+            s.source_label,
+            s.entities.len(),
+            s.types.len(),
+            s.parse_warnings.len()
+        );
+    }
+    match infer::variant::run(&schemas) {
+        Ok(()) => ExitCode::SUCCESS,
+        Err(e) => {
+            eprintln!("infer variant failed:\n{e}");
             ExitCode::from(2)
         }
     }

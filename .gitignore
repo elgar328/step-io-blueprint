@@ -1,1 +1,6 @@
 /target
+
+# infer pipeline outputs are regenerated from schemas/ + overrides files;
+# only the user-edited overrides are tracked.
+/inferred/*.toml
+!/inferred/*_overrides.toml
