@@ -1,31 +1,10 @@
 //! SUBTYPE chain resolution — walk parent ancestry within a single
-//! schema. Helpers used by the catalog classifier and (future) by the
-//! check tool's attribute count comparison.
+//! schema. Used by the infer pipeline (`variant` stage) to compute
+//! supertype roots and ancestor sets.
 
 use std::collections::HashSet;
 
 use crate::express::Schema;
-
-/// Total attributes including inherited from all ancestors. Returns
-/// `None` when the entity is not present in this schema.
-pub fn effective_attr_count(name: &str, schema: &Schema) -> Option<usize> {
-    let mut visited = HashSet::new();
-    Some(walk_count(name, schema, &mut visited))
-}
-
-fn walk_count(name: &str, schema: &Schema, visited: &mut HashSet<String>) -> usize {
-    if !visited.insert(name.to_string()) {
-        return 0;
-    }
-    let Some(entity) = schema.entities.get(name) else {
-        return 0;
-    };
-    let mut total = entity.own_attrs.len();
-    for parent in &entity.parents {
-        total += walk_count(parent, schema, visited);
-    }
-    total
-}
 
 /// Walk SUBTYPE chain to its furthest ancestor (no `parents` left).
 /// For multi-parent entities, follows the first parent (inheritance
@@ -79,15 +58,15 @@ mod tests {
     use crate::express::EntitySchema;
     use std::collections::HashMap;
 
-    fn schema_with(entries: &[(&str, &[&str], &[&str])]) -> Schema {
+    fn schema_with(entries: &[(&str, &[&str])]) -> Schema {
         let mut entities = HashMap::new();
-        for (name, parents, attrs) in entries {
+        for (name, parents) in entries {
             entities.insert(
                 (*name).to_string(),
                 EntitySchema {
                     name: (*name).to_string(),
                     parents: parents.iter().map(|s| (*s).to_string()).collect(),
-                    own_attrs: attrs.iter().map(|s| (*s).to_string()).collect(),
+                    own_attrs: Vec::new(),
                     is_abstract: false,
                 },
             );
@@ -95,20 +74,19 @@ mod tests {
         Schema {
             source_label: "test".into(),
             entities,
+            types: HashMap::new(),
             parse_warnings: Vec::new(),
         }
     }
 
     #[test]
     fn cartesian_point_chain() {
-        // representation_item.name + (no own) + (no own) + cartesian_point.coordinates = 2
         let s = schema_with(&[
-            ("representation_item", &[], &["name"]),
-            ("geometric_representation_item", &["representation_item"], &[]),
-            ("point", &["geometric_representation_item"], &[]),
-            ("cartesian_point", &["point"], &["coordinates"]),
+            ("representation_item", &[]),
+            ("geometric_representation_item", &["representation_item"]),
+            ("point", &["geometric_representation_item"]),
+            ("cartesian_point", &["point"]),
         ]);
-        assert_eq!(effective_attr_count("cartesian_point", &s), Some(2));
         assert_eq!(
             root_supertype("cartesian_point", &s).as_deref(),
             Some("representation_item")
@@ -122,11 +100,5 @@ mod tests {
                 "representation_item".to_string(),
             ]
         );
-    }
-
-    #[test]
-    fn unknown_entity_returns_zero() {
-        let s = schema_with(&[("foo", &[], &["x"])]);
-        assert_eq!(effective_attr_count("nonexistent", &s), Some(0));
     }
 }
