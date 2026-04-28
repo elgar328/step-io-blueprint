@@ -6,6 +6,7 @@
 
 #![allow(dead_code)] // wired up incrementally across stages
 
+pub mod arena;
 pub mod io;
 pub mod overrides;
 pub mod refgraph;

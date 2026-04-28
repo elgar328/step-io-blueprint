@@ -13,15 +13,24 @@ use std::env;
 use std::path::Path;
 use std::process::ExitCode;
 
+const ALLOW_PENDING_FLAG: &str = "--allow-pending";
+
 mod express;
 mod infer;
 mod inheritance;
 
 fn main() -> ExitCode {
-    let mut args = env::args().skip(1);
-    match (args.next().as_deref(), args.next().as_deref()) {
+    let args: Vec<String> = env::args().skip(1).collect();
+    let allow_pending = args.iter().any(|a| a == ALLOW_PENDING_FLAG);
+    let positional: Vec<&str> = args
+        .iter()
+        .filter(|a| !a.starts_with("--"))
+        .map(|s| s.as_str())
+        .collect();
+
+    match (positional.first().copied(), positional.get(1).copied()) {
         (Some("infer"), Some("variant")) => run_variant(),
-        (Some("infer"), Some("arena")) => stub("infer arena"),
+        (Some("infer"), Some("arena")) => run_arena(allow_pending),
         (Some("infer"), Some("pool")) => stub("infer pool"),
         (Some("infer"), Some(stage)) => {
             eprintln!("unknown infer stage: {stage}");
@@ -45,16 +54,16 @@ fn main() -> ExitCode {
     }
 }
 
-fn run_variant() -> ExitCode {
+fn load_schemas() -> Result<Vec<express::Schema>, ExitCode> {
     let schemas_dir = Path::new("schemas");
     if !schemas_dir.exists() {
         eprintln!("schemas/ not found in cwd — run from project root.");
-        return ExitCode::from(2);
+        return Err(ExitCode::from(2));
     }
     let schemas = express::load_all_schemas(schemas_dir);
     if schemas.is_empty() {
         eprintln!("no schemas loaded — check schemas/*.exp.");
-        return ExitCode::from(2);
+        return Err(ExitCode::from(2));
     }
     for s in &schemas {
         eprintln!(
@@ -65,10 +74,32 @@ fn run_variant() -> ExitCode {
             s.parse_warnings.len()
         );
     }
+    Ok(schemas)
+}
+
+fn run_variant() -> ExitCode {
+    let schemas = match load_schemas() {
+        Ok(s) => s,
+        Err(c) => return c,
+    };
     match infer::variant::run(&schemas) {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {
             eprintln!("infer variant failed:\n{e}");
+            ExitCode::from(2)
+        }
+    }
+}
+
+fn run_arena(allow_pending: bool) -> ExitCode {
+    let schemas = match load_schemas() {
+        Ok(s) => s,
+        Err(c) => return c,
+    };
+    match infer::arena::run(&schemas, allow_pending) {
+        Ok(()) => ExitCode::SUCCESS,
+        Err(e) => {
+            eprintln!("infer arena failed:\n{e}");
             ExitCode::from(2)
         }
     }
