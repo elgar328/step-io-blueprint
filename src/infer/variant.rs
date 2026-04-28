@@ -303,17 +303,17 @@ fn enum_candidate_confidence(
 
     let p_score = match poly_count {
         0 => 0.0,
-        1 => 0.5,
-        2..=3 => 0.8,
+        1 => 0.7,
+        2..=3 => 0.85,
         _ => 1.0,
     };
     let v_score = match n {
         0 | 1 => 0.0,
-        2 => 0.4,
+        2 => 0.5,
         3..=15 => 1.0,
-        16..=30 => 0.8,
-        31..=50 => 0.5,
-        _ => 0.3,
+        16..=30 => 0.95,
+        31..=50 => 0.85,
+        _ => 0.7,
     };
     let multi_parent_descendants = descendants
         .iter()
@@ -327,7 +327,7 @@ fn enum_candidate_confidence(
     let s_score = if descendants.is_empty() {
         1.0
     } else {
-        1.0 - (multi_parent_descendants as f32 / descendants.len() as f32)
+        1.0 - 0.5 * (multi_parent_descendants as f32 / descendants.len() as f32)
     };
 
     Confidence::new(0.4 * p_score + 0.3 * v_score + 0.3 * s_score)
