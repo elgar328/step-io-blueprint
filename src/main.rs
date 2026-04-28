@@ -31,7 +31,7 @@ fn main() -> ExitCode {
     match (positional.first().copied(), positional.get(1).copied()) {
         (Some("infer"), Some("variant")) => run_variant(),
         (Some("infer"), Some("arena")) => run_arena(allow_pending),
-        (Some("infer"), Some("pool")) => stub("infer pool"),
+        (Some("infer"), Some("pool")) => run_pool(allow_pending),
         (Some("infer"), Some(stage)) => {
             eprintln!("unknown infer stage: {stage}");
             print_usage();
@@ -105,9 +105,18 @@ fn run_arena(allow_pending: bool) -> ExitCode {
     }
 }
 
-fn stub(name: &str) -> ExitCode {
-    eprintln!("{name}: not yet implemented");
-    ExitCode::from(2)
+fn run_pool(allow_pending: bool) -> ExitCode {
+    let schemas = match load_schemas() {
+        Ok(s) => s,
+        Err(c) => return c,
+    };
+    match infer::pool::run(&schemas, allow_pending) {
+        Ok(()) => ExitCode::SUCCESS,
+        Err(e) => {
+            eprintln!("infer pool failed:\n{e}");
+            ExitCode::from(2)
+        }
+    }
 }
 
 fn print_usage() {
