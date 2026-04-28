@@ -313,10 +313,8 @@ fn enum_candidate_confidence(
     let v_score = match n {
         0 | 1 => 0.0,
         2 => 0.5,
-        3..=15 => 1.0,
-        16..=30 => 0.95,
-        31..=50 => 0.85,
-        _ => 0.7,
+        3..=50 => 1.0,
+        _ => 0.95,
     };
     let multi_parent_descendants = descendants
         .iter()
