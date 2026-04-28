@@ -228,7 +228,7 @@ fn try_nested_field(
     let as_field = if added_count == 1 {
         extra.iter().next().cloned().unwrap()
     } else {
-        synthesize_field_name(entity, &parent)
+        format!("{entity}_ext")
     };
 
     Some(Decision {
@@ -244,19 +244,6 @@ fn try_nested_field(
             added_count
         )],
     })
-}
-
-fn synthesize_field_name(entity: &str, parent: &str) -> String {
-    let stripped = entity
-        .strip_prefix(parent)
-        .or_else(|| entity.strip_suffix(parent))
-        .unwrap_or(entity)
-        .trim_matches('_');
-    if stripped.is_empty() {
-        entity.to_string()
-    } else {
-        stripped.to_string()
-    }
 }
 
 fn enclosing_enum_root(
@@ -638,8 +625,12 @@ mod tests {
         };
         match &ext.data {
             VariantSpec::NestedField {
-                added_attr_count, ..
+                into,
+                as_field,
+                added_attr_count,
             } => {
+                assert_eq!(into, "base");
+                assert_eq!(as_field, "ext_ext");
                 assert_eq!(*added_attr_count, 2);
             }
             other => panic!("expected NestedField, got {other:?}"),
