@@ -4,7 +4,7 @@ use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 
 use serde::{Deserialize, Serialize};
 
-use crate::express::Schema;
+use crate::express::{AttrType, Schema};
 use crate::infer::io::{ConfidentFile, PendingFile, PendingStats};
 use crate::infer::overrides::{self, OverrideFile};
 use crate::infer::refgraph::{self, RefTarget, UnifiedSchema};
@@ -20,6 +20,10 @@ pub enum VariantSpec {
     NestedField {
         into: String,
         as_field: String,
+        /// 1 → codegen wraps as `Option<inner_type>`.
+        /// 2+ → codegen synthesizes a nested struct and wraps as
+        /// `Option<NestedStruct>` to enforce the all-or-nothing invariant.
+        added_attr_count: usize,
     },
 }
 
@@ -192,6 +196,17 @@ fn try_nested_field(
         return None;
     }
 
+    let entity_attr_types = unified.entity_attr_types.get(entity);
+    let all_extra_optional = extra.iter().all(|attr| {
+        entity_attr_types
+            .and_then(|m| m.get(attr))
+            .map(|ty| matches!(ty, AttrType::Optional(_)))
+            .unwrap_or(false)
+    });
+    if all_extra_optional {
+        return None;
+    }
+
     let extending_siblings = concrete_descendants(&parent, unified, descendants)
         .iter()
         .filter(|s| {
@@ -220,6 +235,7 @@ fn try_nested_field(
         data: VariantSpec::NestedField {
             into: parent,
             as_field,
+            added_attr_count: added_count,
         },
         source: DecisionSource::Auto,
         confidence: Confidence::new(base),
@@ -583,10 +599,124 @@ mod tests {
             _ => panic!("expected decided"),
         };
         match &ext.data {
-            VariantSpec::NestedField { into, as_field } => {
+            VariantSpec::NestedField {
+                into,
+                as_field,
+                added_attr_count,
+            } => {
                 assert_eq!(into, "base");
                 assert_eq!(as_field, "y");
+                assert_eq!(*added_attr_count, 1);
             }
+            other => panic!("expected NestedField, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn nested_field_with_two_added_attrs_carries_count() {
+        let s = schema(
+            "test",
+            vec![
+                ent("base", &[], vec![("x", AttrType::Primitive("INTEGER".into()))]),
+                ent(
+                    "ext",
+                    &["base"],
+                    vec![
+                        ("x", AttrType::Primitive("INTEGER".into())),
+                        ("a", AttrType::Primitive("REAL".into())),
+                        ("b", AttrType::Primitive("STRING".into())),
+                    ],
+                ),
+            ],
+            vec![],
+        );
+        let unified = refgraph::build(&[s]);
+        let auto = compute_auto_decisions(&unified);
+        let ext = match auto.entities.get("ext").unwrap() {
+            AutoEntry::Decided(d) => d,
+            _ => panic!("expected decided"),
+        };
+        match &ext.data {
+            VariantSpec::NestedField {
+                added_attr_count, ..
+            } => {
+                assert_eq!(*added_attr_count, 2);
+            }
+            other => panic!("expected NestedField, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn nested_field_rejected_when_all_extra_optional() {
+        // base / ext where every added attr is OPTIONAL → outer Option<Ext>
+        // would collapse semantically with `Ext { a: None, b: None }`.
+        let s = schema(
+            "test",
+            vec![
+                ent("base", &[], vec![("x", AttrType::Primitive("INTEGER".into()))]),
+                ent(
+                    "ext",
+                    &["base"],
+                    vec![
+                        ("x", AttrType::Primitive("INTEGER".into())),
+                        (
+                            "a",
+                            AttrType::Optional(Box::new(AttrType::Primitive("REAL".into()))),
+                        ),
+                        (
+                            "b",
+                            AttrType::Optional(Box::new(AttrType::Primitive("STRING".into()))),
+                        ),
+                    ],
+                ),
+            ],
+            vec![],
+        );
+        let unified = refgraph::build(&[s]);
+        let auto = compute_auto_decisions(&unified);
+        let ext = match auto.entities.get("ext").unwrap() {
+            AutoEntry::Decided(d) => d,
+            _ => panic!("expected decided"),
+        };
+        assert!(
+            !matches!(&ext.data, VariantSpec::NestedField { .. }),
+            "ext should not be NestedField (all extras OPTIONAL), got {:?}",
+            ext.data
+        );
+    }
+
+    #[test]
+    fn nested_field_kept_when_some_extra_non_optional() {
+        // Mixed: a is OPTIONAL, b is non-OPTIONAL → still nested OK.
+        let s = schema(
+            "test",
+            vec![
+                ent("base", &[], vec![("x", AttrType::Primitive("INTEGER".into()))]),
+                ent(
+                    "ext",
+                    &["base"],
+                    vec![
+                        ("x", AttrType::Primitive("INTEGER".into())),
+                        (
+                            "a",
+                            AttrType::Optional(Box::new(AttrType::Primitive("REAL".into()))),
+                        ),
+                        ("b", AttrType::Primitive("STRING".into())),
+                    ],
+                ),
+            ],
+            vec![],
+        );
+        let unified = refgraph::build(&[s]);
+        let auto = compute_auto_decisions(&unified);
+        let ext = match auto.entities.get("ext").unwrap() {
+            AutoEntry::Decided(d) => d,
+            _ => panic!("expected decided"),
+        };
+        match &ext.data {
+            VariantSpec::NestedField {
+                added_attr_count, ..
+            } => assert_eq!(*added_attr_count, 2),
             other => panic!("expected NestedField, got {other:?}"),
         }
     }

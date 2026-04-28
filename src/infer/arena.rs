@@ -307,6 +307,7 @@ mod tests {
             variant_dec(VariantSpec::NestedField {
                 into: "b_spline".into(),
                 as_field: "weights".into(),
+                added_attr_count: 1,
             }),
         );
         variants.insert("b_spline".into(), variant_dec(VariantSpec::SingleStruct));

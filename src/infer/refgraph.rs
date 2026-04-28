@@ -58,6 +58,10 @@ pub struct UnifiedSchema {
     pub entity_parents: BTreeMap<String, BTreeSet<String>>,
     /// Entity name → set of attr names declared anywhere across schemas.
     pub entity_attrs: BTreeMap<String, BTreeSet<String>>,
+    /// Entity name → (attr name → canonical AttrType). Picks the first
+    /// parsed type when schemas disagree (conflict recorded in
+    /// `attr_conflicts`).
+    pub entity_attr_types: BTreeMap<String, BTreeMap<String, AttrType>>,
     /// All edges (one per concrete reference, after SELECT unfolding and
     /// TYPE alias resolution).
     pub edges: Vec<RefEdge>,
@@ -125,6 +129,7 @@ pub fn build(schemas: &[Schema]) -> UnifiedSchema {
     //    proceeds best-effort).
     let mut attr_conflicts: BTreeMap<(String, String), Vec<String>> = BTreeMap::new();
     let mut edges: Vec<RefEdge> = Vec::new();
+    let mut entity_attr_types: BTreeMap<String, BTreeMap<String, AttrType>> = BTreeMap::new();
 
     for ((ent_name, attr_name), variants) in &attr_types {
         let canonical = &variants[0].1;
@@ -141,6 +146,11 @@ pub fn build(schemas: &[Schema]) -> UnifiedSchema {
             attr_conflicts.insert((ent_name.clone(), attr_name.clone()), all);
         }
 
+        entity_attr_types
+            .entry(ent_name.clone())
+            .or_default()
+            .insert(attr_name.clone(), canonical.clone());
+
         emit_edges_for_type(
             ent_name,
             attr_name,
@@ -155,6 +165,7 @@ pub fn build(schemas: &[Schema]) -> UnifiedSchema {
     UnifiedSchema {
         entity_parents,
         entity_attrs,
+        entity_attr_types,
         edges,
         attr_conflicts,
         type_conflicts,
