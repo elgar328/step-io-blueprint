@@ -34,7 +34,7 @@ pub fn run(schemas: &[Schema], allow_pending: bool) -> Result<(), String> {
         ));
     }
 
-    let variants: BTreeMap<String, Decision<VariantSpec>> =
+    let variants: BTreeMap<String, VariantSpec> =
         crate::infer::io::read_confident(VARIANT_CONFIDENT, "entity")
             .map_err(|e| format!("read {VARIANT_CONFIDENT}: {e}"))?;
     let arenas: BTreeMap<String, Decision<ArenaSpec>> =
@@ -99,14 +99,17 @@ pub fn run(schemas: &[Schema], allow_pending: bool) -> Result<(), String> {
 }
 
 fn compute_entity_to_group(
-    variants: &BTreeMap<String, Decision<VariantSpec>>,
+    variants: &BTreeMap<String, VariantSpec>,
 ) -> HashMap<String, String> {
     let mut out = HashMap::new();
-    for (entity, dec) in variants {
-        let group = match &dec.data {
+    for (entity, spec) in variants {
+        let group = match spec {
             VariantSpec::SingleStruct => entity.clone(),
             VariantSpec::InEnum { enum_name } => enum_name.clone(),
             VariantSpec::NestedField { into, .. } => into.clone(),
+            VariantSpec::EnumBase { enum_name } => enum_name.clone(),
+            VariantSpec::ComplexSupertype { .. } => entity.clone(),
+            VariantSpec::MergedInto { target, .. } => target.clone(),
         };
         out.insert(entity.clone(), group);
     }

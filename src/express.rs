@@ -80,6 +80,23 @@ pub struct EntitySchema {
     pub own_attrs: Vec<AttrSpec>,
     /// `ABSTRACT SUPERTYPE` flag.
     pub is_abstract: bool,
+    /// Children declaration extracted from the `SUPERTYPE OF (...)` clause.
+    /// `None` means no SUPERTYPE clause (the entity is a leaf or only
+    /// reachable through SUBTYPE OF declarations from children).
+    pub supertype_decl: Option<SupertypeDecl>,
+}
+
+#[derive(Debug, Clone, Serialize)]
+pub enum SupertypeDecl {
+    /// `SUPERTYPE OF (ONEOF (a, b, c))`.
+    OneOf { children: Vec<String> },
+    /// `SUPERTYPE OF (ONEOF (...) ANDOR mixin)`.
+    OneOfAndOr {
+        oneof_children: Vec<String>,
+        mixin_children: Vec<String>,
+    },
+    /// `SUPERTYPE OF (a, b)` with no ONEOF/ANDOR keyword.
+    Plain { children: Vec<String> },
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -260,6 +277,7 @@ fn process_entity_block(
     let is_abstract = block.contains("ABSTRACT SUPERTYPE")
         || block.contains("ABSTRACT  SUPERTYPE")
         || block.contains("ABSTRACT\nSUPERTYPE");
+    let supertype_decl = extract_supertype_decl(block, &name, warnings);
     let own_attrs = extract_attrs(block, &name, warnings);
 
     entities.insert(
@@ -269,8 +287,145 @@ fn process_entity_block(
             parents,
             own_attrs,
             is_abstract,
+            supertype_decl,
         },
     );
+}
+
+/// Extract the `SUPERTYPE OF (...)` clause body and parse it into a
+/// `SupertypeDecl`. Returns `None` when there is no SUPERTYPE OF clause
+/// (the `ABSTRACT SUPERTYPE;` shorthand also lands here — `is_abstract`
+/// is set separately).
+fn extract_supertype_decl(
+    block: &str,
+    entity_name: &str,
+    warnings: &mut Vec<String>,
+) -> Option<SupertypeDecl> {
+    let body = find_supertype_of_body(block)?;
+    parse_supertype_body(&body, entity_name, warnings)
+}
+
+/// Find the parenthesized body that follows `SUPERTYPE OF`. Handles
+/// nested parens by tracking depth.
+fn find_supertype_of_body(block: &str) -> Option<String> {
+    let re = regex::Regex::new(r"(?is)\bSUPERTYPE\s+OF\s*\(").ok()?;
+    let m = re.find(block)?;
+    let after_paren = m.end();
+    let bytes = block.as_bytes();
+    let mut depth = 1usize;
+    let mut i = after_paren;
+    while i < bytes.len() && depth > 0 {
+        match bytes[i] {
+            b'(' => depth += 1,
+            b')' => {
+                depth -= 1;
+                if depth == 0 {
+                    return Some(block[after_paren..i].to_string());
+                }
+            }
+            _ => {}
+        }
+        i += 1;
+    }
+    None
+}
+
+/// Parse the body inside `SUPERTYPE OF (...)`. Recognises:
+///   - `ONEOF (a, b, c)`            → OneOf
+///   - `ONEOF (a, b) ANDOR mixin`    → OneOfAndOr
+///   - `a, b`                        → Plain
+fn parse_supertype_body(
+    body: &str,
+    entity_name: &str,
+    warnings: &mut Vec<String>,
+) -> Option<SupertypeDecl> {
+    let body_trim = body.trim();
+    if body_trim.is_empty() {
+        return None;
+    }
+
+    if let Some(oneof_re) = regex::Regex::new(r"(?is)\bONEOF\s*\(").ok() {
+        if let Some(m) = oneof_re.find(body_trim) {
+            let after_paren = m.end();
+            let bytes = body_trim.as_bytes();
+            let mut depth = 1usize;
+            let mut i = after_paren;
+            while i < bytes.len() && depth > 0 {
+                match bytes[i] {
+                    b'(' => depth += 1,
+                    b')' => {
+                        depth -= 1;
+                        if depth == 0 {
+                            break;
+                        }
+                    }
+                    _ => {}
+                }
+                i += 1;
+            }
+            if depth != 0 {
+                warnings.push(format!(
+                    "ENTITY {entity_name}: SUPERTYPE ONEOF clause is malformed"
+                ));
+                return None;
+            }
+            let oneof_inner = &body_trim[after_paren..i];
+            let oneof_children = split_identifier_list(oneof_inner);
+            let after_oneof = body_trim[i + 1..].trim();
+            // Only treat the tail as ANDOR mixin when the ANDOR keyword
+            // is actually present. Other trailing tokens (closing parens,
+            // whitespace, exotic nestings) fall back to plain OneOf.
+            let upper = after_oneof.to_ascii_uppercase();
+            if !upper.contains("ANDOR") {
+                let _ = entity_name;
+                let _ = warnings;
+                return Some(SupertypeDecl::OneOf {
+                    children: oneof_children,
+                });
+            }
+            let mixin_children = collect_andor_mixins(after_oneof);
+            if mixin_children.is_empty() {
+                return Some(SupertypeDecl::OneOf {
+                    children: oneof_children,
+                });
+            }
+            return Some(SupertypeDecl::OneOfAndOr {
+                oneof_children,
+                mixin_children,
+            });
+        }
+    }
+
+    // No ONEOF — treat as plain children list.
+    let children = split_identifier_list(body_trim);
+    if children.is_empty() {
+        return None;
+    }
+    Some(SupertypeDecl::Plain { children })
+}
+
+/// Pull bare identifiers out of a body like `ANDOR foo` or
+/// `ANDOR (foo, bar)`. Anything that isn't a `[a-z_][a-z0-9_]*` token is
+/// ignored.
+fn collect_andor_mixins(s: &str) -> Vec<String> {
+    let re = match regex::Regex::new(r"(?i)\b([a-z_][a-z0-9_]*)\b") {
+        Ok(r) => r,
+        Err(_) => return Vec::new(),
+    };
+    re.captures_iter(s)
+        .filter_map(|c| c.get(1).map(|m| m.as_str().to_lowercase()))
+        .filter(|t| t != "andor" && t != "oneof")
+        .collect()
+}
+
+fn split_identifier_list(s: &str) -> Vec<String> {
+    let re = match regex::Regex::new(r"(?i)\b([a-z_][a-z0-9_]*)\b") {
+        Ok(r) => r,
+        Err(_) => return Vec::new(),
+    };
+    re.captures_iter(s)
+        .filter_map(|c| c.get(1).map(|m| m.as_str().to_lowercase()))
+        .collect()
 }
 
 fn process_type_block(

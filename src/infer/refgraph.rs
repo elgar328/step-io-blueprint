@@ -13,7 +13,7 @@
 
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 
-use crate::express::{AttrType, Schema, TypeDef};
+use crate::express::{AttrType, Schema, SupertypeDecl, TypeDef};
 
 /// One reference from an entity's ATTR to another entity (or to a
 /// primitive / enumeration). Stored at full fidelity so callers can
@@ -71,6 +71,12 @@ pub struct UnifiedSchema {
     /// Type aliases that resolved differently across schemas (name →
     /// distinct aliased reprs).
     pub type_conflicts: BTreeMap<String, Vec<String>>,
+    /// Entity name → SUPERTYPE OF clause body (children info from the
+    /// first schema declaring the clause).
+    pub supertype_decls: BTreeMap<String, SupertypeDecl>,
+    /// Entities whose SUPERTYPE block carries the `ABSTRACT` keyword in at
+    /// least one schema.
+    pub abstract_entities: BTreeSet<String>,
 }
 
 /// Build the unified schema + ref graph from one or more parsed schemas.
@@ -81,6 +87,9 @@ pub fn build(schemas: &[Schema]) -> UnifiedSchema {
     // Per-entity attr → list of distinct (schema_label, type repr string)
     // pairs to detect conflicts.
     let mut attr_types: HashMap<(String, String), Vec<(String, AttrType)>> = HashMap::new();
+
+    let mut supertype_decls: BTreeMap<String, SupertypeDecl> = BTreeMap::new();
+    let mut abstract_entities: BTreeSet<String> = BTreeSet::new();
 
     for schema in schemas {
         for (name, ent) in &schema.entities {
@@ -97,6 +106,14 @@ pub fn build(schemas: &[Schema]) -> UnifiedSchema {
                     .entry((name.clone(), spec.name.clone()))
                     .or_default()
                     .push((schema.source_label.clone(), spec.ty.clone()));
+            }
+            if ent.is_abstract {
+                abstract_entities.insert(name.clone());
+            }
+            if let Some(decl) = &ent.supertype_decl {
+                supertype_decls
+                    .entry(name.clone())
+                    .or_insert_with(|| decl.clone());
             }
         }
     }
@@ -169,6 +186,8 @@ pub fn build(schemas: &[Schema]) -> UnifiedSchema {
         edges,
         attr_conflicts,
         type_conflicts,
+        supertype_decls,
+        abstract_entities,
     }
 }
 
@@ -425,6 +444,7 @@ mod tests {
                 })
                 .collect(),
             is_abstract: false,
+            supertype_decl: None,
         }
     }
 

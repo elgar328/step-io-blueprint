@@ -112,8 +112,28 @@ fn compute_groups(variants: &BTreeMap<String, VariantSpec>) -> Groups {
                 });
                 entry.members.push(entity.clone());
             }
-            VariantSpec::NestedField { .. } => {
-                // absorbed into parent's group; not a group of its own
+            VariantSpec::EnumBase { enum_name } => {
+                // Establishes the enum group key but doesn't appear as a
+                // member (the base entity has no IR struct of its own).
+                groups
+                    .entry(enum_name.clone())
+                    .or_insert_with(|| GroupInfo {
+                        members: Vec::new(),
+                        is_enum: true,
+                    });
+            }
+            VariantSpec::ComplexSupertype { .. } => {
+                // Complex supertype carries its own struct + nested enum +
+                // mixin in IR; treated as its own non-enum group here.
+                groups
+                    .entry(entity.clone())
+                    .or_insert_with(|| GroupInfo {
+                        members: vec![entity.clone()],
+                        is_enum: false,
+                    });
+            }
+            VariantSpec::NestedField { .. } | VariantSpec::MergedInto { .. } => {
+                // No IR struct → not a group of its own.
             }
         }
     }
