@@ -43,14 +43,6 @@ impl<T> PendingFile<T> {
     }
 }
 
-/// On-disk shape of `<stage>.toml`. Outer key is e.g. `"entity"`, inner
-/// keys are entity names → decisions.
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(transparent)]
-pub struct ConfidentFile<T> {
-    pub items: BTreeMap<String, BTreeMap<String, Decision<T>>>,
-}
-
 fn inferred_path(filename: &str) -> PathBuf {
     Path::new(INFERRED_DIR).join(filename)
 }
@@ -59,26 +51,26 @@ fn ensure_dir() -> io::Result<()> {
     fs::create_dir_all(INFERRED_DIR)
 }
 
-pub fn write_confident<T: Serialize>(
+pub fn write_confident<V: Serialize>(
     stage_filename: &str,
     section: &str,
-    decisions: &BTreeMap<String, Decision<T>>,
+    decisions: &BTreeMap<String, V>,
 ) -> io::Result<()> {
     ensure_dir()?;
-    let mut outer: BTreeMap<String, &BTreeMap<String, Decision<T>>> = BTreeMap::new();
+    let mut outer: BTreeMap<String, &BTreeMap<String, V>> = BTreeMap::new();
     outer.insert(section.to_string(), decisions);
     let body = toml::to_string_pretty(&outer)
         .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))?;
     fs::write(inferred_path(stage_filename), body)
 }
 
-pub fn read_confident<T: DeserializeOwned>(
+pub fn read_confident<V: DeserializeOwned>(
     stage_filename: &str,
     section: &str,
-) -> io::Result<BTreeMap<String, Decision<T>>> {
+) -> io::Result<BTreeMap<String, V>> {
     let path = inferred_path(stage_filename);
     let body = fs::read_to_string(&path)?;
-    let mut outer: BTreeMap<String, BTreeMap<String, Decision<T>>> = toml::from_str(&body)
+    let mut outer: BTreeMap<String, BTreeMap<String, V>> = toml::from_str(&body)
         .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, format!("{path:?}: {e}")))?;
     Ok(outer.remove(section).unwrap_or_default())
 }

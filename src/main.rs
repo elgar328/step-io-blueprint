@@ -17,7 +17,6 @@ const ALLOW_PENDING_FLAG: &str = "--allow-pending";
 
 mod express;
 mod infer;
-mod inheritance;
 
 fn main() -> ExitCode {
     let args: Vec<String> = env::args().skip(1).collect();

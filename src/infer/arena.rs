@@ -31,7 +31,7 @@ pub fn run(_schemas: &[Schema], allow_pending: bool) -> Result<(), String> {
         ));
     }
 
-    let variants: BTreeMap<String, Decision<VariantSpec>> =
+    let variants: BTreeMap<String, VariantSpec> =
         crate::infer::io::read_confident(VARIANT_CONFIDENT, "entity")
             .map_err(|e| format!("read {VARIANT_CONFIDENT}: {e}"))?;
     if variants.is_empty() {
@@ -93,10 +93,10 @@ struct GroupInfo {
     is_enum: bool,
 }
 
-fn compute_groups(variants: &BTreeMap<String, Decision<VariantSpec>>) -> Groups {
+fn compute_groups(variants: &BTreeMap<String, VariantSpec>) -> Groups {
     let mut groups: Groups = BTreeMap::new();
-    for (entity, dec) in variants {
-        match &dec.data {
+    for (entity, spec) in variants {
+        match spec {
             VariantSpec::SingleStruct => {
                 groups
                     .entry(entity.clone())
@@ -261,19 +261,10 @@ fn merge_overrides(
 mod tests {
     use super::*;
 
-    fn variant_dec(spec: VariantSpec) -> Decision<VariantSpec> {
-        Decision {
-            data: spec,
-            source: DecisionSource::Auto,
-            confidence: Confidence::new(0.9),
-            reasons: Vec::new(),
-        }
-    }
-
     #[test]
     fn single_struct_becomes_own_group() {
         let mut variants = BTreeMap::new();
-        variants.insert("foo".into(), variant_dec(VariantSpec::SingleStruct));
+        variants.insert("foo".into(), VariantSpec::SingleStruct);
         let groups = compute_groups(&variants);
         assert_eq!(groups.len(), 1);
         assert!(!groups["foo"].is_enum);
@@ -285,9 +276,9 @@ mod tests {
         for v in ["plane", "cylinder", "sphere"] {
             variants.insert(
                 v.into(),
-                variant_dec(VariantSpec::InEnum {
+                VariantSpec::InEnum {
                     enum_name: "surface".into(),
-                }),
+                },
             );
         }
         let groups = compute_groups(&variants);
@@ -304,13 +295,13 @@ mod tests {
         let mut variants = BTreeMap::new();
         variants.insert(
             "rational_b_spline".into(),
-            variant_dec(VariantSpec::NestedField {
+            VariantSpec::NestedField {
                 into: "b_spline".into(),
                 as_field: "weights".into(),
                 added_attr_count: 1,
-            }),
+            },
         );
-        variants.insert("b_spline".into(), variant_dec(VariantSpec::SingleStruct));
+        variants.insert("b_spline".into(), VariantSpec::SingleStruct);
         let groups = compute_groups(&variants);
         assert_eq!(groups.len(), 1);
         assert!(groups.contains_key("b_spline"));
