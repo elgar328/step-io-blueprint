@@ -122,9 +122,10 @@ fn compute_groups(variants: &BTreeMap<String, VariantSpec>) -> Groups {
                         is_enum: true,
                     });
             }
-            VariantSpec::ComplexSupertype { .. } => {
-                // Complex supertype carries its own struct + nested enum +
-                // mixin in IR; treated as its own non-enum group here.
+            VariantSpec::ComplexSupertype { .. } | VariantSpec::CompositeOneOf { .. } => {
+                // Complex / composite supertype carries its own struct +
+                // nested enum + mixin (or composite alternatives) in IR;
+                // treated as its own non-enum group here.
                 groups
                     .entry(entity.clone())
                     .or_insert_with(|| GroupInfo {

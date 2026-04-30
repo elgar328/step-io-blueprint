@@ -18,7 +18,9 @@ use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
+
+mod supertype_parser;
 
 /// Type of an ATTR or TYPE alias. Bound information (`[1:3]`) and inner
 /// `UNIQUE`/`OPTIONAL` modifiers on aggregations are intentionally dropped
@@ -81,22 +83,32 @@ pub struct EntitySchema {
     /// `ABSTRACT SUPERTYPE` flag.
     pub is_abstract: bool,
     /// Children declaration extracted from the `SUPERTYPE OF (...)` clause.
-    /// `None` means no SUPERTYPE clause (the entity is a leaf or only
-    /// reachable through SUBTYPE OF declarations from children).
-    pub supertype_decl: Option<SupertypeDecl>,
+    /// `None` means either no SUPERTYPE clause or a parser error (the entity
+    /// is then treated as a leaf with `is_abstract` set separately).
+    pub supertype_expr: Option<SupertypeExpr>,
 }
 
-#[derive(Debug, Clone, Serialize)]
-pub enum SupertypeDecl {
-    /// `SUPERTYPE OF (ONEOF (a, b, c))`.
-    OneOf { children: Vec<String> },
-    /// `SUPERTYPE OF (ONEOF (...) ANDOR mixin)`.
-    OneOfAndOr {
-        oneof_children: Vec<String>,
-        mixin_children: Vec<String>,
-    },
-    /// `SUPERTYPE OF (a, b)` with no ONEOF/ANDOR keyword.
-    Plain { children: Vec<String> },
+/// Faithful tree of a SUPERTYPE OF expression. Every shape allowed by
+/// EXPRESS § 9.2.4 is representable; downstream classifiers pattern-match
+/// for known shapes (single ONEOF, ANDOR mixin, composite OneOf member,
+/// etc.) and raise `Unresolved` for the rest.
+///
+/// Anonymous composition nodes (AndOr / And / OneOf appearing inside
+/// another node) are preserved — they have no entity name of their own.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+#[serde(tag = "kind", rename_all = "snake_case")]
+pub enum SupertypeExpr {
+    /// Bare entity reference.
+    Entity { name: String },
+    /// `ONEOF (a, b, ...)` — exactly one of the children. Always carries
+    /// `children.len() >= 2`.
+    OneOf { children: Vec<SupertypeExpr> },
+    /// `a ANDOR b ANDOR c` — at least one of the children, n-ary flattened.
+    /// Always carries `children.len() >= 2`.
+    AndOr { children: Vec<SupertypeExpr> },
+    /// `a AND b AND c` — all of the children, n-ary flattened. Always
+    /// carries `children.len() >= 2`.
+    And { children: Vec<SupertypeExpr> },
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -277,7 +289,7 @@ fn process_entity_block(
     let is_abstract = block.contains("ABSTRACT SUPERTYPE")
         || block.contains("ABSTRACT  SUPERTYPE")
         || block.contains("ABSTRACT\nSUPERTYPE");
-    let supertype_decl = extract_supertype_decl(block, &name, warnings);
+    let supertype_expr = extract_supertype_expr(block, &name, warnings);
     let own_attrs = extract_attrs(block, &name, warnings);
 
     entities.insert(
@@ -287,22 +299,31 @@ fn process_entity_block(
             parents,
             own_attrs,
             is_abstract,
-            supertype_decl,
+            supertype_expr,
         },
     );
 }
 
 /// Extract the `SUPERTYPE OF (...)` clause body and parse it into a
-/// `SupertypeDecl`. Returns `None` when there is no SUPERTYPE OF clause
+/// `SupertypeExpr`. Returns `None` when there is no SUPERTYPE OF clause
 /// (the `ABSTRACT SUPERTYPE;` shorthand also lands here — `is_abstract`
-/// is set separately).
-fn extract_supertype_decl(
+/// is set separately) or when the parser rejects the body. In the latter
+/// case a `parse_warnings` entry is pushed so callers can surface it.
+fn extract_supertype_expr(
     block: &str,
     entity_name: &str,
     warnings: &mut Vec<String>,
-) -> Option<SupertypeDecl> {
+) -> Option<SupertypeExpr> {
     let body = find_supertype_of_body(block)?;
-    parse_supertype_body(&body, entity_name, warnings)
+    match supertype_parser::parse(&body) {
+        Ok(expr) => Some(expr),
+        Err(e) => {
+            warnings.push(format!(
+                "ENTITY {entity_name}: SUPERTYPE OF parse error: {e} (body={body:?})"
+            ));
+            None
+        }
+    }
 }
 
 /// Find the parenthesized body that follows `SUPERTYPE OF`. Handles
@@ -328,104 +349,6 @@ fn find_supertype_of_body(block: &str) -> Option<String> {
         i += 1;
     }
     None
-}
-
-/// Parse the body inside `SUPERTYPE OF (...)`. Recognises:
-///   - `ONEOF (a, b, c)`            → OneOf
-///   - `ONEOF (a, b) ANDOR mixin`    → OneOfAndOr
-///   - `a, b`                        → Plain
-fn parse_supertype_body(
-    body: &str,
-    entity_name: &str,
-    warnings: &mut Vec<String>,
-) -> Option<SupertypeDecl> {
-    let body_trim = body.trim();
-    if body_trim.is_empty() {
-        return None;
-    }
-
-    if let Some(oneof_re) = regex::Regex::new(r"(?is)\bONEOF\s*\(").ok() {
-        if let Some(m) = oneof_re.find(body_trim) {
-            let after_paren = m.end();
-            let bytes = body_trim.as_bytes();
-            let mut depth = 1usize;
-            let mut i = after_paren;
-            while i < bytes.len() && depth > 0 {
-                match bytes[i] {
-                    b'(' => depth += 1,
-                    b')' => {
-                        depth -= 1;
-                        if depth == 0 {
-                            break;
-                        }
-                    }
-                    _ => {}
-                }
-                i += 1;
-            }
-            if depth != 0 {
-                warnings.push(format!(
-                    "ENTITY {entity_name}: SUPERTYPE ONEOF clause is malformed"
-                ));
-                return None;
-            }
-            let oneof_inner = &body_trim[after_paren..i];
-            let oneof_children = split_identifier_list(oneof_inner);
-            let after_oneof = body_trim[i + 1..].trim();
-            // Only treat the tail as ANDOR mixin when the ANDOR keyword
-            // is actually present. Other trailing tokens (closing parens,
-            // whitespace, exotic nestings) fall back to plain OneOf.
-            let upper = after_oneof.to_ascii_uppercase();
-            if !upper.contains("ANDOR") {
-                let _ = entity_name;
-                let _ = warnings;
-                return Some(SupertypeDecl::OneOf {
-                    children: oneof_children,
-                });
-            }
-            let mixin_children = collect_andor_mixins(after_oneof);
-            if mixin_children.is_empty() {
-                return Some(SupertypeDecl::OneOf {
-                    children: oneof_children,
-                });
-            }
-            return Some(SupertypeDecl::OneOfAndOr {
-                oneof_children,
-                mixin_children,
-            });
-        }
-    }
-
-    // No ONEOF — treat as plain children list.
-    let children = split_identifier_list(body_trim);
-    if children.is_empty() {
-        return None;
-    }
-    Some(SupertypeDecl::Plain { children })
-}
-
-/// Pull bare identifiers out of a body like `ANDOR foo` or
-/// `ANDOR (foo, bar)`. Anything that isn't a `[a-z_][a-z0-9_]*` token is
-/// ignored.
-fn collect_andor_mixins(s: &str) -> Vec<String> {
-    let re = match regex::Regex::new(r"(?i)\b([a-z_][a-z0-9_]*)\b") {
-        Ok(r) => r,
-        Err(_) => return Vec::new(),
-    };
-    re.captures_iter(s)
-        .filter_map(|c| c.get(1).map(|m| m.as_str().to_lowercase()))
-        .filter(|t| t != "andor" && t != "oneof")
-        .collect()
-}
-
-fn split_identifier_list(s: &str) -> Vec<String> {
-    let re = match regex::Regex::new(r"(?i)\b([a-z_][a-z0-9_]*)\b") {
-        Ok(r) => r,
-        Err(_) => return Vec::new(),
-    };
-    re.captures_iter(s)
-        .filter_map(|c| c.get(1).map(|m| m.as_str().to_lowercase()))
-        .collect()
 }
 
 fn process_type_block(
@@ -1029,6 +952,76 @@ mod tests {
             ap203.entities.len() >= 100,
             "ap203: entity count {} suspiciously low",
             ap203.entities.len()
+        );
+
+        // Non-trivial SUPERTYPE patterns surveyed during planning. Each
+        // must have a Some supertype_expr — the parser cannot have
+        // silently dropped any of them.
+        let b7_entities: &[(&str, &str)] = &[
+            ("ap203", "surface_curve"),
+            ("ap203e2", "b_spline_curve"),
+            ("ap203e2", "b_spline_surface"),
+            ("ap203e2", "draughting_callout"),
+            ("ap203e2", "edge_blended_solid"),
+            ("ap203e2", "named_unit"),
+            ("ap203e2", "solid_with_depression"),
+            ("ap203e2", "solid_with_slot"),
+            ("ap203e2", "solid_with_stepped_round_hole"),
+            ("ap203e2", "topological_representation_item"),
+            ("ap203e2", "zone_structural_makeup"),
+            ("ap214e3", "surface_curve"),
+            ("ap242", "solid_with_slot"),
+        ];
+        for (schema_label, entity_name) in b7_entities {
+            let s = by_label.get(schema_label).unwrap_or_else(|| {
+                panic!("missing schema {schema_label}")
+            });
+            let ent = s.entities.get(*entity_name).unwrap_or_else(|| {
+                panic!("missing entity {schema_label}/{entity_name}")
+            });
+            assert!(
+                ent.supertype_expr.is_some(),
+                "{schema_label}/{entity_name}: supertype_expr unexpectedly None — silent fallback?"
+            );
+        }
+
+        // B5 regression: solid_with_slot uses ONEOF AND ONEOF, the only
+        // entity in the corpus that triggers the And keyword path.
+        let slot = by_label
+            .get("ap203e2")
+            .unwrap()
+            .entities
+            .get("solid_with_slot")
+            .unwrap();
+        assert!(
+            matches!(&slot.supertype_expr, Some(SupertypeExpr::And { .. })),
+            "ap203e2/solid_with_slot: expected And {{ .. }} at root, got {:?}",
+            slot.supertype_expr
+        );
+
+        // B7 tree-preservation regression: topological_representation_item
+        // must keep its anonymous AndOr member intact (not flatten loop +
+        // path into separate alternatives, which is what the old silent
+        // parser did).
+        let trep = by_label
+            .get("ap203e2")
+            .unwrap()
+            .entities
+            .get("topological_representation_item")
+            .unwrap();
+        let Some(SupertypeExpr::OneOf { children }) = &trep.supertype_expr else {
+            panic!(
+                "topological_representation_item: expected OneOf root, got {:?}",
+                trep.supertype_expr
+            );
+        };
+        let composite_count = children
+            .iter()
+            .filter(|c| matches!(c, SupertypeExpr::AndOr { .. }))
+            .count();
+        assert_eq!(
+            composite_count, 1,
+            "topological_representation_item: expected exactly 1 anonymous AndOr child, got {composite_count}"
         );
     }
 }

@@ -13,7 +13,7 @@
 
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 
-use crate::express::{AttrType, Schema, SupertypeDecl, TypeDef};
+use crate::express::{AttrType, Schema, SupertypeExpr, TypeDef};
 
 /// One reference from an entity's ATTR to another entity (or to a
 /// primitive / enumeration). Stored at full fidelity so callers can
@@ -73,7 +73,7 @@ pub struct UnifiedSchema {
     pub type_conflicts: BTreeMap<String, Vec<String>>,
     /// Entity name → SUPERTYPE OF clause body (children info from the
     /// first schema declaring the clause).
-    pub supertype_decls: BTreeMap<String, SupertypeDecl>,
+    pub supertype_exprs: BTreeMap<String, SupertypeExpr>,
     /// Entities whose SUPERTYPE block carries the `ABSTRACT` keyword in at
     /// least one schema.
     pub abstract_entities: BTreeSet<String>,
@@ -88,7 +88,7 @@ pub fn build(schemas: &[Schema]) -> UnifiedSchema {
     // pairs to detect conflicts.
     let mut attr_types: HashMap<(String, String), Vec<(String, AttrType)>> = HashMap::new();
 
-    let mut supertype_decls: BTreeMap<String, SupertypeDecl> = BTreeMap::new();
+    let mut supertype_exprs: BTreeMap<String, SupertypeExpr> = BTreeMap::new();
     let mut abstract_entities: BTreeSet<String> = BTreeSet::new();
 
     for schema in schemas {
@@ -110,10 +110,10 @@ pub fn build(schemas: &[Schema]) -> UnifiedSchema {
             if ent.is_abstract {
                 abstract_entities.insert(name.clone());
             }
-            if let Some(decl) = &ent.supertype_decl {
-                supertype_decls
+            if let Some(expr) = &ent.supertype_expr {
+                supertype_exprs
                     .entry(name.clone())
-                    .or_insert_with(|| decl.clone());
+                    .or_insert_with(|| expr.clone());
             }
         }
     }
@@ -186,7 +186,7 @@ pub fn build(schemas: &[Schema]) -> UnifiedSchema {
         edges,
         attr_conflicts,
         type_conflicts,
-        supertype_decls,
+        supertype_exprs,
         abstract_entities,
     }
 }
@@ -444,7 +444,7 @@ mod tests {
                 })
                 .collect(),
             is_abstract: false,
-            supertype_decl: None,
+            supertype_expr: None,
         }
     }
 
