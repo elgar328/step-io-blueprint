@@ -110,6 +110,7 @@ fn compute_entity_to_group(
             VariantSpec::EnumBase { enum_name } => enum_name.clone(),
             VariantSpec::ComplexSupertype { .. } => entity.clone(),
             VariantSpec::CompositeOneOf { .. } => entity.clone(),
+            VariantSpec::ConcreteSupertype => entity.clone(),
             VariantSpec::MergedInto { target, .. } => target.clone(),
         };
         out.insert(entity.clone(), group);

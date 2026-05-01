@@ -90,6 +90,26 @@ pub enum VariantSpec {
         /// OneOf members that are anonymous composite nodes.
         composite_alternatives: Vec<CompositeMember>,
     },
+
+    /// SUPERTYPE OF clause is absent in the schema, but the entity has
+    /// own attrs (instance-capable), at least one child via SUBTYPE OF,
+    /// and its name is used as a polymorphic target somewhere. EXPRESS
+    /// allows this implicit-supertype shape (e.g. `action`,
+    /// `general_property`, `product_definition_formation`).
+    ///
+    /// The IR carries this entity's struct AND acts as the enum root for
+    /// its children. Downstream lowering (step-io) decides between
+    /// Carrier enum (`enum E { Itself(EData), ChildA, ... }`), base
+    /// struct + parallel enum (`struct E { ... } enum EKind { ... }`),
+    /// or just SingleStruct (when 53k stats show children are unused).
+    /// The schema-check stage captures only the structural fact; the IR
+    /// shape is a step-io lowering concern.
+    ///
+    /// The enum name is implicitly the entity's own name — children's
+    /// `InEnum.enum_name` already targets it, and `enclosing_enum_root`
+    /// returns the parent name directly when it sees this variant. So
+    /// no `enum_name` field is needed.
+    ConcreteSupertype,
 }
 
 /// One alternative inside a `CompositeOneOf` whose shape is *not* a bare
@@ -154,6 +174,10 @@ pub enum VariantOverride {
         #[serde(default)]
         reason: Option<String>,
     },
+    ConcreteSupertype {
+        #[serde(default)]
+        reason: Option<String>,
+    },
 }
 
 impl From<VariantOverride> for VariantSpec {
@@ -193,6 +217,7 @@ impl From<VariantOverride> for VariantSpec {
                 simple_alternatives,
                 composite_alternatives,
             },
+            VariantOverride::ConcreteSupertype { .. } => VariantSpec::ConcreteSupertype,
         }
     }
 }
@@ -241,7 +266,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
 
     let counts = KindCounts::from(&decisions);
     eprintln!(
-        "infer variant: {} entities (single={} enum={} nested={} enum_base={} merged_into={} complex={} composite={}) unresolved={}",
+        "infer variant: {} entities (single={} enum={} nested={} enum_base={} merged_into={} complex={} composite={} concrete_super={}) unresolved={}",
         decisions.len(),
         counts.single,
         counts.in_enum,
@@ -250,6 +275,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
         counts.merged_into,
         counts.complex,
         counts.composite,
+        counts.concrete_super,
         pending.stats.unresolved,
     );
     Ok(())
@@ -264,6 +290,7 @@ struct KindCounts {
     merged_into: usize,
     complex: usize,
     composite: usize,
+    concrete_super: usize,
 }
 
 impl KindCounts {
@@ -278,6 +305,7 @@ impl KindCounts {
                 VariantSpec::MergedInto { .. } => k.merged_into += 1,
                 VariantSpec::ComplexSupertype { .. } => k.complex += 1,
                 VariantSpec::CompositeOneOf { .. } => k.composite += 1,
+                VariantSpec::ConcreteSupertype => k.concrete_super += 1,
             }
         }
         k
@@ -620,6 +648,30 @@ fn pass2_remaining_kinds(
             continue;
         }
 
+        // Rule 1.7 (ConcreteSupertype): SUPERTYPE OF clause absent yet the
+        // entity has own_attrs, ≥ 1 child via SUBTYPE OF, and shows up as
+        // a polymorphic target somewhere. EXPRESS allows this implicit-
+        // supertype pattern. This must run before Rule 5/6 so that chain
+        // entities (own parent is itself a ConcreteSupertype) match here
+        // instead of being mis-classified as InEnum of the parent enum
+        // by Rule 6's polymorphic-target fallback.
+        let supertype_absent = unified.supertype_exprs.get(entity).is_none();
+        let has_own_attrs = unified
+            .entity_attrs
+            .get(entity)
+            .map_or(false, |s| !s.is_empty());
+        let direct_children: usize = descendants
+            .get(entity)
+            .map_or(0, |v| v.len());
+        if supertype_absent
+            && has_own_attrs
+            && direct_children >= 1
+            && polymorphic_targets.contains(entity)
+        {
+            decisions.insert(entity.clone(), VariantSpec::ConcreteSupertype);
+            continue;
+        }
+
         let eff_parent = effective_parent(entity, unified, decisions);
 
         // Rule 5: NestedField — only when effective parent is a SingleStruct.
@@ -797,7 +849,8 @@ fn enclosing_enum_root(
         match decisions.get(&parent) {
             Some(VariantSpec::EnumBase { enum_name }) => return Some(enum_name.clone()),
             Some(VariantSpec::ComplexSupertype { .. })
-            | Some(VariantSpec::CompositeOneOf { .. }) => return Some(parent),
+            | Some(VariantSpec::CompositeOneOf { .. })
+            | Some(VariantSpec::ConcreteSupertype) => return Some(parent),
             Some(VariantSpec::MergedInto { .. }) => {
                 current = parent;
                 continue;
@@ -1645,6 +1698,122 @@ mod tests {
         }
     }
 
+    /// Implicit-supertype pattern: schema omits SUPERTYPE OF, the entity
+    /// has its own attrs, and ≥ 1 child plus a polymorphic-target
+    /// reference to its name. Auto-classified as ConcreteSupertype.
+    #[test]
+    fn classify_concrete_supertype_implicit_pattern() {
+        let s = schema(
+            "test",
+            vec![
+                // `act` has own attrs, no SUPERTYPE OF clause, and 2
+                // children pointing to it via SUBTYPE OF. A separate
+                // entity references `act` polymorphically through an
+                // ATTR — that triggers polymorphic_targets membership.
+                ent("act", &[], vec![("name", AttrType::Primitive("STRING".into()))]),
+                ent(
+                    "executed_act",
+                    &["act"],
+                    vec![("done", AttrType::Primitive("BOOLEAN".into()))],
+                ),
+                ent(
+                    "analyzed_act",
+                    &["act"],
+                    vec![("score", AttrType::Primitive("REAL".into()))],
+                ),
+                ent(
+                    "consumer",
+                    &[],
+                    vec![("target", AttrType::Entity("act".into()))],
+                ),
+            ],
+            vec![],
+        );
+        let unified = refgraph::build(&[s]);
+        let decisions = classify_no_overrides(&unified);
+        assert!(
+            matches!(decisions.get("act").unwrap(), VariantSpec::ConcreteSupertype),
+            "act should be ConcreteSupertype, got {:?}",
+            decisions.get("act").unwrap()
+        );
+        match decisions.get("executed_act").unwrap() {
+            VariantSpec::InEnum { enum_name } => assert_eq!(enum_name, "act"),
+            other => panic!("executed_act should be InEnum(act), got {other:?}"),
+        }
+    }
+
+    /// Real-schema regression — a representative sample of entities that
+    /// must classify as ConcreteSupertype on the actual schemas. The full
+    /// auto-rule reach is wider (~75 entities, the rule's
+    /// polymorphic_targets is broader than the proxy used during
+    /// planning); this test pins a known-good subset including the chain
+    /// case `representation_relationship_with_transformation`.
+    #[test]
+    fn concrete_supertype_classifies_known_entities_on_real_schemas() {
+        use std::path::Path;
+
+        let schemas = crate::express::load_all_schemas(Path::new("schemas"));
+        let unified = refgraph::build(&schemas);
+        let decisions = classify_no_overrides(&unified);
+
+        // Spot-check sample. Each must be ConcreteSupertype.
+        let expected: &[&str] = &[
+            "action",
+            "action_method",
+            "characterized_object",
+            "general_property",
+            "item_defined_transformation",
+            "product_definition_formation",
+            "product_definition_relationship",
+            "property_definition_representation",
+            "representation_context",
+            "representation_map",
+            "representation_relationship",
+            "shape_aspect_relationship",
+            // chain entity — own parent (representation_relationship) is
+            // also a ConcreteSupertype; the rule must run before Rule 6
+            // for this case to land here instead of InEnum.
+            "representation_relationship_with_transformation",
+        ];
+        for name in expected {
+            assert!(
+                matches!(
+                    decisions.get(*name),
+                    Some(VariantSpec::ConcreteSupertype)
+                ),
+                "{name}: expected ConcreteSupertype, got {:?}",
+                decisions.get(*name)
+            );
+        }
+    }
+
+    /// Plan 1's silent-fail regression must still hold after adding the
+    /// ConcreteSupertype rule — those four entities have explicit
+    /// SUPERTYPE OF clauses, so the new rule's `supertype_absent` guard
+    /// should leave them untouched.
+    #[test]
+    fn plan1_silent_fail_classifications_unchanged() {
+        use std::path::Path;
+        let schemas = crate::express::load_all_schemas(Path::new("schemas"));
+        let unified = refgraph::build(&schemas);
+        let decisions = classify_no_overrides(&unified);
+        for name in [
+            "edge_blended_solid",
+            "solid_with_depression",
+            "solid_with_stepped_round_hole",
+            "solid_with_slot",
+        ] {
+            assert!(
+                matches!(
+                    decisions.get(name),
+                    Some(VariantSpec::ComplexSupertype { .. })
+                ),
+                "{name}: expected ComplexSupertype, got {:?}",
+                decisions.get(name)
+            );
+        }
+    }
+
     /// Override short-circuit: an entity listed in
     /// `variants_overrides.toml` bypasses every automatic rule and lands
     /// in the confident map with the user's chosen kind.
@@ -1674,6 +1843,36 @@ mod tests {
             VariantSpec::EnumBase { enum_name } => assert_eq!(enum_name, "forced"),
             other => panic!("override should win; got {other:?}"),
         }
+    }
+
+    /// Override with VariantOverride::ConcreteSupertype should land in
+    /// confident as VariantSpec::ConcreteSupertype.
+    #[test]
+    fn override_concrete_supertype() {
+        let s = schema(
+            "test",
+            vec![ent(
+                "forced",
+                &[],
+                vec![("v", AttrType::Primitive("REAL".into()))],
+            )],
+            vec![],
+        );
+        let unified = refgraph::build(&[s]);
+        let mut overrides = OverrideFile::<VariantOverride>::default();
+        overrides.entity.insert(
+            "forced".to_string(),
+            VariantOverride::ConcreteSupertype {
+                reason: Some("manual decision".to_string()),
+            },
+        );
+        let (decisions, unresolved) = classify_all(&unified, &overrides);
+        assert_eq!(unresolved.len(), 0);
+        assert!(
+            matches!(decisions.get("forced").unwrap(), VariantSpec::ConcreteSupertype),
+            "override should produce ConcreteSupertype; got {:?}",
+            decisions.get("forced").unwrap()
+        );
     }
 
     #[test]

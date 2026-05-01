@@ -133,6 +133,18 @@ fn compute_groups(variants: &BTreeMap<String, VariantSpec>) -> Groups {
                         is_enum: false,
                     });
             }
+            VariantSpec::ConcreteSupertype => {
+                // Implicit supertype: the entity is both a concrete struct
+                // and the enum root for its children. Register as an enum
+                // group named after itself, and include itself in members.
+                // Children carry InEnum { enum_name: <this entity> } and
+                // join the same group automatically.
+                let entry = groups.entry(entity.clone()).or_insert_with(|| GroupInfo {
+                    members: Vec::new(),
+                    is_enum: true,
+                });
+                entry.members.push(entity.clone());
+            }
             VariantSpec::NestedField { .. } | VariantSpec::MergedInto { .. } => {
                 // No IR struct → not a group of its own.
             }

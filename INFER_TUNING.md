@@ -25,6 +25,14 @@ SUPERTYPE 절 파서 + 분류기 정밀화 후 분포:
 | arena | 436 group | confident=436 review=0 unresolved=0 |
 | pool | 436 group → 97 distinct pool | confident=436 review=0 unresolved=0 |
 
+ConcreteSupertype 자동 분류 후 분포 (§8 처리됨):
+
+| Stage | output | 비고 |
+|---|---|---|
+| variant | 1,780 (single=195 enum=1223 nested=2 enum_base=173 merged_into=97 complex=13 composite=2 concrete_super=75) | 이전 silent SingleStruct/InEnum/NestedField 75 건이 정확한 자리로 |
+| arena | 462 group | confident=462 review=0 unresolved=0 |
+| pool | 462 group → 93 distinct pool | confident=462 review=0 unresolved=0 |
+
 분포 변동의 본질: 이전 단순 분류기가 silent fallback / 누락된 mixin 으로
 부정확하게 single / enum 으로 분류하던 entity 들이 정확한 자리로 이동
 (enum_base / merged_into / complex_supertype / composite_one_of 가 명시
@@ -152,34 +160,50 @@ enum 6 개 검출:
 **난이도**: §3 (ID 분리) 와 함께 다루면 효율적. 분리 신호 모두 arena 단계의
 group → arena 매핑 정밀화에 속함.
 
-## 8. ABSTRACT/ONEOF 미명시 concrete supertype 잔존
+## 8. ABSTRACT/ONEOF 미명시 concrete supertype — 처리됨
 
-**현재**: variant 분류기가 schema 의 `ABSTRACT SUPERTYPE` 또는 `SUPERTYPE OF
-(ONEOF ...)` 명시를 EnumBase / MergedInto / ComplexSupertype 으로 처리. 명시
-없는 concrete supertype 은 SingleStruct 으로 분류되며, 자식들이 자기 자신을
-enum_name 으로 가리키면 arena 측 group 충돌 발생.
+**처리 방식**: schema 의 4 신호 (SUPERTYPE OF 절 부재 + own_attrs ≥ 1 +
+직접 자식 ≥ 1 + polymorphic_targets 등장) 를 만족하는 entity 를 자동
+`ConcreteSupertype` 으로 분류. pass2 의 *override 직후 / Rule 5 앞* 에
+배치되어 chain 케이스 (자기 위에 또 다른 implicit supertype 이 있는
+entity) 도 동일 패턴으로 처리.
 
-**예**: `action`, `characterized_object`, `item_defined_transformation` 등 — schema
-가 inheritance 만 정의 (자식들이 SUBTYPE OF 명시) 하고 부모 측에 SUPERTYPE OF
-절이 없음.
+**최종 카운트**: **75 건** (이전 §8 추정 24 건 + 정확 진단으로 발견된 50
+건). 이전 진단의 24 건 추정은 *proxy polymorphic_targets* (variants.toml
+의 InEnum.enum_name 집합) 기준이었고, 실 분류기의 ATTR cross-reference
+graph 기준 polymorphic_targets 가 더 넓은 집합. 50 건은 이전에 silent 로
+SingleStruct / InEnum / NestedField 잘못 분류되던 entity 들. 자동 룰이
+이걸 모두 정확하게 ConcreteSupertype 으로 잡음.
 
-**현재 잔존 카운트**: 24 건 (variant 정밀화 commit 후). 이전 53 건의 약 절반.
+**arena/pool 영향**:
+- arena: 436 group → 462 group (+26). 이전 충돌로 누락되던 group 들 정상화
+- pool: distinct pools 97 → 93 (-4 — pool 통합)
 
-**구현 방향 후보**:
-- (a) `polymorphic_targets` 에 등장하면서 own_attrs 있는 concrete supertype 도
-  ComplexSupertype (또는 새 marker) 로 자동 분류. semantic 결정 필요 — 자기
-  instance 가능 + 자식 instance 별개라는 의미 보존하려면 mixin 형태 IR.
-- (b) step-io IR 측에서 24 건 수작업 처리. IR 디자이너가 enum 의 한 variant 로
-  자기 자신 추가 또는 별도 정책.
+**53k STEP 파일 사용 통계**: 24 건 sample 의 카테고리 분포 (구현 전 진단):
+- only_parent (자식 0): 5 건 (e.g. general_property 568 self / 0 children)
+- mixed_parent_dominant (child/self < 5): 3 건
+- mixed_children_dominant (child/self ≥ 5): 2 건
+- both_zero (이 corpus 미등장, 다른 도메인): 14 건
 
-**난이도**: 룰 자동화는 schema 신호 부족으로 정밀도 보장 어려움. 24 건이라
-수작업 영역 가능성 큼.
+→ 24 건 안에서도 사용 패턴 극단적 차이. 일괄 IR 강제 부담.
+
+**IR shape 결정의 책임**: `ConcreteSupertype` 라벨은 *schema 사실* 만 박음.
+IR 의 Rust 코드 모양 (Carrier enum / base struct + parallel enum / 단독
+struct) 결정은 **step-io 측 lowering 의 책임**. 입력으로:
+- 이 분류표 (variants.toml 의 `concrete_supertype` 라벨)
+- 53k STEP 파일 사용 통계 (case-by-case 가지치기)
+- SUBTYPE OF graph (chain hierarchy 복원 — chain entity 는 부모 enum 의
+  자식 명단에서 빠지므로 graph 직접 활용 필요)
+
+**chain hierarchy 부분 손실**: chain entity (예: representation_relationship_with_transformation)
+가 자기 sub-enum 의 base 로 분류되면서 그 부모 enum (representation_relationship)
+의 직접 자식 명단에서 빠짐. 의도된 변동. SUBTYPE OF graph 는 refgraph 에
+보존되므로 step-io lowering 이 graph 직접 활용으로 복원 가능.
 
 ## 우선순위 (제안)
 
 작업 순서:
-1. **#8 (variant supertype 일관성)** — variant 단계의 룰이 바뀌면 arena 입력도
-   변하므로 arena 정밀화보다 먼저 해야 함. ~0.5 일.
+1. ~~**#8 (variant supertype 일관성)**~~ — 처리됨 (75 건 자동 ConcreteSupertype)
 2. **#3 (arena ID 분리)** + **#7 (거대 enum sub-group 분리)** — 묶어서 arena 단계
    분리 신호 정밀화. variant 안정화 후 진행. ~1~2 일.
 3. **#4 (pool community detection)** — 진짜 의미 있는 pool 결정. ~1~2 일.
