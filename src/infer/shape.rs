@@ -1,10 +1,10 @@
-//! ConcreteSupertype IR style decision (manual input + validation).
+//! ConcreteSupertype IR shape decision (manual input + validation).
 //!
 //! Pure validation: compares the ConcreteSupertype set in
-//! `variants_pruned.toml` against the entries in
-//! `concrete_supertype_styles.toml`. Missing required entries → Err
-//! stops the run; extra entries → warning, ignored. No output file —
-//! the input file itself is the step-io codegen input.
+//! `variants_pruned.toml` against the entries in `shapes.toml`. Missing
+//! required entries → Err stops the run; extra entries → warning,
+//! ignored. No output file — the input file itself is the step-io
+//! codegen input.
 
 use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
@@ -17,11 +17,11 @@ use crate::infer::variant::VariantSpec;
 const VARIANTS_PENDING: &str = "variants_pending.toml";
 const ARENAS_PENDING: &str = "arenas_pending.toml";
 const FILE_VARIANTS_PRUNED: &str = "variants_pruned.toml";
-const FILE_CS_STYLES: &str = "concrete_supertype_styles.toml";
+const FILE_CS_SHAPES: &str = "shapes.toml";
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(tag = "style", rename_all = "snake_case")]
-pub enum ConcreteSupertypeStyle {
+#[serde(tag = "shape", rename_all = "snake_case")]
+pub enum ConcreteSupertypeShape {
     /// `enum E { Itself(EData), ChildA(...), ... }` — parent and children
     /// are equal-rank variants.
     Carrier,
@@ -31,9 +31,9 @@ pub enum ConcreteSupertypeStyle {
 }
 
 #[derive(Debug, Default, Serialize, Deserialize)]
-struct ConcreteSupertypeStylesFile {
+struct ConcreteSupertypeShapesFile {
     #[serde(default)]
-    entity: BTreeMap<String, ConcreteSupertypeStyle>,
+    entity: BTreeMap<String, ConcreteSupertypeShape>,
 }
 
 pub fn run(allow_pending: bool) -> Result<(), String> {
@@ -64,24 +64,24 @@ pub fn run(allow_pending: bool) -> Result<(), String> {
         .map(|(k, _)| k.clone())
         .collect();
 
-    let path = Path::new("inferred").join(FILE_CS_STYLES);
+    let path = Path::new("inferred").join(FILE_CS_SHAPES);
     if !path.exists() {
         return Err(missing_file_message(&required));
     }
     let body = fs::read_to_string(&path).map_err(|e| format!("read {path:?}: {e}"))?;
-    let file: ConcreteSupertypeStylesFile =
+    let file: ConcreteSupertypeShapesFile =
         toml::from_str(&body).map_err(|e| format!("parse {path:?}: {e}"))?;
 
     match validate(&required, &file.entity) {
         Validation::Ok { carrier, base_parallel, extras } => {
             for e in &extras {
                 eprintln!(
-                    "warning: {FILE_CS_STYLES} [entity.{e}] is not a ConcreteSupertype \
+                    "warning: {FILE_CS_SHAPES} [entity.{e}] is not a ConcreteSupertype \
                      in {FILE_VARIANTS_PRUNED} — ignored"
                 );
             }
             eprintln!(
-                "infer concrete_supertype_style: {} ConcreteSupertype entities (carrier={carrier} base_parallel={base_parallel})",
+                "infer shape: {} ConcreteSupertype entities (carrier={carrier} base_parallel={base_parallel})",
                 required.len()
             );
             Ok(())
@@ -102,7 +102,7 @@ enum Validation {
 
 fn validate(
     required: &BTreeSet<String>,
-    provided: &BTreeMap<String, ConcreteSupertypeStyle>,
+    provided: &BTreeMap<String, ConcreteSupertypeShape>,
 ) -> Validation {
     let provided_keys: BTreeSet<&String> = provided.keys().collect();
     let required_refs: BTreeSet<&String> = required.iter().collect();
@@ -126,8 +126,8 @@ fn validate(
             continue;
         }
         match v {
-            ConcreteSupertypeStyle::Carrier => carrier += 1,
-            ConcreteSupertypeStyle::BaseParallel => base_parallel += 1,
+            ConcreteSupertypeShape::Carrier => carrier += 1,
+            ConcreteSupertypeShape::BaseParallel => base_parallel += 1,
         }
     }
     Validation::Ok {
@@ -144,8 +144,8 @@ fn missing_file_message(required: &BTreeSet<String>) -> String {
         .collect::<Vec<_>>()
         .join("\n  ");
     format!(
-        "{FILE_CS_STYLES} not found — required ConcreteSupertype entities ({}):\n  {list}\n\
-         Add `[entity.<name>] style = \"carrier\" | \"base_parallel\"` for each.",
+        "{FILE_CS_SHAPES} not found — required ConcreteSupertype entities ({}):\n  {list}\n\
+         Add `[entity.<name>] shape = \"carrier\" | \"base_parallel\"` for each.",
         required.len()
     )
 }
@@ -153,8 +153,8 @@ fn missing_file_message(required: &BTreeSet<String>) -> String {
 fn missing_entries_message(missing: &[String]) -> String {
     let list = missing.join("\n  ");
     format!(
-        "{FILE_CS_STYLES} missing {} required ConcreteSupertype entries:\n  {list}\n\
-         Add `[entity.<name>] style = \"carrier\" | \"base_parallel\"` for each.",
+        "{FILE_CS_SHAPES} missing {} required ConcreteSupertype entries:\n  {list}\n\
+         Add `[entity.<name>] shape = \"carrier\" | \"base_parallel\"` for each.",
         missing.len()
     )
 }
@@ -168,17 +168,17 @@ mod tests {
     }
 
     fn provided_map(
-        pairs: &[(&str, ConcreteSupertypeStyle)],
-    ) -> BTreeMap<String, ConcreteSupertypeStyle> {
+        pairs: &[(&str, ConcreteSupertypeShape)],
+    ) -> BTreeMap<String, ConcreteSupertypeShape> {
         pairs.iter().map(|(k, v)| (k.to_string(), *v)).collect()
     }
 
     #[test]
-    fn validate_complete_match_counts_styles() {
+    fn validate_complete_match_counts_shapes() {
         let required = required_set(&["face_bound", "styled_item"]);
         let provided = provided_map(&[
-            ("face_bound", ConcreteSupertypeStyle::Carrier),
-            ("styled_item", ConcreteSupertypeStyle::BaseParallel),
+            ("face_bound", ConcreteSupertypeShape::Carrier),
+            ("styled_item", ConcreteSupertypeShape::BaseParallel),
         ]);
         match validate(&required, &provided) {
             Validation::Ok {
@@ -197,7 +197,7 @@ mod tests {
     #[test]
     fn validate_missing_entry_returns_missing_list() {
         let required = required_set(&["face_bound", "styled_item"]);
-        let provided = provided_map(&[("face_bound", ConcreteSupertypeStyle::Carrier)]);
+        let provided = provided_map(&[("face_bound", ConcreteSupertypeShape::Carrier)]);
         match validate(&required, &provided) {
             Validation::Missing(missing) => {
                 assert_eq!(missing, vec!["styled_item".to_string()]);
@@ -210,8 +210,8 @@ mod tests {
     fn validate_extra_entry_passes_with_warning_payload() {
         let required = required_set(&["face_bound"]);
         let provided = provided_map(&[
-            ("face_bound", ConcreteSupertypeStyle::Carrier),
-            ("cartesian_point", ConcreteSupertypeStyle::Carrier),
+            ("face_bound", ConcreteSupertypeShape::Carrier),
+            ("cartesian_point", ConcreteSupertypeShape::Carrier),
         ]);
         match validate(&required, &provided) {
             Validation::Ok {
@@ -244,22 +244,22 @@ mod tests {
     }
 
     #[test]
-    fn parses_toml_with_tagged_style() {
+    fn parses_toml_with_tagged_shape() {
         let body = r#"
 [entity.face_bound]
-style = "carrier"
+shape = "carrier"
 
 [entity.styled_item]
-style = "base_parallel"
+shape = "base_parallel"
 "#;
-        let file: ConcreteSupertypeStylesFile = toml::from_str(body).unwrap();
+        let file: ConcreteSupertypeShapesFile = toml::from_str(body).unwrap();
         assert_eq!(
             file.entity.get("face_bound"),
-            Some(&ConcreteSupertypeStyle::Carrier)
+            Some(&ConcreteSupertypeShape::Carrier)
         );
         assert_eq!(
             file.entity.get("styled_item"),
-            Some(&ConcreteSupertypeStyle::BaseParallel)
+            Some(&ConcreteSupertypeShape::BaseParallel)
         );
     }
 }

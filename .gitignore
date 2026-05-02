@@ -4,4 +4,4 @@
 # user-edited overrides and manual-input files are tracked.
 /inferred/*.toml
 !/inferred/*_overrides.toml
-!/inferred/concrete_supertype_styles.toml
+!/inferred/shapes.toml

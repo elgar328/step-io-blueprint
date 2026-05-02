@@ -7,12 +7,12 @@
 #![allow(dead_code)] // wired up incrementally across stages
 
 pub mod arena;
-pub mod concrete_supertype_style;
 pub mod io;
 pub mod overrides;
 pub mod pool;
 pub mod prune;
 pub mod refgraph;
+pub mod shape;
 pub mod variant;
 
 use serde::{Deserialize, Serialize};
