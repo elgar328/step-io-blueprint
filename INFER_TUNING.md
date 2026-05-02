@@ -227,7 +227,7 @@ Plan 2 ✓ — ConcreteSupertype 자동 분류 (commit 310eaa1)
 Plan 3a — arena 보수적 자동 분류 (skip)
 Plan 3b ✓ — 53k STEP 파일 통계 가지치기
 Plan 3c ✓ — ConcreteSupertype IR style 결정
-Plan 3d — Lossy 정책 결정
+Plan 3d — *제거됨* (Lossy 정책 → round-trip 테스트 의미적 정확화로 책임 이관)
 Plan 3e — IR 친화 명명
 Plan 3f — pool 분류
 ```
@@ -261,8 +261,13 @@ Plan 3f — pool 분류
   강제* 위해 의도적으로 수동 선택. 결과: Carrier 8 + Base+Parallel 5 =
   13. fixtures 확장으로 ConcreteSupertype 늘면 strict gate 가 누락분
   잡음 → 사용자가 추가 entry 만 수동 작성
-- **3d (Lossy)** — arena 단위 일괄 lossy 정책. 어느 attr 가 typed
-  field, 어느 attr 가 round-trip default. 사람 의미 판단
+- ~~**3d (Lossy)**~~ — **제거 결정**. 본래 의도 (어느 attr 가 typed
+  field, 어느 attr 가 round-trip default) 의 동기는 *부정확한 round-trip
+  테스트 우회용 텍스트 보존*. 텍스트 보존은 IR 의 책임이 아니고 *테스트
+  설계의 약점*. 모든 attr 는 *typed* (필요 시 default 값 제공). round-trip
+  비교의 정확성 (의미적 동등성, ISO 의무 placeholder 무시 등) 은 step-io
+  측 round-trip 테스트의 책임 → Phase 2.2 / 운영 영역으로 이관. lossy
+  marker / lossy_overrides 산출 X. schema-check 측 결정 면적 축소
 - **3e (이름)** — IR 친화 명명. snake → PascalCase / `*Id` 자동 기본 +
   `names_overrides.toml` 사람 override (100% 수동)
 - **3f (pool)** — community detection 자동 후보 + `pools_overrides.toml`
