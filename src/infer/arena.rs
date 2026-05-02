@@ -87,6 +87,34 @@ pub fn run(_schemas: &[Schema], allow_pending: bool) -> Result<(), String> {
 
 type Groups = BTreeMap<String, GroupInfo>;
 
+/// Recompute the arena classification from a pruned variants map. Used by
+/// the prune stage so it does not need to depend on the private group /
+/// auto-decision helpers below — only this entry point and `ArenaSpec`
+/// cross the module boundary.
+///
+/// The caller is responsible for filtering overrides whose target groups
+/// disappeared during pruning; `validate_known` runs over `overrides` as
+/// a final safety check and any stale entry produces an error.
+pub fn recompute_for_pruned(
+    variants: &BTreeMap<String, VariantSpec>,
+    overrides: &OverrideFile<ArenaSpec>,
+) -> Result<BTreeMap<String, Decision<ArenaSpec>>, String> {
+    let groups = compute_groups(variants);
+    let known: BTreeSet<String> = groups.keys().cloned().collect();
+    let mut errs = overrides::validate_known(overrides, SECTION, &known, FILE_OVERRIDES);
+    errs.extend(overrides::validate_no_conflict(
+        overrides,
+        SECTION,
+        FILE_OVERRIDES,
+    ));
+    if !errs.is_empty() {
+        return Err(errs.join("\n"));
+    }
+    let auto = compute_auto_decisions(&groups);
+    let result = merge_overrides(auto, overrides)?;
+    Ok(result.confident)
+}
+
 #[derive(Debug, Clone)]
 struct GroupInfo {
     members: Vec<String>,

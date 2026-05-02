@@ -10,6 +10,7 @@ pub mod arena;
 pub mod io;
 pub mod overrides;
 pub mod pool;
+pub mod prune;
 pub mod refgraph;
 pub mod variant;
 

@@ -38,6 +38,22 @@ ConcreteSupertype 자동 분류 후 분포 (§8 처리됨):
 (enum_base / merged_into / complex_supertype / composite_one_of 가 명시
 변형으로 분리됨).
 
+53k STEP 파일 가지치기 후 분포 (Plan 3b 처리됨):
+
+| Stage | output | 비고 |
+|---|---|---|
+| usage | 1,780 entities (used=296 unused=1,484) | corpus 미등장 entity 가 압도 — geometry 편향 corpus |
+| variants_pruned | 240 entities | transitive cascade 후 (75 ConcreteSupertype 중 18 → SingleStruct, 44 → 제거) |
+| arenas_pruned | 130 groups | variants_pruned 기준 재계산. 원본 462 → 130 |
+
+원본 variants.toml / arenas.toml / pools.toml 은 *불변*. 가지치기는 *별
+view*. corpus 변동 시 prune 만 재실행. 실행 시간 ~85 초 (1,780 alternation
+regex + 53k 파일 ~2.6GB 처리, single-thread).
+
+*가지치기 산출이 매우 좁음* (240 entities) — 현재 corpus 의 geometry
+편향 반영. PMI / property / metadata 도메인 entity 가 corpus 미등장.
+fixtures 확장으로 산출 entity 수 증가 — 운영 영역 (plan scope X).
+
 본 문서는 정밀화 단계에서 다뤄야 할 미흡 부분을 항목별로 정리. 임시 문서로,
 정밀화 후 폐기 또는 INFRA_PLAN.md 같은 영구 문서로 이관 예정.
 
@@ -202,12 +218,58 @@ struct) 결정은 **step-io 측 lowering 의 책임**. 입력으로:
 
 ## 우선순위 (제안)
 
-작업 순서:
-1. ~~**#8 (variant supertype 일관성)**~~ — 처리됨 (75 건 자동 ConcreteSupertype)
-2. **#3 (arena ID 분리)** + **#7 (거대 enum sub-group 분리)** — 묶어서 arena 단계
-   분리 신호 정밀화. variant 안정화 후 진행. ~1~2 일.
-3. **#4 (pool community detection)** — 진짜 의미 있는 pool 결정. ~1~2 일.
-4. **#6 (작은 정리)** — 우선순위 낮음.
+전체 작업 흐름은 IR_DESIGN.md 의 *IR Roadmap plan 의 작업 항목* 섹션과
+align. schema-check 측 단계만 이곳에서 추적.
+
+```
+Plan 1 ✓ — SUPERTYPE 절 파서 정확도 (commit 6a19d83)
+Plan 2 ✓ — ConcreteSupertype 자동 분류 (commit 310eaa1)
+Plan 3a — arena 보수적 자동 분류
+Plan 3b — 53k STEP 파일 통계 가지치기
+Plan 3c — ConcreteSupertype IR 모양 결정
+Plan 3d — Lossy 정책 결정
+Plan 3e — IR 친화 명명
+Plan 3f — pool 분류
+```
+
+각 plan 의 책임:
+
+- ~~**3a (arena 자동)**~~ — **skip 결정**. 진단 결과 자동 룰의 효과가
+  사실상 0 또는 부작용 위험: Rule B (root disjoint 강제 분리) 발동 후보
+  0 (variants 가 이미 root SUPERTYPE 따라 정렬됨), Rule A (SELECT 멤버
+  통합) 후보 253 건 중 대부분이 *generic cross-cutting SELECT* (예:
+  approved_item 9 distinct groups) — 무차별 통합 시 거대 generic enum
+  발생 → IR 사용성 파괴. arena 단계는 *현재 그대로* (variants 의 group
+  변환 + arenas_overrides 적용) 유지. 거대 group 분할은 Plan 3b 가
+  통계로 흡수
+- **3b (가지치기) ✓** — `infer prune --corpus <path>` sub-command. 외부
+  53k STEP 파일 corpus 경로 인자로 받음 (fixtures 복사 X). instance
+  카운트 측정 + P-2 transitive 가지치기 + arena 재계산. 산출 3 파일:
+  `usage.toml` (모든 entity 카운트), `variants_pruned.toml`,
+  `arenas_pruned.toml`. 원본 variants/arenas/pools 불변. 실 corpus
+  결과: 1,780 → 296 used / 1,484 unused, variants_pruned 240 entities,
+  arenas_pruned 130 groups, ~85 초 소요. 거대 group cluster 분할
+  (co-occurrence 기반) 은 *후속 plan*
+- **3c (ConcreteSupertype 모양)** — 75 건 각각의 IR 모양 결정 (Carrier
+  enum / base+parallel / 단독 struct). 통계 신호 기반 자동 후보 +
+  사람 검토
+- **3d (Lossy)** — arena 단위 일괄 lossy 정책. 어느 attr 가 typed
+  field, 어느 attr 가 round-trip default. 사람 의미 판단
+- **3e (이름)** — IR 친화 명명. snake → PascalCase / `*Id` 자동 기본 +
+  `names_overrides.toml` 사람 override (100% 수동)
+- **3f (pool)** — community detection 자동 후보 + `pools_overrides.toml`
+  사용자 mental model 결정. §4 / §1 (이전 pool component) 흡수
+
+**책임 분리 원칙**: 모든 분류 / 사람 결정 / 통계 가지치기가 본 도구
+(schema-check) 측. step-io 측은 schema-check 의 최종 산출만 받아 *기계적*
+IR 코드 생성. step-io 자기완결성을 위해 schema-check 의 외부 fixtures
+의존 (53k corpus 경로 인자) 은 OK — 외부 도구 간 상호 의존 허용.
+
+**기존 INFER_TUNING.md § 항목과 새 plan 의 매핑**:
+- ~~§8~~ (concrete supertype) — Plan 2 ✓
+- §3 (arena ID 분리) + §7 (거대 enum sub-group) → Plan 3a + 3b 흡수
+- §4 (pool community detection) → Plan 3f
+- §6 (작은 정리) → 우선순위 낮음, 후속
 
 ## 검증 방향
 

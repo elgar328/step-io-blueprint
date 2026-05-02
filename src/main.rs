@@ -3,14 +3,15 @@
 //! Sub-commands:
 //! - `infer variant`  Stage 1: arena enum variant 분류
 //! - `infer arena`    Stage 2: arena 분류
-//! - `infer pool`     Stage 3: pool 분류
+//! - `infer prune --corpus <path>`  Stage 3: 53k STEP corpus 가지치기
+//! - `infer pool`     Stage 4: pool 분류
 //!
 //! 4 schema (ap203 / ap203e2 / ap214e3 / ap242) 항상 union 으로 처리.
 //! 출력은 `inferred/` 디렉토리에. 자세한 사양은 `internal/INFRA_PLAN.md` 와
 //! 본 repo 의 plan 파일 참조.
 
 use std::env;
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 const ALLOW_PENDING_FLAG: &str = "--allow-pending";
@@ -30,6 +31,7 @@ fn main() -> ExitCode {
     match (positional.first().copied(), positional.get(1).copied()) {
         (Some("infer"), Some("variant")) => run_variant(),
         (Some("infer"), Some("arena")) => run_arena(allow_pending),
+        (Some("infer"), Some("prune")) => run_prune(&args, allow_pending),
         (Some("infer"), Some("pool")) => run_pool(allow_pending),
         (Some("infer"), Some(stage)) => {
             eprintln!("unknown infer stage: {stage}");
@@ -37,7 +39,7 @@ fn main() -> ExitCode {
             ExitCode::from(2)
         }
         (Some("infer"), None) => {
-            eprintln!("infer requires a stage argument: variant | arena | pool");
+            eprintln!("infer requires a stage argument: variant | arena | prune | pool");
             print_usage();
             ExitCode::from(2)
         }
@@ -118,11 +120,43 @@ fn run_pool(allow_pending: bool) -> ExitCode {
     }
 }
 
+fn run_prune(args: &[String], allow_pending: bool) -> ExitCode {
+    let corpus_path = match parse_corpus_arg(args) {
+        Ok(p) => p,
+        Err(e) => {
+            eprintln!("{e}");
+            return ExitCode::from(2);
+        }
+    };
+    // No load_schemas() — prune reads variants.toml only.
+    match infer::prune::run(&corpus_path, allow_pending) {
+        Ok(()) => ExitCode::SUCCESS,
+        Err(e) => {
+            eprintln!("infer prune failed:\n{e}");
+            ExitCode::from(2)
+        }
+    }
+}
+
+fn parse_corpus_arg(args: &[String]) -> Result<PathBuf, String> {
+    let mut iter = args.iter();
+    while let Some(arg) = iter.next() {
+        if arg == "--corpus" {
+            return iter
+                .next()
+                .map(PathBuf::from)
+                .ok_or_else(|| "--corpus requires a path argument".into());
+        }
+    }
+    Err("--corpus <path> required for `infer prune`".into())
+}
+
 fn print_usage() {
     eprintln!(
         "\nusage:\n  \
          cargo run --release -- infer variant\n  \
          cargo run --release -- infer arena\n  \
+         cargo run --release -- infer prune --corpus <path>\n  \
          cargo run --release -- infer pool"
     );
 }
