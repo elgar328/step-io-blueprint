@@ -7,6 +7,7 @@
 #![allow(dead_code)] // wired up incrementally across stages
 
 pub mod arena;
+pub mod concrete_supertype_style;
 pub mod io;
 pub mod overrides;
 pub mod pool;

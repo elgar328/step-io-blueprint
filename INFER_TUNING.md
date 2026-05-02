@@ -224,9 +224,9 @@ align. schema-check 측 단계만 이곳에서 추적.
 ```
 Plan 1 ✓ — SUPERTYPE 절 파서 정확도 (commit 6a19d83)
 Plan 2 ✓ — ConcreteSupertype 자동 분류 (commit 310eaa1)
-Plan 3a — arena 보수적 자동 분류
-Plan 3b — 53k STEP 파일 통계 가지치기
-Plan 3c — ConcreteSupertype IR 모양 결정
+Plan 3a — arena 보수적 자동 분류 (skip)
+Plan 3b ✓ — 53k STEP 파일 통계 가지치기
+Plan 3c ✓ — ConcreteSupertype IR style 결정
 Plan 3d — Lossy 정책 결정
 Plan 3e — IR 친화 명명
 Plan 3f — pool 분류
@@ -250,9 +250,17 @@ Plan 3f — pool 분류
   결과: 1,780 → 296 used / 1,484 unused, variants_pruned 240 entities,
   arenas_pruned 130 groups, ~85 초 소요. 거대 group cluster 분할
   (co-occurrence 기반) 은 *후속 plan*
-- **3c (ConcreteSupertype 모양)** — 75 건 각각의 IR 모양 결정 (Carrier
-  enum / base+parallel / 단독 struct). 통계 신호 기반 자동 후보 +
-  사람 검토
+- **3c (ConcreteSupertype style) ✓** — `infer concrete_supertype_style`
+  sub-command. 가지치기 후 살아남은 ConcreteSupertype (현재 13 건) 각각의
+  IR style 결정 (Carrier enum / Base+Parallel struct+enum). *수동 입력*
+  (`inferred/concrete_supertype_styles.toml`) + strict gate 검증 — missing
+  → Err, extra → warning. 산출 파일 X (입력 자체가 step-io codegen 의
+  입력). 자동화는 ratio 단일 신호로 가능했으나 (Carrier 측 ratio ≥ 1.99
+  vs Base+Parallel 측 ≤ 0.020 의 100 배 gap) ratio 가 못 잡는 신호
+  (children 의 attr 구조, 도메인 mental model) 와 *경계 케이스 사람 검토
+  강제* 위해 의도적으로 수동 선택. 결과: Carrier 8 + Base+Parallel 5 =
+  13. fixtures 확장으로 ConcreteSupertype 늘면 strict gate 가 누락분
+  잡음 → 사용자가 추가 entry 만 수동 작성
 - **3d (Lossy)** — arena 단위 일괄 lossy 정책. 어느 attr 가 typed
   field, 어느 attr 가 round-trip default. 사람 의미 판단
 - **3e (이름)** — IR 친화 명명. snake → PascalCase / `*Id` 자동 기본 +

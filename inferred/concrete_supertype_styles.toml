@@ -1,0 +1,51 @@
+# 13 ConcreteSupertype entities — IR style decision per Plan 3c.
+#
+# Style options:
+#   - style = "carrier"        : enum E { Itself(EData), ChildA(...), ... }
+#                                parent and children are equal-rank variants.
+#   - style = "base_parallel"  : struct E { ... } + enum EKind { ... }
+#                                parent struct primary, kind enum is auxiliary axis.
+#
+# Counts in trailing comments are corpus instance counts at the time of
+# initial decision (geometry-biased fixtures). Re-evaluate ratios after
+# fixtures expansion. Children count = sum of instance_count over all
+# entities whose VariantSpec is InEnum { enum_name = <this entity> }.
+
+[entity.characterized_object]              # 90 self / 621 children, ratio 6.9
+style = "carrier"
+
+[entity.face_bound]                        # 1.1M self / 3.6M children, ratio 3.3
+style = "carrier"
+
+[entity.face_surface]                      # 495K self / 3.4M children, ratio 6.9
+style = "carrier"
+
+[entity.manifold_solid_brep]               # 105K self / 759 children, ratio 0.0072 — parent dominant
+style = "base_parallel"
+
+[entity.product_category]                  # 10K self / 195K children, ratio 19.4
+style = "carrier"
+
+[entity.product_context]                   # 53K self / 13 children, ratio ~0 — parent overwhelms
+style = "base_parallel"
+
+[entity.product_definition_context]        # 53K self / 11 children, ratio ~0 — parent overwhelms
+style = "base_parallel"
+
+[entity.product_definition_formation]      # 43K self / 152K children, ratio 3.5
+style = "carrier"
+
+[entity.property_definition_representation] # 2K self / 195K children, ratio 87.6
+style = "carrier"
+
+[entity.representation_context]            # 96K self / 191K children, ratio 1.99
+style = "carrier"
+
+[entity.representation_relationship]       # 42 self / 43K children, ratio 1024 — children dominant
+style = "carrier"
+
+[entity.shape_aspect_relationship]         # 2K self / 41 children, ratio 0.020 — parent dominant
+style = "base_parallel"
+
+[entity.styled_item]                       # 4M self / 25 children, ratio ~0 — parent dominant
+style = "base_parallel"

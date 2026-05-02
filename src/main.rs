@@ -32,6 +32,9 @@ fn main() -> ExitCode {
         (Some("infer"), Some("variant")) => run_variant(),
         (Some("infer"), Some("arena")) => run_arena(allow_pending),
         (Some("infer"), Some("prune")) => run_prune(&args, allow_pending),
+        (Some("infer"), Some("concrete_supertype_style")) => {
+            run_concrete_supertype_style(allow_pending)
+        }
         (Some("infer"), Some("pool")) => run_pool(allow_pending),
         (Some("infer"), Some(stage)) => {
             eprintln!("unknown infer stage: {stage}");
@@ -39,7 +42,9 @@ fn main() -> ExitCode {
             ExitCode::from(2)
         }
         (Some("infer"), None) => {
-            eprintln!("infer requires a stage argument: variant | arena | prune | pool");
+            eprintln!(
+                "infer requires a stage argument: variant | arena | prune | concrete_supertype_style | pool"
+            );
             print_usage();
             ExitCode::from(2)
         }
@@ -120,6 +125,16 @@ fn run_pool(allow_pending: bool) -> ExitCode {
     }
 }
 
+fn run_concrete_supertype_style(allow_pending: bool) -> ExitCode {
+    match infer::concrete_supertype_style::run(allow_pending) {
+        Ok(()) => ExitCode::SUCCESS,
+        Err(e) => {
+            eprintln!("infer concrete_supertype_style failed:\n{e}");
+            ExitCode::from(2)
+        }
+    }
+}
+
 fn run_prune(args: &[String], allow_pending: bool) -> ExitCode {
     let corpus_path = match parse_corpus_arg(args) {
         Ok(p) => p,
@@ -157,6 +172,7 @@ fn print_usage() {
          cargo run --release -- infer variant\n  \
          cargo run --release -- infer arena\n  \
          cargo run --release -- infer prune --corpus <path>\n  \
+         cargo run --release -- infer concrete_supertype_style\n  \
          cargo run --release -- infer pool"
     );
 }
