@@ -14,14 +14,19 @@ cargo run --release                     # default: check (placeholder, 미구현
 
 ## `infer` 파이프라인
 
-5 stage 를 순서대로 실행. 각 stage 는 *upstream stage 의 산출* 을 입력으로
+6 stage 를 순서대로 실행. 각 stage 는 *upstream stage 의 산출* 을 입력으로
 받아, 사람 결정 (overrides) 이 필요한 자리에서만 사용자 입력 파일을 추가
 참조. **stage 간 단방향 흐름** — downstream 이 upstream 의 산출을
 변경하지 않음.
 
 ```
-infer variant → infer arena → infer prune → infer shape → infer pool
+infer variant → infer arena → infer prune → infer shape → infer naming → infer pool
 ```
+
+`infer naming` 은 *미구현* — `entities.toml` 위에서 type / id / variant /
+field 의 IR 친화 이름 결정 (사용자 100% 수동 + `names_overrides.toml`).
+현재 `infer pool` 은 옛 흐름 그대로 `arenas.toml` 을 입력으로 받음 — 후속
+이행 시 `entities.toml` 입력으로 전환 예정.
 
 ### 입출력 표
 
@@ -31,6 +36,7 @@ infer variant → infer arena → infer prune → infer shape → infer pool
 | `infer arena` | `arenas_overrides.toml` (선택) | `variants.toml`, `schemas/*.exp` | — | `arenas.toml`, (`arenas_pending.toml`) |
 | `infer prune --corpus <path>` | — | `variants.toml`, `arenas_overrides.toml` | **외부 STEP corpus** (`<path>`) | `usage.toml`, `variants_pruned.toml`, `arenas_pruned.toml` |
 | `infer shape` | `shapes.toml` (수동, ConcreteSupertype 별 1 entry) | `variants_pruned.toml`, `arenas_pruned.toml`, `usage.toml` | — | (검증 + 통과 시 `entities.toml` 자동 응축) |
+| `infer naming` *(미구현)* | `names_overrides.toml` (수동, 100%) | `entities.toml` | — | `names.toml` (예정) |
 | `infer pool` | `pools_overrides.toml` (선택) | `arenas.toml` | — | `pools.toml`, (`pools_pending.toml`) |
 
 `<stage>_pending.toml` 은 *review / unresolved 결정이 있을 때만* 생성 —
@@ -69,6 +75,9 @@ stage 는 외부 의존이 없다.
   각각의 IR shape (Carrier vs Base+Parallel) 결정 검증 + 4 입력을
   *entity 단위 단일 view* (`entities.toml`) 로 응축. 명명 / pool stage 의
   단일 입력.
+- **`infer naming`** *(미구현)* — `entities.toml` 위에서 type / id /
+  variant / field 의 IR 친화 이름 결정. 100% 수동 (`names_overrides.toml`)
+  — snake_case 자동 default 만으로는 IR 가독성 부족. 후속 plan 에서 구현.
 - **`infer pool`** — arena → pool (코드 폴더 / sub-crate) 묶음. 사용자
   mental model 의 결정 자리.
 
