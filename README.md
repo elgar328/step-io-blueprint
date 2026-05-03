@@ -85,7 +85,7 @@ Resolve in variants_overrides.toml or pass --allow-pending.
 
 `--allow-pending` 플래그로 우회 가능 (개발 / 진단 시).
 
-### `check` mode (미구현)
+## `check` mode (미구현)
 
 step-io 의 트레잇 + per-module 리팩토링 도입 후 활성. trait introspection
 으로 entity 의 NAME / ATTR_COUNT 추출 → schema 와 mismatch 검출.
