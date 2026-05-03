@@ -115,6 +115,83 @@ pub fn recompute_for_pruned(
     Ok(result.confident)
 }
 
+/// Build an entity → group reverse index. Used by the shape stage to
+/// compile the unified `entities.toml` view: every entity (including
+/// those `compute_groups` skips because they have no IR struct of their
+/// own — `NestedField` and `MergedInto`) needs a group / arena to point
+/// at.
+///
+/// `NestedField` inherits its parent's group (`into`); `MergedInto`
+/// inherits its target's group, transitively if the target is itself
+/// merged. The fixpoint loop handles arbitrary chains regardless of
+/// iteration order.
+pub(crate) fn compute_entity_to_group(
+    variants: &BTreeMap<String, VariantSpec>,
+) -> BTreeMap<String, String> {
+    let groups = compute_groups(variants);
+    let mut out: BTreeMap<String, String> = BTreeMap::new();
+
+    // 1. Members emitted by compute_groups (SingleStruct / InEnum members
+    //    / ConcreteSupertype / Complex / Composite). EnumBase only seeds
+    //    the group key — its own entity is mapped separately below.
+    for (group_name, info) in &groups {
+        for member in &info.members {
+            out.insert(member.clone(), group_name.clone());
+        }
+    }
+
+    // 2. EnumBase: not a member of its group, but it is itself an entity
+    //    that needs a group mapping. The enum_name is the group key.
+    //    ComplexSupertype / CompositeOneOf seed their own group with
+    //    `or_insert_with` so children that happen to alphabetize before
+    //    them can leave the parent's self entry off the members list —
+    //    map the parent explicitly here.
+    for (entity, spec) in variants {
+        match spec {
+            VariantSpec::EnumBase { enum_name } => {
+                out.entry(entity.clone())
+                    .or_insert_with(|| enum_name.clone());
+            }
+            VariantSpec::ComplexSupertype { .. } | VariantSpec::CompositeOneOf { .. } => {
+                out.entry(entity.clone())
+                    .or_insert_with(|| entity.clone());
+            }
+            _ => {}
+        }
+    }
+
+    // 3. NestedField → parent's group; MergedInto → target's group. Both
+    //    can chain (a NestedField parent might itself be merged), so a
+    //    fixpoint loop handles arbitrary chains. The bound is the worst-
+    //    case chain length (variants.len() + 1) — any cycle would prevent
+    //    progress and be cut off here, leaving the offending entity
+    //    unmapped (compile_entities surfaces that as an error).
+    for _ in 0..variants.len() + 1 {
+        let mut changed = false;
+        for (entity, spec) in variants {
+            if out.contains_key(entity) {
+                continue;
+            }
+            let parent = match spec {
+                VariantSpec::NestedField { into, .. } => Some(into),
+                VariantSpec::MergedInto { target, .. } => Some(target),
+                _ => None,
+            };
+            if let Some(p) = parent {
+                if let Some(g) = out.get(p).cloned() {
+                    out.insert(entity.clone(), g);
+                    changed = true;
+                }
+            }
+        }
+        if !changed {
+            break;
+        }
+    }
+
+    out
+}
+
 #[derive(Debug, Clone)]
 struct GroupInfo {
     members: Vec<String>,

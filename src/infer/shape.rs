@@ -12,6 +12,8 @@ use std::path::Path;
 
 use serde::{Deserialize, Serialize};
 
+use crate::infer::arena::{compute_entity_to_group, ArenaSpec};
+use crate::infer::prune::UsageRecord;
 use crate::infer::variant::VariantSpec;
 
 const VARIANTS_PENDING: &str = "variants_pending.toml";
@@ -19,8 +21,10 @@ const ARENAS_PENDING: &str = "arenas_pending.toml";
 const FILE_VARIANTS_PRUNED: &str = "variants_pruned.toml";
 const FILE_CS_SHAPES: &str = "shapes.toml";
 
+/// Serialized as a plain string (`"carrier"` / `"base_parallel"`) so it
+/// fits inline in entity tables without producing a nested sub-table.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(tag = "shape", rename_all = "snake_case")]
+#[serde(rename_all = "snake_case")]
 pub enum ConcreteSupertypeShape {
     /// `enum E { Itself(EData), ChildA(...), ... }` — parent and children
     /// are equal-rank variants.
@@ -30,10 +34,31 @@ pub enum ConcreteSupertypeShape {
     BaseParallel,
 }
 
+/// One entry in `shapes.toml`. The user writes `[entity.<name>] shape =
+/// "..."`; this struct deserializes that table form into the inner enum.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+struct ShapeEntry {
+    shape: ConcreteSupertypeShape,
+}
+
 #[derive(Debug, Default, Serialize, Deserialize)]
 struct ConcreteSupertypeShapesFile {
     #[serde(default)]
-    entity: BTreeMap<String, ConcreteSupertypeShape>,
+    entity: BTreeMap<String, ShapeEntry>,
+}
+
+/// Per-entity row of the unified `entities.toml` view. Aggregates every
+/// classification decision so downstream stages (naming, pool) take a
+/// single file as input.
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct EntitySummary {
+    #[serde(flatten)]
+    pub variant: VariantSpec,
+    pub group: String,
+    pub arena: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub shape: Option<ConcreteSupertypeShape>,
+    pub instance_count: usize,
 }
 
 pub fn run(allow_pending: bool) -> Result<(), String> {
@@ -71,8 +96,13 @@ pub fn run(allow_pending: bool) -> Result<(), String> {
     let body = fs::read_to_string(&path).map_err(|e| format!("read {path:?}: {e}"))?;
     let file: ConcreteSupertypeShapesFile =
         toml::from_str(&body).map_err(|e| format!("parse {path:?}: {e}"))?;
+    let provided: BTreeMap<String, ConcreteSupertypeShape> = file
+        .entity
+        .iter()
+        .map(|(k, v)| (k.clone(), v.shape))
+        .collect();
 
-    match validate(&required, &file.entity) {
+    match validate(&required, &provided) {
         Validation::Ok { carrier, base_parallel, extras } => {
             for e in &extras {
                 eprintln!(
@@ -84,10 +114,74 @@ pub fn run(allow_pending: bool) -> Result<(), String> {
                 "infer shape: {} ConcreteSupertype entities (carrier={carrier} base_parallel={base_parallel})",
                 required.len()
             );
+
+            let arenas: BTreeMap<String, ArenaSpec> =
+                crate::infer::io::read_confident("arenas_pruned.toml", "group")
+                    .map_err(|e| format!("read arenas_pruned.toml: {e}"))?;
+            let usage: BTreeMap<String, UsageRecord> =
+                crate::infer::io::read_confident("usage.toml", "entity")
+                    .map_err(|e| format!("read usage.toml: {e}"))?;
+            let entities = compile_entities(&pruned, &arenas, &provided, &usage)?;
+            write_entities_toml(&entities)?;
+            eprintln!(
+                "infer shape: wrote entities.toml ({} entities)",
+                entities.len()
+            );
             Ok(())
         }
         Validation::Missing(missing) => Err(missing_entries_message(&missing)),
     }
+}
+
+fn compile_entities(
+    variants: &BTreeMap<String, VariantSpec>,
+    arenas: &BTreeMap<String, ArenaSpec>,
+    shapes: &BTreeMap<String, ConcreteSupertypeShape>,
+    usage: &BTreeMap<String, UsageRecord>,
+) -> Result<BTreeMap<String, EntitySummary>, String> {
+    let entity_to_group = compute_entity_to_group(variants);
+
+    let mut out = BTreeMap::new();
+    for (entity, variant) in variants {
+        let group = entity_to_group
+            .get(entity)
+            .ok_or_else(|| format!("entity {entity} has no group"))?
+            .clone();
+        let arena = arenas
+            .get(&group)
+            .ok_or_else(|| format!("group {group} missing in arenas_pruned.toml"))?
+            .arena
+            .clone();
+        let shape = shapes.get(entity).copied();
+        let instance_count = usage.get(entity).map(|u| u.instance_count).unwrap_or(0);
+        out.insert(
+            entity.clone(),
+            EntitySummary {
+                variant: variant.clone(),
+                group,
+                arena,
+                shape,
+                instance_count,
+            },
+        );
+    }
+    Ok(out)
+}
+
+fn write_entities_toml(
+    entities: &BTreeMap<String, EntitySummary>,
+) -> Result<(), String> {
+    let mut outer: BTreeMap<&str, &BTreeMap<String, EntitySummary>> = BTreeMap::new();
+    outer.insert("entity", entities);
+    let body = toml::to_string_pretty(&outer)
+        .map_err(|e| format!("serialize entities.toml: {e}"))?;
+    let header = "# Generated by `infer shape`. Do not edit manually.\n\
+                  # Inputs: variants_pruned.toml + arenas_pruned.toml + shapes.toml + usage.toml\n\n";
+    fs::write(
+        Path::new("inferred").join("entities.toml"),
+        format!("{header}{body}"),
+    )
+    .map_err(|e| format!("write entities.toml: {e}"))
 }
 
 #[derive(Debug)]
@@ -254,12 +348,210 @@ shape = "base_parallel"
 "#;
         let file: ConcreteSupertypeShapesFile = toml::from_str(body).unwrap();
         assert_eq!(
-            file.entity.get("face_bound"),
-            Some(&ConcreteSupertypeShape::Carrier)
+            file.entity.get("face_bound").map(|e| e.shape),
+            Some(ConcreteSupertypeShape::Carrier)
         );
         assert_eq!(
-            file.entity.get("styled_item"),
-            Some(&ConcreteSupertypeShape::BaseParallel)
+            file.entity.get("styled_item").map(|e| e.shape),
+            Some(ConcreteSupertypeShape::BaseParallel)
         );
+    }
+
+    fn variants_with(pairs: &[(&str, VariantSpec)]) -> BTreeMap<String, VariantSpec> {
+        pairs
+            .iter()
+            .map(|(k, v)| (k.to_string(), v.clone()))
+            .collect()
+    }
+
+    fn arenas_with(pairs: &[(&str, &str)]) -> BTreeMap<String, ArenaSpec> {
+        pairs
+            .iter()
+            .map(|(g, a)| {
+                (
+                    g.to_string(),
+                    ArenaSpec {
+                        arena: a.to_string(),
+                    },
+                )
+            })
+            .collect()
+    }
+
+    fn usage_with(pairs: &[(&str, usize)]) -> BTreeMap<String, UsageRecord> {
+        pairs
+            .iter()
+            .map(|(k, n)| {
+                (
+                    k.to_string(),
+                    UsageRecord {
+                        instance_count: *n,
+                    },
+                )
+            })
+            .collect()
+    }
+
+    #[test]
+    fn compile_entities_basic() {
+        let variants = variants_with(&[
+            ("cartesian_point", VariantSpec::SingleStruct),
+            (
+                "line",
+                VariantSpec::InEnum {
+                    enum_name: "curve".into(),
+                },
+            ),
+            (
+                "curve",
+                VariantSpec::EnumBase {
+                    enum_name: "curve".into(),
+                },
+            ),
+            ("face_bound", VariantSpec::ConcreteSupertype),
+        ]);
+        let arenas = arenas_with(&[
+            ("cartesian_point", "cartesian_point"),
+            ("curve", "curve"),
+            ("face_bound", "face_bound"),
+        ]);
+        let shapes: BTreeMap<String, ConcreteSupertypeShape> =
+            [("face_bound".to_string(), ConcreteSupertypeShape::Carrier)]
+                .into_iter()
+                .collect();
+        let usage = usage_with(&[
+            ("cartesian_point", 100),
+            ("line", 50),
+            ("curve", 0),
+            ("face_bound", 7),
+        ]);
+
+        let out = compile_entities(&variants, &arenas, &shapes, &usage).unwrap();
+
+        assert_eq!(out["cartesian_point"].group, "cartesian_point");
+        assert_eq!(out["cartesian_point"].arena, "cartesian_point");
+        assert_eq!(out["cartesian_point"].instance_count, 100);
+        assert!(out["cartesian_point"].shape.is_none());
+
+        assert_eq!(out["line"].group, "curve");
+        assert_eq!(out["line"].arena, "curve");
+
+        assert_eq!(out["curve"].group, "curve");
+        assert_eq!(out["curve"].arena, "curve");
+
+        assert_eq!(out["face_bound"].group, "face_bound");
+        assert_eq!(
+            out["face_bound"].shape,
+            Some(ConcreteSupertypeShape::Carrier)
+        );
+    }
+
+    #[test]
+    fn compile_entities_nested_field_inherits_parent_group() {
+        let variants = variants_with(&[
+            ("parent", VariantSpec::SingleStruct),
+            (
+                "child",
+                VariantSpec::NestedField {
+                    into: "parent".into(),
+                    as_field: "child".into(),
+                    added_attr_count: 1,
+                },
+            ),
+        ]);
+        let arenas = arenas_with(&[("parent", "parent")]);
+        let shapes = BTreeMap::new();
+        let usage = usage_with(&[("parent", 1), ("child", 0)]);
+
+        let out = compile_entities(&variants, &arenas, &shapes, &usage).unwrap();
+
+        assert_eq!(out["child"].group, "parent");
+        assert_eq!(out["child"].arena, "parent");
+    }
+
+    #[test]
+    fn compile_entities_merged_into_follows_chain() {
+        let variants = variants_with(&[
+            ("a", VariantSpec::SingleStruct),
+            (
+                "b",
+                VariantSpec::MergedInto {
+                    target: "a".into(),
+                    chain: vec![],
+                },
+            ),
+            (
+                "c",
+                VariantSpec::MergedInto {
+                    target: "b".into(),
+                    chain: vec![],
+                },
+            ),
+        ]);
+        let arenas = arenas_with(&[("a", "a")]);
+        let shapes = BTreeMap::new();
+        let usage = BTreeMap::new();
+
+        let out = compile_entities(&variants, &arenas, &shapes, &usage).unwrap();
+
+        assert_eq!(out["b"].group, "a");
+        assert_eq!(out["c"].group, "a");
+        assert_eq!(out["c"].arena, "a");
+    }
+
+    #[test]
+    fn entity_summary_toml_roundtrip() {
+        let variants = variants_with(&[
+            ("cartesian_point", VariantSpec::SingleStruct),
+            (
+                "line",
+                VariantSpec::InEnum {
+                    enum_name: "curve".into(),
+                },
+            ),
+            (
+                "curve",
+                VariantSpec::EnumBase {
+                    enum_name: "curve".into(),
+                },
+            ),
+            ("face_bound", VariantSpec::ConcreteSupertype),
+            (
+                "child",
+                VariantSpec::NestedField {
+                    into: "cartesian_point".into(),
+                    as_field: "extra".into(),
+                    added_attr_count: 2,
+                },
+            ),
+        ]);
+        let arenas = arenas_with(&[
+            ("cartesian_point", "cartesian_point"),
+            ("curve", "curve"),
+            ("face_bound", "face_bound"),
+        ]);
+        let shapes: BTreeMap<String, ConcreteSupertypeShape> = [(
+            "face_bound".to_string(),
+            ConcreteSupertypeShape::BaseParallel,
+        )]
+        .into_iter()
+        .collect();
+        let usage = usage_with(&[("cartesian_point", 5)]);
+
+        let entities = compile_entities(&variants, &arenas, &shapes, &usage).unwrap();
+
+        // Serialize to TOML, then deserialize back. Catches any
+        // flatten + tagged enum incompatibility in toml-rs.
+        let mut outer: BTreeMap<&str, &BTreeMap<String, EntitySummary>> = BTreeMap::new();
+        outer.insert("entity", &entities);
+        let body = toml::to_string_pretty(&outer).unwrap();
+
+        #[derive(Deserialize)]
+        struct Outer {
+            entity: BTreeMap<String, EntitySummary>,
+        }
+        let parsed: Outer = toml::from_str(&body).unwrap();
+
+        assert_eq!(parsed.entity, entities);
     }
 }

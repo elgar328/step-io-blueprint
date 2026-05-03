@@ -250,17 +250,18 @@ Plan 3f — pool 분류
   결과: 1,780 → 296 used / 1,484 unused, variants_pruned 240 entities,
   arenas_pruned 130 groups, ~85 초 소요. 거대 group cluster 분할
   (co-occurrence 기반) 은 *후속 plan*
-- **3c (ConcreteSupertype shape) ✓** — `infer shape` sub-command.
-  가지치기 후 살아남은 ConcreteSupertype (현재 13 건) 각각의 IR shape
-  결정 (Carrier enum / Base+Parallel struct+enum). *수동 입력*
-  (`inferred/shapes.toml`) + strict gate 검증 — missing → Err, extra →
-  warning. 산출 파일 X (입력 자체가 step-io codegen 의 입력). 자동화는
-  ratio 단일 신호로 가능했으나 (Carrier 측 ratio ≥ 1.99 vs Base+Parallel
-  측 ≤ 0.020 의 100 배 gap) ratio 가 못 잡는 신호 (children 의 attr 구조,
-  도메인 mental model) 와 *경계 케이스 사람 검토 강제* 위해 의도적으로
-  수동 선택. 결과: Carrier 8 + Base+Parallel 5 = 13. fixtures 확장으로
-  ConcreteSupertype 늘면 strict gate 가 누락분 잡음 → 사용자가 추가
-  entry 만 수동 작성
+- **3c (ConcreteSupertype shape) ✓** — `infer shape` sub-command. 두
+  책임: (1) 가지치기 후 살아남은 ConcreteSupertype (현재 13 건) 각각의
+  IR shape 결정 검증 (*수동 입력* `inferred/shapes.toml` vs required
+  set; missing → Err, extra → warning); (2) 검증 통과 후 *통합 view*
+  `entities.toml` 산출 — variants_pruned + arenas_pruned + shapes +
+  usage 를 entity 단위 단일 표로 응축. 명명 (Plan 3e) / pool (Plan 3f)
+  의 *단일 입력*. shape 자동화는 ratio 단일 신호로 가능했으나 (Carrier
+  측 ratio ≥ 1.99 vs Base+Parallel 측 ≤ 0.020 의 100 배 gap) ratio 가
+  못 잡는 신호 (children 의 attr 구조, 도메인 mental model) 와 *경계
+  케이스 사람 검토 강제* 위해 의도적으로 수동 선택. 결과: Carrier 8 +
+  Base+Parallel 5 = 13. fixtures 확장으로 ConcreteSupertype 늘면 strict
+  gate 가 누락분 잡음 → 사용자가 추가 entry 만 수동 작성
 - ~~**3d (Lossy)**~~ — **제거 결정**. 본래 의도 (어느 attr 가 typed
   field, 어느 attr 가 round-trip default) 의 동기는 *부정확한 round-trip
   테스트 우회용 텍스트 보존*. 텍스트 보존은 IR 의 책임이 아니고 *테스트
