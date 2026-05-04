@@ -1,9 +1,11 @@
 # step-io-schema-check
 
 EXPRESS schema 분석 도구 — 4 STEP schema (AP203 / AP203e2 / AP214e3 /
-AP242) 를 union 으로 읽고, *step-io 의 IR 코드 생성 입력* 이 되는 분류표를
-산출한다. 사람 결정은 모두 `inferred/` 의 사용자 입력 파일에 누적, 도구는
-*기계적 변환 + 검증* 만 수행.
+AP242) 를 union 으로 읽고, *step-io 측 IR 코드를 수작업으로 작성할 때
+참조하는 청사진* 을 산출한다. 사람 결정은 모두 `inferred/` 의 사용자
+입력 파일에 누적, 도구는 *기계적 변환 + 검증* 만 수행. step-io 측의 IR
+구현은 entity 별 수작업 — 본 도구는 *어떤 모양으로 만들지의 reference*
+만 제공.
 
 ## Modes
 
@@ -25,7 +27,7 @@ infer variant → infer arena → infer prune → infer shape → infer pool →
 
 `infer naming` 은 분류 파이프라인의 *마지막 layer* — type / id / variant /
 enum / field 의 IR 친화 이름 결정 + 모든 stage 산출 (entities + pools +
-names + schemas) 통합 → step-io codegen 의 *단일 청사진* `ir.toml` 산출.
+names + schemas) 통합 → step-io 측 수작업 구현의 *단일 reference* `ir.toml` 산출.
 사용자는 `names.toml` 의 *어색한 자리만* override (자동 default 가
 대부분 OK).
 
@@ -38,7 +40,7 @@ names + schemas) 통합 → step-io codegen 의 *단일 청사진* `ir.toml` 산
 | `infer prune --corpus <path>` | — | `variants.toml`, `arenas_overrides.toml` | **외부 STEP corpus** (`<path>`) | `usage.toml`, `variants_pruned.toml`, `arenas_pruned.toml` |
 | `infer shape` | `shapes.toml` (수동, ConcreteSupertype 별 1 entry) | `variants_pruned.toml`, `arenas_pruned.toml`, `usage.toml` | — | (검증 + 통과 시 `entities.toml` 자동 응축) |
 | `infer pool` | `pools.toml` (수동, arena 별 1 entry) | `arenas_pruned.toml` | — | (검증만; missing → Err, extra → warning) |
-| `infer naming` | `names.toml` (수동 partial — 어색한 자리만 override) | `entities.toml`, `pools.toml`, `schemas/*.exp` | — | `ir.toml` (entity 단위 단일 IR 청사진 — codegen 입력) |
+| `infer naming` | `names.toml` (수동 partial — 어색한 자리만 override) | `entities.toml`, `pools.toml`, `schemas/*.exp` | — | `ir.toml` (entity 단위 단일 IR 청사진 — step-io 측 수작업 구현의 reference) |
 
 `variants_pending.toml` 은 variant stage 가 *Rule 8 unresolved 안전망* 으로
 *예상 외 schema 모양* 을 발견했을 때만 생성 — 파일 존재 자체가 "다음
@@ -89,7 +91,8 @@ stage 는 외부 의존이 없다.
   PascalCase, `<type>Id`, attr 그대로) + 사용자 점진 override
   (`names.toml` partial — 빈 파일 OK). entities + pools + names +
   schemas 의 attr type 까지 통합한 *entity 단위 단일 청사진* `ir.toml`
-  산출 — step-io codegen 의 단일 입력. 알려진 약어 (B-spline / NURBS)
+  산출 — step-io 측에서 entity 를 *수작업으로 한 명씩 추가할 때 참조*
+  하는 단일 파일 (codegen 미사용). 알려진 약어 (B-spline / NURBS)
   자동 인식 X (사용자 override 영역).
 
 ### Pending gate
