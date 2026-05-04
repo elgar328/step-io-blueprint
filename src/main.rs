@@ -6,6 +6,7 @@
 //! - `infer prune --corpus <path>`  Stage 3: 53k STEP corpus 가지치기
 //! - `infer shape`    Stage 4: ConcreteSupertype 의 IR shape 검증 + entities.toml 응축
 //! - `infer pool`     Stage 5: pools.toml 검증 (수동 입력 vs arenas_pruned 의 required arena)
+//! - `infer naming`   Stage 6: ir.toml 청사진 산출 (entities + pools + names + schemas 통합)
 //!
 //! 4 schema (ap203 / ap203e2 / ap214e3 / ap242) 항상 union 으로 처리.
 //! 출력은 `inferred/` 디렉토리에. 자세한 사양은 README + INFER_TUNING.md
@@ -35,6 +36,7 @@ fn main() -> ExitCode {
         (Some("infer"), Some("prune")) => run_prune(&args, allow_pending),
         (Some("infer"), Some("shape")) => run_shape(allow_pending),
         (Some("infer"), Some("pool")) => run_pool(allow_pending),
+        (Some("infer"), Some("naming")) => run_naming(),
         (Some("infer"), Some(stage)) => {
             eprintln!("unknown infer stage: {stage}");
             print_usage();
@@ -42,7 +44,7 @@ fn main() -> ExitCode {
         }
         (Some("infer"), None) => {
             eprintln!(
-                "infer requires a stage argument: variant | arena | prune | shape | pool"
+                "infer requires a stage argument: variant | arena | prune | shape | pool | naming"
             );
             print_usage();
             ExitCode::from(2)
@@ -130,6 +132,16 @@ fn run_shape(allow_pending: bool) -> ExitCode {
     }
 }
 
+fn run_naming() -> ExitCode {
+    match infer::naming::run() {
+        Ok(()) => ExitCode::SUCCESS,
+        Err(e) => {
+            eprintln!("infer naming failed:\n{e}");
+            ExitCode::from(2)
+        }
+    }
+}
+
 fn run_prune(args: &[String], allow_pending: bool) -> ExitCode {
     let corpus_path = match parse_corpus_arg(args) {
         Ok(p) => p,
@@ -168,6 +180,7 @@ fn print_usage() {
          cargo run --release -- infer arena\n  \
          cargo run --release -- infer prune --corpus <path>\n  \
          cargo run --release -- infer shape\n  \
-         cargo run --release -- infer pool"
+         cargo run --release -- infer pool\n  \
+         cargo run --release -- infer naming"
     );
 }

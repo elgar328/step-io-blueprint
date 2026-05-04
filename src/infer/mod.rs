@@ -8,6 +8,7 @@
 
 pub mod arena;
 pub mod io;
+pub mod naming;
 pub mod overrides;
 pub mod pool;
 pub mod prune;

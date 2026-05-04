@@ -23,11 +23,11 @@ cargo run --release                     # default: check (placeholder, 미구현
 infer variant → infer arena → infer prune → infer shape → infer pool → infer naming
 ```
 
-`infer naming` 은 *미구현* — 분류 파이프라인의 *마지막 layer*. pool 까지
-모든 분류 결정이 끝난 후 type / id / variant / field 의 IR 친화 이름 결정
-(자동 default + 사용자 점진 override). *명명은 pool 결정에 의존 X (역순
-가능했음)* 이지만, 같은 pool 의 type 들이 *도메인 일관성* 을 갖도록 사람이
-검토하기 좋은 자리 = pool 후.
+`infer naming` 은 분류 파이프라인의 *마지막 layer* — type / id / variant /
+enum / field 의 IR 친화 이름 결정 + 모든 stage 산출 (entities + pools +
+names + schemas) 통합 → step-io codegen 의 *단일 청사진* `ir.toml` 산출.
+사용자는 `names.toml` 의 *어색한 자리만* override (자동 default 가
+대부분 OK).
 
 ### 입출력 표
 
@@ -38,7 +38,7 @@ infer variant → infer arena → infer prune → infer shape → infer pool →
 | `infer prune --corpus <path>` | — | `variants.toml`, `arenas_overrides.toml` | **외부 STEP corpus** (`<path>`) | `usage.toml`, `variants_pruned.toml`, `arenas_pruned.toml` |
 | `infer shape` | `shapes.toml` (수동, ConcreteSupertype 별 1 entry) | `variants_pruned.toml`, `arenas_pruned.toml`, `usage.toml` | — | (검증 + 통과 시 `entities.toml` 자동 응축) |
 | `infer pool` | `pools.toml` (수동, arena 별 1 entry) | `arenas_pruned.toml` | — | (검증만; missing → Err, extra → warning) |
-| `infer naming` *(미구현)* | `names_overrides.toml` (점진 추가) | `entities.toml`, `pools.toml` | — | `names.toml` (예정) |
+| `infer naming` | `names.toml` (수동 partial — 어색한 자리만 override) | `entities.toml`, `pools.toml`, `schemas/*.exp` | — | `ir.toml` (entity 단위 단일 IR 청사진 — codegen 입력) |
 
 `variants_pending.toml` 은 variant stage 가 *Rule 8 unresolved 안전망* 으로
 *예상 외 schema 모양* 을 발견했을 때만 생성 — 파일 존재 자체가 "다음
@@ -84,11 +84,13 @@ stage 는 외부 의존이 없다.
   도구는 검증만 (missing → Err, extra → warning). 자동 분류는 효과 0
   (cross-ref 풍부 schema 에서 union-find 가 거대 component 1 개로 수렴)
   으로 폐기.
-- **`infer naming`** *(미구현)* — 분류 파이프라인의 *마지막 layer*. type /
-  id / variant / field 의 IR 친화 이름 결정. 자동 default (snake_case →
-  PascalCase, type + Id, attr 그대로) + 사용자 점진 override
-  (`names_overrides.toml`) — IR 코드 작성 중 발견된 어색한 자리만 추가.
-  후속 plan 에서 구현.
+- **`infer naming`** — 분류 파이프라인의 *마지막 layer*. type / id /
+  variant / enum / field 의 IR 친화 이름 결정. 자동 default (snake_case →
+  PascalCase, `<type>Id`, attr 그대로) + 사용자 점진 override
+  (`names.toml` partial — 빈 파일 OK). entities + pools + names +
+  schemas 의 attr type 까지 통합한 *entity 단위 단일 청사진* `ir.toml`
+  산출 — step-io codegen 의 단일 입력. 알려진 약어 (B-spline / NURBS)
+  자동 인식 X (사용자 override 영역).
 
 ### Pending gate
 
@@ -149,17 +151,19 @@ src/
     ├── arena.rs               stage 2 — group → arena 매핑 + entity → group 인덱스
     ├── prune.rs               stage 3 — corpus 가지치기 + transitive cascade
     ├── shape.rs               stage 4 — ConcreteSupertype shape 검증 + entities.toml 응축
-    └── pool.rs                stage 5 — pools.toml 검증 (수동 입력 vs arenas_pruned 의 required arena set)
+    ├── pool.rs                stage 5 — pools.toml 검증 (수동 입력 vs arenas_pruned 의 required arena set)
+    └── naming.rs              stage 6 — auto default + names.toml overrides → ir.toml 청사진
 schemas/                       4 STEP schema (.exp 파일)
 inferred/                      stage 산출 + 사용자 입력 파일 (대부분 gitignored)
 ```
 
 `inferred/` 의 추적 정책 (gitignore):
-- *사용자 입력 파일* (`*_overrides.toml`, `shapes.toml`, `pools.toml`) —
-  tracked
+- *사용자 입력 파일* (`*_overrides.toml`, `shapes.toml`, `pools.toml`,
+  `names.toml`) — tracked
 - *도구 산출 파일* (`variants.toml`, `arenas.toml`,
   `variants_pruned.toml`, `arenas_pruned.toml`, `usage.toml`,
-  `entities.toml`, `*_pending.toml`) — gitignored (재실행으로 복원 가능)
+  `entities.toml`, `ir.toml`, `*_pending.toml`) — gitignored (재실행으로
+  복원 가능)
 
 ## Tests
 

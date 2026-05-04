@@ -222,7 +222,7 @@ Plan 3b ✓ — 53k STEP 파일 통계 가지치기
 Plan 3c ✓ — ConcreteSupertype IR shape 결정
 Plan 3d — *제거됨* (Lossy 정책 → round-trip 테스트 의미적 정확화로 책임 이관)
 Plan 3e ✓ — pool 분류 (수동 입력 + strict gate, shape 패턴 복제)
-Plan 3f — IR 친화 명명 (분류 파이프라인의 마지막 layer)
+Plan 3f ✓ — IR 친화 명명 + ir.toml 청사진 산출 (entities + pools + names + schemas 통합)
 ```
 
 각 plan 의 책임:
@@ -273,11 +273,16 @@ Plan 3f — IR 친화 명명 (분류 파이프라인의 마지막 layer)
   X (입력이 곧 step-io codegen 입력). 자동 분류는 폐기 (cross-ref 풍부
   schema 에서 union-find 의 거대 component 1 개 수렴 — INFER_TUNING §4 의
   진단)
-- **3f (이름)** — *분류 파이프라인의 마지막 layer*. type / id / variant /
-  field 의 IR 친화 이름 결정. snake → PascalCase / type + `Id` / attr
-  그대로 자동 default + `names_overrides.toml` 사용자 점진 override (IR
-  코드 작성 중 발견된 어색한 자리만 추가). pool 결정에 강한 의존 X 지만
-  *같은 pool 의 도메인 일관성* 검토에 pool 결과 hint 활용
+- **3f (이름) ✓** — `infer naming` sub-command. *분류 파이프라인의 마지막
+  layer*. type / id / variant / enum / kind_enum / field 의 IR 친화 이름
+  결정. **자동 default** (snake → PascalCase / `<type>Id` / attr 그대로 /
+  Carrier 의 `<type>Data` / Base+Parallel 의 `<type>Kind`) + **사용자
+  partial override** (`names.toml` — 카테고리별 flat, 빈 파일 OK, 누락 X).
+  entities + pools + names + schemas 통합 → `ir.toml` (entity 단위 단일
+  IR 청사진) 산출. *codegen 의 단일 입력*. attr type 까지 prefix string
+  으로 변환 (예: `list_ref_X` / `opt_real`) + inherited attrs 펼침 + TYPE
+  alias resolution. stale 검사는 warning (Err X) — 사용자 typo / 가지치기
+  변동 자연 흡수
 
 **책임 분리 원칙**: 모든 분류 / 사람 결정 / 통계 가지치기가 본 도구
 (schema-check) 측. step-io 측은 schema-check 의 최종 산출만 받아 *기계적*
