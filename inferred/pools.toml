@@ -63,18 +63,6 @@ pool = "plm"
 [arena.cartesian_point]
 pool = "geometry"
 
-[arena.cc_design_approval]
-pool = "plm"
-
-[arena.cc_design_date_and_time_assignment]
-pool = "plm"
-
-[arena.cc_design_person_and_organization_assignment]
-pool = "plm"
-
-[arena.cc_design_security_classification]
-pool = "plm"
-
 [arena.centre_of_symmetry]
 pool = "shape_rep"
 
@@ -398,3 +386,24 @@ pool = "pmi"
 
 [arena.vertex_loop]
 pool = "topology"
+
+[arena.applied_group_assignment]
+pool = "plm"
+
+[arena.applied_presented_item]
+pool = "visualization"
+
+[arena.area_in_set]
+pool = "visualization"
+
+[arena.presentation_area]
+pool = "visualization"
+
+[arena.presentation_size]
+pool = "visualization"
+
+[arena.presented_item_representation]
+pool = "visualization"
+
+[arena.product_definition_with_associated_documents]
+pool = "assembly_product"

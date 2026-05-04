@@ -23,6 +23,9 @@ shape = "carrier"
 [entity.manifold_solid_brep]               # 105K self / 759 children, ratio 0.0072 — parent dominant
 shape = "base_parallel"
 
+[entity.mapped_item]                       # 900 self / 0 children — children 미등장
+shape = "carrier"
+
 [entity.product_category]                  # 10K self / 195K children, ratio 19.4
 shape = "carrier"
 
@@ -32,6 +35,9 @@ shape = "base_parallel"
 [entity.product_definition_context]        # 53K self / 11 children, ratio ~0 — parent overwhelms
 shape = "base_parallel"
 
+[entity.presentation_style_assignment]     # 4.2M self / 0 children — children 미등장
+shape = "carrier"
+
 [entity.product_definition_formation]      # 43K self / 152K children, ratio 3.5
 shape = "carrier"
 
@@ -39,6 +45,9 @@ shape = "carrier"
 shape = "carrier"
 
 [entity.representation_context]            # 96K self / 191K children, ratio 1.99
+shape = "carrier"
+
+[entity.representation_map]                # 882 self / 0 children — children 미등장
 shape = "carrier"
 
 [entity.representation_relationship]       # 42 self / 43K children, ratio 1024 — children dominant
