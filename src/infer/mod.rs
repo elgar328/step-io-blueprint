@@ -52,8 +52,9 @@ pub enum DecisionSource {
     Auto,
     /// User explicitly set this via the overrides file (`[entity.X] ...`).
     Override,
-    /// User accepted the auto decision via `[batch_accept] entries = [...]`.
-    /// Confidence is preserved verbatim from the auto run.
+    /// User accepted the auto decision (legacy variant — no current stage
+    /// emits this since the bulk-accept mechanism was removed alongside
+    /// arena's 3-bucket scaffolding).
     Accepted,
 }
 

@@ -232,9 +232,13 @@ Plan 3f — IR 친화 명명 (분류 파이프라인의 마지막 layer)
   0 (variants 가 이미 root SUPERTYPE 따라 정렬됨), Rule A (SELECT 멤버
   통합) 후보 253 건 중 대부분이 *generic cross-cutting SELECT* (예:
   approved_item 9 distinct groups) — 무차별 통합 시 거대 generic enum
-  발생 → IR 사용성 파괴. arena 단계는 *현재 그대로* (variants 의 group
-  변환 + arenas_overrides 적용) 유지. 거대 group 분할은 Plan 3b 가
-  통계로 흡수
+  발생 → IR 사용성 파괴. arena 단계는 *1 group = 1 arena default + arenas_overrides
+  적용* 유지. 거대 group 분할은 Plan 3b 가 통계로 흡수.
+  **Plan 3.7 (commit 후속) 으로** Decision wrap / 3-bucket / batch_accept
+  scaffolding 폐기 — auto 룰이 항상 confident 0.9~0.95 이라 review/unresolved
+  자리 0 의 dead code 였음. arenas.toml / arenas_pruned.toml 의 source/
+  confidence/reasons noise 제거. variant 의 Rule 8 unresolved 안전망
+  (Decision/PendingFile/Unresolved) 은 보존.
 - **3b (가지치기) ✓** — `infer prune --corpus <path>` sub-command. 외부
   53k STEP 파일 corpus 경로 인자로 받음 (fixtures 복사 X). instance
   카운트 측정 + P-2 transitive 가지치기 + arena 재계산. 산출 3 파일:

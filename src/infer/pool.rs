@@ -12,7 +12,6 @@ use std::path::Path;
 use serde::{Deserialize, Serialize};
 
 use crate::infer::arena::ArenaSpec;
-use crate::infer::Decision;
 
 const VARIANTS_PENDING: &str = "variants_pending.toml";
 const ARENAS_PENDING: &str = "arenas_pending.toml";
@@ -47,7 +46,7 @@ pub fn run(allow_pending: bool) -> Result<(), String> {
         ));
     }
 
-    let arenas: BTreeMap<String, Decision<ArenaSpec>> =
+    let arenas: BTreeMap<String, ArenaSpec> =
         crate::infer::io::read_confident(FILE_ARENAS_PRUNED, "group")
             .map_err(|e| format!("read {FILE_ARENAS_PRUNED}: {e}"))?;
     if arenas.is_empty() {
@@ -55,7 +54,7 @@ pub fn run(allow_pending: bool) -> Result<(), String> {
             "{FILE_ARENAS_PRUNED} is empty or missing — run `infer prune --corpus <path>` first."
         ));
     }
-    let required: BTreeSet<String> = arenas.values().map(|d| d.data.arena.clone()).collect();
+    let required: BTreeSet<String> = arenas.values().map(|s| s.arena.clone()).collect();
 
     let path = Path::new("inferred").join(FILE_POOLS);
     if !path.exists() {

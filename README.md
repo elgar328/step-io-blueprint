@@ -34,14 +34,15 @@ infer variant → infer arena → infer prune → infer shape → infer pool →
 | Stage | 사용자 입력 (`inferred/`) | 도구 입력 | 외부 의존 | 산출 |
 |---|---|---|---|---|
 | `infer variant` | `variants_overrides.toml` (선택) | `schemas/*.exp` | — | `variants.toml`, (`variants_pending.toml`) |
-| `infer arena` | `arenas_overrides.toml` (선택) | `variants.toml`, `schemas/*.exp` | — | `arenas.toml`, (`arenas_pending.toml`) |
+| `infer arena` | `arenas_overrides.toml` (선택) | `variants.toml`, `schemas/*.exp` | — | `arenas.toml` |
 | `infer prune --corpus <path>` | — | `variants.toml`, `arenas_overrides.toml` | **외부 STEP corpus** (`<path>`) | `usage.toml`, `variants_pruned.toml`, `arenas_pruned.toml` |
 | `infer shape` | `shapes.toml` (수동, ConcreteSupertype 별 1 entry) | `variants_pruned.toml`, `arenas_pruned.toml`, `usage.toml` | — | (검증 + 통과 시 `entities.toml` 자동 응축) |
 | `infer pool` | `pools.toml` (수동, arena 별 1 entry) | `arenas_pruned.toml` | — | (검증만; missing → Err, extra → warning) |
 | `infer naming` *(미구현)* | `names_overrides.toml` (점진 추가) | `entities.toml`, `pools.toml` | — | `names.toml` (예정) |
 
-`<stage>_pending.toml` 은 *review / unresolved 결정이 있을 때만* 생성 —
-파일 존재 자체가 "다음 stage 진입 차단" 의 strict gate 신호.
+`variants_pending.toml` 은 variant stage 가 *Rule 8 unresolved 안전망* 으로
+*예상 외 schema 모양* 을 발견했을 때만 생성 — 파일 존재 자체가 "다음
+stage 진입 차단" 의 strict gate 신호 (현재까지 한 번도 생성된 적 없음).
 `*_overrides.toml` 은 사용자가 *직접 작성* 하는 결정 파일 (자동 분류의
 재해석 / 좁은 사람 개입). `shapes.toml` 은 *override 가 아닌 수동 입력*
 (ConcreteSupertype 의 IR shape — 자동 분류 X).
@@ -67,8 +68,10 @@ stage 는 외부 의존이 없다.
   ComplexSupertype / CompositeOneOf / ConcreteSupertype) 로 자동 분류.
   결정 신호는 SUPERTYPE / SUBTYPE 구조 + ATTR.
 - **`infer arena`** — variants 분류를 group (같은 enum 으로 묶이는 entity
-  들의 묶음) 으로 변환하고 group → arena 매핑 결정. 자동 분할 룰은 보수적
-  (1 group = 1 arena 가 default).
+  들의 묶음) 으로 변환하고 group → arena 매핑. **1 group = 1 arena 가
+  default** (arena 이름 = group 이름) + `arenas_overrides.toml` 로
+  사용자가 *그루핑 / 이름* 변경 가능. 자동 룰이 trivial 이라 별도
+  3-bucket 처리 없음.
 - **`infer prune --corpus <path>`** — corpus 의 instance 카운트로
   *현재 사용되지 않는* entity 를 식별 + transitive cascade 로 흡수된
   entity 도 정리. 산출은 *별 view* — 원본 variants/arenas 는 불변.

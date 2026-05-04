@@ -368,15 +368,6 @@ fn filter_stale_overrides(
             );
         }
     }
-    for k in &overrides.batch_accept.entries {
-        if valid_groups.contains(k) {
-            filtered.batch_accept.entries.push(k.clone());
-        } else {
-            eprintln!(
-                "warning: arenas_overrides batch_accept {k:?} skipped — group removed by pruning"
-            );
-        }
-    }
     filtered
 }
 

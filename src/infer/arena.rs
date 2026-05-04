@@ -5,10 +5,8 @@ use std::collections::{BTreeMap, BTreeSet};
 use serde::{Deserialize, Serialize};
 
 use crate::express::Schema;
-use crate::infer::io::{PendingFile, PendingStats};
 use crate::infer::overrides::{self, OverrideFile};
 use crate::infer::variant::VariantSpec;
-use crate::infer::{Bucket, Confidence, Decision, DecisionSource, InferResult, Unresolved};
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct ArenaSpec {
@@ -16,7 +14,6 @@ pub struct ArenaSpec {
 }
 
 const FILE_CONFIDENT: &str = "arenas.toml";
-const FILE_PENDING: &str = "arenas_pending.toml";
 const FILE_OVERRIDES: &str = "arenas_overrides.toml";
 const SECTION: &str = "group";
 
@@ -46,41 +43,27 @@ pub fn run(_schemas: &[Schema], allow_pending: bool) -> Result<(), String> {
         overrides::load(FILE_OVERRIDES).map_err(|e| format!("load overrides: {e}"))?;
 
     let known: BTreeSet<String> = groups.keys().cloned().collect();
-    let mut errs = overrides::validate_known(&overrides_file, SECTION, &known, FILE_OVERRIDES);
-    errs.extend(overrides::validate_no_conflict(
-        &overrides_file,
-        SECTION,
-        FILE_OVERRIDES,
-    ));
+    let errs = overrides::validate_known(&overrides_file, SECTION, &known, FILE_OVERRIDES);
     if !errs.is_empty() {
         return Err(errs.join("\n"));
     }
 
-    let auto = compute_auto_decisions(&groups);
-    let result = merge_overrides(auto, &overrides_file)?;
+    // 1 group = 1 arena default; explicit overrides replace the default.
+    let mut arenas: BTreeMap<String, ArenaSpec> = groups
+        .keys()
+        .map(|g| (g.clone(), ArenaSpec { arena: g.clone() }))
+        .collect();
+    for (g, spec) in &overrides_file.group {
+        arenas.insert(g.clone(), spec.clone());
+    }
 
-    crate::infer::io::write_confident(FILE_CONFIDENT, SECTION, &result.confident)
+    crate::infer::io::write_confident(FILE_CONFIDENT, SECTION, &arenas)
         .map_err(|e| format!("write {FILE_CONFIDENT}: {e}"))?;
 
-    let pending = PendingFile {
-        stats: PendingStats {
-            total: result.confident.len() + result.review.len() + result.unresolved.len(),
-            confident: result.confident.len(),
-            review: result.review.len(),
-            unresolved: result.unresolved.len(),
-        },
-        review: result.review,
-        unresolved: result.unresolved,
-    };
-    crate::infer::io::write_pending(FILE_PENDING, &pending)
-        .map_err(|e| format!("write {FILE_PENDING}: {e}"))?;
-
     eprintln!(
-        "infer arena: confident={} review={} unresolved={} (total={})",
-        pending.stats.confident,
-        pending.stats.review,
-        pending.stats.unresolved,
-        pending.stats.total,
+        "infer arena: {} groups (overridden={})",
+        arenas.len(),
+        overrides_file.group.len(),
     );
     Ok(())
 }
@@ -98,21 +81,21 @@ type Groups = BTreeMap<String, GroupInfo>;
 pub fn recompute_for_pruned(
     variants: &BTreeMap<String, VariantSpec>,
     overrides: &OverrideFile<ArenaSpec>,
-) -> Result<BTreeMap<String, Decision<ArenaSpec>>, String> {
+) -> Result<BTreeMap<String, ArenaSpec>, String> {
     let groups = compute_groups(variants);
     let known: BTreeSet<String> = groups.keys().cloned().collect();
-    let mut errs = overrides::validate_known(overrides, SECTION, &known, FILE_OVERRIDES);
-    errs.extend(overrides::validate_no_conflict(
-        overrides,
-        SECTION,
-        FILE_OVERRIDES,
-    ));
+    let errs = overrides::validate_known(overrides, SECTION, &known, FILE_OVERRIDES);
     if !errs.is_empty() {
         return Err(errs.join("\n"));
     }
-    let auto = compute_auto_decisions(&groups);
-    let result = merge_overrides(auto, overrides)?;
-    Ok(result.confident)
+    let mut out: BTreeMap<String, ArenaSpec> = groups
+        .keys()
+        .map(|g| (g.clone(), ArenaSpec { arena: g.clone() }))
+        .collect();
+    for (g, spec) in &overrides.group {
+        out.insert(g.clone(), spec.clone());
+    }
+    Ok(out)
 }
 
 /// Build an entity → group reverse index. Used by the shape stage to
@@ -261,140 +244,6 @@ fn compute_groups(variants: &BTreeMap<String, VariantSpec>) -> Groups {
     groups
 }
 
-struct AutoDecisions {
-    groups: BTreeMap<String, AutoEntry>,
-}
-
-enum AutoEntry {
-    Decided(Decision<ArenaSpec>),
-    #[allow(dead_code)]
-    Unresolved(Unresolved),
-}
-
-fn compute_auto_decisions(groups: &Groups) -> AutoDecisions {
-    let mut out: BTreeMap<String, AutoEntry> = BTreeMap::new();
-    for (name, info) in groups {
-        let conf = if info.is_enum {
-            Confidence::new(0.9)
-        } else {
-            Confidence::new(0.95)
-        };
-        out.insert(
-            name.clone(),
-            AutoEntry::Decided(Decision {
-                data: ArenaSpec {
-                    arena: name.clone(),
-                },
-                source: DecisionSource::Auto,
-                confidence: conf,
-                reasons: vec![format!(
-                    "default 1 group = 1 arena ({} member(s))",
-                    info.members.len()
-                )],
-            }),
-        );
-    }
-    AutoDecisions { groups: out }
-}
-
-fn merge_overrides(
-    auto: AutoDecisions,
-    overrides_file: &OverrideFile<ArenaSpec>,
-) -> Result<InferResult<ArenaSpec>, String> {
-    let mut confident = BTreeMap::new();
-    let mut review = BTreeMap::new();
-    let mut unresolved = BTreeMap::new();
-    let mut errors = Vec::new();
-
-    let accept_set: BTreeSet<&String> = overrides_file.batch_accept.entries.iter().collect();
-
-    for (key, entry) in auto.groups {
-        if let Some(override_spec) = overrides_file.group.get(&key) {
-            let prior_conf = match &entry {
-                AutoEntry::Decided(d) => d.confidence,
-                AutoEntry::Unresolved(_) => Confidence::new(1.0),
-            };
-            confident.insert(
-                key,
-                Decision {
-                    data: override_spec.clone(),
-                    source: DecisionSource::Override,
-                    confidence: prior_conf,
-                    reasons: Vec::new(),
-                },
-            );
-            continue;
-        }
-
-        if accept_set.contains(&key) {
-            match entry {
-                AutoEntry::Decided(d) => match d.bucket() {
-                    Bucket::Confident => {
-                        errors.push(format!(
-                            "{FILE_OVERRIDES}: batch_accept.entries lists {key:?}, but it's already in the confident bucket. Remove the entry."
-                        ));
-                    }
-                    Bucket::Review => {
-                        confident.insert(
-                            key,
-                            Decision {
-                                data: d.data,
-                                source: DecisionSource::Accepted,
-                                confidence: d.confidence,
-                                reasons: Vec::new(),
-                            },
-                        );
-                    }
-                    Bucket::Unresolved => {
-                        errors.push(format!(
-                            "{FILE_OVERRIDES}: batch_accept.entries lists {key:?}, but it has no auto decision (unresolved). Use an explicit override instead."
-                        ));
-                    }
-                },
-                AutoEntry::Unresolved(_) => {
-                    errors.push(format!(
-                        "{FILE_OVERRIDES}: batch_accept.entries lists {key:?}, but it has no auto decision (unresolved). Use an explicit override instead."
-                    ));
-                }
-            }
-            continue;
-        }
-
-        match entry {
-            AutoEntry::Decided(d) => match d.bucket() {
-                Bucket::Confident => {
-                    confident.insert(key, d);
-                }
-                Bucket::Review => {
-                    review.insert(key, d);
-                }
-                Bucket::Unresolved => {
-                    unresolved.insert(
-                        key,
-                        Unresolved {
-                            reasons: d.reasons,
-                            override_example: "arena = \"some_arena_name\"".to_string(),
-                        },
-                    );
-                }
-            },
-            AutoEntry::Unresolved(u) => {
-                unresolved.insert(key, u);
-            }
-        }
-    }
-
-    if !errors.is_empty() {
-        return Err(errors.join("\n"));
-    }
-
-    Ok(InferResult {
-        confident,
-        review,
-        unresolved,
-    })
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -446,22 +295,4 @@ mod tests {
         assert!(!groups.contains_key("rational_b_spline"));
     }
 
-    #[test]
-    fn auto_default_arena_named_after_group() {
-        let mut groups: Groups = BTreeMap::new();
-        groups.insert(
-            "surface".into(),
-            GroupInfo {
-                members: vec!["plane".into(), "cylinder".into()],
-                is_enum: true,
-            },
-        );
-        let auto = compute_auto_decisions(&groups);
-        let d = match auto.groups.get("surface").unwrap() {
-            AutoEntry::Decided(d) => d,
-            _ => panic!("expected decided"),
-        };
-        assert_eq!(d.data.arena, "surface");
-        assert!(d.confidence.0 >= 0.8);
-    }
 }

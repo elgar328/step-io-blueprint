@@ -234,12 +234,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
         overrides::load(FILE_OVERRIDES).map_err(|e| format!("load overrides: {e}"))?;
 
     let known: BTreeSet<String> = unified.entity_parents.keys().cloned().collect();
-    let mut errs = overrides::validate_known(&overrides_file, SECTION, &known, FILE_OVERRIDES);
-    errs.extend(overrides::validate_no_conflict(
-        &overrides_file,
-        SECTION,
-        FILE_OVERRIDES,
-    ));
+    let errs = overrides::validate_known(&overrides_file, SECTION, &known, FILE_OVERRIDES);
     if !errs.is_empty() {
         return Err(errs.join("\n"));
     }
