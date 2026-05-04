@@ -22,8 +22,8 @@ const FILE_PENDING: &str = "pools_pending.toml";
 const FILE_OVERRIDES: &str = "pools_overrides.toml";
 const SECTION: &str = "arena";
 
-const VARIANT_CONFIDENT: &str = "variants.toml";
-const ARENA_CONFIDENT: &str = "arenas.toml";
+const VARIANT_CONFIDENT: &str = "variants_pruned.toml";
+const ARENA_CONFIDENT: &str = "arenas_pruned.toml";
 const ARENA_PENDING: &str = "arenas_pending.toml";
 
 pub fn run(schemas: &[Schema], allow_pending: bool) -> Result<(), String> {
@@ -41,7 +41,9 @@ pub fn run(schemas: &[Schema], allow_pending: bool) -> Result<(), String> {
         crate::infer::io::read_confident(ARENA_CONFIDENT, "group")
             .map_err(|e| format!("read {ARENA_CONFIDENT}: {e}"))?;
     if arenas.is_empty() {
-        return Err(format!("{ARENA_CONFIDENT} is empty — run `infer arena` first."));
+        return Err(format!(
+            "{ARENA_CONFIDENT} is empty — run `infer prune --corpus <path>` first."
+        ));
     }
 
     let entity_to_group = compute_entity_to_group(&variants);
