@@ -228,8 +228,8 @@ Plan 3a — arena 보수적 자동 분류 (skip)
 Plan 3b ✓ — 53k STEP 파일 통계 가지치기
 Plan 3c ✓ — ConcreteSupertype IR shape 결정
 Plan 3d — *제거됨* (Lossy 정책 → round-trip 테스트 의미적 정확화로 책임 이관)
-Plan 3e — IR 친화 명명
-Plan 3f — pool 분류
+Plan 3e — pool 분류
+Plan 3f — IR 친화 명명 (분류 파이프라인의 마지막 layer)
 ```
 
 각 plan 의 책임:
@@ -255,7 +255,7 @@ Plan 3f — pool 분류
   IR shape 결정 검증 (*수동 입력* `inferred/shapes.toml` vs required
   set; missing → Err, extra → warning); (2) 검증 통과 후 *통합 view*
   `entities.toml` 산출 — variants_pruned + arenas_pruned + shapes +
-  usage 를 entity 단위 단일 표로 응축. 명명 (Plan 3e) / pool (Plan 3f)
+  usage 를 entity 단위 단일 표로 응축. pool (Plan 3e) / 명명 (Plan 3f)
   의 *단일 입력*. shape 자동화는 ratio 단일 신호로 가능했으나 (Carrier
   측 ratio ≥ 1.99 vs Base+Parallel 측 ≤ 0.020 의 100 배 gap) ratio 가
   못 잡는 신호 (children 의 attr 구조, 도메인 mental model) 와 *경계
@@ -269,10 +269,14 @@ Plan 3f — pool 분류
   비교의 정확성 (의미적 동등성, ISO 의무 placeholder 무시 등) 은 step-io
   측 round-trip 테스트의 책임 → Phase 2.2 / 운영 영역으로 이관. lossy
   marker / lossy_overrides 산출 X. schema-check 측 결정 면적 축소
-- **3e (이름)** — IR 친화 명명. snake → PascalCase / `*Id` 자동 기본 +
-  `names_overrides.toml` 사람 override (100% 수동)
-- **3f (pool)** — community detection 자동 후보 + `pools_overrides.toml`
-  사용자 mental model 결정. §4 / §1 (이전 pool component) 흡수
+- **3e (pool)** — community detection 자동 후보 + `pools_overrides.toml`
+  사용자 mental model 결정. §4 / §1 (이전 pool component) 흡수. 입력은
+  `entities.toml` (이행 후) — arena 의 응집도 + 사용자 도메인 mental model
+- **3f (이름)** — *분류 파이프라인의 마지막 layer*. type / id / variant /
+  field 의 IR 친화 이름 결정. snake → PascalCase / type + `Id` / attr
+  그대로 자동 default + `names_overrides.toml` 사용자 점진 override (IR
+  코드 작성 중 발견된 어색한 자리만 추가). pool 결정에 강한 의존 X 지만
+  *같은 pool 의 도메인 일관성* 검토에 pool 결과 hint 활용
 
 **책임 분리 원칙**: 모든 분류 / 사람 결정 / 통계 가지치기가 본 도구
 (schema-check) 측. step-io 측은 schema-check 의 최종 산출만 받아 *기계적*
@@ -282,7 +286,7 @@ IR 코드 생성. step-io 자기완결성을 위해 schema-check 의 외부 fixt
 **기존 INFER_TUNING.md § 항목과 새 plan 의 매핑**:
 - ~~§8~~ (concrete supertype) — Plan 2 ✓
 - §3 (arena ID 분리) + §7 (거대 enum sub-group) → Plan 3a + 3b 흡수
-- §4 (pool community detection) → Plan 3f
+- §4 (pool community detection) → Plan 3e
 - §6 (작은 정리) → 우선순위 낮음, 후속
 
 ## 검증 방향

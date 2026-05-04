@@ -20,13 +20,15 @@ cargo run --release                     # default: check (placeholder, 미구현
 변경하지 않음.
 
 ```
-infer variant → infer arena → infer prune → infer shape → infer naming → infer pool
+infer variant → infer arena → infer prune → infer shape → infer pool → infer naming
 ```
 
-`infer naming` 은 *미구현* — `entities.toml` 위에서 type / id / variant /
-field 의 IR 친화 이름 결정 (사용자 100% 수동 + `names_overrides.toml`).
-현재 `infer pool` 은 옛 흐름 그대로 `arenas.toml` 을 입력으로 받음 — 후속
-이행 시 `entities.toml` 입력으로 전환 예정.
+`infer naming` 은 *미구현* — 분류 파이프라인의 *마지막 layer*. pool 까지
+모든 분류 결정이 끝난 후 type / id / variant / field 의 IR 친화 이름 결정
+(자동 default + 사용자 점진 override). `infer pool` 도 현재는 옛 흐름
+그대로 `arenas.toml` 입력 — 후속 이행 시 `entities.toml` 입력으로 전환
+예정. *명명은 pool 결정에 의존 X (역순 가능했음)* 이지만, 같은 pool 의
+type 들이 *도메인 일관성* 을 갖도록 사람이 검토하기 좋은 자리 = pool 후.
 
 ### 입출력 표
 
@@ -36,8 +38,8 @@ field 의 IR 친화 이름 결정 (사용자 100% 수동 + `names_overrides.toml
 | `infer arena` | `arenas_overrides.toml` (선택) | `variants.toml`, `schemas/*.exp` | — | `arenas.toml`, (`arenas_pending.toml`) |
 | `infer prune --corpus <path>` | — | `variants.toml`, `arenas_overrides.toml` | **외부 STEP corpus** (`<path>`) | `usage.toml`, `variants_pruned.toml`, `arenas_pruned.toml` |
 | `infer shape` | `shapes.toml` (수동, ConcreteSupertype 별 1 entry) | `variants_pruned.toml`, `arenas_pruned.toml`, `usage.toml` | — | (검증 + 통과 시 `entities.toml` 자동 응축) |
-| `infer naming` *(미구현)* | `names_overrides.toml` (수동, 100%) | `entities.toml` | — | `names.toml` (예정) |
-| `infer pool` | `pools_overrides.toml` (선택) | `arenas.toml` | — | `pools.toml`, (`pools_pending.toml`) |
+| `infer pool` | `pools_overrides.toml` (선택) | `arenas.toml` (현재) / `entities.toml` (이행 후) | — | `pools.toml`, (`pools_pending.toml`) |
+| `infer naming` *(미구현)* | `names_overrides.toml` (점진 추가) | `entities.toml`, `pools.toml` | — | `names.toml` (예정) |
 
 `<stage>_pending.toml` 은 *review / unresolved 결정이 있을 때만* 생성 —
 파일 존재 자체가 "다음 stage 진입 차단" 의 strict gate 신호.
@@ -73,13 +75,15 @@ stage 는 외부 의존이 없다.
   entity 도 정리. 산출은 *별 view* — 원본 variants/arenas 는 불변.
 - **`infer shape`** — 가지치기 후 살아남은 ConcreteSupertype (현재 13 건)
   각각의 IR shape (Carrier vs Base+Parallel) 결정 검증 + 4 입력을
-  *entity 단위 단일 view* (`entities.toml`) 로 응축. 명명 / pool stage 의
-  단일 입력.
-- **`infer naming`** *(미구현)* — `entities.toml` 위에서 type / id /
-  variant / field 의 IR 친화 이름 결정. 100% 수동 (`names_overrides.toml`)
-  — snake_case 자동 default 만으로는 IR 가독성 부족. 후속 plan 에서 구현.
+  *entity 단위 단일 view* (`entities.toml`) 로 응축. pool / naming stage
+  의 단일 입력.
 - **`infer pool`** — arena → pool (코드 폴더 / sub-crate) 묶음. 사용자
   mental model 의 결정 자리.
+- **`infer naming`** *(미구현)* — 분류 파이프라인의 *마지막 layer*. type /
+  id / variant / field 의 IR 친화 이름 결정. 자동 default (snake_case →
+  PascalCase, type + Id, attr 그대로) + 사용자 점진 override
+  (`names_overrides.toml`) — IR 코드 작성 중 발견된 어색한 자리만 추가.
+  후속 plan 에서 구현.
 
 ### Pending gate
 
@@ -121,7 +125,7 @@ cp ~/Desktop/references/stepcode/data/ap203/ap203.exp schemas/
 cp ~/Desktop/references/stepcode/data/ap203e2/ap203e2_mim_lf.exp schemas/
 cp ~/Desktop/references/stepcode/data/ap214e3/AP214E3_2010.exp schemas/ap214e3.exp
 cp ~/Desktop/references/stepcode/data/ap242/242_n8324_mim_lf.exp schemas/ap242_mim_lf.exp
-# 이후 infer 파이프라인 재실행 (variant → arena → prune → shape → pool)
+# 이후 infer 파이프라인 재실행 (variant → arena → prune → shape → pool → naming)
 ```
 
 ## Architecture
