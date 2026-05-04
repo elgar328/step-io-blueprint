@@ -1,0 +1,400 @@
+# Manually authored — pool grouping for the 130 pruned arenas.
+# Pool names align with the 8 step-io entity groups (geometry / topology /
+# units / shape_rep / assembly_product / visualization / property / pmi)
+# plus `plm` for product-lifecycle metadata (approval / person /
+# organization / document / classification / role / date / context).
+#
+# Edit this file to redirect any arena to a different pool. The tool only
+# validates that every arena in arenas_pruned.toml has an entry here
+# (missing → Err) and that no entry refers to an unknown arena
+# (extra → warning).
+
+[arena.all_around_shape_aspect]
+pool = "shape_rep"
+
+[arena.angular_size]
+pool = "pmi"
+
+[arena.annotation_occurrence]
+pool = "pmi"
+
+[arena.application_context]
+pool = "plm"
+
+[arena.application_protocol_definition]
+pool = "plm"
+
+[arena.applied_classification_assignment]
+pool = "plm"
+
+[arena.applied_document_reference]
+pool = "plm"
+
+[arena.applied_organization_assignment]
+pool = "plm"
+
+[arena.approval]
+pool = "plm"
+
+[arena.approval_date_time]
+pool = "plm"
+
+[arena.approval_person_organization]
+pool = "plm"
+
+[arena.approval_role]
+pool = "plm"
+
+[arena.approval_status]
+pool = "plm"
+
+[arena.b_spline_curve]
+pool = "geometry"
+
+[arena.b_spline_surface]
+pool = "geometry"
+
+[arena.bounded_curve]
+pool = "geometry"
+
+[arena.calendar_date]
+pool = "plm"
+
+[arena.cartesian_point]
+pool = "geometry"
+
+[arena.cc_design_approval]
+pool = "plm"
+
+[arena.cc_design_date_and_time_assignment]
+pool = "plm"
+
+[arena.cc_design_person_and_organization_assignment]
+pool = "plm"
+
+[arena.cc_design_security_classification]
+pool = "plm"
+
+[arena.centre_of_symmetry]
+pool = "shape_rep"
+
+[arena.characterized_object]
+pool = "shape_rep"
+
+[arena.circular_area]
+pool = "geometry"
+
+[arena.classification_role]
+pool = "plm"
+
+[arena.colour]
+pool = "visualization"
+
+[arena.complex_triangulated_face]
+pool = "topology"
+
+[arena.complex_triangulated_surface_set]
+pool = "topology"
+
+[arena.composite_curve]
+pool = "geometry"
+
+[arena.composite_curve_segment]
+pool = "geometry"
+
+[arena.composite_group_shape_aspect]
+pool = "shape_rep"
+
+[arena.composite_text]
+pool = "visualization"
+
+[arena.context_dependent_shape_representation]
+pool = "shape_rep"
+
+[arena.conversion_based_unit]
+pool = "units"
+
+[arena.coordinated_universal_time_offset]
+pool = "plm"
+
+[arena.curve_style]
+pool = "visualization"
+
+[arena.data_environment]
+pool = "plm"
+
+[arena.date_and_time]
+pool = "plm"
+
+[arena.date_time_role]
+pool = "plm"
+
+[arena.datum]
+pool = "pmi"
+
+[arena.derived_unit]
+pool = "units"
+
+[arena.derived_unit_element]
+pool = "units"
+
+[arena.description_attribute]
+pool = "property"
+
+[arena.dimensional_characteristic_representation]
+pool = "property"
+
+[arena.dimensional_exponents]
+pool = "units"
+
+[arena.dimensional_location]
+pool = "pmi"
+
+[arena.dimensional_size_with_datum_feature]
+pool = "pmi"
+
+[arena.document]
+pool = "plm"
+
+[arena.document_product_equivalence]
+pool = "plm"
+
+[arena.document_representation_type]
+pool = "plm"
+
+[arena.document_type]
+pool = "plm"
+
+[arena.draughting_callout]
+pool = "pmi"
+
+[arena.draughting_callout_relationship]
+pool = "pmi"
+
+[arena.draughting_model_item_association]
+pool = "pmi"
+
+[arena.draughting_pre_defined_text_font]
+pool = "pmi"
+
+[arena.edge_curve]
+pool = "topology"
+
+[arena.external_source]
+pool = "plm"
+
+[arena.face_bound]
+pool = "topology"
+
+[arena.face_surface]
+pool = "topology"
+
+[arena.fill_area_style_colour]
+pool = "visualization"
+
+[arena.general_property]
+pool = "property"
+
+[arena.general_property_association]
+pool = "property"
+
+[arena.geometric_representation_item]
+pool = "geometry"
+
+[arena.geometric_tolerance]
+pool = "pmi"
+
+[arena.geometric_tolerance_relationship]
+pool = "pmi"
+
+[arena.geometric_tolerance_with_datum_reference]
+pool = "pmi"
+
+[arena.id_attribute]
+pool = "property"
+
+[arena.identification_role]
+pool = "plm"
+
+[arena.invisibility]
+pool = "visualization"
+
+[arena.item_defined_transformation]
+pool = "shape_rep"
+
+[arena.item_identified_representation_usage]
+pool = "shape_rep"
+
+[arena.leader_curve]
+pool = "pmi"
+
+[arena.limits_and_fits]
+pool = "pmi"
+
+[arena.line]
+pool = "geometry"
+
+[arena.local_time]
+pool = "plm"
+
+[arena.manifold_solid_brep]
+pool = "topology"
+
+[arena.mapped_item]
+pool = "shape_rep"
+
+[arena.measure_qualification]
+pool = "pmi"
+
+[arena.measure_with_unit]
+pool = "units"
+
+[arena.name_attribute]
+pool = "property"
+
+[arena.named_unit]
+pool = "units"
+
+[arena.next_assembly_usage_occurrence]
+pool = "assembly_product"
+
+[arena.object_role]
+pool = "plm"
+
+[arena.offset_surface]
+pool = "geometry"
+
+[arena.organization]
+pool = "plm"
+
+[arena.organization_role]
+pool = "plm"
+
+[arena.oriented_edge]
+pool = "topology"
+
+[arena.pcurve]
+pool = "geometry"
+
+[arena.person]
+pool = "plm"
+
+[arena.person_and_organization]
+pool = "plm"
+
+[arena.person_and_organization_role]
+pool = "plm"
+
+[arena.plus_minus_tolerance]
+pool = "pmi"
+
+[arena.pre_defined_marker]
+pool = "visualization"
+
+[arena.presentation_layer_assignment]
+pool = "visualization"
+
+[arena.presentation_style_assignment]
+pool = "visualization"
+
+[arena.product]
+pool = "assembly_product"
+
+[arena.product_category]
+pool = "assembly_product"
+
+[arena.product_category_relationship]
+pool = "assembly_product"
+
+[arena.product_context]
+pool = "assembly_product"
+
+[arena.product_definition_context]
+pool = "assembly_product"
+
+[arena.product_definition_context_association]
+pool = "assembly_product"
+
+[arena.product_definition_context_role]
+pool = "assembly_product"
+
+[arena.product_definition_formation]
+pool = "assembly_product"
+
+[arena.projected_zone_definition]
+pool = "pmi"
+
+[arena.property_definition]
+pool = "property"
+
+[arena.property_definition_representation]
+pool = "property"
+
+[arena.representation]
+pool = "shape_rep"
+
+[arena.representation_context]
+pool = "shape_rep"
+
+[arena.representation_item]
+pool = "shape_rep"
+
+[arena.representation_map]
+pool = "shape_rep"
+
+[arena.representation_relationship]
+pool = "shape_rep"
+
+[arena.representation_relationship_with_transformation]
+pool = "shape_rep"
+
+[arena.role_association]
+pool = "plm"
+
+[arena.security_classification]
+pool = "plm"
+
+[arena.security_classification_level]
+pool = "plm"
+
+[arena.shape_aspect]
+pool = "shape_rep"
+
+[arena.shape_aspect_relationship]
+pool = "shape_rep"
+
+[arena.styled_item]
+pool = "visualization"
+
+[arena.surface_curve]
+pool = "geometry"
+
+[arena.surface_style_transparent]
+pool = "visualization"
+
+[arena.symbol_colour]
+pool = "visualization"
+
+[arena.tessellated_item]
+pool = "topology"
+
+[arena.text_literal]
+pool = "visualization"
+
+[arena.text_style_for_defined_font]
+pool = "visualization"
+
+[arena.tolerance_value]
+pool = "pmi"
+
+[arena.tolerance_zone_form]
+pool = "pmi"
+
+[arena.type_qualifier]
+pool = "pmi"
+
+[arena.value_format_type_qualifier]
+pool = "pmi"
+
+[arena.vertex_loop]
+pool = "topology"
