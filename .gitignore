@@ -5,3 +5,4 @@
 /inferred/*.toml
 !/inferred/*_overrides.toml
 !/inferred/shapes.toml
+!/inferred/pools.toml

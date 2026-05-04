@@ -61,7 +61,7 @@ pub enum DecisionSource {
 /// confident) or `<stage>_pending.toml` (when review or unresolved).
 ///
 /// `T` is the stage-specific payload (`VariantSpec` for variant stage,
-/// future `ArenaSpec` / `PoolSpec`). For unresolved decisions the payload
+/// future `ArenaSpec`). For unresolved decisions the payload
 /// can be a placeholder (`VariantSpec::default()` or similar) since the
 /// caller relies on `bucket()` to know it's not a real decision.
 #[derive(Debug, Clone, Serialize, Deserialize)]

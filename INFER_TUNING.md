@@ -105,31 +105,24 @@ SupertypeExpr 로 + B7 자동 분류 (`VariantSpec::CompositeOneOf` + `Rule
 **난이도**: schema 의 representation_context 의미적 분석이 필요. 단순 ATTR ref
 graph 에서 한 단계 더 들어감. plan 의 약 100~200 lines 추가 예상.
 
-## 4. pool 단계 — connected component 가 너무 거친 분류
+## 4. pool 단계 — 자동 분류 폐기, 100% 수동 + strict gate (Plan 3e ✓)
 
-**현재**: 362 arena → 94 pool (connected component 기반).
+**진단 (커밋 da76ba9 시점)**: 가지치기 후 130 arena → 32 pool, 그러나 87
+arena 가 한 거대 pool 로 묶임. cross-reference 풍부한 schema 에서 connected
+component 가 *의미축* (geometry / topology / pmi / etc.) 을 못 잡음.
+Louvain / modularity community detection 도 *의미축* 을 자동으로 알아낼
+정보 X — *사용자 도메인 mental model* 이 본질.
 
-**미흡한 점**:
-- 거대 component 가 1 개 형성될 가능성 큼 (94 pool 중 한 두 pool 이 200+ arena
-  포함). EXPRESS schema 는 cross-reference 가 많아서 connected component 만으로는
-  domain 경계를 잡지 못함.
-- 모든 결정이 confident → review 가 0 인 것도 의심스러움. 실제로는 community
-  detection 의 modularity score 가 borderline 인 arena 들이 review 로 빠져야 함.
+**해결 (Plan 3e)**: 자동 분류 통째 폐기. shape stage 패턴 복제 (수동
+입력 + strict gate). 사용자가 `pools.toml` 에 130 arena 마다 pool 직접
+명시. 도구는 missing → Err, extra → warning 의 검증만.
 
-**진단 명령**:
-```bash
-# pool 별 arena 수 분포
-grep "^pool = " inferred/pools.toml | sort | uniq -c | sort -rn | head -20
-```
-
-**구현 방향**:
-- Louvain (or 단순한 greedy modularity-based) community detection 도입.
-- 각 arena 의 modularity 기여도 계산 → 신호 점수.
-- inbound/outbound ref 비율 신호 정밀화 (현재 same/cross ratio 만 봄).
-- 거대 component 안에서 sub-cluster 가 자연스럽게 나오게 됨.
-
-**난이도**: Louvain 구현 또는 외부 crate (`graph` 등) 도입. 구현 100~200 lines
-또는 외부 의존 추가.
+**근거**:
+- pool 결정 = 사용자 mental model 영역 (자동의 한계 명확).
+- shape stage 의 13 건 결정과 같은 패턴 — *판단 영역의 결정은 입력 파일,
+  도구는 검증* 의 책임 분리.
+- 자동 후보가 부정확하면 *사용자가 검토 안 함* — 경계 케이스에서 잘못
+  분류되어 IR 사용성 파괴 가능. 수동 강제로 회피.
 
 ## 6. 그 외 작은 정리
 
@@ -228,7 +221,7 @@ Plan 3a — arena 보수적 자동 분류 (skip)
 Plan 3b ✓ — 53k STEP 파일 통계 가지치기
 Plan 3c ✓ — ConcreteSupertype IR shape 결정
 Plan 3d — *제거됨* (Lossy 정책 → round-trip 테스트 의미적 정확화로 책임 이관)
-Plan 3e — pool 분류
+Plan 3e ✓ — pool 분류 (수동 입력 + strict gate, shape 패턴 복제)
 Plan 3f — IR 친화 명명 (분류 파이프라인의 마지막 layer)
 ```
 
@@ -269,9 +262,13 @@ Plan 3f — IR 친화 명명 (분류 파이프라인의 마지막 layer)
   비교의 정확성 (의미적 동등성, ISO 의무 placeholder 무시 등) 은 step-io
   측 round-trip 테스트의 책임 → Phase 2.2 / 운영 영역으로 이관. lossy
   marker / lossy_overrides 산출 X. schema-check 측 결정 면적 축소
-- **3e (pool)** — community detection 자동 후보 + `pools_overrides.toml`
-  사용자 mental model 결정. §4 / §1 (이전 pool component) 흡수. 입력은
-  `entities.toml` (이행 후) — arena 의 응집도 + 사용자 도메인 mental model
+- **3e (pool) ✓** — `infer pool` sub-command. 100% 수동 입력 + strict
+  gate (shape 패턴 복제). 사용자가 `pools.toml` 직접 작성 (arena 별 1
+  entry: `[arena.X] pool = "Y"`); 도구는 `arenas_pruned.toml` 의 130
+  required arena 와 비교 검증 — missing → Err, extra → warning. 산출 파일
+  X (입력이 곧 step-io codegen 입력). 자동 분류는 폐기 (cross-ref 풍부
+  schema 에서 union-find 의 거대 component 1 개 수렴 — INFER_TUNING §4 의
+  진단)
 - **3f (이름)** — *분류 파이프라인의 마지막 layer*. type / id / variant /
   field 의 IR 친화 이름 결정. snake → PascalCase / type + `Id` / attr
   그대로 자동 default + `names_overrides.toml` 사용자 점진 override (IR

@@ -1,14 +1,15 @@
 //! step-io-schema-check — schema-driven IR classification tool.
 //!
 //! Sub-commands:
-//! - `infer variant`  Stage 1: arena enum variant 분류
-//! - `infer arena`    Stage 2: arena 분류
+//! - `infer variant`  Stage 1: entity 의 IR shape (variant) 분류
+//! - `infer arena`    Stage 2: group → arena 매핑
 //! - `infer prune --corpus <path>`  Stage 3: 53k STEP corpus 가지치기
-//! - `infer pool`     Stage 4: pool 분류
+//! - `infer shape`    Stage 4: ConcreteSupertype 의 IR shape 검증 + entities.toml 응축
+//! - `infer pool`     Stage 5: pools.toml 검증 (수동 입력 vs arenas_pruned 의 required arena)
 //!
 //! 4 schema (ap203 / ap203e2 / ap214e3 / ap242) 항상 union 으로 처리.
-//! 출력은 `inferred/` 디렉토리에. 자세한 사양은 `internal/INFRA_PLAN.md` 와
-//! 본 repo 의 plan 파일 참조.
+//! 출력은 `inferred/` 디렉토리에. 자세한 사양은 README + INFER_TUNING.md
+//! 참조.
 
 use std::env;
 use std::path::{Path, PathBuf};
@@ -110,11 +111,7 @@ fn run_arena(allow_pending: bool) -> ExitCode {
 }
 
 fn run_pool(allow_pending: bool) -> ExitCode {
-    let schemas = match load_schemas() {
-        Ok(s) => s,
-        Err(c) => return c,
-    };
-    match infer::pool::run(&schemas, allow_pending) {
+    match infer::pool::run(allow_pending) {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {
             eprintln!("infer pool failed:\n{e}");
