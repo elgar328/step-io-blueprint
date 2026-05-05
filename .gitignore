@@ -7,3 +7,5 @@
 !/inferred/shapes.toml
 !/inferred/pools.toml
 !/inferred/names.toml
+!/inferred/splits.toml
+!/inferred/merges.toml

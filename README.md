@@ -22,7 +22,7 @@ cargo run --release                     # default: check (placeholder, 미구현
 변경하지 않음.
 
 ```
-infer variant → infer arena → infer prune → infer shape → infer pool → infer naming
+infer variant → infer arena → infer prune → infer shape → infer reshape → infer pool → infer naming
 ```
 
 `infer naming` 은 분류 파이프라인의 *마지막 layer* — type / id / variant /
@@ -39,7 +39,8 @@ names + schemas) 통합 → step-io 측 수작업 구현의 *단일 reference* `
 | `infer arena` | `arenas_overrides.toml` (선택) | `variants.toml`, `schemas/*.exp` | — | `arenas.toml` |
 | `infer prune --corpus <path>` | — | `variants.toml`, `arenas_overrides.toml` | **외부 STEP corpus** (`<path>`) | `usage.toml`, `variants_pruned.toml`, `arenas_pruned.toml` |
 | `infer shape` | `shapes.toml` (수동, ConcreteSupertype 별 1 entry) | `variants_pruned.toml`, `arenas_pruned.toml`, `usage.toml` | — | (검증 + 통과 시 `entities.toml` 자동 응축) |
-| `infer pool` | `pools.toml` (수동, arena 별 1 entry) | `arenas_pruned.toml` | — | (검증만; missing → Err, extra → warning) |
+| `infer reshape` | `splits.toml` + `merges.toml` (수동, 빈 파일 OK) | `entities.toml` | — | `abstract_entities.toml` (split / merge 적용 후 view) |
+| `infer pool` | `pools.toml` (수동, arena 별 1 entry) | `abstract_entities.toml` | — | (검증만; missing → Err, extra → warning) |
 | `infer naming` | `names.toml` (수동 partial — 어색한 자리만 override) | `entities.toml`, `pools.toml`, `schemas/*.exp` | — | `ir.toml` (entity 단위 단일 IR 청사진 — step-io 측 수작업 구현의 reference) |
 
 `variants_pending.toml` 은 variant stage 가 *Rule 8 unresolved 안전망* 으로
@@ -79,8 +80,14 @@ stage 는 외부 의존이 없다.
   entity 도 정리. 산출은 *별 view* — 원본 variants/arenas 는 불변.
 - **`infer shape`** — 가지치기 후 살아남은 ConcreteSupertype (현재 13 건)
   각각의 IR shape (Carrier vs Base+Parallel) 결정 검증 + 4 입력을
-  *entity 단위 단일 view* (`entities.toml`) 로 응축. pool / naming stage
-  의 단일 입력.
+  *entity 단위 단일 view* (`entities.toml`) 로 응축. reshape stage 의
+  단일 입력.
+- **`infer reshape`** — *추상화 결정의 단일 자리*. split (1 schema entity →
+  N IR type, 예: cartesian_point → Point3 + Point2) / merge (N schema
+  entity → 1 IR type, 예: NurbsCurve 가 b_spline_* 류 흡수) 적용 →
+  `abstract_entities.toml` 산출. 빈 입력 시 entities.toml 그대로 복제 —
+  점진 도입. step-io 의 추상화 결정이 *코드 marker* 가 아닌 *splits.toml
+  / merges.toml* 에 모임.
 - **`infer pool`** — arena → pool (코드 폴더 / sub-crate) 묶음. shape 와
   같은 *수동 입력 + strict gate* 패턴 — `pools.toml` 사용자 직접 작성,
   도구는 검증만 (missing → Err, extra → warning). 자동 분류는 효과 0
@@ -154,19 +161,25 @@ src/
     ├── arena.rs               stage 2 — group → arena 매핑 + entity → group 인덱스
     ├── prune.rs               stage 3 — corpus 가지치기 + transitive cascade
     ├── shape.rs               stage 4 — ConcreteSupertype shape 검증 + entities.toml 응축
-    ├── pool.rs                stage 5 — pools.toml 검증 (수동 입력 vs arenas_pruned 의 required arena set)
-    └── naming.rs              stage 6 — auto default + names.toml overrides → ir.toml 청사진
+    ├── reshape.rs             stage 5 — split / merge 추상화 적용 → abstract_entities.toml
+    ├── pool.rs                stage 6 — pools.toml 검증 (수동 입력 vs abstract_entities 의 required arena set)
+    └── naming.rs              stage 7 — auto default + names.toml overrides → ir.toml 청사진
 schemas/                       4 STEP schema (.exp 파일)
 inferred/                      stage 산출 + 사용자 입력 파일 (대부분 gitignored)
 ```
 
 `inferred/` 의 추적 정책 (gitignore):
 - *사용자 입력 파일* (`*_overrides.toml`, `shapes.toml`, `pools.toml`,
-  `names.toml`) — tracked
+  `names.toml`, `splits.toml`, `merges.toml`) — tracked
 - *도구 산출 파일* (`variants.toml`, `arenas.toml`,
   `variants_pruned.toml`, `arenas_pruned.toml`, `usage.toml`,
-  `entities.toml`, `ir.toml`, `*_pending.toml`) — gitignored (재실행으로
-  복원 가능)
+  `entities.toml`, `abstract_entities.toml`, `ir.toml`, `*_pending.toml`)
+  — gitignored (재실행으로 복원 가능)
+
+*entities.toml vs abstract_entities.toml*: 두 view 보존. entities.toml =
+shape 의 schema 1:1 분류 응축. abstract_entities.toml = reshape 의 split /
+merge 적용 후. step-io 측 reference 는 ir.toml 단일 — 두 중간 view 는
+디버깅 / 추상화 결정 검증 용도.
 
 ## Tests
 

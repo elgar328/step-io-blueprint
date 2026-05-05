@@ -50,7 +50,7 @@ struct ConcreteSupertypeShapesFile {
 /// Per-entity row of the unified `entities.toml` view. Aggregates every
 /// classification decision so downstream stages (naming, pool) take a
 /// single file as input.
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub struct EntitySummary {
     #[serde(flatten)]
     pub variant: VariantSpec,
@@ -59,6 +59,21 @@ pub struct EntitySummary {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub shape: Option<ConcreteSupertypeShape>,
     pub instance_count: usize,
+
+    // Reshape stage metadata — shape stage leaves these at default,
+    // reshape fills them when applying splits / merges.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub split_from: Option<String>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub split_context: Option<String>,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub merge_absorbs: Vec<String>,
+    #[serde(default, skip_serializing_if = "is_false")]
+    pub fields_union: bool,
+}
+
+fn is_false(b: &bool) -> bool {
+    !*b
 }
 
 pub fn run(allow_pending: bool) -> Result<(), String> {
@@ -162,6 +177,10 @@ fn compile_entities(
                 arena,
                 shape,
                 instance_count,
+                split_from: None,
+                split_context: None,
+                merge_absorbs: Vec::new(),
+                fields_union: false,
             },
         );
     }

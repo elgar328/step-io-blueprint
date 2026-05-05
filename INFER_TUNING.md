@@ -223,6 +223,8 @@ Plan 3c ✓ — ConcreteSupertype IR shape 결정
 Plan 3d — *제거됨* (Lossy 정책 → round-trip 테스트 의미적 정확화로 책임 이관)
 Plan 3e ✓ — pool 분류 (수동 입력 + strict gate, shape 패턴 복제)
 Plan 3f ✓ — IR 친화 명명 + ir.toml 청사진 산출 (entities + pools + names + schemas 통합)
+Plan 3.7 ✓ — arena 의 3-bucket 인프라 부분 폐기
+Plan 3.8 ✓ (Phase 1) — infer reshape stage: split / merge 추상화 통합 자리 (infrastructure)
 ```
 
 각 plan 의 책임:

@@ -13,6 +13,7 @@ pub mod overrides;
 pub mod pool;
 pub mod prune;
 pub mod refgraph;
+pub mod reshape;
 pub mod shape;
 pub mod variant;
 

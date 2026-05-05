@@ -1,6 +1,6 @@
 //! Pool grouping (manual input + validation).
 //!
-//! Pure validation: compares the arena set in `arenas_pruned.toml`
+//! Pure validation: compares the arena set in `abstract_entities.toml`
 //! against the entries in `pools.toml`. Missing required entries → Err
 //! stops the run; extra entries → warning, ignored. No output file —
 //! the input file itself is the step-io codegen input.
@@ -11,11 +11,11 @@ use std::path::Path;
 
 use serde::{Deserialize, Serialize};
 
-use crate::infer::arena::ArenaSpec;
+use crate::infer::shape::EntitySummary;
 
 const VARIANTS_PENDING: &str = "variants_pending.toml";
 const ARENAS_PENDING: &str = "arenas_pending.toml";
-const FILE_ARENAS_PRUNED: &str = "arenas_pruned.toml";
+const FILE_ABSTRACT_ENTITIES: &str = "abstract_entities.toml";
 const FILE_POOLS: &str = "pools.toml";
 
 /// One entry in `pools.toml`. The user writes `[arena.<name>] pool =
@@ -46,15 +46,18 @@ pub fn run(allow_pending: bool) -> Result<(), String> {
         ));
     }
 
-    let arenas: BTreeMap<String, ArenaSpec> =
-        crate::infer::io::read_confident(FILE_ARENAS_PRUNED, "group")
-            .map_err(|e| format!("read {FILE_ARENAS_PRUNED}: {e}"))?;
-    if arenas.is_empty() {
+    let abstract_entities: BTreeMap<String, EntitySummary> =
+        crate::infer::io::read_confident(FILE_ABSTRACT_ENTITIES, "entity")
+            .map_err(|e| format!("read {FILE_ABSTRACT_ENTITIES}: {e}"))?;
+    if abstract_entities.is_empty() {
         return Err(format!(
-            "{FILE_ARENAS_PRUNED} is empty or missing — run `infer prune --corpus <path>` first."
+            "{FILE_ABSTRACT_ENTITIES} is empty or missing — run `infer reshape` first."
         ));
     }
-    let required: BTreeSet<String> = arenas.values().map(|s| s.arena.clone()).collect();
+    let required: BTreeSet<String> = abstract_entities
+        .values()
+        .map(|s| s.arena.clone())
+        .collect();
 
     let path = Path::new("inferred").join(FILE_POOLS);
     if !path.exists() {
@@ -71,7 +74,7 @@ pub fn run(allow_pending: bool) -> Result<(), String> {
         } => {
             for e in &extras {
                 eprintln!(
-                    "warning: {FILE_POOLS} [arena.{e}] is not an arena in {FILE_ARENAS_PRUNED} — ignored"
+                    "warning: {FILE_POOLS} [arena.{e}] is not an arena in {FILE_ABSTRACT_ENTITIES} — ignored"
                 );
             }
             eprintln!(
