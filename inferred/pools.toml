@@ -407,3 +407,6 @@ pool = "visualization"
 
 [arena.product_definition_with_associated_documents]
 pool = "assembly_product"
+
+[arena.cartesian_point_2d]
+pool = "geometry"

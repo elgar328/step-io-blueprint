@@ -1,0 +1,18 @@
+# Manually authored — only override entries that don't fit the
+# automatic default. Empty file is valid.
+#
+# Auto defaults:
+#   type / variant / enum  : snake_case → UpperCamelCase
+#   id                     : <type>Id  (arena 단위)
+#   kind_enum              : <type>Kind  (Base+Parallel only)
+#   field                  : schema attr name as-is
+
+[type]
+# step-io 의 단축 이름 — 자동 default 가 어색한 자리 일치
+cartesian_point = "Point3"
+cartesian_point_2d = "Point2"
+
+[id]
+# arena 단위. step-io 의 PointId / Point2dId 일치
+cartesian_point = "PointId"
+cartesian_point_2d = "Point2dId"

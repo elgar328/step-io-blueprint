@@ -1,0 +1,16 @@
+# Manually authored — 1 schema entity → N IR type splits.
+# Each split entry produces virtual entities the rest of the pipeline
+# treats as siblings. Empty file is valid (no splits).
+#
+# step-io 의 의도된 추상화 결정. context_signal 은 step-io 측 codegen 시
+# runtime 분기 룰의 reference (free string).
+
+[split.cartesian_point]
+# step-io: schema 의 cartesian_point 1 entity 가 IR 에서 Point3 / Point2
+# 두 type 으로 분리. PCURVE 컨텍스트 (representation 의 dimensionality
+# 가 2) 에서 등장하면 Point2, 일반 geometry 에서는 Point3.
+context_signal = "representation_context.dimensionality"
+variants = [
+  { name = "cartesian_point", suffix = "3d", arena = "cartesian_point" },
+  { name = "cartesian_point_2d", suffix = "2d", arena = "cartesian_point_2d" },
+]
