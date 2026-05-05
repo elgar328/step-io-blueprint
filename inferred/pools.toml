@@ -410,3 +410,15 @@ pool = "assembly_product"
 
 [arena.cartesian_point_2d]
 pool = "geometry"
+
+[arena.direction]
+pool = "geometry"
+
+[arena.direction_2d]
+pool = "geometry"
+
+[arena.nurbs_curve]
+pool = "geometry"
+
+[arena.nurbs_surface]
+pool = "geometry"

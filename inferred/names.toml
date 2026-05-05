@@ -11,8 +11,18 @@
 # step-io 의 단축 이름 — 자동 default 가 어색한 자리 일치
 cartesian_point = "Point3"
 cartesian_point_2d = "Point2"
+direction = "Direction3"
+direction_2d = "Direction2"
+# nurbs_curve / nurbs_surface 는 자동 default 와 일치 (NurbsCurve / NurbsSurface)
+# 명시 안 해도 OK 단 *문서화 가치* — POC 에서 명시
+nurbs_curve = "NurbsCurve"
+nurbs_surface = "NurbsSurface"
 
 [id]
-# arena 단위. step-io 의 PointId / Point2dId 일치
+# arena 단위. step-io 의 ID 이름 일치
 cartesian_point = "PointId"
 cartesian_point_2d = "Point2dId"
+direction = "DirectionId"
+direction_2d = "Direction2dId"
+# nurbs_curve / nurbs_surface ID 는 자동 default (NurbsCurveId / NurbsSurfaceId)
+# step-io 와 일치 — 명시 X 도 OK

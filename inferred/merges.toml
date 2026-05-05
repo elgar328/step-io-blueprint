@@ -1,0 +1,30 @@
+# Manually authored — N schema entity → 1 IR type merges.
+# `target_name` is the merged IR type (may not match any schema entity).
+# Empty file is valid.
+#
+# step-io 의 의도된 추상화 결정. absorbs 의 schema entity 들이 *수학적
+# 동등성* (rational mixin / knots variant 가 본질적으로 동일 표현) 으로
+# 통합. round-trip 시 어느 schema variant 로 emit 결정은 step-io 책임.
+
+[merge.nurbs_curve]
+# step-io 의 NurbsCurve struct 가 흡수. 현재 3 entity (TODO: uniform /
+# quasi_uniform / bezier 의 추가 흡수는 후속 결정).
+target_name = "nurbs_curve"
+arena = "nurbs_curve"
+absorbs = [
+  "b_spline_curve",
+  "b_spline_curve_with_knots",
+  "rational_b_spline_curve",
+]
+fields_strategy = "union"
+
+[merge.nurbs_surface]
+# step-io 의 NurbsSurface struct 가 흡수. 같은 패턴.
+target_name = "nurbs_surface"
+arena = "nurbs_surface"
+absorbs = [
+  "b_spline_surface",
+  "b_spline_surface_with_knots",
+  "rational_b_spline_surface",
+]
+fields_strategy = "union"
