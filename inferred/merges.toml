@@ -38,3 +38,47 @@ nurbs_curve 와 같은 *수학적 동등성* 패턴 — surface 측. b_spline_su
 구분 의미 없음. NurbsSurface 1 type 으로 통합. round-trip 책임은 step-io
 codegen.
 """
+
+[merge.nurbs_curve_2d]
+target_name = "nurbs_curve_2d"
+arena = "nurbs_curve_2d"
+absorbs = [
+  "b_spline_curve_2d",
+  "b_spline_curve_with_knots_2d",
+  "rational_b_spline_curve_2d",
+]
+fields_strategy = "union"
+reasons = """
+3D nurbs_curve merge 와 *동일한 수학적 동등성* 패턴 — surface 매개변수
+공간 (PCURVE) 의 2D NURBS. split 의 3 산출 (b_spline_curve_2d /
+*_with_knots_2d / rational_*_2d) 을 NurbsCurve2d 1 type 으로 통합 →
+사용자 자료구조 1 개 + 2D dimensionality type 보장. control_points 의
+원소 type 이 Point2dId (Plan 3.9 의 Point2 split 결과) 로 컴파일타임
+보장. round-trip 시 schema variant 결정은 step-io codegen.
+
+본 single_struct 산출은 *임시 자리* — step-io 의 실 IR 에서 NurbsCurve2d
+는 동시에 (a) 별 struct 이고 (b) Curve2d enum 의 variant (BaseParallel
+형식). Curve2d enum 통합은 entity-level kind override 인프라 필요 (현
+reshape 인프라 미지원, 별 plan). 인프라 도입 시 본 merge target 의 kind
+override 로 in_enum (curve_2d) 으로 retrofit.
+"""
+
+[merge.nurbs_surface_2d]
+target_name = "nurbs_surface_2d"
+arena = "nurbs_surface_2d"
+absorbs = [
+  "b_spline_surface_2d",
+  "b_spline_surface_with_knots_2d",
+  "rational_b_spline_surface_2d",
+]
+fields_strategy = "union"
+reasons = """
+3D nurbs_surface merge 의 surface 측 2D 짝. PCURVE 컨텍스트에서 2D
+parametric NURBS 면. NurbsCurve2d 와 동일한 *수학적 동등성* 패턴 —
+3 split 산출을 NurbsSurface2d 1 type 으로 통합. control_points 의
+원소가 Point2dId 로 dimensionality type 보장.
+
+NurbsCurve2d 와 동일한 *임시 자리* — Surface2d enum 통합 시 in_enum
+(surface_2d) 으로 retrofit (별 plan, entity-level kind override 인프라
+필요).
+"""

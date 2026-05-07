@@ -18,7 +18,11 @@ shape = "carrier"
 shape = "carrier"
 
 [entity.face_surface]                      # 495K self / 3.4M children, ratio 6.9
-shape = "carrier"
+# step-io 매칭: parent attr (face_geometry, bounds) 가 모든 face variant
+# 에서 빈번히 직접 접근 — Carrier 의 enum match 보다 BaseParallel 의
+# struct field 가 API 친화. ratio 통계 (6.9) 의 default 결정과 사용자
+# 디자인 선호의 불일치 자리 — override 의 본래 목적.
+shape = "base_parallel"
 
 [entity.manifold_solid_brep]               # 105K self / 759 children, ratio 0.0072 — parent dominant
 shape = "base_parallel"

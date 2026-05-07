@@ -420,5 +420,11 @@ pool = "geometry"
 [arena.nurbs_curve]
 pool = "geometry"
 
+[arena.nurbs_curve_2d]
+pool = "geometry"
+
 [arena.nurbs_surface]
+pool = "geometry"
+
+[arena.nurbs_surface_2d]
 pool = "geometry"

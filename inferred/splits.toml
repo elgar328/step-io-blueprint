@@ -37,3 +37,50 @@ variants = [
   { name = "direction", suffix = "3d", arena = "direction" },
   { name = "direction_2d", suffix = "2d", arena = "direction_2d", kind = "single_struct" },
 ]
+
+# 2D NURBS prerequisite splits — first variant (3D) 는 기존
+# merge.nurbs_curve / nurbs_surface 가 흡수, virtual variant (2D) 는 신규
+# merge.nurbs_curve_2d / nurbs_surface_2d 가 흡수. 추상화 근거는
+# [merge.nurbs_curve_2d] / [merge.nurbs_surface_2d] 의 reasons 참조.
+
+[split.b_spline_curve]
+context_signal = "representation_context.dimensionality"
+variants = [
+  { name = "b_spline_curve", suffix = "3d", arena = "b_spline_curve" },
+  { name = "b_spline_curve_2d", suffix = "2d", arena = "b_spline_curve_2d" },
+]
+
+[split.b_spline_curve_with_knots]
+context_signal = "representation_context.dimensionality"
+variants = [
+  { name = "b_spline_curve_with_knots", suffix = "3d", arena = "b_spline_curve" },
+  { name = "b_spline_curve_with_knots_2d", suffix = "2d", arena = "b_spline_curve_2d" },
+]
+
+[split.rational_b_spline_curve]
+context_signal = "representation_context.dimensionality"
+variants = [
+  { name = "rational_b_spline_curve", suffix = "3d", arena = "b_spline_curve" },
+  { name = "rational_b_spline_curve_2d", suffix = "2d", arena = "b_spline_curve_2d" },
+]
+
+[split.b_spline_surface]
+context_signal = "representation_context.dimensionality"
+variants = [
+  { name = "b_spline_surface", suffix = "3d", arena = "b_spline_surface" },
+  { name = "b_spline_surface_2d", suffix = "2d", arena = "b_spline_surface_2d" },
+]
+
+[split.b_spline_surface_with_knots]
+context_signal = "representation_context.dimensionality"
+variants = [
+  { name = "b_spline_surface_with_knots", suffix = "3d", arena = "b_spline_surface" },
+  { name = "b_spline_surface_with_knots_2d", suffix = "2d", arena = "b_spline_surface_2d" },
+]
+
+[split.rational_b_spline_surface]
+context_signal = "representation_context.dimensionality"
+variants = [
+  { name = "rational_b_spline_surface", suffix = "3d", arena = "b_spline_surface" },
+  { name = "rational_b_spline_surface_2d", suffix = "2d", arena = "b_spline_surface_2d" },
+]
