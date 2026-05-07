@@ -86,8 +86,12 @@ stage 는 외부 의존이 없다.
   N IR type, 예: cartesian_point → Point3 + Point2) / merge (N schema
   entity → 1 IR type, 예: NurbsCurve 가 b_spline_* 류 흡수) 적용 →
   `abstract_entities.toml` 산출. 빈 입력 시 entities.toml 그대로 복제 —
-  점진 도입. step-io 의 추상화 결정이 *코드 marker* 가 아닌 *splits.toml
-  / merges.toml* 에 모임.
+  점진 도입. 각 entry 는 `reasons` 로 *왜 이 추상화가 schema 1:1 보다
+  나은 IR 디자인인지* 의 근거를 보존 (ir.toml 의 primary entity 에
+  propagate). split variant 는 per-variant `kind` / `enum_of` override 로
+  분기별 VariantSpec 조정 가능 (예: direction_2d 가 source 의 InEnum 에서
+  벗어나 standalone 으로). step-io 의 추상화 결정이 *코드 marker* 가
+  아닌 *splits.toml / merges.toml* 에 모임.
 - **`infer pool`** — arena → pool (코드 폴더 / sub-crate) 묶음. shape 와
   같은 *수동 입력 + strict gate* 패턴 — `pools.toml` 사용자 직접 작성,
   도구는 검증만 (missing → Err, extra → warning). 자동 분류는 효과 0

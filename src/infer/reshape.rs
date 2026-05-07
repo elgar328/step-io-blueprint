@@ -30,6 +30,8 @@ struct SplitsFile {
 struct SplitEntry {
     context_signal: String,
     variants: Vec<SplitVariant>,
+    #[serde(default)]
+    reasons: Option<String>,
 }
 
 #[derive(Debug, Deserialize)]
@@ -38,6 +40,10 @@ struct SplitVariant {
     #[allow(dead_code)]
     suffix: String,
     arena: String,
+    #[serde(default)]
+    kind: Option<String>,
+    #[serde(default)]
+    enum_of: Option<String>,
 }
 
 #[derive(Debug, Default, Deserialize)]
@@ -53,6 +59,8 @@ struct MergeEntry {
     absorbs: Vec<String>,
     #[serde(default)]
     fields_strategy: FieldsStrategy,
+    #[serde(default)]
+    reasons: Option<String>,
 }
 
 #[derive(Debug, Default, Deserialize, Clone, Copy)]
@@ -161,6 +169,34 @@ fn validate_merges(merges: &MergesFile, entities: &BTreeMap<String, EntitySummar
     }
 }
 
+fn variant_spec_from_override(
+    base_spec: &VariantSpec,
+    override_kind: Option<&str>,
+    override_enum: Option<&str>,
+    diag_key: &str,
+) -> Result<VariantSpec, String> {
+    match (override_kind, override_enum) {
+        (None, None) => Ok(base_spec.clone()),
+        (None, Some(_)) => Err(format!(
+            "{FILE_SPLITS} [{diag_key}]: enum_of set without kind"
+        )),
+        (Some("single_struct"), None) => Ok(VariantSpec::SingleStruct),
+        (Some("single_struct"), Some(_)) => Err(format!(
+            "{FILE_SPLITS} [{diag_key}]: enum_of incompatible with kind = \"single_struct\""
+        )),
+        (Some("in_enum"), Some(name)) => Ok(VariantSpec::InEnum {
+            enum_name: name.to_string(),
+        }),
+        (Some("in_enum"), None) => Err(format!(
+            "{FILE_SPLITS} [{diag_key}]: kind = \"in_enum\" requires enum_of"
+        )),
+        (Some(other), _) => Err(format!(
+            "{FILE_SPLITS} [{diag_key}]: unsupported kind override '{other}' \
+             (allowed: \"single_struct\", \"in_enum\")"
+        )),
+    }
+}
+
 fn apply_splits_merges(
     entities: &BTreeMap<String, EntitySummary>,
     splits: &SplitsFile,
@@ -172,7 +208,8 @@ fn apply_splits_merges(
     // 2. Apply splits: for each [split.<source>], the first variant takes
     //    over the source entity's slot (with its arena adjusted), and the
     //    remaining variants are added as virtual entities with split_from
-    //    metadata.
+    //    metadata. The reasons rationale lives on the first variant only —
+    //    the abstraction-decision property, not a per-variant property.
     for (source, entry) in &splits.split {
         let Some(base) = out.remove(source) else {
             continue; // already warned in validate_splits
@@ -186,16 +223,30 @@ fn apply_splits_merges(
             }
         };
 
-        // First variant: keep the source name, adjust arena.
+        // First variant — primary, carries reasons.
         let mut first_summary = base.clone();
         first_summary.arena = first.arena.clone();
+        first_summary.variant = variant_spec_from_override(
+            &base.variant,
+            first.kind.as_deref(),
+            first.enum_of.as_deref(),
+            &format!("split.{source}.variants[0]"),
+        )?;
+        first_summary.reasons = entry.reasons.clone();
         out.insert(first.name.clone(), first_summary);
 
-        // Remaining variants: virtual entities with split_from metadata.
-        for variant in variants_iter {
+        // Remaining variants — derivatives, point back via split_from.
+        // reasons stays None; readers follow split_from to find rationale.
+        for (idx, variant) in variants_iter.enumerate() {
             let mut virt = base.clone();
             virt.arena = variant.arena.clone();
             virt.group = variant.arena.clone();
+            virt.variant = variant_spec_from_override(
+                &base.variant,
+                variant.kind.as_deref(),
+                variant.enum_of.as_deref(),
+                &format!("split.{source}.variants[{}]", idx + 1),
+            )?;
             virt.split_from = Some(source.clone());
             virt.split_context = Some(entry.context_signal.clone());
             out.insert(variant.name.clone(), virt);
@@ -204,7 +255,8 @@ fn apply_splits_merges(
 
     // 3. Apply merges: remove the absorbs and add the target as a single
     //    entity with merge_absorbs metadata. fields_union flag carries the
-    //    strategy for downstream stages.
+    //    strategy for downstream stages. reasons rationale rides on the
+    //    target.
     for (key, entry) in &merges.merge {
         // Pick a "base" template to seed the merged entity from one of
         // the absorbs (first that exists). If none exist, skip.
@@ -225,6 +277,7 @@ fn apply_splits_merges(
         merged.group = entry.target_name.clone();
         merged.merge_absorbs = entry.absorbs.clone();
         merged.fields_union = matches!(entry.fields_strategy, FieldsStrategy::Union);
+        merged.reasons = entry.reasons.clone();
         let _ = key; // entries keyed for readability; target_name carries the name.
         out.insert(entry.target_name.clone(), merged);
     }
@@ -264,6 +317,7 @@ mod tests {
             split_context: None,
             merge_absorbs: Vec::new(),
             fields_union: false,
+            reasons: None,
         }
     }
 
@@ -301,13 +355,18 @@ mod tests {
                             name: "cartesian_point".into(),
                             suffix: "3d".into(),
                             arena: "cartesian_point".into(),
+                            kind: None,
+                            enum_of: None,
                         },
                         SplitVariant {
                             name: "cartesian_point_2d".into(),
                             suffix: "2d".into(),
                             arena: "cartesian_point_2d".into(),
+                            kind: None,
+                            enum_of: None,
                         },
                     ],
+                    reasons: None,
                 },
             )]),
         };
@@ -345,6 +404,7 @@ mod tests {
                         "quasi_uniform_curve".into(),
                     ],
                     fields_strategy: FieldsStrategy::Union,
+                    reasons: None,
                 },
             )]),
         };
@@ -370,6 +430,7 @@ mod tests {
                     arena: "ab".into(),
                     absorbs: vec!["a".into(), "b".into()],
                     fields_strategy: FieldsStrategy::First,
+                    reasons: None,
                 },
             )]),
         };
@@ -409,5 +470,183 @@ mod tests {
         let merges = MergesFile::default();
         let out = apply_splits_merges(&entities, &splits, &merges).unwrap();
         assert_eq!(out["face_bound"].shape, Some(ConcreteSupertypeShape::Carrier));
+    }
+
+    fn split_variant(
+        name: &str,
+        arena: &str,
+        kind: Option<&str>,
+        enum_of: Option<&str>,
+    ) -> SplitVariant {
+        SplitVariant {
+            name: name.to_string(),
+            suffix: name.to_string(),
+            arena: arena.to_string(),
+            kind: kind.map(str::to_string),
+            enum_of: enum_of.map(str::to_string),
+        }
+    }
+
+    fn direction_split_with(second: SplitVariant, reasons: Option<&str>) -> SplitsFile {
+        SplitsFile {
+            split: BTreeMap::from([(
+                "direction".to_string(),
+                SplitEntry {
+                    context_signal: "is_2d".into(),
+                    variants: vec![
+                        split_variant("direction", "direction", None, None),
+                        second,
+                    ],
+                    reasons: reasons.map(str::to_string),
+                },
+            )]),
+        }
+    }
+
+    fn direction_seed() -> BTreeMap<String, EntitySummary> {
+        let mut entities = BTreeMap::new();
+        entities.insert(
+            "direction".into(),
+            summary(
+                VariantSpec::InEnum {
+                    enum_name: "geometric_representation_item".into(),
+                },
+                "direction",
+            ),
+        );
+        entities
+    }
+
+    #[test]
+    fn split_variant_kind_override_single_struct() {
+        let entities = direction_seed();
+        let splits = direction_split_with(
+            split_variant("direction_2d", "direction_2d", Some("single_struct"), None),
+            None,
+        );
+        let out = apply_splits_merges(&entities, &splits, &MergesFile::default()).unwrap();
+        assert!(matches!(out["direction_2d"].variant, VariantSpec::SingleStruct));
+        // First variant inherits source's InEnum (no override on it).
+        assert!(matches!(
+            out["direction"].variant,
+            VariantSpec::InEnum { ref enum_name } if enum_name == "geometric_representation_item"
+        ));
+    }
+
+    #[test]
+    fn split_variant_kind_override_in_enum_with_enum_of() {
+        let entities = direction_seed();
+        let splits = direction_split_with(
+            split_variant(
+                "direction_2d",
+                "direction_2d",
+                Some("in_enum"),
+                Some("planar_only"),
+            ),
+            None,
+        );
+        let out = apply_splits_merges(&entities, &splits, &MergesFile::default()).unwrap();
+        match &out["direction_2d"].variant {
+            VariantSpec::InEnum { enum_name } => assert_eq!(enum_name, "planar_only"),
+            other => panic!("expected InEnum, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn split_variant_in_enum_missing_enum_of_errors() {
+        let entities = direction_seed();
+        let splits = direction_split_with(
+            split_variant("direction_2d", "direction_2d", Some("in_enum"), None),
+            None,
+        );
+        let err = apply_splits_merges(&entities, &splits, &MergesFile::default()).unwrap_err();
+        assert!(err.contains("split.direction.variants[1]"));
+        assert!(err.contains("requires enum_of"));
+    }
+
+    #[test]
+    fn split_variant_orphan_enum_of_errors() {
+        let entities = direction_seed();
+        let splits = direction_split_with(
+            split_variant("direction_2d", "direction_2d", None, Some("anything")),
+            None,
+        );
+        let err = apply_splits_merges(&entities, &splits, &MergesFile::default()).unwrap_err();
+        assert!(err.contains("split.direction.variants[1]"));
+        assert!(err.contains("enum_of set without kind"));
+    }
+
+    #[test]
+    fn split_variant_single_struct_with_enum_of_errors() {
+        let entities = direction_seed();
+        let splits = direction_split_with(
+            split_variant(
+                "direction_2d",
+                "direction_2d",
+                Some("single_struct"),
+                Some("anything"),
+            ),
+            None,
+        );
+        let err = apply_splits_merges(&entities, &splits, &MergesFile::default()).unwrap_err();
+        assert!(err.contains("split.direction.variants[1]"));
+        assert!(err.contains("incompatible"));
+    }
+
+    #[test]
+    fn split_variant_unsupported_kind_errors() {
+        let entities = direction_seed();
+        let splits = direction_split_with(
+            split_variant("direction_2d", "direction_2d", Some("weird_kind"), None),
+            None,
+        );
+        let err = apply_splits_merges(&entities, &splits, &MergesFile::default()).unwrap_err();
+        assert!(err.contains("split.direction.variants[1]"));
+        assert!(err.contains("unsupported kind override 'weird_kind'"));
+    }
+
+    #[test]
+    fn split_reasons_lands_on_first_variant_only() {
+        let entities = direction_seed();
+        let splits = direction_split_with(
+            split_variant("direction_2d", "direction_2d", Some("single_struct"), None),
+            Some("2D direction lives outside the 3D enum"),
+        );
+        let out = apply_splits_merges(&entities, &splits, &MergesFile::default()).unwrap();
+        assert_eq!(
+            out["direction"].reasons.as_deref(),
+            Some("2D direction lives outside the 3D enum")
+        );
+        // Virtual variant points back via split_from; reasons stays None.
+        assert_eq!(out["direction_2d"].reasons, None);
+        assert_eq!(out["direction_2d"].split_from.as_deref(), Some("direction"));
+    }
+
+    #[test]
+    fn merge_reasons_lands_on_target() {
+        let mut entities = BTreeMap::new();
+        for name in ["b_spline_curve", "rational_b_spline_curve"] {
+            entities.insert(name.into(), summary(VariantSpec::SingleStruct, name));
+        }
+        let merges = MergesFile {
+            merge: BTreeMap::from([(
+                "nurbs".to_string(),
+                MergeEntry {
+                    target_name: "nurbs_curve".into(),
+                    arena: "nurbs_curve".into(),
+                    absorbs: vec![
+                        "b_spline_curve".into(),
+                        "rational_b_spline_curve".into(),
+                    ],
+                    fields_strategy: FieldsStrategy::Union,
+                    reasons: Some("Mathematical equivalence — unify under one type".into()),
+                },
+            )]),
+        };
+        let out = apply_splits_merges(&entities, &SplitsFile::default(), &merges).unwrap();
+        assert_eq!(
+            out["nurbs_curve"].reasons.as_deref(),
+            Some("Mathematical equivalence — unify under one type")
+        );
     }
 }

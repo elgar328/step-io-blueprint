@@ -102,6 +102,11 @@ struct IrEntity {
     merge_absorbs: Vec<String>,
     #[serde(default, skip_serializing_if = "is_false")]
     fields_union: bool,
+    /// Rationale for the abstraction. Present on the primary entity
+    /// (split first variant, merge target) only; virtual variants
+    /// follow split_from to find it.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    reasons: Option<String>,
 }
 
 fn is_false(b: &bool) -> bool {
@@ -610,6 +615,7 @@ fn compile_ir(
                 split_context: summary.split_context.clone(),
                 merge_absorbs: summary.merge_absorbs.clone(),
                 fields_union: summary.fields_union,
+                reasons: summary.reasons.clone(),
             },
         );
     }
@@ -690,6 +696,7 @@ mod tests {
             split_context: None,
             merge_absorbs: Vec::new(),
             fields_union: false,
+            reasons: None,
         }
     }
 
@@ -897,6 +904,7 @@ mod tests {
             split_context: None,
             merge_absorbs: Vec::new(),
             fields_union: false,
+            reasons: None,
         };
 
         let mut ir = BTreeMap::new();

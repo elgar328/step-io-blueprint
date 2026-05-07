@@ -225,6 +225,7 @@ Plan 3e ✓ — pool 분류 (수동 입력 + strict gate, shape 패턴 복제)
 Plan 3f ✓ — IR 친화 명명 + ir.toml 청사진 산출 (entities + pools + names + schemas 통합)
 Plan 3.7 ✓ — arena 의 3-bucket 인프라 부분 폐기
 Plan 3.8 ✓ (Phase 1) — infer reshape stage: split / merge 추상화 통합 자리 (infrastructure)
+Plan 3.9 ✓ — splits/merges 의 reasons 필드 + per-variant kind override
 ```
 
 각 plan 의 책임:

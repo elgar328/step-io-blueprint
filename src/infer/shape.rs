@@ -70,6 +70,11 @@ pub struct EntitySummary {
     pub merge_absorbs: Vec<String>,
     #[serde(default, skip_serializing_if = "is_false")]
     pub fields_union: bool,
+    /// Rationale for the abstraction, propagated from
+    /// splits.toml / merges.toml. Set on the primary entity only
+    /// (split first variant, merge target).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub reasons: Option<String>,
 }
 
 fn is_false(b: &bool) -> bool {
@@ -181,6 +186,7 @@ fn compile_entities(
                 split_context: None,
                 merge_absorbs: Vec::new(),
                 fields_union: false,
+                reasons: None,
             },
         );
     }
