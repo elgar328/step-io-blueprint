@@ -9,3 +9,4 @@
 !/inferred/names.toml
 !/inferred/splits.toml
 !/inferred/merges.toml
+!/inferred/recasts.toml

@@ -39,7 +39,7 @@ names + schemas) 통합 → step-io 측 수작업 구현의 *단일 reference* `
 | `infer arena` | `arenas_overrides.toml` (선택) | `variants.toml`, `schemas/*.exp` | — | `arenas.toml` |
 | `infer prune --corpus <path>` | `prune_overrides.toml` (선택, ABSTRACT supertype keep) | `variants.toml`, `arenas_overrides.toml` | **외부 STEP corpus** (`<path>`) | `usage.toml`, `variants_pruned.toml`, `arenas_pruned.toml` |
 | `infer shape` | `shapes.toml` (수동, ConcreteSupertype 별 1 entry) | `variants_pruned.toml`, `arenas_pruned.toml`, `usage.toml` | — | (검증 + 통과 시 `entities.toml` 자동 응축) |
-| `infer reshape` | `splits.toml` + `merges.toml` (수동, 빈 파일 OK) | `entities.toml` | — | `abstract_entities.toml` (split / merge 적용 후 view) |
+| `infer reshape` | `splits.toml` + `merges.toml` + `recasts.toml` (수동, 빈 파일 OK) | `entities.toml` | — | `abstract_entities.toml` (split / merge / recast 적용 후 view) |
 | `infer pool` | `pools.toml` (수동, arena 별 1 entry) | `abstract_entities.toml` | — | (검증만; missing → Err, extra → warning) |
 | `infer naming` | `names.toml` (수동 partial — 어색한 자리만 override) | `entities.toml`, `pools.toml`, `schemas/*.exp` | — | `ir.toml` (entity 단위 단일 IR 청사진 — step-io 측 수작업 구현의 reference) |
 
@@ -85,18 +85,21 @@ stage 는 외부 의존이 없다.
   각각의 IR shape (Carrier vs Base+Parallel) 결정 검증 + 4 입력을
   *entity 단위 단일 view* (`entities.toml`) 로 응축. reshape stage 의
   단일 입력.
-- **`infer reshape`** — *추상화 결정의 단일 자리*. split (1 schema entity →
-  N IR type, 예: cartesian_point → Point3 + Point2) / merge (N schema
-  entity → 1 IR type, 예: NurbsCurve 가 b_spline_* 류 흡수) 적용 →
-  `abstract_entities.toml` 산출. 빈 입력 시 entities.toml 그대로 복제 —
-  점진 도입. 각 entry 는 `reasons` 로 *왜 이 추상화가 schema 1:1 보다
-  나은 IR 디자인인지* 의 근거를 보존 (ir.toml 의 primary entity 에
-  propagate). split / merge 양쪽 모두 `kind` / `enum_of` override 로
-  target VariantSpec 조정 가능 — split 측은 per-variant (예: direction_2d
-  가 source 의 InEnum 에서 벗어나 standalone), merge 측은 per-target (예:
-  NurbsCurve 를 Curve enum 의 InEnum variant 로 — N → 1 InEnum 패턴).
-  step-io 의 추상화 결정이 *코드 marker* 가 아닌 *splits.toml / merges.toml*
-  에 모임.
+- **`infer reshape`** — *추상화 결정의 단일 자리*. 세 추상화 유형:
+  split (1 schema entity → N IR type, 예: cartesian_point → Point3 +
+  Point2), merge (N schema entity → 1 IR type, 예: NurbsCurve 가
+  b_spline_* 류 흡수), recast (1 schema entity → 1 IR type 의
+  *grouped reclassification*, 예: line / circle / ... 을 일괄적으로
+  Curve enum 의 InEnum variant 로). `abstract_entities.toml` 산출. 빈
+  입력 시 entities.toml 그대로 복제 — 점진 도입. 각 entry 는 `reasons`
+  로 *왜 이 추상화가 schema 1:1 보다 나은 IR 디자인인지* 의 근거를
+  보존 (ir.toml 의 primary entity 에 propagate). split / merge / recast
+  모두 `kind` / `enum_of` override 로 target VariantSpec 조정 가능 —
+  split 측은 per-variant, merge 측은 per-target, recast 측은
+  per-group (entries 배열의 모든 entity 가 동일 target VariantSpec
+  공유). 적용 순서: splits → merges → recasts (recast 는 post-abstraction
+  state 위에서 동작). step-io 의 추상화 결정이 *코드 marker* 가 아닌
+  *splits.toml / merges.toml / recasts.toml* 에 모임.
 - **`infer pool`** — arena → pool (코드 폴더 / sub-crate) 묶음. shape 와
   같은 *수동 입력 + strict gate* 패턴 — `pools.toml` 사용자 직접 작성,
   도구는 검증만 (missing → Err, extra → warning). 자동 분류는 효과 0
@@ -170,7 +173,7 @@ src/
     ├── arena.rs               stage 2 — group → arena 매핑 + entity → group 인덱스
     ├── prune.rs               stage 3 — corpus 가지치기 + transitive cascade
     ├── shape.rs               stage 4 — ConcreteSupertype shape 검증 + entities.toml 응축
-    ├── reshape.rs             stage 5 — split / merge 추상화 적용 → abstract_entities.toml
+    ├── reshape.rs             stage 5 — split / merge / recast 추상화 적용 → abstract_entities.toml
     ├── pool.rs                stage 6 — pools.toml 검증 (수동 입력 vs abstract_entities 의 required arena set)
     └── naming.rs              stage 7 — auto default + names.toml overrides → ir.toml 청사진
 schemas/                       4 STEP schema (.exp 파일)
@@ -179,7 +182,7 @@ inferred/                      stage 산출 + 사용자 입력 파일 (대부분
 
 `inferred/` 의 추적 정책 (gitignore):
 - *사용자 입력 파일* (`*_overrides.toml`, `shapes.toml`, `pools.toml`,
-  `names.toml`, `splits.toml`, `merges.toml`) — tracked
+  `names.toml`, `splits.toml`, `merges.toml`, `recasts.toml`) — tracked
 - *도구 산출 파일* (`variants.toml`, `arenas.toml`,
   `variants_pruned.toml`, `arenas_pruned.toml`, `usage.toml`,
   `entities.toml`, `abstract_entities.toml`, `ir.toml`, `*_pending.toml`)
@@ -187,7 +190,7 @@ inferred/                      stage 산출 + 사용자 입력 파일 (대부분
 
 *entities.toml vs abstract_entities.toml*: 두 view 보존. entities.toml =
 shape 의 schema 1:1 분류 응축. abstract_entities.toml = reshape 의 split /
-merge 적용 후. step-io 측 reference 는 ir.toml 단일 — 두 중간 view 는
+merge / recast 적용 후. step-io 측 reference 는 ir.toml 단일 — 두 중간 view 는
 디버깅 / 추상화 결정 검증 용도.
 
 ## Tests

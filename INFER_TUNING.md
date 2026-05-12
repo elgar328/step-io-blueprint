@@ -229,6 +229,7 @@ Plan 3.9 ✓ — splits/merges 의 reasons 필드 + per-variant kind override
 Plan 3.10 ✓ — 2D NURBS 짝 (NurbsCurve2d / NurbsSurface2d) + face_surface BaseParallel
 Plan 3.11 ✓ — Merge target 의 kind / enum_of override (split 인프라 대칭)
 Plan 3.12 Phase 1 ✓ — prune_overrides infra (ABSTRACT supertype keep)
+Plan 3.12 Phase 2 ✓ — recasts infra (1→1 grouped reclassification in reshape)
 ```
 
 각 plan 의 책임:

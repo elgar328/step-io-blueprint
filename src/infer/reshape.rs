@@ -1,10 +1,10 @@
-//! Reshape stage — apply split / merge abstractions to entities.toml.
+//! Reshape stage — apply split / merge / recast abstractions to entities.toml.
 //!
-//! Reads entities.toml + splits.toml + merges.toml, validates that
-//! split sources / merge absorbs exist and have compatible variant
-//! kinds, then writes abstract_entities.toml with the abstractions
-//! applied. Empty input files leave the output a verbatim copy of
-//! entities.toml — Phase 1 infrastructure ships with no abstractions.
+//! Reads entities.toml + splits.toml + merges.toml + recasts.toml,
+//! validates that split sources / merge absorbs / recast targets exist
+//! and have compatible variant kinds, then writes abstract_entities.toml
+//! with the abstractions applied. Empty input files leave the output a
+//! verbatim copy of entities.toml.
 
 use std::collections::BTreeMap;
 use std::fs;
@@ -18,6 +18,7 @@ use crate::infer::variant::VariantSpec;
 const FILE_ENTITIES: &str = "entities.toml";
 const FILE_SPLITS: &str = "splits.toml";
 const FILE_MERGES: &str = "merges.toml";
+const FILE_RECASTS: &str = "recasts.toml";
 const FILE_ABSTRACT_ENTITIES: &str = "abstract_entities.toml";
 
 #[derive(Debug, Default, Deserialize)]
@@ -75,6 +76,23 @@ enum FieldsStrategy {
     First,
 }
 
+#[derive(Debug, Default, Deserialize)]
+struct RecastsFile {
+    #[serde(default)]
+    recast: BTreeMap<String, RecastEntry>,
+}
+
+#[derive(Debug, Deserialize)]
+struct RecastEntry {
+    kind: String,
+    #[serde(default)]
+    enum_of: Option<String>,
+    arena: String,
+    entities: Vec<String>,
+    #[serde(default)]
+    reasons: Option<String>,
+}
+
 pub fn run() -> Result<(), String> {
     let entities: BTreeMap<String, EntitySummary> =
         crate::infer::io::read_confident(FILE_ENTITIES, "entity")
@@ -86,18 +104,22 @@ pub fn run() -> Result<(), String> {
     }
     let splits = load_splits()?;
     let merges = load_merges()?;
+    let recasts = load_recasts()?;
 
     validate_splits(&splits, &entities);
     validate_merges(&merges, &entities);
+    validate_recasts(&recasts, &entities);
 
-    let abstract_entities = apply_splits_merges(&entities, &splits, &merges)?;
+    let mut abstract_entities = apply_splits_merges(&entities, &splits, &merges)?;
+    apply_recasts(&mut abstract_entities, &recasts)?;
     write_abstract_entities(&abstract_entities)?;
 
     eprintln!(
-        "infer reshape: wrote {FILE_ABSTRACT_ENTITIES} ({} entities, {} splits, {} merges)",
+        "infer reshape: wrote {FILE_ABSTRACT_ENTITIES} ({} entities, {} splits, {} merges, {} recasts)",
         abstract_entities.len(),
         splits.split.len(),
-        merges.merge.len()
+        merges.merge.len(),
+        recasts.recast.len()
     );
     Ok(())
 }
@@ -115,6 +137,15 @@ fn load_merges() -> Result<MergesFile, String> {
     let path = Path::new("inferred").join(FILE_MERGES);
     if !path.exists() {
         return Ok(MergesFile::default());
+    }
+    let body = fs::read_to_string(&path).map_err(|e| format!("read {path:?}: {e}"))?;
+    toml::from_str(&body).map_err(|e| format!("parse {path:?}: {e}"))
+}
+
+fn load_recasts() -> Result<RecastsFile, String> {
+    let path = Path::new("inferred").join(FILE_RECASTS);
+    if !path.exists() {
+        return Ok(RecastsFile::default());
     }
     let body = fs::read_to_string(&path).map_err(|e| format!("read {path:?}: {e}"))?;
     toml::from_str(&body).map_err(|e| format!("parse {path:?}: {e}"))
@@ -163,6 +194,27 @@ fn validate_merges(merges: &MergesFile, entities: &BTreeMap<String, EntitySummar
                     VariantSpec::NestedField { .. } | VariantSpec::MergedInto { .. } => {
                         eprintln!(
                             "warning: {FILE_MERGES} [merge.{k}] absorbs {absorb} which is already {} (no IR struct)",
+                            kind_str(&s.variant)
+                        );
+                    }
+                    _ => {}
+                },
+            }
+        }
+    }
+}
+
+fn validate_recasts(recasts: &RecastsFile, entities: &BTreeMap<String, EntitySummary>) {
+    for (k, entry) in &recasts.recast {
+        for entity_name in &entry.entities {
+            match entities.get(entity_name) {
+                None => eprintln!(
+                    "warning: {FILE_RECASTS} [recast.{k}] entity {entity_name} not in {FILE_ENTITIES}"
+                ),
+                Some(s) => match &s.variant {
+                    VariantSpec::NestedField { .. } | VariantSpec::MergedInto { .. } => {
+                        eprintln!(
+                            "warning: {FILE_RECASTS} [recast.{k}] entity {entity_name} is {} (recast unsupported on absorbed)",
                             kind_str(&s.variant)
                         );
                     }
@@ -303,6 +355,37 @@ fn apply_splits_merges(
     Ok(out)
 }
 
+fn apply_recasts(
+    out: &mut BTreeMap<String, EntitySummary>,
+    recasts: &RecastsFile,
+) -> Result<(), String> {
+    for (key, entry) in &recasts.recast {
+        let target_variant = variant_spec_from_override(
+            &VariantSpec::SingleStruct,
+            Some(&entry.kind),
+            entry.enum_of.as_deref(),
+            FILE_RECASTS,
+            &format!("recast.{key}"),
+        )?;
+        for entity_name in &entry.entities {
+            let Some(s) = out.get_mut(entity_name) else {
+                eprintln!(
+                    "warning: {FILE_RECASTS} [recast.{key}] entity {entity_name} not in abstract_entities (already split / merged?)"
+                );
+                continue;
+            };
+            s.variant = target_variant.clone();
+            s.arena = entry.arena.clone();
+            s.group = match &target_variant {
+                VariantSpec::InEnum { enum_name } => enum_name.clone(),
+                _ => entry.arena.clone(),
+            };
+            s.reasons = entry.reasons.clone();
+        }
+    }
+    Ok(())
+}
+
 fn write_abstract_entities(
     entities: &BTreeMap<String, EntitySummary>,
 ) -> Result<(), String> {
@@ -311,7 +394,7 @@ fn write_abstract_entities(
     let body = toml::to_string_pretty(&outer)
         .map_err(|e| format!("serialize {FILE_ABSTRACT_ENTITIES}: {e}"))?;
     let header = "# Generated by `infer reshape`. Do not edit manually.\n\
-                  # Inputs: entities.toml + splits.toml + merges.toml + schemas/*.exp\n\n";
+                  # Inputs: entities.toml + splits.toml + merges.toml + recasts.toml + schemas/*.exp\n\n";
     fs::write(
         Path::new("inferred").join(FILE_ABSTRACT_ENTITIES),
         format!("{header}{body}"),
@@ -774,6 +857,128 @@ mod tests {
         let err = apply_splits_merges(&entities, &SplitsFile::default(), &merges).unwrap_err();
         assert!(err.contains("merges.toml"));
         assert!(err.contains("merge.m"));
+        assert!(err.contains("unsupported kind override 'weird_kind'"));
+    }
+
+    fn recast_with(
+        key: &str,
+        kind: &str,
+        enum_of: Option<&str>,
+        arena: &str,
+        entities: Vec<&str>,
+        reasons: Option<&str>,
+    ) -> RecastsFile {
+        RecastsFile {
+            recast: BTreeMap::from([(
+                key.to_string(),
+                RecastEntry {
+                    kind: kind.to_string(),
+                    enum_of: enum_of.map(str::to_string),
+                    arena: arena.to_string(),
+                    entities: entities.into_iter().map(String::from).collect(),
+                    reasons: reasons.map(str::to_string),
+                },
+            )]),
+        }
+    }
+
+    #[test]
+    fn empty_recasts_leaves_entities_unchanged() {
+        let mut out = BTreeMap::new();
+        out.insert("line".into(), summary(VariantSpec::SingleStruct, "line"));
+        let before = out.clone();
+        apply_recasts(&mut out, &RecastsFile::default()).unwrap();
+        assert_eq!(out, before);
+    }
+
+    #[test]
+    fn recast_to_in_enum_updates_variant_group_arena_reasons() {
+        let mut out = BTreeMap::new();
+        out.insert("line".into(), summary(VariantSpec::SingleStruct, "line"));
+        out.insert("circle".into(), summary(VariantSpec::SingleStruct, "circle"));
+        let recasts = recast_with(
+            "curve_unification",
+            "in_enum",
+            Some("curve"),
+            "curve",
+            vec!["line", "circle"],
+            Some("Unify under Curve enum"),
+        );
+        apply_recasts(&mut out, &recasts).unwrap();
+        for name in ["line", "circle"] {
+            match &out[name].variant {
+                VariantSpec::InEnum { enum_name } => assert_eq!(enum_name, "curve"),
+                other => panic!("expected InEnum for {name}, got {other:?}"),
+            }
+            assert_eq!(out[name].arena, "curve");
+            assert_eq!(out[name].group, "curve");
+            assert_eq!(out[name].reasons.as_deref(), Some("Unify under Curve enum"));
+        }
+    }
+
+    #[test]
+    fn recast_to_single_struct_updates_variant_and_group_to_arena() {
+        let mut out = BTreeMap::new();
+        out.insert(
+            "x".into(),
+            summary(
+                VariantSpec::InEnum {
+                    enum_name: "old_enum".into(),
+                },
+                "x",
+            ),
+        );
+        let recasts = recast_with(
+            "promote",
+            "single_struct",
+            None,
+            "standalone",
+            vec!["x"],
+            None,
+        );
+        apply_recasts(&mut out, &recasts).unwrap();
+        assert!(matches!(out["x"].variant, VariantSpec::SingleStruct));
+        assert_eq!(out["x"].arena, "standalone");
+        // group falls back to arena when variant is not InEnum.
+        assert_eq!(out["x"].group, "standalone");
+    }
+
+    #[test]
+    fn recast_unknown_entity_warns_but_others_apply() {
+        let mut out = BTreeMap::new();
+        out.insert("line".into(), summary(VariantSpec::SingleStruct, "line"));
+        let recasts = recast_with(
+            "curve_unification",
+            "in_enum",
+            Some("curve"),
+            "curve",
+            vec!["line", "ghost_entity"],
+            None,
+        );
+        apply_recasts(&mut out, &recasts).unwrap();
+        // Known entity reclassified, unknown was warned and skipped.
+        match &out["line"].variant {
+            VariantSpec::InEnum { enum_name } => assert_eq!(enum_name, "curve"),
+            other => panic!("expected InEnum, got {other:?}"),
+        }
+        assert!(!out.contains_key("ghost_entity"));
+    }
+
+    #[test]
+    fn recast_invalid_kind_errors_with_file_label() {
+        let mut out = BTreeMap::new();
+        out.insert("line".into(), summary(VariantSpec::SingleStruct, "line"));
+        let recasts = recast_with(
+            "bad",
+            "weird_kind",
+            None,
+            "curve",
+            vec!["line"],
+            None,
+        );
+        let err = apply_recasts(&mut out, &recasts).unwrap_err();
+        assert!(err.contains("recasts.toml"));
+        assert!(err.contains("recast.bad"));
         assert!(err.contains("unsupported kind override 'weird_kind'"));
     }
 }
