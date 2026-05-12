@@ -1,8 +1,9 @@
 # Manually authored — pool grouping for the 130 pruned arenas.
-# Pool names align with the 8 step-io entity groups (geometry / topology /
-# units / shape_rep / assembly_product / visualization / property / pmi)
-# plus `plm` for product-lifecycle metadata (approval / person /
-# organization / document / classification / role / date / context).
+# Pool names align with the step-io entity groups (geometry / topology /
+# units / shape_rep / assembly_product / visualization / property / pmi /
+# form_features) plus `plm` for product-lifecycle metadata (approval /
+# person / organization / document / classification / role / date /
+# context).
 #
 # Edit this file to redirect any arena to a different pool. The tool only
 # validates that every arena in arenas_pruned.toml has an entry here
@@ -350,6 +351,9 @@ pool = "shape_rep"
 
 [arena.shape_aspect_relationship]
 pool = "shape_rep"
+
+[arena.step]
+pool = "form_features"
 
 [arena.styled_item]
 pool = "visualization"
