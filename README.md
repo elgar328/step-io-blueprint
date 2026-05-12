@@ -37,7 +37,7 @@ names + schemas) 통합 → step-io 측 수작업 구현의 *단일 reference* `
 |---|---|---|---|---|
 | `infer variant` | `variants_overrides.toml` (선택) | `schemas/*.exp` | — | `variants.toml`, (`variants_pending.toml`) |
 | `infer arena` | `arenas_overrides.toml` (선택) | `variants.toml`, `schemas/*.exp` | — | `arenas.toml` |
-| `infer prune --corpus <path>` | — | `variants.toml`, `arenas_overrides.toml` | **외부 STEP corpus** (`<path>`) | `usage.toml`, `variants_pruned.toml`, `arenas_pruned.toml` |
+| `infer prune --corpus <path>` | `prune_overrides.toml` (선택, ABSTRACT supertype keep) | `variants.toml`, `arenas_overrides.toml` | **외부 STEP corpus** (`<path>`) | `usage.toml`, `variants_pruned.toml`, `arenas_pruned.toml` |
 | `infer shape` | `shapes.toml` (수동, ConcreteSupertype 별 1 entry) | `variants_pruned.toml`, `arenas_pruned.toml`, `usage.toml` | — | (검증 + 통과 시 `entities.toml` 자동 응축) |
 | `infer reshape` | `splits.toml` + `merges.toml` (수동, 빈 파일 OK) | `entities.toml` | — | `abstract_entities.toml` (split / merge 적용 후 view) |
 | `infer pool` | `pools.toml` (수동, arena 별 1 entry) | `abstract_entities.toml` | — | (검증만; missing → Err, extra → warning) |
@@ -78,6 +78,9 @@ stage 는 외부 의존이 없다.
 - **`infer prune --corpus <path>`** — corpus 의 instance 카운트로
   *현재 사용되지 않는* entity 를 식별 + transitive cascade 로 흡수된
   entity 도 정리. 산출은 *별 view* — 원본 variants/arenas 는 불변.
+  `prune_overrides.toml` 의 `[keep.X]` 항목으로 *ABSTRACT supertype* (예:
+  curve / surface — corpus instance 0 이지만 IR polymorphism root 로 필요)
+  을 *수동 보존*.
 - **`infer shape`** — 가지치기 후 살아남은 ConcreteSupertype (현재 13 건)
   각각의 IR shape (Carrier vs Base+Parallel) 결정 검증 + 4 입력을
   *entity 단위 단일 view* (`entities.toml`) 로 응축. reshape stage 의

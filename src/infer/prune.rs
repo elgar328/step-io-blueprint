@@ -33,6 +33,29 @@ const FILE_USAGE: &str = "usage.toml";
 const FILE_VARIANTS_PRUNED: &str = "variants_pruned.toml";
 const FILE_ARENAS_PRUNED: &str = "arenas_pruned.toml";
 const FILE_ARENAS_OVERRIDES: &str = "arenas_overrides.toml";
+const FILE_PRUNE_OVERRIDES: &str = "prune_overrides.toml";
+
+#[derive(Debug, Default, Deserialize)]
+struct PruneOverridesFile {
+    #[serde(default)]
+    keep: BTreeMap<String, KeepEntry>,
+}
+
+#[derive(Debug, Deserialize)]
+struct KeepEntry {
+    #[serde(default)]
+    #[allow(dead_code)]
+    reason: Option<String>,
+}
+
+fn load_prune_overrides() -> Result<PruneOverridesFile, String> {
+    let path = Path::new("inferred").join(FILE_PRUNE_OVERRIDES);
+    if !path.exists() {
+        return Ok(PruneOverridesFile::default());
+    }
+    let body = fs::read_to_string(&path).map_err(|e| format!("read {path:?}: {e}"))?;
+    toml::from_str(&body).map_err(|e| format!("parse {path:?}: {e}"))
+}
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct UsageRecord {
@@ -101,12 +124,24 @@ pub fn run(corpus_path: &Path, allow_pending: bool) -> Result<(), String> {
     crate::infer::io::write_confident(FILE_USAGE, "entity", &usage)
         .map_err(|e| format!("write {FILE_USAGE}: {e}"))?;
 
-    // 4. P-2 transitive prune of variants.
-    let pruned_variants = prune_transitive(&variants, &counts);
+    // 4. P-2 transitive prune of variants, honoring prune_overrides.toml
+    // keep entries (preserve ABSTRACT supertypes that have 0 corpus
+    // instances but are needed as IR polymorphism roots).
+    let prune_overrides = load_prune_overrides()?;
+    for entity in prune_overrides.keep.keys() {
+        if !variants.contains_key(entity) {
+            eprintln!(
+                "warning: {FILE_PRUNE_OVERRIDES} [keep.{entity}] — entity not in {FILE_VARIANTS}"
+            );
+        }
+    }
+    let keep_set: BTreeSet<String> = prune_overrides.keep.keys().cloned().collect();
+    let pruned_variants = prune_transitive_with_keep(&variants, &counts, &keep_set);
     eprintln!(
-        "infer prune: variants_pruned has {} entities (vs {} original)",
+        "infer prune: variants_pruned has {} entities (vs {} original, {} kept by overrides)",
         pruned_variants.len(),
-        variants.len()
+        variants.len(),
+        keep_set.len(),
     );
     crate::infer::io::write_confident(FILE_VARIANTS_PRUNED, "entity", &pruned_variants)
         .map_err(|e| format!("write {FILE_VARIANTS_PRUNED}: {e}"))?;
@@ -194,14 +229,29 @@ fn count_instances(
 /// Apply the P-2 transitive pruning rules to `variants` until a fixpoint
 /// is reached. The result is a new `BTreeMap` with unused entities
 /// removed and dependent classifications downgraded.
+#[cfg(test)]
 fn prune_transitive(
     variants: &BTreeMap<String, VariantSpec>,
     counts: &HashMap<String, usize>,
 ) -> BTreeMap<String, VariantSpec> {
+    prune_transitive_with_keep(variants, counts, &BTreeSet::new())
+}
+
+/// Same as `prune_transitive`, but honors `keep_overrides` — entities in
+/// the set are never marked unused (neither by initial 0-instance scan,
+/// Rule 2 enum-shrink, nor Rule 3-5 cascade). Used to preserve ABSTRACT
+/// supertypes (curve / surface) that serve as IR polymorphism roots.
+fn prune_transitive_with_keep(
+    variants: &BTreeMap<String, VariantSpec>,
+    counts: &HashMap<String, usize>,
+    keep_overrides: &BTreeSet<String>,
+) -> BTreeMap<String, VariantSpec> {
     let mut pruned: BTreeMap<String, VariantSpec> = variants.clone();
     let mut unused: BTreeSet<String> = pruned
         .keys()
-        .filter(|n| counts.get(*n).copied().unwrap_or(0) == 0)
+        .filter(|n| {
+            counts.get(*n).copied().unwrap_or(0) == 0 && !keep_overrides.contains(*n)
+        })
         .cloned()
         .collect();
 
@@ -218,6 +268,12 @@ fn prune_transitive(
         // direct their lone surviving child to SingleStruct before being
         // physically removed.
         for (entity, spec) in &snapshot {
+            // keep_overrides preserves enum_base entities — skip Rule 2's
+            // shrink-driven removal so they survive even with 0 or 1 live
+            // children.
+            if keep_overrides.contains(entity) {
+                continue;
+            }
             let nc = count_live_children(entity, &pruned, &unused);
             match spec {
                 VariantSpec::EnumBase { .. } if nc == 0 => {
@@ -278,7 +334,10 @@ fn prune_transitive(
                 VariantSpec::NestedField { into, .. } => parent_gone(into, &pruned, &unused),
                 _ => false,
             };
-            if stale && unused.insert(entity.clone()) {
+            if stale
+                && !keep_overrides.contains(entity)
+                && unused.insert(entity.clone())
+            {
                 changed = true;
             }
         }
@@ -564,5 +623,129 @@ mod tests {
         let counts: HashMap<String, usize> = HashMap::new();
         let pruned = prune_transitive(&variants, &counts);
         assert!(pruned.is_empty());
+    }
+
+    fn keep_set(names: &[&str]) -> BTreeSet<String> {
+        names.iter().map(|s| s.to_string()).collect()
+    }
+
+    #[test]
+    fn prune_overrides_empty_matches_wrapper() {
+        // Regression gate: empty keep set must match the no-override
+        // wrapper exactly. Same input, same fixpoint.
+        let variants = variants_with(&[
+            ("used", VariantSpec::SingleStruct),
+            ("dead", VariantSpec::SingleStruct),
+        ]);
+        let counts: HashMap<String, usize> = [("used".to_string(), 5)].into_iter().collect();
+        let baseline = prune_transitive(&variants, &counts);
+        let with_empty = prune_transitive_with_keep(&variants, &counts, &BTreeSet::new());
+        assert_eq!(baseline, with_empty);
+    }
+
+    #[test]
+    fn keep_preserves_zero_instance_entity() {
+        // Initial 0-instance marking is bypassed for keep entries.
+        let variants = variants_with(&[
+            ("zero_used", VariantSpec::SingleStruct),
+            ("seen", VariantSpec::SingleStruct),
+        ]);
+        let counts: HashMap<String, usize> =
+            [("seen".to_string(), 3)].into_iter().collect();
+        let pruned =
+            prune_transitive_with_keep(&variants, &counts, &keep_set(&["zero_used"]));
+        assert!(pruned.contains_key("zero_used"));
+        assert!(pruned.contains_key("seen"));
+    }
+
+    #[test]
+    fn keep_breaks_cascade_for_enum_base() {
+        // The point of prune_overrides for Curve / Surface unification:
+        // an abstract enum_base with 0 instances would normally trigger
+        // cascade pruning of its in_enum children — even those with
+        // high usage. keep on the parent breaks that cascade.
+        let variants = variants_with(&[
+            (
+                "curve",
+                VariantSpec::EnumBase {
+                    enum_name: "curve".into(),
+                },
+            ),
+            (
+                "line",
+                VariantSpec::InEnum {
+                    enum_name: "curve".into(),
+                },
+            ),
+            (
+                "ray",
+                VariantSpec::InEnum {
+                    enum_name: "curve".into(),
+                },
+            ),
+        ]);
+        // curve has 0 corpus instances (abstract); line + ray have many.
+        let counts: HashMap<String, usize> =
+            [("line".to_string(), 1000), ("ray".to_string(), 500)]
+                .into_iter()
+                .collect();
+
+        // Without keep: cascade would normally NOT trigger here since
+        // curve has 2 live children (Rule 2's nc==0/1 don't fire). curve
+        // gets initial-marked unused (0 instance) → children cascade.
+        let without_keep = prune_transitive(&variants, &counts);
+        assert!(!without_keep.contains_key("curve"));
+        assert!(!without_keep.contains_key("line"));
+        assert!(!without_keep.contains_key("ray"));
+
+        // With keep.curve: curve survives initial marking → children
+        // don't cascade.
+        let with_keep =
+            prune_transitive_with_keep(&variants, &counts, &keep_set(&["curve"]));
+        assert!(with_keep.contains_key("curve"));
+        assert!(with_keep.contains_key("line"));
+        assert!(with_keep.contains_key("ray"));
+    }
+
+    #[test]
+    fn keep_preserves_enum_base_with_lone_child() {
+        // Rule 2's "lone child" branch normally dissolves an enum_base
+        // with 1 live child into SingleStruct + drops the parent. keep
+        // on the parent skips this dissolution so it remains as a
+        // future polymorphism root for downstream recasts.
+        let variants = variants_with(&[
+            (
+                "curve",
+                VariantSpec::EnumBase {
+                    enum_name: "curve".into(),
+                },
+            ),
+            (
+                "line",
+                VariantSpec::InEnum {
+                    enum_name: "curve".into(),
+                },
+            ),
+        ]);
+        let counts: HashMap<String, usize> =
+            [("line".to_string(), 7)].into_iter().collect();
+
+        let without_keep = prune_transitive(&variants, &counts);
+        assert!(!without_keep.contains_key("curve"));
+        assert!(matches!(
+            without_keep.get("line"),
+            Some(VariantSpec::SingleStruct)
+        ));
+
+        let with_keep =
+            prune_transitive_with_keep(&variants, &counts, &keep_set(&["curve"]));
+        assert!(matches!(
+            with_keep.get("curve"),
+            Some(VariantSpec::EnumBase { .. })
+        ));
+        assert!(matches!(
+            with_keep.get("line"),
+            Some(VariantSpec::InEnum { .. })
+        ));
     }
 }
