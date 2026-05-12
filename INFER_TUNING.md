@@ -230,6 +230,7 @@ Plan 3.10 ✓ — 2D NURBS 짝 (NurbsCurve2d / NurbsSurface2d) + face_surface Ba
 Plan 3.11 ✓ — Merge target 의 kind / enum_of override (split 인프라 대칭)
 Plan 3.12 Phase 1 ✓ — prune_overrides infra (ABSTRACT supertype keep)
 Plan 3.12 Phase 2 ✓ — recasts infra (1→1 grouped reclassification in reshape)
+Plan 3.13 ✓ — infer prune 의 SquashFS corpus 지원 (backhand in-process streaming)
 ```
 
 각 plan 의 책임:

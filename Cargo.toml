@@ -8,6 +8,9 @@ publish = false
 regex = "1"
 toml = "0.8"
 serde = { version = "1", features = ["derive"] }
+# Pinned to exact patch — backhand (0.x) has frequent API breakage
+# between minor versions. Matches the pin in step-io-reference-check.
+backhand = "=0.25.1"
 
 [dev-dependencies]
 tempfile = "3"

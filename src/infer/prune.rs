@@ -17,8 +17,10 @@
 
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 use std::fs;
+use std::io::{BufReader, Read};
 use std::path::{Path, PathBuf};
 
+use backhand::{FilesystemReader, InnerNode, SquashfsFileReader};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 
@@ -84,6 +86,19 @@ pub fn run(corpus_path: &Path, allow_pending: bool) -> Result<(), String> {
     if !corpus_path.exists() {
         return Err(format!("corpus path does not exist: {corpus_path:?}"));
     }
+    if !corpus_path.is_dir() {
+        return Err(format!(
+            "{} is not a directory (expected a directory containing .sqfs files)",
+            corpus_path.display()
+        ));
+    }
+    let containers = list_sqfs_containers(corpus_path);
+    if containers.is_empty() {
+        return Err(format!(
+            "no *.sqfs containers found in {}",
+            corpus_path.display()
+        ));
+    }
 
     // 1. Read variants.toml — primary classification input.
     let variants: BTreeMap<String, VariantSpec> =
@@ -97,8 +112,9 @@ pub fn run(corpus_path: &Path, allow_pending: bool) -> Result<(), String> {
 
     let entity_names: Vec<String> = variants.keys().cloned().collect();
     eprintln!(
-        "infer prune: scanning {} for {} entities...",
+        "infer prune: scanning {} ({} sqfs container(s)) for {} entities...",
         corpus_path.display(),
+        containers.len(),
         entity_names.len()
     );
 
@@ -167,34 +183,89 @@ pub fn run(corpus_path: &Path, allow_pending: bool) -> Result<(), String> {
     Ok(())
 }
 
-/// Walk `root` recursively, collecting `.stp` / `.step` files (case
-/// insensitive). Permission errors and broken symlinks are silently
-/// skipped — the corpus may legitimately contain unreadable entries.
-fn walk_step_files(root: &Path) -> Vec<PathBuf> {
-    let mut out = Vec::new();
+fn is_step_path(path: &Path) -> bool {
+    matches!(
+        path.extension()
+            .and_then(|s| s.to_str())
+            .map(|s| s.to_ascii_lowercase())
+            .as_deref(),
+        Some("stp" | "step")
+    )
+}
+
+/// Sorted list of `*.sqfs` files directly inside `root` (non-recursive).
+fn list_sqfs_containers(root: &Path) -> Vec<PathBuf> {
     let Ok(entries) = fs::read_dir(root) else {
-        return out;
+        return Vec::new();
     };
-    for entry in entries.flatten() {
-        let p = entry.path();
-        if p.is_dir() {
-            out.extend(walk_step_files(&p));
-        } else if matches!(
-            p.extension()
-                .and_then(|s| s.to_str())
-                .map(|s| s.to_lowercase())
-                .as_deref(),
-            Some("stp" | "step")
-        ) {
-            out.push(p);
+    let mut paths: Vec<PathBuf> = entries
+        .filter_map(Result::ok)
+        .map(|e| e.path())
+        .filter(|p| {
+            p.is_file()
+                && p.extension().and_then(|s| s.to_str()) == Some("sqfs")
+        })
+        .collect();
+    paths.sort();
+    paths
+}
+
+fn tally_entity_matches(re: &Regex, text: &str, counts: &mut HashMap<String, usize>) {
+    for cap in re.captures_iter(text) {
+        let name = cap[1].to_lowercase();
+        *counts.entry(name).or_insert(0) += 1;
+    }
+}
+
+/// Walk every `*.sqfs` container in `root` and invoke `cb` with each
+/// STEP file's UTF-8 content. Open / parse failures on a container are
+/// reported as warnings and skipped.
+fn for_each_step_file_in_corpus<F>(root: &Path, mut cb: F)
+where
+    F: FnMut(&str),
+{
+    for sqfs_path in list_sqfs_containers(root) {
+        let file = match fs::File::open(&sqfs_path) {
+            Ok(f) => f,
+            Err(e) => {
+                eprintln!("warning: open {}: {e}", sqfs_path.display());
+                continue;
+            }
+        };
+        let fs_reader = match FilesystemReader::from_reader(BufReader::new(file)) {
+            Ok(r) => r,
+            Err(e) => {
+                eprintln!("warning: parse {}: {e}", sqfs_path.display());
+                continue;
+            }
+        };
+        let mut step_files: Vec<SquashfsFileReader> = Vec::new();
+        for node in fs_reader.files() {
+            if let InnerNode::File(file_reader) = &node.inner
+                && is_step_path(&node.fullpath)
+            {
+                step_files.push(file_reader.clone());
+            }
+        }
+        for sf in &step_files {
+            let mut content = String::new();
+            if fs_reader
+                .file(sf)
+                .reader()
+                .read_to_string(&mut content)
+                .is_err()
+            {
+                continue;
+            }
+            cb(&content);
         }
     }
-    out
 }
 
 /// Build a single regex matching every entity name (alternation, longest
-/// first to defeat prefix shadowing) and run it against every file in
-/// `corpus_path`. Returns `entity_name → instance_count`.
+/// first to defeat prefix shadowing) and run it against every STEP file
+/// inside every `*.sqfs` container in `corpus_path`. Returns
+/// `entity_name → instance_count`.
 fn count_instances(
     corpus_path: &Path,
     entity_names: &[String],
@@ -214,15 +285,9 @@ fn count_instances(
     let re = Regex::new(&pattern).expect("entity-name alternation regex must compile");
 
     let mut counts: HashMap<String, usize> = HashMap::new();
-    for path in walk_step_files(corpus_path) {
-        let Ok(text) = fs::read_to_string(&path) else {
-            continue;
-        };
-        for cap in re.captures_iter(&text) {
-            let name = cap[1].to_lowercase();
-            *counts.entry(name).or_insert(0) += 1;
-        }
-    }
+    for_each_step_file_in_corpus(corpus_path, |text| {
+        tally_entity_matches(&re, text, &mut counts);
+    });
     counts
 }
 
@@ -434,36 +499,36 @@ fn filter_stale_overrides(
 mod tests {
     use super::*;
     use crate::infer::variant::VariantSpec;
-    use std::io::Write;
     use tempfile::TempDir;
 
-    fn write_step(dir: &Path, name: &str, body: &str) {
-        let path = dir.join(name);
-        let mut f = fs::File::create(&path).unwrap();
-        f.write_all(body.as_bytes()).unwrap();
+    #[test]
+    fn tally_entity_matches_simple() {
+        let names = ["cartesian_point", "line"];
+        let mut alt: Vec<String> = names.iter().map(|n| n.to_uppercase()).collect();
+        alt.sort_by_key(|s| std::cmp::Reverse(s.len()));
+        let pattern = format!(
+            r"\b({})\s*\(",
+            alt.iter()
+                .map(|s| regex::escape(s))
+                .collect::<Vec<_>>()
+                .join("|")
+        );
+        let re = Regex::new(&pattern).unwrap();
+        let text = "ISO-10303-21;\n\
+                    #1 = CARTESIAN_POINT('', (0, 0, 0));\n\
+                    #2 = CARTESIAN_POINT('', (1, 1, 1));\n\
+                    #3 = LINE('', #1, #4);\n\
+                    END-ISO-10303-21;\n";
+        let mut counts: HashMap<String, usize> = HashMap::new();
+        tally_entity_matches(&re, text, &mut counts);
+        assert_eq!(counts.get("cartesian_point").copied(), Some(2));
+        assert_eq!(counts.get("line").copied(), Some(1));
     }
 
     #[test]
-    fn count_instances_simple() {
+    fn list_sqfs_containers_empty_dir() {
         let dir = TempDir::new().unwrap();
-        write_step(
-            dir.path(),
-            "a.stp",
-            "ISO-10303-21;\n\
-             #1 = CARTESIAN_POINT('', (0, 0, 0));\n\
-             #2 = CARTESIAN_POINT('', (1, 1, 1));\n\
-             #3 = LINE('', #1, #4);\n\
-             END-ISO-10303-21;\n",
-        );
-        write_step(
-            dir.path(),
-            "b.step",
-            "#10 = CARTESIAN_POINT('', (2, 2, 2));\n",
-        );
-        let names = vec!["cartesian_point".to_string(), "line".to_string()];
-        let counts = count_instances(dir.path(), &names);
-        assert_eq!(counts.get("cartesian_point").copied(), Some(3));
-        assert_eq!(counts.get("line").copied(), Some(1));
+        assert!(list_sqfs_containers(dir.path()).is_empty());
     }
 
     #[test]
@@ -472,26 +537,6 @@ mod tests {
         let names = vec!["cartesian_point".to_string()];
         let counts = count_instances(dir.path(), &names);
         assert!(counts.is_empty() || counts.get("cartesian_point").copied() == Some(0));
-    }
-
-    #[test]
-    fn count_instances_recursive_walk() {
-        let dir = TempDir::new().unwrap();
-        let sub = dir.path().join("sub");
-        fs::create_dir(&sub).unwrap();
-        write_step(&sub, "deep.stp", "#1 = LINE('', #2, #3);\n");
-        let names = vec!["line".to_string()];
-        let counts = count_instances(dir.path(), &names);
-        assert_eq!(counts.get("line").copied(), Some(1));
-    }
-
-    #[test]
-    fn count_instances_skips_non_step_files() {
-        let dir = TempDir::new().unwrap();
-        write_step(dir.path(), "data.txt", "#1 = LINE('', #2, #3);\n");
-        let names = vec!["line".to_string()];
-        let counts = count_instances(dir.path(), &names);
-        assert!(counts.get("line").copied().unwrap_or(0) == 0);
     }
 
     fn variants_with(pairs: &[(&str, VariantSpec)]) -> BTreeMap<String, VariantSpec> {
