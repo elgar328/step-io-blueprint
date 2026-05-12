@@ -61,6 +61,10 @@ struct MergeEntry {
     fields_strategy: FieldsStrategy,
     #[serde(default)]
     reasons: Option<String>,
+    #[serde(default)]
+    kind: Option<String>,
+    #[serde(default)]
+    enum_of: Option<String>,
 }
 
 #[derive(Debug, Default, Deserialize, Clone, Copy)]
@@ -173,25 +177,26 @@ fn variant_spec_from_override(
     base_spec: &VariantSpec,
     override_kind: Option<&str>,
     override_enum: Option<&str>,
+    file_label: &str,
     diag_key: &str,
 ) -> Result<VariantSpec, String> {
     match (override_kind, override_enum) {
         (None, None) => Ok(base_spec.clone()),
         (None, Some(_)) => Err(format!(
-            "{FILE_SPLITS} [{diag_key}]: enum_of set without kind"
+            "{file_label} [{diag_key}]: enum_of set without kind"
         )),
         (Some("single_struct"), None) => Ok(VariantSpec::SingleStruct),
         (Some("single_struct"), Some(_)) => Err(format!(
-            "{FILE_SPLITS} [{diag_key}]: enum_of incompatible with kind = \"single_struct\""
+            "{file_label} [{diag_key}]: enum_of incompatible with kind = \"single_struct\""
         )),
         (Some("in_enum"), Some(name)) => Ok(VariantSpec::InEnum {
             enum_name: name.to_string(),
         }),
         (Some("in_enum"), None) => Err(format!(
-            "{FILE_SPLITS} [{diag_key}]: kind = \"in_enum\" requires enum_of"
+            "{file_label} [{diag_key}]: kind = \"in_enum\" requires enum_of"
         )),
         (Some(other), _) => Err(format!(
-            "{FILE_SPLITS} [{diag_key}]: unsupported kind override '{other}' \
+            "{file_label} [{diag_key}]: unsupported kind override '{other}' \
              (allowed: \"single_struct\", \"in_enum\")"
         )),
     }
@@ -230,6 +235,7 @@ fn apply_splits_merges(
             &base.variant,
             first.kind.as_deref(),
             first.enum_of.as_deref(),
+            FILE_SPLITS,
             &format!("split.{source}.variants[0]"),
         )?;
         first_summary.reasons = entry.reasons.clone();
@@ -245,6 +251,7 @@ fn apply_splits_merges(
                 &base.variant,
                 variant.kind.as_deref(),
                 variant.enum_of.as_deref(),
+                FILE_SPLITS,
                 &format!("split.{source}.variants[{}]", idx + 1),
             )?;
             virt.split_from = Some(source.clone());
@@ -271,14 +278,25 @@ fn apply_splits_merges(
         let Some(mut merged) = base else {
             continue;
         };
-        // Merged entity becomes a plain SingleStruct in the abstraction.
-        merged.variant = VariantSpec::SingleStruct;
+        // Merged entity defaults to SingleStruct; MergeEntry may override
+        // to InEnum (member of a host enum) for N → 1 enum patterns.
+        merged.variant = variant_spec_from_override(
+            &VariantSpec::SingleStruct,
+            entry.kind.as_deref(),
+            entry.enum_of.as_deref(),
+            FILE_MERGES,
+            &format!("merge.{key}"),
+        )?;
         merged.arena = entry.arena.clone();
-        merged.group = entry.target_name.clone();
+        // group follows the variant: InEnum members share the host enum's
+        // group (matches existing in_enum entities like advanced_face).
+        merged.group = match &merged.variant {
+            VariantSpec::InEnum { enum_name } => enum_name.clone(),
+            _ => entry.target_name.clone(),
+        };
         merged.merge_absorbs = entry.absorbs.clone();
         merged.fields_union = matches!(entry.fields_strategy, FieldsStrategy::Union);
         merged.reasons = entry.reasons.clone();
-        let _ = key; // entries keyed for readability; target_name carries the name.
         out.insert(entry.target_name.clone(), merged);
     }
 
@@ -405,6 +423,8 @@ mod tests {
                     ],
                     fields_strategy: FieldsStrategy::Union,
                     reasons: None,
+                    kind: None,
+                    enum_of: None,
                 },
             )]),
         };
@@ -431,6 +451,8 @@ mod tests {
                     absorbs: vec!["a".into(), "b".into()],
                     fields_strategy: FieldsStrategy::First,
                     reasons: None,
+                    kind: None,
+                    enum_of: None,
                 },
             )]),
         };
@@ -640,6 +662,8 @@ mod tests {
                     ],
                     fields_strategy: FieldsStrategy::Union,
                     reasons: Some("Mathematical equivalence — unify under one type".into()),
+                    kind: None,
+                    enum_of: None,
                 },
             )]),
         };
@@ -648,5 +672,108 @@ mod tests {
             out["nurbs_curve"].reasons.as_deref(),
             Some("Mathematical equivalence — unify under one type")
         );
+    }
+
+    fn merge_with_override(
+        target: &str,
+        absorbs: Vec<&str>,
+        kind: Option<&str>,
+        enum_of: Option<&str>,
+    ) -> MergesFile {
+        MergesFile {
+            merge: BTreeMap::from([(
+                "m".to_string(),
+                MergeEntry {
+                    target_name: target.to_string(),
+                    arena: target.to_string(),
+                    absorbs: absorbs.into_iter().map(String::from).collect(),
+                    fields_strategy: FieldsStrategy::Union,
+                    reasons: None,
+                    kind: kind.map(str::to_string),
+                    enum_of: enum_of.map(str::to_string),
+                },
+            )]),
+        }
+    }
+
+    fn merge_seed(absorbs: &[&str]) -> BTreeMap<String, EntitySummary> {
+        let mut entities = BTreeMap::new();
+        for name in absorbs {
+            entities.insert(
+                (*name).to_string(),
+                summary(VariantSpec::SingleStruct, name),
+            );
+        }
+        entities
+    }
+
+    #[test]
+    fn merge_target_kind_override_single_struct() {
+        let entities = merge_seed(&["a", "b"]);
+        let merges = merge_with_override("ab", vec!["a", "b"], Some("single_struct"), None);
+        let out = apply_splits_merges(&entities, &SplitsFile::default(), &merges).unwrap();
+        assert!(matches!(out["ab"].variant, VariantSpec::SingleStruct));
+        assert_eq!(out["ab"].group, "ab");
+        assert_eq!(out["ab"].arena, "ab");
+    }
+
+    #[test]
+    fn merge_target_kind_override_in_enum_with_enum_of() {
+        let entities = merge_seed(&["a", "b"]);
+        let merges = merge_with_override("ab", vec!["a", "b"], Some("in_enum"), Some("curve"));
+        let out = apply_splits_merges(&entities, &SplitsFile::default(), &merges).unwrap();
+        match &out["ab"].variant {
+            VariantSpec::InEnum { enum_name } => assert_eq!(enum_name, "curve"),
+            other => panic!("expected InEnum, got {other:?}"),
+        }
+        // group auto-follows enum_name (matches existing in_enum pattern).
+        assert_eq!(out["ab"].group, "curve");
+        // arena stays as MergeEntry.arena (user-controlled).
+        assert_eq!(out["ab"].arena, "ab");
+    }
+
+    #[test]
+    fn merge_target_in_enum_missing_enum_of_errors() {
+        let entities = merge_seed(&["a", "b"]);
+        let merges = merge_with_override("ab", vec!["a", "b"], Some("in_enum"), None);
+        let err = apply_splits_merges(&entities, &SplitsFile::default(), &merges).unwrap_err();
+        assert!(err.contains("merges.toml"));
+        assert!(err.contains("merge.m"));
+        assert!(err.contains("requires enum_of"));
+    }
+
+    #[test]
+    fn merge_target_orphan_enum_of_errors() {
+        let entities = merge_seed(&["a", "b"]);
+        let merges = merge_with_override("ab", vec!["a", "b"], None, Some("curve"));
+        let err = apply_splits_merges(&entities, &SplitsFile::default(), &merges).unwrap_err();
+        assert!(err.contains("merges.toml"));
+        assert!(err.contains("merge.m"));
+        assert!(err.contains("enum_of set without kind"));
+    }
+
+    #[test]
+    fn merge_target_single_struct_with_enum_of_errors() {
+        let entities = merge_seed(&["a", "b"]);
+        let merges = merge_with_override(
+            "ab",
+            vec!["a", "b"],
+            Some("single_struct"),
+            Some("curve"),
+        );
+        let err = apply_splits_merges(&entities, &SplitsFile::default(), &merges).unwrap_err();
+        assert!(err.contains("merges.toml"));
+        assert!(err.contains("merge.m"));
+        assert!(err.contains("incompatible"));
+    }
+
+    #[test]
+    fn merge_target_unsupported_kind_errors() {
+        let entities = merge_seed(&["a", "b"]);
+        let merges = merge_with_override("ab", vec!["a", "b"], Some("weird_kind"), None);
+        let err = apply_splits_merges(&entities, &SplitsFile::default(), &merges).unwrap_err();
+        assert!(err.contains("merges.toml"));
+        assert!(err.contains("merge.m"));
+        assert!(err.contains("unsupported kind override 'weird_kind'"));
     }
 }
