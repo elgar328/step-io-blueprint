@@ -236,6 +236,7 @@ Plan 3.15 ✓ — pools.toml 의 unused arena entry cleanup (Phase 3 후속, 5 d
 Plan 3.16 ✓ — reshape 의 빈 enum_base 자동 cleanup (Phase 3 후속, 4 dangling)
 Plan 3.17 ✓ — degenerate_toroidal_surface recast 추가 + elementary_surface cleanup
 Plan 3.18 ✓ — 1-child enum_base collapse + dangling refs 정책 Err 통일 (Plan 3.16 안전망 갱신)
+Plan 3.19 Phase 1 ✓ — anchors.toml 인프라 (4번째 추상화: anchor). 빈 입력 → ir.toml diff 0.
 ```
 
 각 plan 의 책임:

@@ -10,3 +10,4 @@
 !/inferred/splits.toml
 !/inferred/merges.toml
 !/inferred/recasts.toml
+!/inferred/anchors.toml

@@ -1,0 +1,18 @@
+# Manually authored — schema 외부의 IR EnumBase anchor 선언
+# (4번째 reshape 추상화: anchor, 0 → 1).
+#
+# 현 reshape 의 split (1→N), merge (N→1), recast (1→1 reclassification)
+# 와 직교. anchor 는 EXPRESS schema 에 *없는* IR enum_base 를 추가해,
+# 후속 recasts 가 `enum_of = <anchor_name>` 으로 children 을 흡수.
+#
+# Empty file is valid (no anchors → ir.toml 무변동).
+#
+# 예시:
+# [anchor.surface_trace_curve]
+# arena = "curve"
+# kind = "enum_base"
+# reasons = """
+# surface_curve / intersection_curve / seam_curve / bounded_surface_curve
+# 는 *3D 공간 곡선 + surface 관계* 라는 의미를 공유 — 일반 curve enum
+# 흡수보다 별도 enum (SurfaceTraceCurve) 이 IR 의도 명확.
+# """

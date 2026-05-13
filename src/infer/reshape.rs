@@ -19,6 +19,7 @@ const FILE_ENTITIES: &str = "entities.toml";
 const FILE_SPLITS: &str = "splits.toml";
 const FILE_MERGES: &str = "merges.toml";
 const FILE_RECASTS: &str = "recasts.toml";
+const FILE_ANCHORS: &str = "anchors.toml";
 const FILE_ABSTRACT_ENTITIES: &str = "abstract_entities.toml";
 
 #[derive(Debug, Default, Deserialize)]
@@ -93,6 +94,19 @@ struct RecastEntry {
     reasons: Option<String>,
 }
 
+#[derive(Debug, Default, Deserialize)]
+struct AnchorsFile {
+    #[serde(default)]
+    anchor: BTreeMap<String, AnchorEntry>,
+}
+
+#[derive(Debug, Deserialize)]
+struct AnchorEntry {
+    arena: String,
+    kind: String,
+    reasons: String,
+}
+
 pub fn run() -> Result<(), String> {
     let entities: BTreeMap<String, EntitySummary> =
         crate::infer::io::read_confident(FILE_ENTITIES, "entity")
@@ -105,23 +119,31 @@ pub fn run() -> Result<(), String> {
     let splits = load_splits()?;
     let merges = load_merges()?;
     let recasts = load_recasts()?;
+    let anchors = load_anchors()?;
 
     validate_splits(&splits, &entities);
     validate_merges(&merges, &entities);
     validate_recasts(&recasts, &entities);
 
     let mut abstract_entities = apply_splits_merges(&entities, &splits, &merges)?;
+    validate_anchors(&anchors, &abstract_entities)?;
+    let inserted_anchors = apply_anchors(&anchors, &mut abstract_entities);
+
+    // Post-apply enum_of cross-ref: splits / merges / anchors are all
+    // applied, so the only abstraction still pending is recasts itself.
+    validate_recasts_enum_of(&recasts, &abstract_entities)?;
     apply_recasts(&mut abstract_entities, &recasts)?;
     let pruned_enum_bases = prune_empty_enum_bases(&mut abstract_entities)?;
     let collapsed_enum_bases = collapse_single_child_enum_bases(&mut abstract_entities)?;
     write_abstract_entities(&abstract_entities)?;
 
     eprintln!(
-        "infer reshape: wrote {FILE_ABSTRACT_ENTITIES} ({} entities, {} splits, {} merges, {} recasts, {} empty enum_bases pruned, {} single-child enum_bases collapsed)",
+        "infer reshape: wrote {FILE_ABSTRACT_ENTITIES} ({} entities, {} splits, {} merges, {} recasts, {} anchors, {} empty enum_bases pruned, {} single-child enum_bases collapsed)",
         abstract_entities.len(),
         splits.split.len(),
         merges.merge.len(),
         recasts.recast.len(),
+        inserted_anchors.len(),
         pruned_enum_bases.len(),
         collapsed_enum_bases.len()
     );
@@ -153,6 +175,65 @@ fn load_recasts() -> Result<RecastsFile, String> {
     }
     let body = fs::read_to_string(&path).map_err(|e| format!("read {path:?}: {e}"))?;
     toml::from_str(&body).map_err(|e| format!("parse {path:?}: {e}"))
+}
+
+fn load_anchors() -> Result<AnchorsFile, String> {
+    let path = Path::new("inferred").join(FILE_ANCHORS);
+    if !path.exists() {
+        return Ok(AnchorsFile::default());
+    }
+    let body = fs::read_to_string(&path).map_err(|e| format!("read {path:?}: {e}"))?;
+    toml::from_str(&body).map_err(|e| format!("parse {path:?}: {e}"))
+}
+
+fn validate_anchors(
+    anchors: &AnchorsFile,
+    entities: &BTreeMap<String, EntitySummary>,
+) -> Result<(), String> {
+    for (name, entry) in &anchors.anchor {
+        if entities.contains_key(name) {
+            return Err(format!(
+                "{FILE_ANCHORS} [anchor.{name}] collides with existing entity \
+                 (schema entity, split product, or merge target)"
+            ));
+        }
+        if entry.kind != "enum_base" {
+            return Err(format!(
+                "{FILE_ANCHORS} [anchor.{name}] kind={:?} unsupported \
+                 (only \"enum_base\")",
+                entry.kind
+            ));
+        }
+    }
+    Ok(())
+}
+
+fn apply_anchors(
+    anchors: &AnchorsFile,
+    out: &mut BTreeMap<String, EntitySummary>,
+) -> Vec<String> {
+    let mut inserted = Vec::new();
+    for (name, entry) in &anchors.anchor {
+        out.insert(
+            name.clone(),
+            EntitySummary {
+                variant: VariantSpec::EnumBase {
+                    enum_name: name.clone(),
+                },
+                group: name.clone(),
+                arena: entry.arena.clone(),
+                shape: None,
+                instance_count: 0,
+                split_from: None,
+                split_context: None,
+                merge_absorbs: Vec::new(),
+                fields_union: false,
+                reasons: Some(entry.reasons.clone()),
+            },
+        );
+        inserted.push(name.clone());
+    }
+    inserted
 }
 
 fn kind_str(spec: &VariantSpec) -> &'static str {
@@ -227,6 +308,41 @@ fn validate_recasts(recasts: &RecastsFile, entities: &BTreeMap<String, EntitySum
             }
         }
     }
+}
+
+/// Post-apply check: each recast's `enum_of` target must resolve to an
+/// existing EnumBase or ConcreteSupertype in the abstract-entities map
+/// (schema entity, split product, or anchor).
+fn validate_recasts_enum_of(
+    recasts: &RecastsFile,
+    abstract_entities: &BTreeMap<String, EntitySummary>,
+) -> Result<(), String> {
+    for (label, entry) in &recasts.recast {
+        if entry.kind != "in_enum" {
+            continue;
+        }
+        let target = entry.enum_of.as_ref().ok_or_else(|| {
+            format!("{FILE_RECASTS} [recast.{label}] kind=in_enum requires enum_of")
+        })?;
+        let target_entity = abstract_entities.get(target).ok_or_else(|| {
+            format!(
+                "{FILE_RECASTS} [recast.{label}] enum_of={target:?} not in entities \
+                 (schema entity, split product, or anchor). \
+                 Declare it in {FILE_ANCHORS} if intentional."
+            )
+        })?;
+        match &target_entity.variant {
+            VariantSpec::EnumBase { .. } | VariantSpec::ConcreteSupertype => {}
+            other => {
+                return Err(format!(
+                    "{FILE_RECASTS} [recast.{label}] enum_of={target:?} resolves to {}, \
+                     not enum_base or concrete_supertype",
+                    kind_str(other)
+                ));
+            }
+        }
+    }
+    Ok(())
 }
 
 fn variant_spec_from_override(
@@ -494,7 +610,7 @@ fn write_abstract_entities(
     let body = toml::to_string_pretty(&outer)
         .map_err(|e| format!("serialize {FILE_ABSTRACT_ENTITIES}: {e}"))?;
     let header = "# Generated by `infer reshape`. Do not edit manually.\n\
-                  # Inputs: entities.toml + splits.toml + merges.toml + recasts.toml + schemas/*.exp\n\n";
+                  # Inputs: entities.toml + splits.toml + merges.toml + recasts.toml + anchors.toml + schemas/*.exp\n\n";
     fs::write(
         Path::new("inferred").join(FILE_ABSTRACT_ENTITIES),
         format!("{header}{body}"),
@@ -1300,5 +1416,119 @@ mod tests {
             out["degenerate_toroidal_surface"].variant,
             VariantSpec::InEnum { .. }
         ));
+    }
+
+    fn anchor_entry(arena: &str, kind: &str, reasons: &str) -> AnchorEntry {
+        AnchorEntry {
+            arena: arena.to_string(),
+            kind: kind.to_string(),
+            reasons: reasons.to_string(),
+        }
+    }
+
+    #[test]
+    fn validate_anchors_rejects_collision_with_existing_entity() {
+        let mut entities = BTreeMap::new();
+        entities.insert(
+            "curve".into(),
+            summary(VariantSpec::ConcreteSupertype, "curve"),
+        );
+        let anchors = AnchorsFile {
+            anchor: BTreeMap::from([(
+                "curve".to_string(),
+                anchor_entry("curve", "enum_base", "should collide"),
+            )]),
+        };
+        let err = validate_anchors(&anchors, &entities).unwrap_err();
+        assert!(err.contains("collides"));
+        assert!(err.contains("curve"));
+    }
+
+    #[test]
+    fn validate_anchors_rejects_non_enum_base_kind() {
+        let entities = BTreeMap::new();
+        let anchors = AnchorsFile {
+            anchor: BTreeMap::from([(
+                "foo".to_string(),
+                anchor_entry("curve", "single_struct", "wrong kind"),
+            )]),
+        };
+        let err = validate_anchors(&anchors, &entities).unwrap_err();
+        assert!(err.contains("unsupported"));
+        assert!(err.contains("single_struct"));
+    }
+
+    #[test]
+    fn apply_anchors_inserts_enum_base_with_all_fields() {
+        let mut out: BTreeMap<String, EntitySummary> = BTreeMap::new();
+        let anchors = AnchorsFile {
+            anchor: BTreeMap::from([(
+                "surface_trace_curve".to_string(),
+                anchor_entry("curve", "enum_base", "reason text"),
+            )]),
+        };
+        let inserted = apply_anchors(&anchors, &mut out);
+        assert_eq!(inserted, vec!["surface_trace_curve".to_string()]);
+        let entity = out.get("surface_trace_curve").expect("anchor inserted");
+        match &entity.variant {
+            VariantSpec::EnumBase { enum_name } => {
+                assert_eq!(enum_name, "surface_trace_curve");
+            }
+            other => panic!("expected EnumBase, got {other:?}"),
+        }
+        assert_eq!(entity.group, "surface_trace_curve");
+        assert_eq!(entity.arena, "curve");
+        assert_eq!(entity.shape, None);
+        assert_eq!(entity.instance_count, 0);
+        assert_eq!(entity.split_from, None);
+        assert_eq!(entity.split_context, None);
+        assert!(entity.merge_absorbs.is_empty());
+        assert!(!entity.fields_union);
+        assert_eq!(entity.reasons.as_deref(), Some("reason text"));
+    }
+
+    #[test]
+    fn validate_recasts_enum_of_errs_on_missing_target() {
+        let abstract_entities: BTreeMap<String, EntitySummary> = BTreeMap::new();
+        let recasts = RecastsFile {
+            recast: BTreeMap::from([(
+                "ghost_unification".to_string(),
+                RecastEntry {
+                    kind: "in_enum".to_string(),
+                    enum_of: Some("ghost".to_string()),
+                    arena: "curve".to_string(),
+                    entities: vec![],
+                    reasons: None,
+                },
+            )]),
+        };
+        let err = validate_recasts_enum_of(&recasts, &abstract_entities).unwrap_err();
+        assert!(err.contains("ghost"));
+        assert!(err.contains("anchors.toml"));
+    }
+
+    #[test]
+    fn validate_recasts_enum_of_accepts_anchor_target() {
+        let mut abstract_entities: BTreeMap<String, EntitySummary> = BTreeMap::new();
+        let anchors = AnchorsFile {
+            anchor: BTreeMap::from([(
+                "surface_trace_curve".to_string(),
+                anchor_entry("curve", "enum_base", "anchor reason"),
+            )]),
+        };
+        apply_anchors(&anchors, &mut abstract_entities);
+        let recasts = RecastsFile {
+            recast: BTreeMap::from([(
+                "surface_trace_unification".to_string(),
+                RecastEntry {
+                    kind: "in_enum".to_string(),
+                    enum_of: Some("surface_trace_curve".to_string()),
+                    arena: "curve".to_string(),
+                    entities: vec![],
+                    reasons: None,
+                },
+            )]),
+        };
+        validate_recasts_enum_of(&recasts, &abstract_entities).unwrap();
     }
 }
