@@ -166,9 +166,6 @@ pool = "pmi"
 [arena.edge_curve]
 pool = "topology"
 
-[arena.elementary_surface]
-pool = "geometry"
-
 [arena.external_source]
 pool = "plm"
 

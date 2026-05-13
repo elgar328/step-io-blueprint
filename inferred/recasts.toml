@@ -35,6 +35,7 @@ entities = [
   "conical_surface",
   "spherical_surface",
   "toroidal_surface",
+  "degenerate_toroidal_surface",
   "surface_of_revolution",
   "surface_of_linear_extrusion",
   "rectangular_trimmed_surface",
