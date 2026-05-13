@@ -232,6 +232,7 @@ Plan 3.12 Phase 1 ✓ — prune_overrides infra (ABSTRACT supertype keep)
 Plan 3.12 Phase 2 ✓ — recasts infra (1→1 grouped reclassification in reshape)
 Plan 3.13 ✓ — infer prune 의 SquashFS corpus 지원 (backhand in-process streaming)
 Plan 3.12 Phase 3 ✓ — Curve / Surface enum 통합 (3D, keep+recast 적극 blueprint)
+Plan 3.15 ✓ — pools.toml 의 unused arena entry cleanup (Phase 3 후속, 5 dangling)
 ```
 
 각 plan 의 책임:

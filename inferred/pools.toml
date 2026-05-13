@@ -88,9 +88,6 @@ pool = "topology"
 [arena.complex_triangulated_surface_set]
 pool = "topology"
 
-[arena.composite_curve]
-pool = "geometry"
-
 [arena.composite_curve_segment]
 pool = "geometry"
 
@@ -232,9 +229,6 @@ pool = "pmi"
 [arena.limits_and_fits]
 pool = "pmi"
 
-[arena.line]
-pool = "geometry"
-
 [arena.local_time]
 pool = "plm"
 
@@ -261,9 +255,6 @@ pool = "assembly_product"
 
 [arena.object_role]
 pool = "plm"
-
-[arena.offset_surface]
-pool = "geometry"
 
 [arena.organization]
 pool = "plm"
@@ -439,13 +430,7 @@ pool = "geometry"
 [arena.direction_2d]
 pool = "geometry"
 
-[arena.nurbs_curve]
-pool = "geometry"
-
 [arena.nurbs_curve_2d]
-pool = "geometry"
-
-[arena.nurbs_surface]
 pool = "geometry"
 
 [arena.nurbs_surface_2d]
