@@ -112,14 +112,16 @@ pub fn run() -> Result<(), String> {
 
     let mut abstract_entities = apply_splits_merges(&entities, &splits, &merges)?;
     apply_recasts(&mut abstract_entities, &recasts)?;
+    let pruned_enum_bases = prune_empty_enum_bases(&mut abstract_entities);
     write_abstract_entities(&abstract_entities)?;
 
     eprintln!(
-        "infer reshape: wrote {FILE_ABSTRACT_ENTITIES} ({} entities, {} splits, {} merges, {} recasts)",
+        "infer reshape: wrote {FILE_ABSTRACT_ENTITIES} ({} entities, {} splits, {} merges, {} recasts, {} empty enum_bases pruned)",
         abstract_entities.len(),
         splits.split.len(),
         merges.merge.len(),
-        recasts.recast.len()
+        recasts.recast.len(),
+        pruned_enum_bases.len()
     );
     Ok(())
 }
@@ -384,6 +386,46 @@ fn apply_recasts(
         }
     }
     Ok(())
+}
+
+/// Drop enum_bases that lost all in_enum children to splits / merges /
+/// recasts. Mirrors prune.rs Rule 2's shrink-driven removal, applied
+/// at the abstract-entities stage instead of the prune stage.
+///
+/// Safety: also checks that no remaining entity references the empty
+/// enum_base via NestedField.into / MergedInto.target — those keep the
+/// enum_base alive (warning + skip).
+fn prune_empty_enum_bases(out: &mut BTreeMap<String, EntitySummary>) -> Vec<String> {
+    let mut to_remove: Vec<String> = Vec::new();
+    for (name, summary) in out.iter() {
+        if !matches!(summary.variant, VariantSpec::EnumBase { .. }) {
+            continue;
+        }
+        let has_live_child = out.values().any(|s| {
+            matches!(&s.variant, VariantSpec::InEnum { enum_name }
+                if enum_name == name)
+        });
+        if has_live_child {
+            continue;
+        }
+        let dangling = out.iter().any(|(_, s)| match &s.variant {
+            VariantSpec::NestedField { into, .. } => into == name,
+            VariantSpec::MergedInto { target, .. } => target == name,
+            _ => false,
+        });
+        if dangling {
+            eprintln!(
+                "warning: empty enum_base {name} has dangling \
+                 NestedField/MergedInto references; not removed"
+            );
+            continue;
+        }
+        to_remove.push(name.clone());
+    }
+    for name in &to_remove {
+        out.remove(name);
+    }
+    to_remove
 }
 
 fn write_abstract_entities(
@@ -980,5 +1022,120 @@ mod tests {
         assert!(err.contains("recasts.toml"));
         assert!(err.contains("recast.bad"));
         assert!(err.contains("unsupported kind override 'weird_kind'"));
+    }
+
+    #[test]
+    fn prune_empty_enum_bases_removes_zero_child() {
+        let mut out = BTreeMap::new();
+        out.insert(
+            "bounded_curve".into(),
+            summary(
+                VariantSpec::EnumBase {
+                    enum_name: "bounded_curve".into(),
+                },
+                "bounded_curve",
+            ),
+        );
+        let removed = prune_empty_enum_bases(&mut out);
+        assert_eq!(removed, vec!["bounded_curve".to_string()]);
+        assert!(!out.contains_key("bounded_curve"));
+    }
+
+    #[test]
+    fn prune_empty_enum_bases_keeps_one_child() {
+        let mut out = BTreeMap::new();
+        out.insert(
+            "elementary_surface".into(),
+            summary(
+                VariantSpec::EnumBase {
+                    enum_name: "elementary_surface".into(),
+                },
+                "elementary_surface",
+            ),
+        );
+        out.insert(
+            "degenerate_toroidal_surface".into(),
+            summary(
+                VariantSpec::InEnum {
+                    enum_name: "elementary_surface".into(),
+                },
+                "elementary_surface",
+            ),
+        );
+        let removed = prune_empty_enum_bases(&mut out);
+        assert!(removed.is_empty());
+        assert!(out.contains_key("elementary_surface"));
+        assert!(out.contains_key("degenerate_toroidal_surface"));
+    }
+
+    #[test]
+    fn prune_empty_enum_bases_after_recast() {
+        let mut entities = BTreeMap::new();
+        entities.insert(
+            "conic".into(),
+            summary(
+                VariantSpec::EnumBase {
+                    enum_name: "conic".into(),
+                },
+                "conic",
+            ),
+        );
+        entities.insert(
+            "circle".into(),
+            summary(
+                VariantSpec::InEnum {
+                    enum_name: "conic".into(),
+                },
+                "conic",
+            ),
+        );
+        let recasts = recast_with(
+            "curve_unification",
+            "in_enum",
+            Some("curve"),
+            "curve",
+            vec!["circle"],
+            None,
+        );
+        let mut out = entities.clone();
+        apply_recasts(&mut out, &recasts).unwrap();
+        // After recast: conic's only child (circle) is now in_enum curve.
+        let removed = prune_empty_enum_bases(&mut out);
+        assert_eq!(removed, vec!["conic".to_string()]);
+        assert!(!out.contains_key("conic"));
+        match &out["circle"].variant {
+            VariantSpec::InEnum { enum_name } => assert_eq!(enum_name, "curve"),
+            other => panic!("expected InEnum curve, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn prune_empty_enum_bases_skips_dangling_refs() {
+        let mut out = BTreeMap::new();
+        out.insert(
+            "bounded_curve".into(),
+            summary(
+                VariantSpec::EnumBase {
+                    enum_name: "bounded_curve".into(),
+                },
+                "bounded_curve",
+            ),
+        );
+        // Y has NestedField pointing at bounded_curve — safety should skip.
+        out.insert(
+            "y".into(),
+            summary(
+                VariantSpec::NestedField {
+                    into: "bounded_curve".into(),
+                    as_field: "bc".into(),
+                    added_attr_count: 0,
+                },
+                "y",
+            ),
+        );
+        let removed = prune_empty_enum_bases(&mut out);
+        assert!(removed.is_empty());
+        assert!(out.contains_key("bounded_curve"));
+        assert!(out.contains_key("y"));
     }
 }

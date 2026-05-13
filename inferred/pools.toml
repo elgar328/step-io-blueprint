@@ -55,12 +55,6 @@ pool = "geometry"
 [arena.b_spline_surface]
 pool = "geometry"
 
-[arena.bounded_curve]
-pool = "geometry"
-
-[arena.bounded_surface]
-pool = "geometry"
-
 [arena.calendar_date]
 pool = "plm"
 
@@ -96,9 +90,6 @@ pool = "shape_rep"
 
 [arena.composite_text]
 pool = "visualization"
-
-[arena.conic]
-pool = "geometry"
 
 [arena.context_dependent_shape_representation]
 pool = "shape_rep"
@@ -369,9 +360,6 @@ pool = "geometry"
 
 [arena.surface_style_transparent]
 pool = "visualization"
-
-[arena.swept_surface]
-pool = "geometry"
 
 [arena.symbol_colour]
 pool = "visualization"
