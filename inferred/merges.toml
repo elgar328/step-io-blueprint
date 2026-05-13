@@ -7,13 +7,15 @@
 
 [merge.nurbs_curve]
 target_name = "nurbs_curve"
-arena = "nurbs_curve"
+arena = "curve"
 absorbs = [
   "b_spline_curve",
   "b_spline_curve_with_knots",
   "rational_b_spline_curve",
 ]
 fields_strategy = "union"
+kind = "in_enum"
+enum_of = "curve"
 reasons = """
 b_spline_curve / *_with_knots / rational_b_spline_curve 는 *수학적으로
 동일 표현* — rational + knots + weights 의 일반화로 모두 표현 가능. schema
@@ -21,22 +23,30 @@ b_spline_curve / *_with_knots / rational_b_spline_curve 는 *수학적으로
 복잡도 증가 + 자료 변환 boilerplate. NurbsCurve 1 type 통합 시 사용자는
 *자료구조 1 개* 만 알면 됨. round-trip 시 weights 균일성 / knots
 multiplicity 등 신호로 schema variant 결정 — step-io codegen 책임.
+
+본 merge target 은 Curve enum 의 in_enum variant — Plan 3.12 Phase 3 의
+Curve enum 통합 (3D) 의 멤버. CurveId 공유.
 """
 
 [merge.nurbs_surface]
 target_name = "nurbs_surface"
-arena = "nurbs_surface"
+arena = "surface"
 absorbs = [
   "b_spline_surface",
   "b_spline_surface_with_knots",
   "rational_b_spline_surface",
 ]
 fields_strategy = "union"
+kind = "in_enum"
+enum_of = "surface"
 reasons = """
 nurbs_curve 와 같은 *수학적 동등성* 패턴 — surface 측. b_spline_surface /
 *_with_knots / rational_b_spline_surface 의 3 분류는 사용자 IR 측면에서
 구분 의미 없음. NurbsSurface 1 type 으로 통합. round-trip 책임은 step-io
 codegen.
+
+본 merge target 은 Surface enum 의 in_enum variant — Plan 3.12 Phase 3 의
+Surface enum 통합 (3D) 의 멤버. SurfaceId 공유.
 """
 
 [merge.nurbs_curve_2d]

@@ -58,6 +58,9 @@ pool = "geometry"
 [arena.bounded_curve]
 pool = "geometry"
 
+[arena.bounded_surface]
+pool = "geometry"
+
 [arena.calendar_date]
 pool = "plm"
 
@@ -97,6 +100,9 @@ pool = "shape_rep"
 [arena.composite_text]
 pool = "visualization"
 
+[arena.conic]
+pool = "geometry"
+
 [arena.context_dependent_shape_representation]
 pool = "shape_rep"
 
@@ -105,6 +111,9 @@ pool = "units"
 
 [arena.coordinated_universal_time_offset]
 pool = "plm"
+
+[arena.curve]
+pool = "geometry"
 
 [arena.curve_style]
 pool = "visualization"
@@ -168,6 +177,9 @@ pool = "pmi"
 
 [arena.edge_curve]
 pool = "topology"
+
+[arena.elementary_surface]
+pool = "geometry"
 
 [arena.external_source]
 pool = "plm"
@@ -358,11 +370,17 @@ pool = "form_features"
 [arena.styled_item]
 pool = "visualization"
 
+[arena.surface]
+pool = "geometry"
+
 [arena.surface_curve]
 pool = "geometry"
 
 [arena.surface_style_transparent]
 pool = "visualization"
+
+[arena.swept_surface]
+pool = "geometry"
 
 [arena.symbol_colour]
 pool = "visualization"

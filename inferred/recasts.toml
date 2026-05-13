@@ -1,0 +1,47 @@
+# Manually authored — recast (1 schema entity → 1 IR type with different
+# classification, grouped). Reshape's third abstraction operation
+# alongside split (1→N) and merge (N→1).
+
+[recast.curve_unification]
+kind = "in_enum"
+enum_of = "curve"
+arena = "curve"
+entities = [
+  "line",
+  "circle",
+  "ellipse",
+  "hyperbola",
+  "parabola",
+  "polyline",
+  "trimmed_curve",
+  "composite_curve",
+  "offset_curve_3d",
+]
+reasons = """
+step-io 의 단일 Curve enum 구조와 매칭. schema 의 nested 분류 (conic +
+bounded_curve sub-enum) 는 사용자가 *임의의 curve 처리* 하려면 중첩
+match 필요 — IR 사용자 측 코드 복잡도 ↑. flat Curve enum 으로 통합 시
+*단일 match* 로 모든 curve 처리, exhaustive check 컴파일타임 보장.
+round-trip 시 emit schema variant 결정은 step-io codegen 책임.
+"""
+
+[recast.surface_unification]
+kind = "in_enum"
+enum_of = "surface"
+arena = "surface"
+entities = [
+  "plane",
+  "cylindrical_surface",
+  "conical_surface",
+  "spherical_surface",
+  "toroidal_surface",
+  "surface_of_revolution",
+  "surface_of_linear_extrusion",
+  "rectangular_trimmed_surface",
+  "curve_bounded_surface",
+  "offset_surface",
+]
+reasons = """
+step-io 의 단일 Surface enum 구조와 매칭. curve_unification 과 동일
+논리. step-io codegen 이 round-trip 책임.
+"""
