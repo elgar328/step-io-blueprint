@@ -112,16 +112,18 @@ pub fn run() -> Result<(), String> {
 
     let mut abstract_entities = apply_splits_merges(&entities, &splits, &merges)?;
     apply_recasts(&mut abstract_entities, &recasts)?;
-    let pruned_enum_bases = prune_empty_enum_bases(&mut abstract_entities);
+    let pruned_enum_bases = prune_empty_enum_bases(&mut abstract_entities)?;
+    let collapsed_enum_bases = collapse_single_child_enum_bases(&mut abstract_entities)?;
     write_abstract_entities(&abstract_entities)?;
 
     eprintln!(
-        "infer reshape: wrote {FILE_ABSTRACT_ENTITIES} ({} entities, {} splits, {} merges, {} recasts, {} empty enum_bases pruned)",
+        "infer reshape: wrote {FILE_ABSTRACT_ENTITIES} ({} entities, {} splits, {} merges, {} recasts, {} empty enum_bases pruned, {} single-child enum_bases collapsed)",
         abstract_entities.len(),
         splits.split.len(),
         merges.merge.len(),
         recasts.recast.len(),
-        pruned_enum_bases.len()
+        pruned_enum_bases.len(),
+        collapsed_enum_bases.len()
     );
     Ok(())
 }
@@ -392,10 +394,13 @@ fn apply_recasts(
 /// recasts. Mirrors prune.rs Rule 2's shrink-driven removal, applied
 /// at the abstract-entities stage instead of the prune stage.
 ///
-/// Safety: also checks that no remaining entity references the empty
-/// enum_base via NestedField.into / MergedInto.target — those keep the
-/// enum_base alive (warning + skip).
-fn prune_empty_enum_bases(out: &mut BTreeMap<String, EntitySummary>) -> Vec<String> {
+/// Errs if any remaining entity references the empty enum_base via
+/// NestedField.into / MergedInto.target — that combination is
+/// unnatural (a referenced enum_base should carry variants) and likely
+/// a classification bug. User must fix before pipeline continues.
+fn prune_empty_enum_bases(
+    out: &mut BTreeMap<String, EntitySummary>,
+) -> Result<Vec<String>, String> {
     let mut to_remove: Vec<String> = Vec::new();
     for (name, summary) in out.iter() {
         if !matches!(summary.variant, VariantSpec::EnumBase { .. }) {
@@ -408,24 +413,77 @@ fn prune_empty_enum_bases(out: &mut BTreeMap<String, EntitySummary>) -> Vec<Stri
         if has_live_child {
             continue;
         }
-        let dangling = out.iter().any(|(_, s)| match &s.variant {
-            VariantSpec::NestedField { into, .. } => into == name,
-            VariantSpec::MergedInto { target, .. } => target == name,
-            _ => false,
-        });
-        if dangling {
-            eprintln!(
-                "warning: empty enum_base {name} has dangling \
-                 NestedField/MergedInto references; not removed"
-            );
-            continue;
+        let dangling: Vec<String> = out
+            .iter()
+            .filter_map(|(n, s)| match &s.variant {
+                VariantSpec::NestedField { into, .. } if into == name => Some(n.clone()),
+                VariantSpec::MergedInto { target, .. } if target == name => Some(n.clone()),
+                _ => None,
+            })
+            .collect();
+        if !dangling.is_empty() {
+            return Err(format!(
+                "empty enum_base {name} has dangling NestedField/MergedInto \
+                 references: {dangling:?}. Fix the classification before continuing."
+            ));
         }
         to_remove.push(name.clone());
     }
     for name in &to_remove {
         out.remove(name);
     }
-    to_remove
+    Ok(to_remove)
+}
+
+/// Collapse enum_bases that have exactly one live in_enum child:
+/// promote the lone child to SingleStruct and drop the enum_base.
+/// Mirrors prune.rs Rule 2's nc==1 path, applied at the abstract-
+/// entities stage.
+///
+/// Errs on dangling NestedField/MergedInto references — same policy
+/// as prune_empty_enum_bases.
+fn collapse_single_child_enum_bases(
+    out: &mut BTreeMap<String, EntitySummary>,
+) -> Result<Vec<String>, String> {
+    let mut to_collapse: Vec<(String, String)> = Vec::new();
+    for (name, summary) in out.iter() {
+        if !matches!(summary.variant, VariantSpec::EnumBase { .. }) {
+            continue;
+        }
+        let live_children: Vec<String> = out
+            .iter()
+            .filter_map(|(n, s)| match &s.variant {
+                VariantSpec::InEnum { enum_name } if enum_name == name => Some(n.clone()),
+                _ => None,
+            })
+            .collect();
+        if live_children.len() != 1 {
+            continue;
+        }
+        let dangling: Vec<String> = out
+            .iter()
+            .filter_map(|(n, s)| match &s.variant {
+                VariantSpec::NestedField { into, .. } if into == name => Some(n.clone()),
+                VariantSpec::MergedInto { target, .. } if target == name => Some(n.clone()),
+                _ => None,
+            })
+            .collect();
+        if !dangling.is_empty() {
+            return Err(format!(
+                "single-child enum_base {name} has dangling NestedField/MergedInto \
+                 references: {dangling:?}. Fix the classification before continuing."
+            ));
+        }
+        to_collapse.push((name.clone(), live_children.into_iter().next().unwrap()));
+    }
+    let removed: Vec<String> = to_collapse.iter().map(|(eb, _)| eb.clone()).collect();
+    for (enum_base, child) in to_collapse {
+        if let Some(child_entity) = out.get_mut(&child) {
+            child_entity.variant = VariantSpec::SingleStruct;
+        }
+        out.remove(&enum_base);
+    }
+    Ok(removed)
 }
 
 fn write_abstract_entities(
@@ -1036,7 +1094,7 @@ mod tests {
                 "bounded_curve",
             ),
         );
-        let removed = prune_empty_enum_bases(&mut out);
+        let removed = prune_empty_enum_bases(&mut out).unwrap();
         assert_eq!(removed, vec!["bounded_curve".to_string()]);
         assert!(!out.contains_key("bounded_curve"));
     }
@@ -1062,7 +1120,7 @@ mod tests {
                 "elementary_surface",
             ),
         );
-        let removed = prune_empty_enum_bases(&mut out);
+        let removed = prune_empty_enum_bases(&mut out).unwrap();
         assert!(removed.is_empty());
         assert!(out.contains_key("elementary_surface"));
         assert!(out.contains_key("degenerate_toroidal_surface"));
@@ -1100,7 +1158,7 @@ mod tests {
         let mut out = entities.clone();
         apply_recasts(&mut out, &recasts).unwrap();
         // After recast: conic's only child (circle) is now in_enum curve.
-        let removed = prune_empty_enum_bases(&mut out);
+        let removed = prune_empty_enum_bases(&mut out).unwrap();
         assert_eq!(removed, vec!["conic".to_string()]);
         assert!(!out.contains_key("conic"));
         match &out["circle"].variant {
@@ -1110,7 +1168,7 @@ mod tests {
     }
 
     #[test]
-    fn prune_empty_enum_bases_skips_dangling_refs() {
+    fn prune_empty_enum_bases_errs_on_dangling_refs() {
         let mut out = BTreeMap::new();
         out.insert(
             "bounded_curve".into(),
@@ -1121,7 +1179,7 @@ mod tests {
                 "bounded_curve",
             ),
         );
-        // Y has NestedField pointing at bounded_curve — safety should skip.
+        // Y has NestedField pointing at bounded_curve — Err expected.
         out.insert(
             "y".into(),
             summary(
@@ -1133,9 +1191,114 @@ mod tests {
                 "y",
             ),
         );
-        let removed = prune_empty_enum_bases(&mut out);
-        assert!(removed.is_empty());
+        let err = prune_empty_enum_bases(&mut out).unwrap_err();
+        assert!(err.contains("dangling"));
+        assert!(err.contains("bounded_curve"));
         assert!(out.contains_key("bounded_curve"));
         assert!(out.contains_key("y"));
+    }
+
+    #[test]
+    fn collapse_single_child_enum_bases_promotes_lone_child() {
+        let mut out = BTreeMap::new();
+        out.insert(
+            "elementary_surface".into(),
+            summary(
+                VariantSpec::EnumBase {
+                    enum_name: "elementary_surface".into(),
+                },
+                "elementary_surface",
+            ),
+        );
+        out.insert(
+            "degenerate_toroidal_surface".into(),
+            summary(
+                VariantSpec::InEnum {
+                    enum_name: "elementary_surface".into(),
+                },
+                "elementary_surface",
+            ),
+        );
+        let removed = collapse_single_child_enum_bases(&mut out).unwrap();
+        assert_eq!(removed, vec!["elementary_surface".to_string()]);
+        assert!(!out.contains_key("elementary_surface"));
+        assert!(matches!(
+            out["degenerate_toroidal_surface"].variant,
+            VariantSpec::SingleStruct
+        ));
+    }
+
+    #[test]
+    fn collapse_single_child_enum_bases_keeps_two_children() {
+        let mut out = BTreeMap::new();
+        out.insert(
+            "conic".into(),
+            summary(
+                VariantSpec::EnumBase {
+                    enum_name: "conic".into(),
+                },
+                "conic",
+            ),
+        );
+        for child in ["circle", "ellipse"] {
+            out.insert(
+                child.into(),
+                summary(
+                    VariantSpec::InEnum {
+                        enum_name: "conic".into(),
+                    },
+                    "conic",
+                ),
+            );
+        }
+        let removed = collapse_single_child_enum_bases(&mut out).unwrap();
+        assert!(removed.is_empty());
+        assert!(out.contains_key("conic"));
+        assert!(matches!(
+            out["circle"].variant,
+            VariantSpec::InEnum { .. }
+        ));
+    }
+
+    #[test]
+    fn collapse_single_child_enum_bases_errs_on_dangling_refs() {
+        let mut out = BTreeMap::new();
+        out.insert(
+            "elementary_surface".into(),
+            summary(
+                VariantSpec::EnumBase {
+                    enum_name: "elementary_surface".into(),
+                },
+                "elementary_surface",
+            ),
+        );
+        out.insert(
+            "degenerate_toroidal_surface".into(),
+            summary(
+                VariantSpec::InEnum {
+                    enum_name: "elementary_surface".into(),
+                },
+                "elementary_surface",
+            ),
+        );
+        // Y references elementary_surface via MergedInto — Err expected.
+        out.insert(
+            "y".into(),
+            summary(
+                VariantSpec::MergedInto {
+                    target: "elementary_surface".into(),
+                    chain: vec![],
+                },
+                "y",
+            ),
+        );
+        let err = collapse_single_child_enum_bases(&mut out).unwrap_err();
+        assert!(err.contains("dangling"));
+        assert!(err.contains("elementary_surface"));
+        assert!(out.contains_key("elementary_surface"));
+        assert!(matches!(
+            out["degenerate_toroidal_surface"].variant,
+            VariantSpec::InEnum { .. }
+        ));
     }
 }
