@@ -1,0 +1,11 @@
+# Manually authored — entity group → arena 매핑 override.
+# Default 는 1 group = 1 arena (group name 그대로). override 는 그 default 를 대체.
+
+[group.bounded_curve]
+arena = "surface_curve"
+# Plan 3.20 — bounded_curve enum 은 reshape 의 1-child collapse 로 제거됨.
+# 남은 1 entity (bounded_surface_curve) 의 arena 를 surface_curve 와 공유 —
+# schema 의 ANDOR mixin 관계 반영. id "SurfaceTraceCurveId" 자동 공유.
+# 다른 group 멤버 (polyline / trimmed_curve / composite_curve / bounded_pcurve)
+# 는 recasts 로 별도 arena (curve / pcurve) 로 이동 → override 의 실효 영향은
+# bounded_surface_curve 한 entity 만.
