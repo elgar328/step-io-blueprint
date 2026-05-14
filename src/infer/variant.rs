@@ -821,6 +821,26 @@ fn try_nested_field(
     })
 }
 
+/// Among an entity's parents, pick the one whose VariantSpec already
+/// owns an enum body — EnumBase / ConcreteSupertype / ComplexSupertype
+/// / CompositeOneOf. Returns the first qualifying parent in EXPRESS
+/// source order (relies on `entity_parents` preserving that order).
+/// Returns `None` if no parent qualifies.
+fn pick_enum_root_parent<'a>(
+    parents: &'a [String],
+    decisions: &BTreeMap<String, VariantSpec>,
+) -> Option<&'a String> {
+    parents.iter().find(|p| {
+        matches!(
+            decisions.get(*p),
+            Some(VariantSpec::EnumBase { .. })
+                | Some(VariantSpec::ComplexSupertype { .. })
+                | Some(VariantSpec::CompositeOneOf { .. })
+                | Some(VariantSpec::ConcreteSupertype)
+        )
+    })
+}
+
 fn enclosing_enum_root(
     entity: &str,
     unified: &UnifiedSchema,
@@ -828,55 +848,55 @@ fn enclosing_enum_root(
     polymorphic_targets: &HashSet<String>,
     decisions: &BTreeMap<String, VariantSpec>,
 ) -> Option<String> {
-    // Walk the parents chain (skipping markers); return the first
-    // EnumBase / ComplexSupertype.
+    // Walk the parents chain (skipping MergedInto markers); return the
+    // first parent whose VariantSpec owns an enum body. Inspects every
+    // parent at each step, not just the first one, so multi-inheritance
+    // entities (e.g. vertex_point with parents [vertex, GRI]) pick the
+    // enum_root parent rather than the alphabetically-first one.
     let mut current = entity.to_string();
     let mut visited: HashSet<String> = HashSet::new();
     while visited.insert(current.clone()) {
-        let parent = unified
-            .entity_parents
-            .get(&current)
-            .and_then(|ps| ps.iter().next())
-            .cloned();
-        let Some(parent) = parent else {
+        let Some(parents) = unified.entity_parents.get(&current) else {
             break;
         };
-        match decisions.get(&parent) {
-            Some(VariantSpec::EnumBase { enum_name }) => return Some(enum_name.clone()),
-            Some(VariantSpec::ComplexSupertype { .. })
-            | Some(VariantSpec::CompositeOneOf { .. })
-            | Some(VariantSpec::ConcreteSupertype) => return Some(parent),
-            Some(VariantSpec::MergedInto { .. }) => {
-                current = parent;
-                continue;
-            }
-            _ => {
-                current = parent;
-                continue;
-            }
+        if let Some(root_parent) = pick_enum_root_parent(parents, decisions) {
+            return match decisions.get(root_parent) {
+                Some(VariantSpec::EnumBase { enum_name }) => Some(enum_name.clone()),
+                _ => Some(root_parent.clone()),
+            };
         }
+        // No qualifying parent at this level. Step up the chain via
+        // the first MergedInto parent (those are the markers we skip),
+        // otherwise fall back to the first parent in source order.
+        let next = parents
+            .iter()
+            .find(|p| matches!(decisions.get(*p), Some(VariantSpec::MergedInto { .. })))
+            .or_else(|| parents.first());
+        let Some(next) = next.cloned() else {
+            break;
+        };
+        current = next;
     }
 
-    // Fallback: the legacy polymorphic-target rule. Picks the narrowest
-    // ancestor that is itself referenced as an ATTR target *and* has at
-    // least two concrete descendants, with `entity` among them.
+    // Fallback: the legacy polymorphic-target rule. Walks every
+    // ancestor (not just the source-order first) and picks the
+    // narrowest one that is itself referenced as an ATTR target *and*
+    // has at least two concrete descendants, with `entity` among them.
     let mut chain: Vec<String> = vec![entity.to_string()];
-    let mut current = entity.to_string();
-    let mut visited: HashSet<String> = HashSet::new();
-    loop {
-        if !visited.insert(current.clone()) {
-            break;
+    let mut queue: Vec<String> = vec![entity.to_string()];
+    let mut seen: HashSet<String> = HashSet::new();
+    while let Some(node) = queue.pop() {
+        if !seen.insert(node.clone()) {
+            continue;
         }
-        let Some(parent) = unified
-            .entity_parents
-            .get(&current)
-            .and_then(|ps| ps.iter().next())
-            .cloned()
-        else {
-            break;
-        };
-        chain.push(parent.clone());
-        current = parent;
+        if let Some(parents) = unified.entity_parents.get(&node) {
+            for p in parents {
+                if !seen.contains(p) {
+                    chain.push(p.clone());
+                    queue.push(p.clone());
+                }
+            }
+        }
     }
     for candidate in chain {
         if !polymorphic_targets.contains(&candidate) {

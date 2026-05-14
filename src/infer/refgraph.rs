@@ -54,8 +54,10 @@ pub enum RefTarget {
 /// aliased target) are recorded for the caller to surface as an
 /// unresolved decision.
 pub struct UnifiedSchema {
-    /// Entity name → merged parents (union). Lowercase.
-    pub entity_parents: BTreeMap<String, BTreeSet<String>>,
+    /// Entity name → merged parents (union), in EXPRESS source order.
+    /// Cross-schema duplicates are removed but order from the first
+    /// schema declaring each parent is preserved.
+    pub entity_parents: BTreeMap<String, Vec<String>>,
     /// Entity name → set of attr names declared anywhere across schemas.
     pub entity_attrs: BTreeMap<String, BTreeSet<String>>,
     /// Entity name → (attr name → canonical AttrType). Picks the first
@@ -82,7 +84,7 @@ pub struct UnifiedSchema {
 /// Build the unified schema + ref graph from one or more parsed schemas.
 pub fn build(schemas: &[Schema]) -> UnifiedSchema {
     // 1. Union entity definitions across schemas (parents + attrs).
-    let mut entity_parents: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
+    let mut entity_parents: BTreeMap<String, Vec<String>> = BTreeMap::new();
     let mut entity_attrs: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
     // Per-entity attr → list of distinct (schema_label, type repr string)
     // pairs to detect conflicts.
@@ -93,10 +95,12 @@ pub fn build(schemas: &[Schema]) -> UnifiedSchema {
 
     for schema in schemas {
         for (name, ent) in &schema.entities {
-            entity_parents
-                .entry(name.clone())
-                .or_default()
-                .extend(ent.parents.iter().cloned());
+            let parents_vec = entity_parents.entry(name.clone()).or_default();
+            for p in &ent.parents {
+                if !parents_vec.contains(p) {
+                    parents_vec.push(p.clone());
+                }
+            }
             for spec in &ent.own_attrs {
                 entity_attrs
                     .entry(name.clone())
