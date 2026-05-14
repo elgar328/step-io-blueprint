@@ -240,6 +240,7 @@ Plan 3.19 Phase 1 ✓ — anchors.toml 인프라 (4번째 추상화: anchor). �
 Plan 3.19 Phase 2a ✓ — ParameterSpaceCurve anchor (anchors.toml 첫 실제 사용, pcurve / bounded_pcurve InEnum).
 Plan 3.19 Phase 2b ✓ — SurfaceTraceCurve naming + 멤버 복원 (schema 구조 존중, intersection_curve / bounded_surface_curve keep).
 Plan 3.20 ✓ — bounded_surface_curve 의 arena 정리 (surface_curve 공유, ANDOR mixin 의미 반영).
+Plan 3.21 ✓ — naming default 의 약어 dictionary (pcurve → PCurve, rgb → RGB). names.toml override 부담 감소.
 ```
 
 각 plan 의 책임:

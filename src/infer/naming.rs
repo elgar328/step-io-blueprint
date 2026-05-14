@@ -159,10 +159,21 @@ fn load_names() -> Result<NamesFile, String> {
     toml::from_str(&body).map_err(|e| format!("parse {path:?}: {e}"))
 }
 
+/// Word-level acronyms. A snake_case word matching one of these keys
+/// is emitted as the mapped form instead of the default capitalize-
+/// first-letter rule.
+const KNOWN_ACRONYMS: &[(&str, &str)] = &[
+    ("pcurve", "PCurve"),
+    ("rgb", "RGB"),
+];
+
 fn snake_to_pascal(s: &str) -> String {
     s.split('_')
         .filter(|w| !w.is_empty())
         .map(|w| {
+            if let Some((_, mapped)) = KNOWN_ACRONYMS.iter().find(|(k, _)| *k == w) {
+                return (*mapped).to_string();
+            }
             let mut c = w.chars();
             match c.next() {
                 Some(h) => h.to_uppercase().chain(c).collect::<String>(),
@@ -652,6 +663,17 @@ mod tests {
     fn snake_to_pascal_handles_double_underscores() {
         assert_eq!(snake_to_pascal("foo__bar"), "FooBar");
         assert_eq!(snake_to_pascal("__leading_trailing__"), "LeadingTrailing");
+    }
+
+    #[test]
+    fn snake_to_pascal_known_acronym_pcurve() {
+        assert_eq!(snake_to_pascal("pcurve"), "PCurve");
+        assert_eq!(snake_to_pascal("bounded_pcurve"), "BoundedPCurve");
+    }
+
+    #[test]
+    fn snake_to_pascal_known_acronym_rgb() {
+        assert_eq!(snake_to_pascal("colour_rgb"), "ColourRGB");
     }
 
     #[test]
