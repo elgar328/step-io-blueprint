@@ -237,6 +237,8 @@ Plan 3.16 ✓ — reshape 의 빈 enum_base 자동 cleanup (Phase 3 후속, 4 da
 Plan 3.17 ✓ — degenerate_toroidal_surface recast 추가 + elementary_surface cleanup
 Plan 3.18 ✓ — 1-child enum_base collapse + dangling refs 정책 Err 통일 (Plan 3.16 안전망 갱신)
 Plan 3.19 Phase 1 ✓ — anchors.toml 인프라 (4번째 추상화: anchor). 빈 입력 → ir.toml diff 0.
+Plan 3.19 Phase 2a ✓ — ParameterSpaceCurve anchor (anchors.toml 첫 실제 사용, pcurve / bounded_pcurve InEnum).
+Plan 3.19 Phase 2b ✓ — SurfaceTraceCurve naming + 멤버 복원 (schema 구조 존중, intersection_curve / bounded_surface_curve keep).
 ```
 
 각 plan 의 책임:

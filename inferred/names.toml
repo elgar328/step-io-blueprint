@@ -17,6 +17,8 @@ direction_2d = "Direction2"
 # 명시 안 해도 OK 단 *문서화 가치* — POC 에서 명시
 nurbs_curve = "NurbsCurve"
 nurbs_surface = "NurbsSurface"
+# surface_curve 는 의미 명확화를 위해 SurfaceTraceCurve (3D + surface info)
+surface_curve = "SurfaceTraceCurve"
 
 [id]
 # arena 단위. step-io 의 ID 이름 일치
@@ -26,3 +28,9 @@ direction = "DirectionId"
 direction_2d = "Direction2dId"
 # nurbs_curve / nurbs_surface ID 는 자동 default (NurbsCurveId / NurbsSurfaceId)
 # step-io 와 일치 — 명시 X 도 OK
+surface_curve = "SurfaceTraceCurveId"
+
+[enum]
+# Plan 3.19 Phase 2b — surface_curve 의 enum 이름. seam_curve /
+# intersection_curve 의 enum_of 도 자동 같은 표현 공유.
+surface_curve = "SurfaceTraceCurve"

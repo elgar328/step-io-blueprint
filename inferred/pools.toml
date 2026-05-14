@@ -420,3 +420,6 @@ pool = "geometry"
 
 [arena.nurbs_surface_2d]
 pool = "geometry"
+
+[arena.bounded_curve]
+pool = "geometry"

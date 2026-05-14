@@ -72,3 +72,10 @@ reason = "Surface enum variant (step-io ROADMAP Phase 1) — same."
 # ParameterSpaceCurve enum variant — bounded variant of pcurve, corpus 0
 [keep.bounded_pcurve]
 reason = "ParameterSpaceCurve enum 의 bounded variant — corpus 미등장이지만 IR 청사진에 보존. pcurve 와 함께 anchors.toml 의 parameter_space_curve 가 묶음."
+
+# SurfaceTraceCurve enum variants — corpus 0, blueprint keep
+[keep.intersection_curve]
+reason = "SurfaceTraceCurve enum 의 ONEOF variant — corpus 미등장이지만 IR 청사진의 surface_curve enum 멤버."
+
+[keep.bounded_surface_curve]
+reason = "SurfaceTraceCurve enum 의 ANDOR mixin alternative — schema 의 다중 상속 (surface_curve + bounded_curve) bounded 변형. corpus 미등장이지만 IR 에 명시적 entity 로 보존."
