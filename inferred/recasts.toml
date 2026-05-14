@@ -46,3 +46,19 @@ reasons = """
 step-io 의 단일 Surface enum 구조와 매칭. curve_unification 과 동일
 논리. step-io codegen 이 round-trip 책임.
 """
+
+[recast.parameter_space_unification]
+kind = "in_enum"
+enum_of = "parameter_space_curve"
+arena = "pcurve"
+entities = [
+  "pcurve",
+  "bounded_pcurve",
+]
+reasons = """
+pcurve / bounded_pcurve 를 ParameterSpaceCurve enum 의 InEnum variant 로.
+anchor.parameter_space_curve 가 enum_base 역할 — IR codegen 시 *pcurve
+enum_of 자리에 ParameterSpaceCurve 등장*. round-trip 시 enum variant 별
+schema entity emit 은 step-io codegen 책임. 2D parameter-space 와 3D 공간
+curve 의 수치/연산 양식 분리가 정당화.
+"""

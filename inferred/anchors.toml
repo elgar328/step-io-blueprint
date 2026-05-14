@@ -6,13 +6,16 @@
 # 후속 recasts 가 `enum_of = <anchor_name>` 으로 children 을 흡수.
 #
 # Empty file is valid (no anchors → ir.toml 무변동).
-#
-# 예시:
-# [anchor.surface_trace_curve]
-# arena = "curve"
-# kind = "enum_base"
-# reasons = """
-# surface_curve / intersection_curve / seam_curve / bounded_surface_curve
-# 는 *3D 공간 곡선 + surface 관계* 라는 의미를 공유 — 일반 curve enum
-# 흡수보다 별도 enum (SurfaceTraceCurve) 이 IR 의도 명확.
-# """
+
+[anchor.parameter_space_curve]
+arena = "pcurve"
+kind = "enum_base"
+reasons = """
+pcurve / bounded_pcurve 는 *surface 의 UV parameter space 안의 2D curve*
+— 3D 공간 curve 와 의미적으로 다른 부류. schema 에는 그룹화 없음
+(pcurve = SUBTYPE OF curve, bounded_pcurve = SUBTYPE OF (pcurve,
+bounded_curve)) 이지만 IR 측면에서 *ParameterSpaceCurve* enum 으로 묶는
+것이 의미 명확. curve enum 으로 흡수하지 않는 이유: 2D parameter-space
+와 3D 공간 curve 가 수치/연산 양식 다름 (좌표계, 정의역, 연결된
+surface).
+"""

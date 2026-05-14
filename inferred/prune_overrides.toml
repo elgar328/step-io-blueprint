@@ -68,3 +68,7 @@ reason = "Surface enum variant — same."
 
 [keep.curve_bounded_surface]
 reason = "Surface enum variant (step-io ROADMAP Phase 1) — same."
+
+# ParameterSpaceCurve enum variant — bounded variant of pcurve, corpus 0
+[keep.bounded_pcurve]
+reason = "ParameterSpaceCurve enum 의 bounded variant — corpus 미등장이지만 IR 청사진에 보존. pcurve 와 함께 anchors.toml 의 parameter_space_curve 가 묶음."
