@@ -401,12 +401,23 @@ fn pass1_supertype_kinds(
         }
 
         // Rule 4 (b): own_attrs empty + effective children = 1 (no
-        // ABSTRACT/ONEOF marker) → MergedInto.
+        // ABSTRACT/ONEOF marker) → MergedInto. Skip when the entity sits
+        // under a parent that has 2+ siblings — such a parent is
+        // destined to become an EnumBase or ComplexSupertype, and the
+        // entity is a useful enum variant rather than a wrapper.
         let own_attrs_empty = unified
             .entity_attrs
             .get(entity)
             .map_or(true, |s| s.is_empty());
-        if own_attrs_empty && eff_children.len() == 1 {
+        let has_enum_shaped_parent = unified
+            .entity_parents
+            .get(entity)
+            .map_or(false, |parents| {
+                parents
+                    .iter()
+                    .any(|p| descendants.get(p).map_or(0, |d| d.len()) >= 2)
+            });
+        if own_attrs_empty && eff_children.len() == 1 && !has_enum_shaped_parent {
             let target = eff_children.iter().next().cloned().unwrap();
             let chain = build_chain(entity, &target, descendants, &decisions);
             decisions.insert(
@@ -1278,6 +1289,71 @@ mod tests {
             other => panic!("expected MergedInto for b, got {other:?}"),
         }
         assert!(matches!(decisions.get("c").unwrap(), VariantSpec::SingleStruct));
+    }
+
+    #[test]
+    fn rule4_skipped_when_parent_has_multiple_children() {
+        // parent has 3 siblings (a, b, c). a has its own subtype a_sub.
+        // a has no own attrs and one effective child -> Rule 4 would
+        // normally merge a into a_sub, but the enum-shaped parent guard
+        // skips Rule 4, so Pass 2 classifies a as InEnum(parent).
+        let s = schema(
+            "test",
+            vec![
+                ent_decl(
+                    "parent",
+                    &[],
+                    vec![],
+                    false,
+                    Some(SupertypeExpr::OneOf {
+                        children: vec![
+                            SupertypeExpr::Entity { name: "a".into() },
+                            SupertypeExpr::Entity { name: "b".into() },
+                            SupertypeExpr::Entity { name: "c".into() },
+                        ],
+                    }),
+                ),
+                ent("a", &["parent"], vec![]),
+                ent("b", &["parent"], vec![("v", AttrType::Primitive("REAL".into()))]),
+                ent("c", &["parent"], vec![("w", AttrType::Primitive("REAL".into()))]),
+                ent("a_sub", &["a"], vec![("x", AttrType::Primitive("REAL".into()))]),
+            ],
+            vec![],
+        );
+        let unified = refgraph::build(&[s]);
+        let decisions = classify_no_overrides(&unified);
+        match decisions.get("a").unwrap() {
+            VariantSpec::InEnum { enum_name } => {
+                assert_eq!(enum_name, "parent");
+            }
+            other => panic!("expected InEnum(parent) for a, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn rule4_fires_for_wrapper_chain_with_singleton_parent() {
+        // Cascading chain a -> b -> c where each level has one child.
+        // Rule 4 fires because no parent has 2+ descendants, preserving
+        // the wrapper-collapse behavior.
+        let s = schema(
+            "test",
+            vec![
+                ent("a", &[], vec![]),
+                ent("b", &["a"], vec![]),
+                ent("c", &["b"], vec![("v", AttrType::Primitive("REAL".into()))]),
+            ],
+            vec![],
+        );
+        let unified = refgraph::build(&[s]);
+        let decisions = classify_no_overrides(&unified);
+        assert!(matches!(
+            decisions.get("a"),
+            Some(VariantSpec::MergedInto { .. })
+        ));
+        assert!(matches!(
+            decisions.get("b"),
+            Some(VariantSpec::MergedInto { .. })
+        ));
     }
 
     // --- Rule 1 / 1.5 / 8 / Overrides regression -------------------------

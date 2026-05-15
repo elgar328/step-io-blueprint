@@ -175,6 +175,9 @@ pool = "shape_rep"
 [arena.item_identified_representation_usage]
 pool = "shape_rep"
 
+[arena.geometric_item_specific_usage]
+pool = "shape_rep"
+
 [arena.limits_and_fits]
 pool = "pmi"
 

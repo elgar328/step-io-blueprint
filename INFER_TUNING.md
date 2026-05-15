@@ -246,6 +246,7 @@ Plan 3.23 ✓ — prune 의 enum_base 자동 keep 룰 + product_definition / geo
 Plan 3.24 ✓ — Plan 3.23 의 신규 25 ConcreteSupertype shape ratio 점검. 17 entity carrier → base_parallel (parent dominant). 0-child ConcreteSupertype → SingleStruct 자동 변환은 별도 plan.
 Plan 3.25 ✓ — pools.toml 의 21개 stale `[arena.X]` block 제거 (Plan 3.19–3.24 reshape cascade 의 잔재). infer pool warning 0 건. 코드 변경 0, ir.toml diff 0.
 Plan 3.26 ✓ — prune.rs 에 *self-live + 살아남는 InEnum child 없는 ConcreteSupertype* 의 SingleStruct 자동 변환 단계 추가. 15 entity 변환 (area_in_set / composite_curve_segment / composite_text / conversion_based_unit / curve_style / date_and_time / datum / external_source / general_property / geometric_representation_context / item_defined_transformation / oriented_edge / representation_relationship_with_transformation / text_literal). shapes.toml entry 15개 제거. variants_overrides reason 코멘트 갱신. pcurve 는 bounded_pcurve (corpus 0, keep-overrides 보존) 가 살아남는 child 라 변환 안 됨.
+Plan 3.27 ✓ — variant.rs Rule 4 에 *enum-shaped parent guard* (parent 의 raw descendants ≥ 2) 추가. closed_shell (230K) / edge_loop (7.2M) / definitional_representation (69K) 의 *역방향 MergedInto* 자동 정정 → 각각 InEnum(connected_face_set / loop / representation). MergedInto 97 → 24. cascade 로 geometric_item_specific_usage arena 추가 (pool=shape_rep). 155 pass.
 ```
 
 각 plan 의 책임:
