@@ -679,7 +679,7 @@ mod tests {
     }
 
     #[test]
-    fn prune_concrete_supertype_with_no_children_becomes_single_struct() {
+    fn prune_concrete_supertype_with_no_children_stays_concrete_supertype() {
         let variants = variants_with(&[
             ("action", VariantSpec::ConcreteSupertype),
             (
@@ -689,12 +689,17 @@ mod tests {
                 },
             ),
         ]);
-        // Parent used, child not.
+        // Parent used, child not. With Plan 3.23's auto-keep rule, a
+        // ConcreteSupertype with corpus > 0 is auto-kept, so the lone
+        // dead child is dropped but the parent stays as
+        // ConcreteSupertype (it doesn't dissolve to SingleStruct).
+        // Collapsing a 0-child ConcreteSupertype to SingleStruct is a
+        // separate concern tracked for a future plan.
         let counts: HashMap<String, usize> = [("action".to_string(), 12)].into_iter().collect();
         let pruned = prune_transitive(&variants, &counts);
         assert!(matches!(
             pruned.get("action"),
-            Some(VariantSpec::SingleStruct)
+            Some(VariantSpec::ConcreteSupertype)
         ));
         assert!(!pruned.contains_key("executed_action"));
     }

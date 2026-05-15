@@ -243,6 +243,7 @@ Plan 3.20 ✓ — bounded_surface_curve 의 arena 정리 (surface_curve 공유, 
 Plan 3.21 ✓ — naming default 의 약어 dictionary (pcurve → PCurve, rgb → RGB). names.toml override 부담 감소.
 Plan 3.22 ✓ — refgraph 의 entity_parents 부모 순서 보존 (BTreeSet → Vec) + enclosing_enum_root 의 모든 부모 검사 + 우선순위 룰. 비결정성 제거 (현 corpus 의 ir.toml 무변동).
 Plan 3.23 ✓ — prune 의 enum_base 자동 keep 룰 + product_definition / geometric_representation_context 의 variant override. 271 → 326 entities (16 핵심 + 추가 39 cascade 부작용 해결).
+Plan 3.24 ✓ — Plan 3.23 의 신규 25 ConcreteSupertype shape ratio 점검. 17 entity carrier → base_parallel (parent dominant). 0-child ConcreteSupertype → SingleStruct 자동 변환은 별도 plan.
 ```
 
 각 plan 의 책임:

@@ -63,75 +63,80 @@ shape = "base_parallel"
 [entity.styled_item]                       # 4M self / 25 children, ratio ~0 — parent dominant
 shape = "base_parallel"
 
-# Plan 3.23 auto-keep — supertypes that surfaced once the auto-keep
-# rule preserved them. Default carrier; revisit if ratio analysis
-# suggests otherwise.
-[entity.address]
+# Plan 3.23 / 3.24 — supertypes surfaced by the auto-keep rule. Shape
+# chosen by ratio: parent dominant (self >> children) → base_parallel;
+# children dominant or self=0 with live children → carrier.
+
+# self=0 + live children — carrier (children dominant by default)
+[entity.address]                           # 0 self / live children
 shape = "carrier"
 
-[entity.planar_extent]
+[entity.planar_extent]                     # 0 self / live children
 shape = "carrier"
 
-[entity.product_definition_relationship]
+[entity.product_definition_relationship]   # 0 self / 3 children
 shape = "carrier"
 
-[entity.surface_style_rendering]
+[entity.surface_style_rendering]           # 0 self / 1 child (988K)
 shape = "carrier"
 
-[entity.text_style]
+[entity.text_style]                        # 0 self / 116 children
 shape = "carrier"
 
-[entity.area_in_set]
+# self > 0, children 0 — parent dominant → base_parallel
+[entity.area_in_set]                       # 18 self / 0 children — parent dominant
+shape = "base_parallel"
+
+[entity.composite_curve]                   # 432 self / 0 children — parent dominant
+shape = "base_parallel"
+
+[entity.composite_curve_segment]           # 4K self / 0 children — parent dominant
+shape = "base_parallel"
+
+[entity.composite_text]                    # 1 self / 0 children — parent dominant
+shape = "base_parallel"
+
+[entity.conversion_based_unit]             # 35K self / 0 children — parent dominant
+shape = "base_parallel"
+
+[entity.curve_style]                       # 155K self / 0 children — parent dominant
+shape = "base_parallel"
+
+[entity.date_and_time]                     # 63K self / 0 children — parent dominant
+shape = "base_parallel"
+
+[entity.datum]                             # 114 self / 0 children — parent dominant
+shape = "base_parallel"
+
+[entity.document]                          # 67 self / 129 children, ratio 1.93 — children dominant
 shape = "carrier"
 
-[entity.composite_curve]
-shape = "carrier"
+[entity.external_source]                   # 129 self / 0 children — parent dominant
+shape = "base_parallel"
 
-[entity.composite_curve_segment]
-shape = "carrier"
+[entity.general_property]                  # 1.5K self / 0 children — parent dominant
+shape = "base_parallel"
 
-[entity.composite_text]
-shape = "carrier"
+[entity.item_defined_transformation]       # 36K self / 0 children — parent dominant
+shape = "base_parallel"
 
-[entity.conversion_based_unit]
-shape = "carrier"
+[entity.oriented_edge]                     # 29M self / 0 children — parent dominant
+shape = "base_parallel"
 
-[entity.curve_style]
-shape = "carrier"
-
-[entity.date_and_time]
-shape = "carrier"
-
-[entity.datum]
-shape = "carrier"
-
-[entity.document]
-shape = "carrier"
-
-[entity.external_source]
-shape = "carrier"
-
-[entity.general_property]
-shape = "carrier"
-
-[entity.item_defined_transformation]
-shape = "carrier"
-
-[entity.oriented_edge]
-shape = "carrier"
-
+# pcurve: 69K self / 0 children — carrier 유지. recasts.parameter_space_unification
+# 으로 InEnum 변환되므로 shape 결정은 IR 에 도달하지 않음.
 [entity.pcurve]
 shape = "carrier"
 
-[entity.representation_relationship_with_transformation]
-shape = "carrier"
+[entity.representation_relationship_with_transformation]  # 36K self / 0 children — parent dominant
+shape = "base_parallel"
 
-[entity.text_literal]
-shape = "carrier"
+[entity.text_literal]                      # 117 self / 0 children — parent dominant
+shape = "base_parallel"
 
 # variants_overrides → ConcreteSupertype 으로 재분류된 entity
-[entity.geometric_representation_context]
-shape = "carrier"
+[entity.geometric_representation_context]  # 230K self / 0 children — parent dominant
+shape = "base_parallel"
 
-[entity.product_definition]
-shape = "carrier"
+[entity.product_definition]                # 216K self / 0 children — parent dominant
+shape = "base_parallel"
