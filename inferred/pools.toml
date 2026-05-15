@@ -458,7 +458,7 @@ pool = "topology"
 pool = "pmi"
 
 [arena.camera_model]
-pool = "pmi"
+pool = "visualization"
 
 [arena.datum_feature]
 pool = "pmi"
