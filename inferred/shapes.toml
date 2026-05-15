@@ -62,3 +62,76 @@ shape = "base_parallel"
 
 [entity.styled_item]                       # 4M self / 25 children, ratio ~0 — parent dominant
 shape = "base_parallel"
+
+# Plan 3.23 auto-keep — supertypes that surfaced once the auto-keep
+# rule preserved them. Default carrier; revisit if ratio analysis
+# suggests otherwise.
+[entity.address]
+shape = "carrier"
+
+[entity.planar_extent]
+shape = "carrier"
+
+[entity.product_definition_relationship]
+shape = "carrier"
+
+[entity.surface_style_rendering]
+shape = "carrier"
+
+[entity.text_style]
+shape = "carrier"
+
+[entity.area_in_set]
+shape = "carrier"
+
+[entity.composite_curve]
+shape = "carrier"
+
+[entity.composite_curve_segment]
+shape = "carrier"
+
+[entity.composite_text]
+shape = "carrier"
+
+[entity.conversion_based_unit]
+shape = "carrier"
+
+[entity.curve_style]
+shape = "carrier"
+
+[entity.date_and_time]
+shape = "carrier"
+
+[entity.datum]
+shape = "carrier"
+
+[entity.document]
+shape = "carrier"
+
+[entity.external_source]
+shape = "carrier"
+
+[entity.general_property]
+shape = "carrier"
+
+[entity.item_defined_transformation]
+shape = "carrier"
+
+[entity.oriented_edge]
+shape = "carrier"
+
+[entity.pcurve]
+shape = "carrier"
+
+[entity.representation_relationship_with_transformation]
+shape = "carrier"
+
+[entity.text_literal]
+shape = "carrier"
+
+# variants_overrides → ConcreteSupertype 으로 재분류된 entity
+[entity.geometric_representation_context]
+shape = "carrier"
+
+[entity.product_definition]
+shape = "carrier"

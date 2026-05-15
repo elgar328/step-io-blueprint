@@ -312,10 +312,62 @@ fn prune_transitive_with_keep(
     keep_overrides: &BTreeSet<String>,
 ) -> BTreeMap<String, VariantSpec> {
     let mut pruned: BTreeMap<String, VariantSpec> = variants.clone();
+
+    // Auto-keep supertypes that own at least one live child. Without
+    // this, an abstract supertype with corpus count 0 gets marked
+    // unused below, and Rule 3-5 then cascades and prunes every live
+    // child too (e.g. placement -> axis2_placement_3d with 9M
+    // instances would disappear).
+    let auto_keep: BTreeSet<String> = pruned
+        .iter()
+        .filter_map(|(name, spec)| {
+            let is_supertype = matches!(
+                spec,
+                VariantSpec::EnumBase { .. }
+                    | VariantSpec::ConcreteSupertype
+                    | VariantSpec::ComplexSupertype { .. }
+                    | VariantSpec::CompositeOneOf { .. }
+            );
+            if !is_supertype {
+                return None;
+            }
+            let self_live = counts.get(name).copied().unwrap_or(0) > 0;
+            let has_live_child = pruned.iter().any(|(child, child_spec)| {
+                let points_back = match child_spec {
+                    VariantSpec::InEnum { enum_name } => enum_name == name,
+                    _ => false,
+                };
+                points_back && counts.get(child).copied().unwrap_or(0) > 0
+            });
+            if self_live || has_live_child {
+                Some(name.clone())
+            } else {
+                None
+            }
+        })
+        .collect();
+
+    if !auto_keep.is_empty() {
+        let preview: Vec<&str> = auto_keep.iter().take(8).map(|s| s.as_str()).collect();
+        let suffix = if auto_keep.len() > 8 { ", ..." } else { "" };
+        eprintln!(
+            "infer prune: auto-kept {} supertype(s) with live children: {}{}",
+            auto_keep.len(),
+            preview.join(", "),
+            suffix,
+        );
+    }
+
+    let effective_keep: BTreeSet<String> = keep_overrides
+        .iter()
+        .chain(auto_keep.iter())
+        .cloned()
+        .collect();
+
     let mut unused: BTreeSet<String> = pruned
         .keys()
         .filter(|n| {
-            counts.get(*n).copied().unwrap_or(0) == 0 && !keep_overrides.contains(*n)
+            counts.get(*n).copied().unwrap_or(0) == 0 && !effective_keep.contains(*n)
         })
         .cloned()
         .collect();
@@ -333,10 +385,11 @@ fn prune_transitive_with_keep(
         // direct their lone surviving child to SingleStruct before being
         // physically removed.
         for (entity, spec) in &snapshot {
-            // keep_overrides preserves enum_base entities — skip Rule 2's
+            // effective_keep preserves enum_base entities — skip Rule 2's
             // shrink-driven removal so they survive even with 0 or 1 live
-            // children.
-            if keep_overrides.contains(entity) {
+            // children. Includes both manual prune_overrides and the
+            // auto-keep set computed above.
+            if effective_keep.contains(entity) {
                 continue;
             }
             let nc = count_live_children(entity, &pruned, &unused);
@@ -400,7 +453,7 @@ fn prune_transitive_with_keep(
                 _ => false,
             };
             if stale
-                && !keep_overrides.contains(entity)
+                && !effective_keep.contains(entity)
                 && unused.insert(entity.clone())
             {
                 changed = true;
@@ -612,12 +665,16 @@ mod tests {
         ]);
         let counts: HashMap<String, usize> = [("circle".to_string(), 7)].into_iter().collect();
         let pruned = prune_transitive(&variants, &counts);
-        // EnumBase removed, square (unused) removed, lone child reclassified.
-        assert!(!pruned.contains_key("shape"));
+        // Auto-keep rule: shape has a live child (circle, corpus=7), so
+        // it survives the initial unused sweep. Cascade therefore does
+        // not fire, and Rule 2's 1-child collapse is also skipped (the
+        // skip applies to anything in effective_keep). circle stays
+        // InEnum; only square (corpus 0) gets dropped.
+        assert!(pruned.contains_key("shape"));
         assert!(!pruned.contains_key("square"));
         assert!(matches!(
             pruned.get("circle"),
-            Some(VariantSpec::SingleStruct)
+            Some(VariantSpec::InEnum { .. })
         ));
     }
 
@@ -729,35 +786,81 @@ mod tests {
                 },
             ),
         ]);
-        // curve has 0 corpus instances (abstract); line + ray have many.
-        let counts: HashMap<String, usize> =
-            [("line".to_string(), 1000), ("ray".to_string(), 500)]
-                .into_iter()
-                .collect();
+        // All three have 0 corpus instances (blueprint-only supertype +
+        // never-used variants — the curve / surface case where manual
+        // keep is the only way to preserve them).
+        let counts: HashMap<String, usize> = HashMap::new();
 
-        // Without keep: cascade would normally NOT trigger here since
-        // curve has 2 live children (Rule 2's nc==0/1 don't fire). curve
-        // gets initial-marked unused (0 instance) → children cascade.
+        // Without keep: curve gets initial-marked unused (0 instance),
+        // and Rule 3-5 cascades through the InEnum children.
         let without_keep = prune_transitive(&variants, &counts);
         assert!(!without_keep.contains_key("curve"));
         assert!(!without_keep.contains_key("line"));
         assert!(!without_keep.contains_key("ray"));
 
-        // With keep.curve: curve survives initial marking → children
-        // don't cascade.
+        // With keep.curve: curve survives initial marking. line / ray
+        // are still 0-instance, so they get marked unused on their own
+        // (not via cascade). Manual keep preserves the supertype only;
+        // preserving the variants too is the auto-keep rule's job and
+        // requires corpus > 0 on at least one child.
         let with_keep =
             prune_transitive_with_keep(&variants, &counts, &keep_set(&["curve"]));
         assert!(with_keep.contains_key("curve"));
-        assert!(with_keep.contains_key("line"));
-        assert!(with_keep.contains_key("ray"));
+        assert!(!with_keep.contains_key("line"));
+        assert!(!with_keep.contains_key("ray"));
+    }
+
+    // Removed `keep_preserves_enum_base_with_lone_child`: the
+    // "lone-child collapse skipped by manual keep" scenario only
+    // matters when the lone child has corpus > 0, but in that case the
+    // auto-keep rule fires on its own and supersedes manual keep. The
+    // remaining manual-keep responsibility (preserving a blueprint-only
+    // supertype with no live children) is covered by
+    // `keep_breaks_cascade_for_enum_base`, and the live-child case is
+    // covered by `auto_keep_preserves_supertype_with_live_child`.
+
+    #[test]
+    fn auto_keep_preserves_supertype_with_live_child() {
+        // The real-world case (placement / axis2_placement_3d): the
+        // supertype is abstract (corpus 0) but one of its variants has
+        // a huge live count. Without auto-keep, both would disappear.
+        let variants = variants_with(&[
+            (
+                "placement",
+                VariantSpec::EnumBase {
+                    enum_name: "placement".into(),
+                },
+            ),
+            (
+                "axis2_placement_3d",
+                VariantSpec::InEnum {
+                    enum_name: "placement".into(),
+                },
+            ),
+        ]);
+        let counts: HashMap<String, usize> =
+            [("axis2_placement_3d".to_string(), 9_000_000)]
+                .into_iter()
+                .collect();
+
+        // No manual keep — auto-keep rule alone must preserve placement
+        // and break the cascade.
+        let pruned = prune_transitive(&variants, &counts);
+        assert!(matches!(
+            pruned.get("placement"),
+            Some(VariantSpec::EnumBase { .. })
+        ));
+        assert!(matches!(
+            pruned.get("axis2_placement_3d"),
+            Some(VariantSpec::InEnum { .. })
+        ));
     }
 
     #[test]
-    fn keep_preserves_enum_base_with_lone_child() {
-        // Rule 2's "lone child" branch normally dissolves an enum_base
-        // with 1 live child into SingleStruct + drops the parent. keep
-        // on the parent skips this dissolution so it remains as a
-        // future polymorphism root for downstream recasts.
+    fn auto_keep_does_not_fire_when_all_children_unused() {
+        // Blueprint-only supertype: every child has corpus 0. Auto-keep
+        // must stay off; manual keep is still required. This is the
+        // curve / surface case.
         let variants = variants_with(&[
             (
                 "curve",
@@ -772,25 +875,10 @@ mod tests {
                 },
             ),
         ]);
-        let counts: HashMap<String, usize> =
-            [("line".to_string(), 7)].into_iter().collect();
+        let counts: HashMap<String, usize> = HashMap::new();
 
-        let without_keep = prune_transitive(&variants, &counts);
-        assert!(!without_keep.contains_key("curve"));
-        assert!(matches!(
-            without_keep.get("line"),
-            Some(VariantSpec::SingleStruct)
-        ));
-
-        let with_keep =
-            prune_transitive_with_keep(&variants, &counts, &keep_set(&["curve"]));
-        assert!(matches!(
-            with_keep.get("curve"),
-            Some(VariantSpec::EnumBase { .. })
-        ));
-        assert!(matches!(
-            with_keep.get("line"),
-            Some(VariantSpec::InEnum { .. })
-        ));
+        let pruned = prune_transitive(&variants, &counts);
+        assert!(!pruned.contains_key("curve"));
+        assert!(!pruned.contains_key("line"));
     }
 }

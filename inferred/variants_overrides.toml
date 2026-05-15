@@ -1,0 +1,18 @@
+# Manually authored — entity-level VariantSpec override.
+# Use when the automatic variant classification (variant.rs) lands on
+# a shape that doesn't match the entity's actual IR role.
+
+# Plan 3.23 — auto-classified as EnumBase because the entity has
+# SUPERTYPE OF (...). Variants (children) all have corpus 0, but the
+# supertype itself has substantial corpus instances and is a primary
+# entity in its own right. Re-classify as ConcreteSupertype so it
+# survives reshape's empty-enum_base cleanup and carries its own
+# struct in the IR blueprint.
+
+[entity.geometric_representation_context]
+kind = "concrete_supertype"
+reason = "230,734 corpus instances. Unit context gateway in step-io; the EnumBase children (geometric_representation_context_with_parameter etc.) all have corpus 0."
+
+[entity.product_definition]
+kind = "concrete_supertype"
+reason = "216,632 corpus instances. Central entity in every assembly chain; the EnumBase children (mechanical / electronic variants) all have corpus 0."

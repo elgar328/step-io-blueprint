@@ -420,3 +420,129 @@ pool = "geometry"
 
 [arena.nurbs_surface_2d]
 pool = "geometry"
+
+# Plan 3.23 auto-keep — arenas that surfaced once auto-keep preserved
+# their supertypes. Pool assignment by domain semantics.
+
+# plm (product lifecycle metadata)
+[arena.address]
+pool = "plm"
+
+[arena.approval_assignment]
+pool = "plm"
+
+[arena.classification_assignment]
+pool = "plm"
+
+[arena.date]
+pool = "plm"
+
+[arena.date_and_time_assignment]
+pool = "plm"
+
+[arena.document_reference]
+pool = "plm"
+
+[arena.group_assignment]
+pool = "plm"
+
+[arena.identification_assignment]
+pool = "plm"
+
+[arena.person_and_organization_assignment]
+pool = "plm"
+
+[arena.security_classification_assignment]
+pool = "plm"
+
+# assembly_product
+[arena.assembly_component_usage]
+pool = "assembly_product"
+
+[arena.product_definition]
+pool = "assembly_product"
+
+[arena.product_definition_relationship]
+pool = "assembly_product"
+
+# shape_rep
+[arena.geometric_representation_context]
+pool = "shape_rep"
+
+[arena.composite_shape_aspect]
+pool = "shape_rep"
+
+[arena.continuous_shape_aspect]
+pool = "shape_rep"
+
+[arena.derived_shape_aspect]
+pool = "shape_rep"
+
+[arena.presentation_representation]
+pool = "shape_rep"
+
+# geometry
+[arena.placement]
+pool = "geometry"
+
+[arena.planar_extent]
+pool = "geometry"
+
+[arena.point]
+pool = "geometry"
+
+[arena.primitive_2d]
+pool = "geometry"
+
+# topology
+[arena.connected_face_set]
+pool = "topology"
+
+[arena.edge]
+pool = "topology"
+
+[arena.loop]
+pool = "topology"
+
+[arena.tessellated_face]
+pool = "topology"
+
+[arena.tessellated_surface_set]
+pool = "topology"
+
+# pmi (annotation / GD&T)
+[arena.annotation_curve_occurrence]
+pool = "pmi"
+
+[arena.camera_model]
+pool = "pmi"
+
+[arena.datum_feature]
+pool = "pmi"
+
+[arena.dimensional_size]
+pool = "pmi"
+
+[arena.general_datum_reference]
+pool = "pmi"
+
+[arena.tolerance_zone_definition]
+pool = "pmi"
+
+# visualization
+[arena.founded_item]
+pool = "visualization"
+
+[arena.surface_style_rendering]
+pool = "visualization"
+
+[arena.text_style]
+pool = "visualization"
+
+# form_features
+[arena.feature_definition]
+pool = "form_features"
+
+# property
+[arena.literal_number]
+pool = "property"
