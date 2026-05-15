@@ -11,8 +11,8 @@
 
 [entity.geometric_representation_context]
 kind = "concrete_supertype"
-reason = "230,734 corpus instances. Unit context gateway in step-io; the EnumBase children (geometric_representation_context_with_parameter etc.) all have corpus 0."
+reason = "230,734 corpus instances. Unit context gateway in step-io; the EnumBase children (geometric_representation_context_with_parameter etc.) all have corpus 0. Plan 3.26 prune-stage specialization then re-classifies it to SingleStruct because no InEnum child survives — this override only ensures the entity is not dropped as an empty EnumBase first."
 
 [entity.product_definition]
 kind = "concrete_supertype"
-reason = "216,632 corpus instances. Central entity in every assembly chain; the EnumBase children (mechanical / electronic variants) all have corpus 0."
+reason = "216,632 corpus instances. Central entity in every assembly chain; most EnumBase children (mechanical / electronic variants) have corpus 0, but product_definition_with_associated_documents (43 corpus) survives, so the Plan 3.26 prune-stage specialization keeps it as ConcreteSupertype."

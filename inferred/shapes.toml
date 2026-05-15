@@ -83,60 +83,22 @@ shape = "carrier"
 [entity.text_style]                        # 0 self / 116 children
 shape = "carrier"
 
-# self > 0, children 0 — parent dominant → base_parallel
-[entity.area_in_set]                       # 18 self / 0 children — parent dominant
-shape = "base_parallel"
-
-[entity.composite_curve]                   # 432 self / 0 children — parent dominant
-shape = "base_parallel"
-
-[entity.composite_curve_segment]           # 4K self / 0 children — parent dominant
-shape = "base_parallel"
-
-[entity.composite_text]                    # 1 self / 0 children — parent dominant
-shape = "base_parallel"
-
-[entity.conversion_based_unit]             # 35K self / 0 children — parent dominant
-shape = "base_parallel"
-
-[entity.curve_style]                       # 155K self / 0 children — parent dominant
-shape = "base_parallel"
-
-[entity.date_and_time]                     # 63K self / 0 children — parent dominant
-shape = "base_parallel"
-
-[entity.datum]                             # 114 self / 0 children — parent dominant
-shape = "base_parallel"
+# Plan 3.26 — prune.rs 가 self-live 이지만 *살아남는 InEnum child 없는*
+# ConcreteSupertype 을 SingleStruct 로 자동 변환. 따라서 0-child parent
+# dominant 자리는 shape 결정이 필요 없어 shapes.toml entry 도 사라짐.
+# 남는 entries 는 *살아남는 child 가 1개 이상* 인 경우만.
 
 [entity.document]                          # 67 self / 129 children, ratio 1.93 — children dominant
 shape = "carrier"
 
-[entity.external_source]                   # 129 self / 0 children — parent dominant
-shape = "base_parallel"
-
-[entity.general_property]                  # 1.5K self / 0 children — parent dominant
-shape = "base_parallel"
-
-[entity.item_defined_transformation]       # 36K self / 0 children — parent dominant
-shape = "base_parallel"
-
-[entity.oriented_edge]                     # 29M self / 0 children — parent dominant
-shape = "base_parallel"
-
-# pcurve: 69K self / 0 children — carrier 유지. recasts.parameter_space_unification
-# 으로 InEnum 변환되므로 shape 결정은 IR 에 도달하지 않음.
+# pcurve: 69K self. bounded_pcurve (corpus 0) 가 prune_overrides 로 보존되어
+# InEnum child 로 살아남음 → SingleStruct 자동 변환 대상 아님. recasts.
+# parameter_space_unification 으로 IR 에서는 InEnum 으로 재구성됨.
 [entity.pcurve]
 shape = "carrier"
 
-[entity.representation_relationship_with_transformation]  # 36K self / 0 children — parent dominant
-shape = "base_parallel"
-
-[entity.text_literal]                      # 117 self / 0 children — parent dominant
-shape = "base_parallel"
-
 # variants_overrides → ConcreteSupertype 으로 재분류된 entity
-[entity.geometric_representation_context]  # 230K self / 0 children — parent dominant
-shape = "base_parallel"
-
-[entity.product_definition]                # 216K self / 0 children — parent dominant
+# product_definition: 살아남는 child product_definition_with_associated_documents
+# (43 instances) 가 있어 SingleStruct 자동 변환 대상 아님.
+[entity.product_definition]                # 216K self / 43 children
 shape = "base_parallel"

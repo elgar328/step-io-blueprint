@@ -358,6 +358,46 @@ fn prune_transitive_with_keep(
         );
     }
 
+    // Specialize self-live ConcreteSupertypes whose surviving InEnum
+    // child set is empty. A child "survives" if its corpus count is
+    // positive or it is kept by manual override; cascade-doomed
+    // zero-corpus children do not block specialization. With no
+    // surviving children, the supertype carries no polymorphism —
+    // represent it as a plain SingleStruct so downstream stages do not
+    // need a shape decision or an empty kind enum.
+    let to_specialize: Vec<String> = pruned
+        .iter()
+        .filter(|(name, spec)| {
+            if !matches!(spec, VariantSpec::ConcreteSupertype) {
+                return false;
+            }
+            if counts.get(*name).copied().unwrap_or(0) == 0 {
+                return false;
+            }
+            !pruned.iter().any(|(child, child_spec)| {
+                matches!(
+                    child_spec,
+                    VariantSpec::InEnum { enum_name } if enum_name == *name
+                ) && (counts.get(child).copied().unwrap_or(0) > 0
+                    || keep_overrides.contains(child))
+            })
+        })
+        .map(|(n, _)| n.clone())
+        .collect();
+    for name in &to_specialize {
+        pruned.insert(name.clone(), VariantSpec::SingleStruct);
+    }
+    if !to_specialize.is_empty() {
+        let preview: Vec<&str> = to_specialize.iter().take(8).map(|s| s.as_str()).collect();
+        let suffix = if to_specialize.len() > 8 { ", ..." } else { "" };
+        eprintln!(
+            "infer prune: specialized {} childless ConcreteSupertype(s) to SingleStruct: {}{}",
+            to_specialize.len(),
+            preview.join(", "),
+            suffix,
+        );
+    }
+
     let effective_keep: BTreeSet<String> = keep_overrides
         .iter()
         .chain(auto_keep.iter())
@@ -679,7 +719,7 @@ mod tests {
     }
 
     #[test]
-    fn prune_concrete_supertype_with_no_children_stays_concrete_supertype() {
+    fn prune_childless_concrete_supertype_specializes_to_single_struct() {
         let variants = variants_with(&[
             ("action", VariantSpec::ConcreteSupertype),
             (
@@ -689,19 +729,71 @@ mod tests {
                 },
             ),
         ]);
-        // Parent used, child not. With Plan 3.23's auto-keep rule, a
-        // ConcreteSupertype with corpus > 0 is auto-kept, so the lone
-        // dead child is dropped but the parent stays as
-        // ConcreteSupertype (it doesn't dissolve to SingleStruct).
-        // Collapsing a 0-child ConcreteSupertype to SingleStruct is a
-        // separate concern tracked for a future plan.
+        // Parent used, child not. The specialization step converts the
+        // self-live but child-dead ConcreteSupertype to SingleStruct.
         let counts: HashMap<String, usize> = [("action".to_string(), 12)].into_iter().collect();
+        let pruned = prune_transitive(&variants, &counts);
+        assert!(matches!(
+            pruned.get("action"),
+            Some(VariantSpec::SingleStruct)
+        ));
+        assert!(!pruned.contains_key("executed_action"));
+    }
+
+    #[test]
+    fn prune_concrete_supertype_with_live_child_unchanged() {
+        let variants = variants_with(&[
+            ("action", VariantSpec::ConcreteSupertype),
+            (
+                "executed_action",
+                VariantSpec::InEnum {
+                    enum_name: "action".into(),
+                },
+            ),
+        ]);
+        let counts: HashMap<String, usize> = [
+            ("action".to_string(), 12),
+            ("executed_action".to_string(), 4),
+        ]
+        .into_iter()
+        .collect();
         let pruned = prune_transitive(&variants, &counts);
         assert!(matches!(
             pruned.get("action"),
             Some(VariantSpec::ConcreteSupertype)
         ));
+        assert!(matches!(
+            pruned.get("executed_action"),
+            Some(VariantSpec::InEnum { .. })
+        ));
+    }
+
+    #[test]
+    fn prune_concrete_supertype_with_only_dead_children_specializes() {
+        let variants = variants_with(&[
+            ("action", VariantSpec::ConcreteSupertype),
+            (
+                "executed_action",
+                VariantSpec::InEnum {
+                    enum_name: "action".into(),
+                },
+            ),
+            (
+                "planned_action",
+                VariantSpec::InEnum {
+                    enum_name: "action".into(),
+                },
+            ),
+        ]);
+        // Parent live, all children dead -> specialize to SingleStruct.
+        let counts: HashMap<String, usize> = [("action".to_string(), 5)].into_iter().collect();
+        let pruned = prune_transitive(&variants, &counts);
+        assert!(matches!(
+            pruned.get("action"),
+            Some(VariantSpec::SingleStruct)
+        ));
         assert!(!pruned.contains_key("executed_action"));
+        assert!(!pruned.contains_key("planned_action"));
     }
 
     #[test]
