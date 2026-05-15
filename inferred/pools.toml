@@ -10,12 +10,6 @@
 # (missing → Err) and that no entry refers to an unknown arena
 # (extra → warning).
 
-[arena.all_around_shape_aspect]
-pool = "shape_rep"
-
-[arena.angular_size]
-pool = "pmi"
-
 [arena.annotation_occurrence]
 pool = "pmi"
 
@@ -23,12 +17,6 @@ pool = "pmi"
 pool = "plm"
 
 [arena.application_protocol_definition]
-pool = "plm"
-
-[arena.applied_classification_assignment]
-pool = "plm"
-
-[arena.applied_document_reference]
 pool = "plm"
 
 [arena.applied_organization_assignment]
@@ -55,20 +43,11 @@ pool = "geometry"
 [arena.b_spline_surface]
 pool = "geometry"
 
-[arena.calendar_date]
-pool = "plm"
-
 [arena.cartesian_point]
 pool = "geometry"
 
-[arena.centre_of_symmetry]
-pool = "shape_rep"
-
 [arena.characterized_object]
 pool = "shape_rep"
-
-[arena.circular_area]
-pool = "geometry"
 
 [arena.classification_role]
 pool = "plm"
@@ -76,17 +55,8 @@ pool = "plm"
 [arena.colour]
 pool = "visualization"
 
-[arena.complex_triangulated_face]
-pool = "topology"
-
-[arena.complex_triangulated_surface_set]
-pool = "topology"
-
 [arena.composite_curve_segment]
 pool = "geometry"
-
-[arena.composite_group_shape_aspect]
-pool = "shape_rep"
 
 [arena.composite_text]
 pool = "visualization"
@@ -136,9 +106,6 @@ pool = "units"
 [arena.dimensional_location]
 pool = "pmi"
 
-[arena.dimensional_size_with_datum_feature]
-pool = "pmi"
-
 [arena.document]
 pool = "plm"
 
@@ -162,9 +129,6 @@ pool = "pmi"
 
 [arena.draughting_pre_defined_text_font]
 pool = "pmi"
-
-[arena.edge_curve]
-pool = "topology"
 
 [arena.external_source]
 pool = "plm"
@@ -211,9 +175,6 @@ pool = "shape_rep"
 [arena.item_identified_representation_usage]
 pool = "shape_rep"
 
-[arena.leader_curve]
-pool = "pmi"
-
 [arena.limits_and_fits]
 pool = "pmi"
 
@@ -237,9 +198,6 @@ pool = "property"
 
 [arena.named_unit]
 pool = "units"
-
-[arena.next_assembly_usage_occurrence]
-pool = "assembly_product"
 
 [arena.object_role]
 pool = "plm"
@@ -301,9 +259,6 @@ pool = "assembly_product"
 [arena.product_definition_formation]
 pool = "assembly_product"
 
-[arena.projected_zone_definition]
-pool = "pmi"
-
 [arena.property_definition]
 pool = "property"
 
@@ -343,9 +298,6 @@ pool = "shape_rep"
 [arena.shape_aspect_relationship]
 pool = "shape_rep"
 
-[arena.step]
-pool = "form_features"
-
 [arena.styled_item]
 pool = "visualization"
 
@@ -382,19 +334,10 @@ pool = "pmi"
 [arena.value_format_type_qualifier]
 pool = "pmi"
 
-[arena.vertex_loop]
-pool = "topology"
-
-[arena.applied_group_assignment]
-pool = "plm"
-
 [arena.applied_presented_item]
 pool = "visualization"
 
 [arena.area_in_set]
-pool = "visualization"
-
-[arena.presentation_area]
 pool = "visualization"
 
 [arena.presentation_size]
@@ -402,9 +345,6 @@ pool = "visualization"
 
 [arena.presented_item_representation]
 pool = "visualization"
-
-[arena.product_definition_with_associated_documents]
-pool = "assembly_product"
 
 [arena.cartesian_point_2d]
 pool = "geometry"
@@ -544,5 +484,3 @@ pool = "visualization"
 pool = "form_features"
 
 # property
-[arena.literal_number]
-pool = "property"
