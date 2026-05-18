@@ -386,6 +386,9 @@ pool = "plm"
 [arena.document_reference]
 pool = "plm"
 
+[arena.group]
+pool = "plm"
+
 [arena.group_assignment]
 pool = "plm"
 

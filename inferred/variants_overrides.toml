@@ -16,3 +16,7 @@ reason = "230,734 corpus instances. Unit context gateway in step-io; the EnumBas
 [entity.product_definition]
 kind = "concrete_supertype"
 reason = "216,632 corpus instances. Central entity in every assembly chain; most EnumBase children (mechanical / electronic variants) have corpus 0, but product_definition_with_associated_documents (43 corpus) survives, so the Plan 3.26 prune-stage specialization keeps it as ConcreteSupertype."
+
+[entity.group]
+kind = "concrete_supertype"
+reason = "5,793 corpus instances. AP242 alone declares group as SUPERTYPE OF (ONEOF (change_group, change_element)), the other three schemas (AP203 / AP203e2 / AP214e3) declare plain ENTITY group; — the 4-schema unification keeps AP242's ONEOF, which triggers variant.rs Rule 2 to misclassify as EnumBase. AP242's group is also NOT abstract and has own_attrs (name, description) — plain GROUP(...) instances are valid per EXPRESS semantics and corpus confirms 5,793 of them. AGA / ACA point assigned_group / assigned_class at plain GROUP. Same pattern as geometric_representation_context / product_definition. Plan 3.26 prune-stage specialization then collapses it to SingleStruct because all 16 declared variants have corpus 0."
