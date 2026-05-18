@@ -102,3 +102,9 @@ shape = "carrier"
 # (43 instances) 가 있어 SingleStruct 자동 변환 대상 아님.
 [entity.product_definition]                # 216K self / 43 children
 shape = "base_parallel"
+
+# Plan 3.30 — dimensional_size: variants_overrides 로 ConcreteSupertype
+# 분류됨. angular_size (corpus 1) 가 살아남는 InEnum child → SingleStruct
+# 자동 변환 대상 아님. 212 self vs 1 child, 압도적 parent-dominant.
+[entity.dimensional_size]                  # 212 self / 1 live child (angular_size), ratio ~0 — parent dominant
+shape = "base_parallel"

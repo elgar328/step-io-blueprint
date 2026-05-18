@@ -427,6 +427,12 @@ pool = "shape_rep"
 [arena.presentation_representation]
 pool = "shape_rep"
 
+[arena.compound_representation_item]
+pool = "shape_rep"
+
+[arena.descriptive_representation_item]
+pool = "shape_rep"
+
 # geometry
 [arena.placement]
 pool = "geometry"

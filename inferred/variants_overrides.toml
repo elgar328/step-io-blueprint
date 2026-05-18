@@ -20,3 +20,19 @@ reason = "216,632 corpus instances. Central entity in every assembly chain; most
 [entity.group]
 kind = "concrete_supertype"
 reason = "5,793 corpus instances. AP242 alone declares group as SUPERTYPE OF (ONEOF (change_group, change_element)), the other three schemas (AP203 / AP203e2 / AP214e3) declare plain ENTITY group; — the 4-schema unification keeps AP242's ONEOF, which triggers variant.rs Rule 2 to misclassify as EnumBase. AP242's group is also NOT abstract and has own_attrs (name, description) — plain GROUP(...) instances are valid per EXPRESS semantics and corpus confirms 5,793 of them. AGA / ACA point assigned_group / assigned_class at plain GROUP. Same pattern as geometric_representation_context / product_definition. Plan 3.26 prune-stage specialization then collapses it to SingleStruct because all 16 declared variants have corpus 0."
+
+[entity.derived_unit]
+kind = "concrete_supertype"
+reason = "5,022 corpus instances. AP242 / AP203e2 / AP214e3 declare derived_unit as SUPERTYPE OF (ONEOF (area_unit, volume_unit, ...)), non-abstract, with own_attr elements : SET[1:?] OF derived_unit_element. The ONEOF children (area_unit/volume_unit etc.) are multi-inherited from named_unit and classified as InEnum of named_unit, so derived_unit has 0 live InEnum children of its own — prune_empty_enum_bases drops it. Override forces ConcreteSupertype; Plan 3.26 prune-stage specialization then collapses to SingleStruct. Same pattern as group / grc / pd."
+
+[entity.descriptive_representation_item]
+kind = "concrete_supertype"
+reason = "6,734 corpus instances. AP242 / AP203e2 declare as SUPERTYPE OF (ONEOF (tagged_text_item, uniform_resource_identifier)), non-abstract, with own_attr description : text. Both ONEOF children have corpus 0 → pruned → no live InEnum children → prune_empty_enum_bases drops. Plan 3.26 will specialize to SingleStruct. Same pattern as group."
+
+[entity.dimensional_size]
+kind = "concrete_supertype"
+reason = "212 corpus instances. AP242 declares as SUPERTYPE OF (ONEOF (angular_size, dimensional_size_with_path)), non-abstract, with own_attrs applies_to, name. angular_size has corpus 1 (live) so prune-stage specialization does NOT collapse to SingleStruct — stays ConcreteSupertype. shape decision: 212 self / 1 live child → parent-dominant → base_parallel."
+
+[entity.compound_representation_item]
+kind = "concrete_supertype"
+reason = "7 corpus instances. AP242 declares as SUPERTYPE OF (ONEOF (point_and_vector, point_path) ANDOR ONEOF (row_representation_item, table_representation_item)), non-abstract, with own_attr item_element : compound_item_definition. All 4 ONEOF children have corpus 0 → no live InEnum children → Plan 3.26 specialization to SingleStruct. (NOTE: the ANDOR/ONEOF shape should plausibly match variant.rs Rule 1 ComplexSupertype but was classified as EnumBase — root cause TBD; override bypasses the misclassification.)"
