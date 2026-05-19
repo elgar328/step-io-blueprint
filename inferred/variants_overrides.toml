@@ -36,3 +36,22 @@ reason = "212 corpus instances. AP242 declares as SUPERTYPE OF (ONEOF (angular_s
 [entity.compound_representation_item]
 kind = "concrete_supertype"
 reason = "7 corpus instances. AP242 declares as SUPERTYPE OF (ONEOF (point_and_vector, point_path) ANDOR ONEOF (row_representation_item, table_representation_item)), non-abstract, with own_attr item_element : compound_item_definition. All 4 ONEOF children have corpus 0 → no live InEnum children → Plan 3.26 specialization to SingleStruct. (NOTE: the ANDOR/ONEOF shape should plausibly match variant.rs Rule 1 ComplexSupertype but was classified as EnumBase — root cause TBD; override bypasses the misclassification.)"
+
+# Plan 3.31 — e1 vs e2+ parent declaration conflict. AP203 e1 declares
+# these as SUBTYPE OF (named_unit) but AP203e2 / AP214e3 / AP242 declare
+# SUBTYPE OF (derived_unit). 4-schema unification picks named_unit as
+# the enum_root. Corpus only uses the derived_unit pattern
+# (AREA_UNIT((#elem)) set form), so force InEnum to derived_unit.
+# Conflict scope verified: across the 4 schemas the parent-declaration
+# mismatch is exactly these 2 entities, so override at this granularity
+# is the correct fix rather than a unification-policy change.
+
+[entity.area_unit]
+kind = "in_enum"
+enum_name = "derived_unit"
+reason = "17 corpus instances, all derived_unit pattern (AREA_UNIT((#derived_unit_element)) set form in AP203e2/AP242 files; no AREA_UNIT instances found in AP203 e1 / AP214 file samples). variant.rs:enclosing_enum_root picked named_unit due to e1's SUBTYPE OF (named_unit) declaration. Force InEnum to derived_unit to match corpus reality."
+
+[entity.volume_unit]
+kind = "in_enum"
+enum_name = "derived_unit"
+reason = "13 corpus instances, same situation as area_unit — AP203 e1 named_unit subtype vs e2+ derived_unit subtype. Corpus uses derived_unit pattern only."

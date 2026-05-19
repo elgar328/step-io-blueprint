@@ -108,3 +108,12 @@ shape = "base_parallel"
 # 자동 변환 대상 아님. 212 self vs 1 child, 압도적 parent-dominant.
 [entity.dimensional_size]                  # 212 self / 1 live child (angular_size), ratio ~0 — parent dominant
 shape = "base_parallel"
+
+# Plan 3.31 — derived_unit: Plan 3.30 의 SingleStruct 자동 특수화가
+# area_unit / volume_unit 의 InEnum override 로 발동 안 함. live InEnum
+# 자식 2 개 (area_unit 17, volume_unit 13) 로 ConcreteSupertype 유지.
+# carrier 가 어색한 이유: area_unit / volume_unit 가 EXPRESS 상 자체 attr
+# 없는 WHERE-constraint marker — base_parallel 의 Kind discriminator 가
+# 자연스러움.
+[entity.derived_unit]                      # 5,022 self / 30 live children (17+13), ratio ~0 — parent dominant
+shape = "base_parallel"
