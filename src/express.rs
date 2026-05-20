@@ -75,8 +75,9 @@ pub struct TypeDef {
 pub struct EntitySchema {
     /// `cartesian_point`, `shape_aspect`, etc. (lowercase as per EXPRESS).
     pub name: String,
-    /// Direct parents from `SUBTYPE OF (a, b)`. Multi-parent (multiple
-    /// inheritance) is rare in practice; first parent's chain dominates.
+    /// Direct parents from `SUBTYPE OF (a, b)`, in declaration order.
+    /// Multiple inheritance is supported — attribute collection walks
+    /// every parent's chain (see `naming::collect_ancestor_attrs`).
     pub parents: Vec<String>,
     /// Attributes declared in this entity (excludes inherited).
     pub own_attrs: Vec<AttrSpec>,

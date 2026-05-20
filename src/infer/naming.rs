@@ -6,7 +6,7 @@
 //! blueprint to ir.toml. Empty names.toml is valid; unknown entries
 //! emit warnings rather than errors.
 
-use std::collections::{BTreeMap, BTreeSet, HashMap};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fs;
 use std::path::Path;
 
@@ -410,9 +410,9 @@ fn ty_string(ty: &AttrType, types: &HashMap<String, AttrType>) -> String {
 }
 
 /// Build a per-entity index of (attr_name → ty_string), pulling in
-/// inherited attrs from the entity's `parents` chain. First parent wins
-/// when multiple branches converge; child attrs override inherited
-/// attrs of the same name.
+/// inherited attrs from *every* parent of the entity's inheritance DAG
+/// (multiple inheritance included). Child attrs override inherited attrs
+/// of the same name.
 fn build_attr_types(schemas: &[Schema]) -> HashMap<String, BTreeMap<String, String>> {
     let mut entity_to_schema: HashMap<&str, &express::EntitySchema> = HashMap::new();
     let mut all_types: HashMap<String, AttrType> = HashMap::new();
@@ -429,7 +429,14 @@ fn build_attr_types(schemas: &[Schema]) -> HashMap<String, BTreeMap<String, Stri
     for (entity_name, entity) in &entity_to_schema {
         let mut fields: BTreeMap<String, String> = BTreeMap::new();
         // Walk ancestors first (so child can override their attr names).
-        collect_ancestor_attrs(entity, &entity_to_schema, &all_types, &mut fields);
+        let mut visited: HashSet<String> = HashSet::new();
+        collect_ancestor_attrs(
+            entity,
+            &entity_to_schema,
+            &all_types,
+            &mut fields,
+            &mut visited,
+        );
         for a in &entity.own_attrs {
             fields.insert(a.name.clone(), ty_string(&a.ty, &all_types));
         }
@@ -438,23 +445,30 @@ fn build_attr_types(schemas: &[Schema]) -> HashMap<String, BTreeMap<String, Stri
     out
 }
 
+/// Recursively gather attrs from *all* parents of `entity` (multiple
+/// inheritance included). `visited` guards against re-walking a shared
+/// ancestor reached via several paths — in a diamond, the ancestor's
+/// attrs are already in `out`, so skipping is correctness-neutral and
+/// avoids exponential re-traversal.
 fn collect_ancestor_attrs(
     entity: &express::EntitySchema,
     entity_to_schema: &HashMap<&str, &express::EntitySchema>,
     types: &HashMap<String, AttrType>,
     out: &mut BTreeMap<String, String>,
+    visited: &mut HashSet<String>,
 ) {
-    let parent = match entity.parents.first() {
-        Some(p) => p,
-        None => return,
-    };
-    let parent_entity = match entity_to_schema.get(parent.as_str()) {
-        Some(e) => e,
-        None => return,
-    };
-    collect_ancestor_attrs(parent_entity, entity_to_schema, types, out);
-    for a in &parent_entity.own_attrs {
-        out.insert(a.name.clone(), ty_string(&a.ty, types));
+    for parent in &entity.parents {
+        if !visited.insert(parent.clone()) {
+            continue;
+        }
+        let parent_entity = match entity_to_schema.get(parent.as_str()) {
+            Some(e) => e,
+            None => continue,
+        };
+        collect_ancestor_attrs(parent_entity, entity_to_schema, types, out, visited);
+        for a in &parent_entity.own_attrs {
+            out.insert(a.name.clone(), ty_string(&a.ty, types));
+        }
     }
 }
 
@@ -705,6 +719,113 @@ mod tests {
         );
         let ty = AttrType::Entity("length_measure".into());
         assert_eq!(ty_string(&ty, &types), "real");
+    }
+
+    fn ent(name: &str, parents: &[&str], attrs: &[(&str, AttrType)]) -> express::EntitySchema {
+        express::EntitySchema {
+            name: name.to_string(),
+            parents: parents.iter().map(|s| s.to_string()).collect(),
+            own_attrs: attrs
+                .iter()
+                .map(|(n, t)| express::AttrSpec {
+                    name: n.to_string(),
+                    ty: t.clone(),
+                })
+                .collect(),
+            is_abstract: false,
+            supertype_expr: None,
+        }
+    }
+
+    fn schema_of(entities: Vec<express::EntitySchema>) -> Schema {
+        Schema {
+            source_label: "test".to_string(),
+            entities: entities.into_iter().map(|e| (e.name.clone(), e)).collect(),
+            types: HashMap::new(),
+            parse_warnings: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn build_attr_types_single_inheritance() {
+        let schemas = vec![schema_of(vec![
+            ent("parent", &[], &[("name", AttrType::Primitive("STRING".into()))]),
+            ent(
+                "child",
+                &["parent"],
+                &[("coords", AttrType::Primitive("REAL".into()))],
+            ),
+        ])];
+        let attrs = build_attr_types(&schemas);
+        let child = attrs.get("child").expect("child present");
+        assert_eq!(child.get("name").map(String::as_str), Some("string"));
+        assert_eq!(child.get("coords").map(String::as_str), Some("real"));
+    }
+
+    #[test]
+    fn build_attr_types_multiple_inheritance_collects_all_parents() {
+        // child SUBTYPE OF (a, b): both parents' own_attrs must surface.
+        let schemas = vec![schema_of(vec![
+            ent("a", &[], &[("name", AttrType::Primitive("STRING".into()))]),
+            ent("b", &[], &[("value", AttrType::Primitive("NUMBER".into()))]),
+            ent("child", &["a", "b"], &[]),
+        ])];
+        let attrs = build_attr_types(&schemas);
+        let child = attrs.get("child").expect("child present");
+        assert_eq!(child.get("name").map(String::as_str), Some("string"));
+        assert_eq!(
+            child.get("value").map(String::as_str),
+            Some("number"),
+            "2nd-parent attr must not be dropped"
+        );
+    }
+
+    #[test]
+    fn build_attr_types_multiple_inheritance_walks_2nd_parent_chain() {
+        // child SUBTYPE OF (a, b); b SUBTYPE OF (grandparent).
+        // The grandparent's attr (reached only via the 2nd parent) counts.
+        let schemas = vec![schema_of(vec![
+            ent("a", &[], &[("name", AttrType::Primitive("STRING".into()))]),
+            ent(
+                "grandparent",
+                &[],
+                &[("the_value", AttrType::Primitive("NUMBER".into()))],
+            ),
+            ent("b", &["grandparent"], &[]),
+            ent("child", &["a", "b"], &[]),
+        ])];
+        let attrs = build_attr_types(&schemas);
+        let child = attrs.get("child").expect("child present");
+        assert_eq!(child.get("name").map(String::as_str), Some("string"));
+        assert_eq!(
+            child.get("the_value").map(String::as_str),
+            Some("number"),
+            "attr inherited via 2nd parent's grandparent must surface"
+        );
+    }
+
+    #[test]
+    fn build_attr_types_child_own_attr_overrides_inherited() {
+        // child redeclares parent's attr with a narrower type.
+        let schemas = vec![schema_of(vec![
+            ent(
+                "parent",
+                &[],
+                &[("the_value", AttrType::Primitive("NUMBER".into()))],
+            ),
+            ent(
+                "child",
+                &["parent"],
+                &[("the_value", AttrType::Primitive("INTEGER".into()))],
+            ),
+        ])];
+        let attrs = build_attr_types(&schemas);
+        let child = attrs.get("child").expect("child present");
+        assert_eq!(
+            child.get("the_value").map(String::as_str),
+            Some("integer"),
+            "child own_attr must override inherited attr of the same name"
+        );
     }
 
     fn make_summary(variant: VariantSpec, arena: &str, shape: Option<ConcreteSupertypeShape>) -> EntitySummary {
