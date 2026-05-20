@@ -53,6 +53,12 @@ struct PoolEntry {
 struct IrField {
     name: String,
     ty: String,
+    /// EXPRESS entity that *originally declared* this attribute. Lets a
+    /// reader tell apart same-named attributes inherited from different
+    /// supertypes (e.g. document_file gets `description` from both
+    /// `document` and `characterized_object`). Unchanged by a subtype
+    /// redeclaration that only narrows the type.
+    from: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
@@ -85,8 +91,12 @@ struct IrEntity {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
     chain: Vec<String>,
 
-    #[serde(default, skip_serializing_if = "BTreeMap::is_empty")]
-    fields: BTreeMap<String, IrField>,
+    /// STEP P21 encoding order: every supertype's attributes (parent
+    /// chains left-to-right, base ancestor first) then own attributes.
+    /// A `Vec` (not a name-keyed map) so order is preserved and
+    /// same-named attributes from different supertypes both survive.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    fields: Vec<IrField>,
 
     #[serde(default, skip_serializing_if = "is_zero")]
     instance_count: usize,
@@ -409,11 +419,37 @@ fn ty_string(ty: &AttrType, types: &HashMap<String, AttrType>) -> String {
     }
 }
 
-/// Build a per-entity index of (attr_name → ty_string), pulling in
-/// inherited attrs from *every* parent of the entity's inheritance DAG
-/// (multiple inheritance included). Child attrs override inherited attrs
-/// of the same name.
-fn build_attr_types(schemas: &[Schema]) -> HashMap<String, BTreeMap<String, String>> {
+/// One attribute slot in STEP P21 encoding order.
+struct FieldRec {
+    name: String,
+    ty: String,
+    /// EXPRESS entity that originally declared the attribute.
+    from: String,
+}
+
+/// Apply a redeclaration (subtype attr type narrowing) to the ordered
+/// field list: find the existing slot by name and overwrite its `ty`.
+/// `from` is left unchanged — the slot still belongs to its original
+/// declarer. Falls back to appending if the name is absent (abnormal
+/// schema; preserves the old map-insert behaviour rather than dropping).
+fn apply_redeclaration(out: &mut Vec<FieldRec>, name: &str, ty: String, redeclarer: &str) {
+    if let Some(f) = out.iter_mut().find(|f| f.name == name) {
+        f.ty = ty;
+    } else {
+        out.push(FieldRec {
+            name: name.to_string(),
+            ty,
+            from: redeclarer.to_string(),
+        });
+    }
+}
+
+/// Build a per-entity ordered attribute list, pulling in inherited attrs
+/// from *every* parent of the entity's inheritance DAG (multiple
+/// inheritance included). Order follows STEP P21 encoding: each parent
+/// chain (base ancestor first), parents left-to-right, then own attrs.
+/// Redeclarations narrow an inherited slot in place.
+fn build_attr_types(schemas: &[Schema]) -> HashMap<String, Vec<FieldRec>> {
     let mut entity_to_schema: HashMap<&str, &express::EntitySchema> = HashMap::new();
     let mut all_types: HashMap<String, AttrType> = HashMap::new();
     for s in schemas {
@@ -425,10 +461,9 @@ fn build_attr_types(schemas: &[Schema]) -> HashMap<String, BTreeMap<String, Stri
         }
     }
 
-    let mut out: HashMap<String, BTreeMap<String, String>> = HashMap::new();
+    let mut out: HashMap<String, Vec<FieldRec>> = HashMap::new();
     for (entity_name, entity) in &entity_to_schema {
-        let mut fields: BTreeMap<String, String> = BTreeMap::new();
-        // Walk ancestors first (so child can override their attr names).
+        let mut fields: Vec<FieldRec> = Vec::new();
         let mut visited: HashSet<String> = HashSet::new();
         collect_ancestor_attrs(
             entity,
@@ -438,12 +473,20 @@ fn build_attr_types(schemas: &[Schema]) -> HashMap<String, BTreeMap<String, Stri
             &mut visited,
         );
         for a in &entity.own_attrs {
-            fields.insert(a.name.clone(), ty_string(&a.ty, &all_types));
+            fields.push(FieldRec {
+                name: a.name.clone(),
+                ty: ty_string(&a.ty, &all_types),
+                from: (*entity_name).to_string(),
+            });
         }
-        // Redeclarations narrow an inherited attr — apply last so they
-        // win over the inherited type collected from the parent chain.
+        // Redeclarations narrow an inherited slot — apply last.
         for a in &entity.redeclared_attrs {
-            fields.insert(a.name.clone(), ty_string(&a.ty, &all_types));
+            apply_redeclaration(
+                &mut fields,
+                &a.name,
+                ty_string(&a.ty, &all_types),
+                entity_name,
+            );
         }
         out.insert((*entity_name).to_string(), fields);
     }
@@ -451,15 +494,15 @@ fn build_attr_types(schemas: &[Schema]) -> HashMap<String, BTreeMap<String, Stri
 }
 
 /// Recursively gather attrs from *all* parents of `entity` (multiple
-/// inheritance included). `visited` guards against re-walking a shared
-/// ancestor reached via several paths — in a diamond, the ancestor's
-/// attrs are already in `out`, so skipping is correctness-neutral and
-/// avoids exponential re-traversal.
+/// inheritance included), appending in STEP P21 order. `visited` guards
+/// against re-walking a shared ancestor reached via several paths — in a
+/// diamond the ancestor's attrs are already in `out`, so skipping is
+/// correctness-neutral and avoids exponential re-traversal.
 fn collect_ancestor_attrs(
     entity: &express::EntitySchema,
     entity_to_schema: &HashMap<&str, &express::EntitySchema>,
     types: &HashMap<String, AttrType>,
-    out: &mut BTreeMap<String, String>,
+    out: &mut Vec<FieldRec>,
     visited: &mut HashSet<String>,
 ) {
     for parent in &entity.parents {
@@ -472,12 +515,14 @@ fn collect_ancestor_attrs(
         };
         collect_ancestor_attrs(parent_entity, entity_to_schema, types, out, visited);
         for a in &parent_entity.own_attrs {
-            out.insert(a.name.clone(), ty_string(&a.ty, types));
+            out.push(FieldRec {
+                name: a.name.clone(),
+                ty: ty_string(&a.ty, types),
+                from: parent.clone(),
+            });
         }
-        // Redeclarations narrow an attr inherited from further up the
-        // chain — apply after own_attrs / the recursion above.
         for a in &parent_entity.redeclared_attrs {
-            out.insert(a.name.clone(), ty_string(&a.ty, types));
+            apply_redeclaration(out, &a.name, ty_string(&a.ty, types), parent);
         }
     }
 }
@@ -605,19 +650,23 @@ fn compile_ir(
             _ => (None, None, None, Vec::new()),
         };
 
-        let mut fields = BTreeMap::new();
+        let mut fields: Vec<IrField> = Vec::new();
         if cats.has_fields {
             if let Some(attrs) = attr_types.get(entity) {
-                for (attr, ty) in attrs {
-                    let key = format!("{entity}.{attr}");
-                    let renamed = names.field.get(&key).cloned().unwrap_or_else(|| attr.clone());
-                    fields.insert(
-                        attr.clone(),
-                        IrField {
-                            name: renamed,
-                            ty: ty.clone(),
-                        },
-                    );
+                for rec in attrs {
+                    // Field rename keyed by `entity.attr`. A same-name
+                    // collision shares the key, so a rename applies to
+                    // both colliding slots — acceptable; tighten to
+                    // `entity.from.attr` only if precise rename is ever
+                    // needed.
+                    let key = format!("{entity}.{}", rec.name);
+                    let renamed =
+                        names.field.get(&key).cloned().unwrap_or_else(|| rec.name.clone());
+                    fields.push(IrField {
+                        name: renamed,
+                        ty: rec.ty.clone(),
+                        from: rec.from.clone(),
+                    });
                 }
             }
         }
@@ -741,6 +790,16 @@ mod tests {
             .collect()
     }
 
+    /// ty of the first field named `name` in an ordered FieldRec list.
+    fn fty<'a>(fields: &'a [FieldRec], name: &str) -> Option<&'a str> {
+        fields.iter().find(|f| f.name == name).map(|f| f.ty.as_str())
+    }
+
+    /// Ordered list of field names — for asserting STEP P21 order.
+    fn fnames(fields: &[FieldRec]) -> Vec<&str> {
+        fields.iter().map(|f| f.name.as_str()).collect()
+    }
+
     fn ent(name: &str, parents: &[&str], attrs: &[(&str, AttrType)]) -> express::EntitySchema {
         ent_redecl(name, parents, attrs, &[])
     }
@@ -782,8 +841,10 @@ mod tests {
         ])];
         let attrs = build_attr_types(&schemas);
         let child = attrs.get("child").expect("child present");
-        assert_eq!(child.get("name").map(String::as_str), Some("string"));
-        assert_eq!(child.get("coords").map(String::as_str), Some("real"));
+        assert_eq!(fty(child, "name"), Some("string"));
+        assert_eq!(fty(child, "coords"), Some("real"));
+        // STEP P21 order: inherited parent attr before own attr.
+        assert_eq!(fnames(child), vec!["name", "coords"]);
     }
 
     #[test]
@@ -796,12 +857,14 @@ mod tests {
         ])];
         let attrs = build_attr_types(&schemas);
         let child = attrs.get("child").expect("child present");
-        assert_eq!(child.get("name").map(String::as_str), Some("string"));
+        assert_eq!(fty(child, "name"), Some("string"));
         assert_eq!(
-            child.get("value").map(String::as_str),
+            fty(child, "value"),
             Some("number"),
             "2nd-parent attr must not be dropped"
         );
+        // parent `a` chain before parent `b` chain.
+        assert_eq!(fnames(child), vec!["name", "value"]);
     }
 
     #[test]
@@ -820,35 +883,42 @@ mod tests {
         ])];
         let attrs = build_attr_types(&schemas);
         let child = attrs.get("child").expect("child present");
-        assert_eq!(child.get("name").map(String::as_str), Some("string"));
+        assert_eq!(fty(child, "name"), Some("string"));
         assert_eq!(
-            child.get("the_value").map(String::as_str),
+            fty(child, "the_value"),
             Some("number"),
             "attr inherited via 2nd parent's grandparent must surface"
         );
     }
 
     #[test]
-    fn build_attr_types_child_own_attr_overrides_inherited() {
-        // child redeclares parent's attr with a narrower type.
+    fn build_attr_types_redeclaration_overrides_direct_parent_attr() {
+        // child redeclares its direct parent's attr with a narrower type
+        // via redeclared_attrs (the EXPRESS `SELF\parent.attr` form).
         let schemas = vec![schema_of(vec![
             ent(
                 "parent",
                 &[],
                 &[("the_value", AttrType::Primitive("NUMBER".into()))],
             ),
-            ent(
+            ent_redecl(
                 "child",
                 &["parent"],
+                &[],
                 &[("the_value", AttrType::Primitive("INTEGER".into()))],
             ),
         ])];
         let attrs = build_attr_types(&schemas);
         let child = attrs.get("child").expect("child present");
         assert_eq!(
-            child.get("the_value").map(String::as_str),
+            fty(child, "the_value"),
             Some("integer"),
-            "child own_attr must override inherited attr of the same name"
+            "redeclaration must narrow the inherited slot in place"
+        );
+        assert_eq!(
+            fnames(child),
+            vec!["the_value"],
+            "redeclaration narrows in place — no extra slot"
         );
     }
 
@@ -875,17 +945,39 @@ mod tests {
         let attrs = build_attr_types(&schemas);
         let b = attrs.get("b").expect("b present");
         assert_eq!(
-            b.get("the_value").map(String::as_str),
+            fty(b, "the_value"),
             Some("integer"),
             "redeclaration must override the inherited NUMBER on b itself"
         );
+        // redeclaration narrows in place — no extra slot.
+        assert_eq!(fnames(b), vec!["the_value"]);
         let child = attrs.get("child").expect("child present");
         assert_eq!(
-            child.get("the_value").map(String::as_str),
+            fty(child, "the_value"),
             Some("integer"),
             "redeclaration on 2nd parent must propagate to the child"
         );
-        assert_eq!(child.get("name").map(String::as_str), Some("string"));
+        assert_eq!(fty(child, "name"), Some("string"));
+    }
+
+    #[test]
+    fn build_attr_types_same_name_collision_keeps_both_slots() {
+        // child SUBTYPE OF (a, b): a and b are unrelated entities that
+        // each declare an attr named `label`. STEP P21 has two slots.
+        let schemas = vec![schema_of(vec![
+            ent("a", &[], &[("label", AttrType::Primitive("STRING".into()))]),
+            ent("b", &[], &[("label", AttrType::Primitive("STRING".into()))]),
+            ent("child", &["a", "b"], &[]),
+        ])];
+        let attrs = build_attr_types(&schemas);
+        let child = attrs.get("child").expect("child present");
+        assert_eq!(
+            fnames(child),
+            vec!["label", "label"],
+            "same-name attrs from distinct ancestors must both survive"
+        );
+        assert_eq!(child[0].from, "a");
+        assert_eq!(child[1].from, "b");
     }
 
     fn make_summary(variant: VariantSpec, arena: &str, shape: Option<ConcreteSupertypeShape>) -> EntitySummary {
@@ -1078,14 +1170,11 @@ mod tests {
 
     #[test]
     fn ir_entity_toml_round_trip() {
-        let mut fields = BTreeMap::new();
-        fields.insert(
-            "coordinates".to_string(),
-            IrField {
-                name: "coordinates".to_string(),
-                ty: "list_real".to_string(),
-            },
-        );
+        let fields = vec![IrField {
+            name: "coordinates".to_string(),
+            ty: "list_real".to_string(),
+            from: "cartesian_point".to_string(),
+        }];
         let row = IrEntity {
             kind: "single_struct".to_string(),
             arena: "cartesian_point".to_string(),
