@@ -440,6 +440,11 @@ fn build_attr_types(schemas: &[Schema]) -> HashMap<String, BTreeMap<String, Stri
         for a in &entity.own_attrs {
             fields.insert(a.name.clone(), ty_string(&a.ty, &all_types));
         }
+        // Redeclarations narrow an inherited attr — apply last so they
+        // win over the inherited type collected from the parent chain.
+        for a in &entity.redeclared_attrs {
+            fields.insert(a.name.clone(), ty_string(&a.ty, &all_types));
+        }
         out.insert((*entity_name).to_string(), fields);
     }
     out
@@ -467,6 +472,11 @@ fn collect_ancestor_attrs(
         };
         collect_ancestor_attrs(parent_entity, entity_to_schema, types, out, visited);
         for a in &parent_entity.own_attrs {
+            out.insert(a.name.clone(), ty_string(&a.ty, types));
+        }
+        // Redeclarations narrow an attr inherited from further up the
+        // chain — apply after own_attrs / the recursion above.
+        for a in &parent_entity.redeclared_attrs {
             out.insert(a.name.clone(), ty_string(&a.ty, types));
         }
     }
@@ -721,17 +731,31 @@ mod tests {
         assert_eq!(ty_string(&ty, &types), "real");
     }
 
+    fn specs(attrs: &[(&str, AttrType)]) -> Vec<express::AttrSpec> {
+        attrs
+            .iter()
+            .map(|(n, t)| express::AttrSpec {
+                name: n.to_string(),
+                ty: t.clone(),
+            })
+            .collect()
+    }
+
     fn ent(name: &str, parents: &[&str], attrs: &[(&str, AttrType)]) -> express::EntitySchema {
+        ent_redecl(name, parents, attrs, &[])
+    }
+
+    fn ent_redecl(
+        name: &str,
+        parents: &[&str],
+        attrs: &[(&str, AttrType)],
+        redeclared: &[(&str, AttrType)],
+    ) -> express::EntitySchema {
         express::EntitySchema {
             name: name.to_string(),
             parents: parents.iter().map(|s| s.to_string()).collect(),
-            own_attrs: attrs
-                .iter()
-                .map(|(n, t)| express::AttrSpec {
-                    name: n.to_string(),
-                    ty: t.clone(),
-                })
-                .collect(),
+            own_attrs: specs(attrs),
+            redeclared_attrs: specs(redeclared),
             is_abstract: false,
             supertype_expr: None,
         }
@@ -826,6 +850,42 @@ mod tests {
             Some("integer"),
             "child own_attr must override inherited attr of the same name"
         );
+    }
+
+    #[test]
+    fn build_attr_types_redeclared_attr_narrows_inherited_via_2nd_parent() {
+        // child SUBTYPE OF (a, b); b SUBTYPE OF (grandparent).
+        // grandparent declares the_value : NUMBER; b redeclares it INTEGER.
+        // The narrowed type must reach `child`.
+        let schemas = vec![schema_of(vec![
+            ent("a", &[], &[("name", AttrType::Primitive("STRING".into()))]),
+            ent(
+                "grandparent",
+                &[],
+                &[("the_value", AttrType::Primitive("NUMBER".into()))],
+            ),
+            ent_redecl(
+                "b",
+                &["grandparent"],
+                &[],
+                &[("the_value", AttrType::Primitive("INTEGER".into()))],
+            ),
+            ent("child", &["a", "b"], &[]),
+        ])];
+        let attrs = build_attr_types(&schemas);
+        let b = attrs.get("b").expect("b present");
+        assert_eq!(
+            b.get("the_value").map(String::as_str),
+            Some("integer"),
+            "redeclaration must override the inherited NUMBER on b itself"
+        );
+        let child = attrs.get("child").expect("child present");
+        assert_eq!(
+            child.get("the_value").map(String::as_str),
+            Some("integer"),
+            "redeclaration on 2nd parent must propagate to the child"
+        );
+        assert_eq!(child.get("name").map(String::as_str), Some("string"));
     }
 
     fn make_summary(variant: VariantSpec, arena: &str, shape: Option<ConcreteSupertypeShape>) -> EntitySummary {

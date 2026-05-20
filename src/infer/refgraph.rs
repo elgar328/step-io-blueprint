@@ -447,6 +447,7 @@ mod tests {
                     ty,
                 })
                 .collect(),
+            redeclared_attrs: Vec::new(),
             is_abstract: false,
             supertype_expr: None,
         }

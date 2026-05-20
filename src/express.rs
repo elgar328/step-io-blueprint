@@ -81,6 +81,11 @@ pub struct EntitySchema {
     pub parents: Vec<String>,
     /// Attributes declared in this entity (excludes inherited).
     pub own_attrs: Vec<AttrSpec>,
+    /// `SELF\supertype.attr : type` redeclarations — type narrowing of an
+    /// inherited attribute, not a new attribute. Kept separate from
+    /// `own_attrs` so variant.rs / refgraph.rs (which read `own_attrs`)
+    /// are unaffected; only `build_attr_types` consumes this.
+    pub redeclared_attrs: Vec<AttrSpec>,
     /// `ABSTRACT SUPERTYPE` flag.
     pub is_abstract: bool,
     /// Children declaration extracted from the `SUPERTYPE OF (...)` clause.
@@ -291,7 +296,7 @@ fn process_entity_block(
         || block.contains("ABSTRACT  SUPERTYPE")
         || block.contains("ABSTRACT\nSUPERTYPE");
     let supertype_expr = extract_supertype_expr(block, &name, warnings);
-    let own_attrs = extract_attrs(block, &name, warnings);
+    let (own_attrs, redeclared_attrs) = extract_attrs(block, &name, warnings);
 
     entities.insert(
         name.clone(),
@@ -299,6 +304,7 @@ fn process_entity_block(
             name,
             parents,
             own_attrs,
+            redeclared_attrs,
             is_abstract,
             supertype_expr,
         },
@@ -419,17 +425,42 @@ fn extract_parents(block: &str) -> Vec<String> {
         .collect()
 }
 
+/// `SELF\supertype.attr` redeclaration → returns the lowercase `attr`
+/// name. EXPRESS standard form is a single `\` followed by
+/// `supertype.attr`; we take the token after the last `.` and require it
+/// to be a valid identifier. `None` for any non-redeclaration names_part.
+fn parse_self_redeclaration(names_part: &str) -> Option<String> {
+    let lower = names_part.trim().to_lowercase();
+    if !lower.starts_with("self\\") {
+        return None;
+    }
+    let attr = lower.rsplit('.').next()?.trim();
+    if is_valid_identifier(attr) {
+        Some(attr.to_string())
+    } else {
+        None
+    }
+}
+
 /// Walk the entity body (after the header `;`, before the first
 /// terminator keyword) and split into ATTR definitions by `;` at
-/// paren-depth 0. Each segment becomes one or more `AttrSpec`s (a single
-/// segment can declare multiple comma-separated names sharing one type).
-fn extract_attrs(block: &str, entity_name: &str, warnings: &mut Vec<String>) -> Vec<AttrSpec> {
+/// paren-depth 0. Returns `(own_attrs, redeclared_attrs)` — a segment
+/// whose name part is a `SELF\supertype.attr` redeclaration lands in the
+/// second vector (type narrowing of an inherited attr), everything else
+/// in the first. A single non-redeclaration segment can declare multiple
+/// comma-separated names sharing one type.
+fn extract_attrs(
+    block: &str,
+    entity_name: &str,
+    warnings: &mut Vec<String>,
+) -> (Vec<AttrSpec>, Vec<AttrSpec>) {
     let body = match find_attribute_section(block) {
         Some(b) => b,
-        None => return Vec::new(),
+        None => return (Vec::new(), Vec::new()),
     };
 
-    let mut out = Vec::new();
+    let mut own = Vec::new();
+    let mut redeclared = Vec::new();
     for segment in split_top_level_semicolons(body) {
         let segment = segment.trim();
         if segment.is_empty() {
@@ -445,31 +476,42 @@ fn extract_attrs(block: &str, entity_name: &str, warnings: &mut Vec<String>) -> 
         if type_part.is_empty() {
             continue;
         }
-        let names: Vec<String> = names_part
-            .split(',')
-            .map(|s| s.trim().to_lowercase())
-            .filter(|s| !s.is_empty() && is_valid_identifier(s))
-            .collect();
-        if names.is_empty() {
+        // `SELF\supertype.attr : type` — redeclaration (attr type narrowing).
+        let redeclared_name = parse_self_redeclaration(names_part);
+        let names: Vec<String> = if redeclared_name.is_some() {
+            Vec::new()
+        } else {
+            names_part
+                .split(',')
+                .map(|s| s.trim().to_lowercase())
+                .filter(|s| !s.is_empty() && is_valid_identifier(s))
+                .collect()
+        };
+        if redeclared_name.is_none() && names.is_empty() {
             continue;
         }
         let ty = match parse_type_repr(type_part) {
             Ok(t) => t,
             Err(e) => {
+                let label = redeclared_name.clone().unwrap_or_else(|| format!("{names:?}"));
                 warnings.push(format!(
-                    "{entity_name}: ATTR type parse failed for {names:?} ({e}) — type was {type_part:?}"
+                    "{entity_name}: ATTR type parse failed for {label} ({e}) — type was {type_part:?}"
                 ));
                 continue;
             }
         };
-        for n in names {
-            out.push(AttrSpec {
-                name: n,
-                ty: ty.clone(),
-            });
+        if let Some(name) = redeclared_name {
+            redeclared.push(AttrSpec { name, ty });
+        } else {
+            for n in names {
+                own.push(AttrSpec {
+                    name: n,
+                    ty: ty.clone(),
+                });
+            }
         }
     }
-    out
+    (own, redeclared)
 }
 
 fn find_attribute_section(block: &str) -> Option<&str> {
@@ -718,7 +760,54 @@ mod tests {
     fn parse_attrs_for(block: &str) -> Vec<AttrSpec> {
         let name = extract_entity_name(block).unwrap();
         let mut warnings = Vec::new();
-        extract_attrs(block, &name, &mut warnings)
+        extract_attrs(block, &name, &mut warnings).0
+    }
+
+    fn parse_redeclared_for(block: &str) -> Vec<AttrSpec> {
+        let name = extract_entity_name(block).unwrap();
+        let mut warnings = Vec::new();
+        extract_attrs(block, &name, &mut warnings).1
+    }
+
+    #[test]
+    fn redeclaration_primitive_narrowing() {
+        // int_literal narrows literal_number.the_value NUMBER -> INTEGER.
+        let block = "ENTITY int_literal\n  SUBTYPE OF ( literal_number );\n    SELF\\literal_number.the_value : INTEGER;\nEND_ENTITY;";
+        let own = parse_attrs_for(block);
+        let redeclared = parse_redeclared_for(block);
+        assert!(own.is_empty(), "redeclaration must not land in own_attrs");
+        assert_eq!(redeclared.len(), 1);
+        assert_eq!(redeclared[0].name, "the_value");
+        match &redeclared[0].ty {
+            AttrType::Primitive(p) => assert_eq!(p, "INTEGER"),
+            other => panic!("expected INTEGER, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn redeclaration_entity_ref_narrowing() {
+        let block = "ENTITY annotation_curve_occurrence\n  SUBTYPE OF ( annotation_occurrence );\n    SELF\\styled_item.item : curve_or_curve_set;\nEND_ENTITY;";
+        let own = parse_attrs_for(block);
+        let redeclared = parse_redeclared_for(block);
+        assert!(own.is_empty());
+        assert_eq!(redeclared.len(), 1);
+        assert_eq!(redeclared[0].name, "item");
+        match &redeclared[0].ty {
+            AttrType::Entity(n) => assert_eq!(n, "curve_or_curve_set"),
+            other => panic!("expected Entity, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn redeclaration_mixed_with_plain_attr() {
+        // A block with both a plain own attr and a redeclaration.
+        let block = "ENTITY mixed\n  SUBTYPE OF ( parent );\n    extra : label;\n    SELF\\parent.item : narrowed_type;\nEND_ENTITY;";
+        let own = parse_attrs_for(block);
+        let redeclared = parse_redeclared_for(block);
+        assert_eq!(own.len(), 1);
+        assert_eq!(own[0].name, "extra");
+        assert_eq!(redeclared.len(), 1);
+        assert_eq!(redeclared[0].name, "item");
     }
 
     #[test]
