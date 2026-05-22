@@ -123,3 +123,9 @@ shape = "base_parallel"
 # → SingleStruct 자동 변환 대상 아님. 102 self / 2 child, parent-dominant.
 [entity.datum_feature]                     # 102 self / 2 live child, ratio ~0 — parent dominant
 shape = "base_parallel"
+
+# Plan 3.34 Phase 2 — shape_aspect: enum_base 오분류 복원.
+# live in_enum 자식 (datum_system / datum_target / tolerance_zone /
+# placed_datum_target_feature) 으로 ConcreteSupertype 유지.
+[entity.shape_aspect]                      # 3,320 self / ~313 live children, ratio ~0 — parent dominant
+shape = "base_parallel"
