@@ -55,3 +55,7 @@ reason = "17 corpus instances, all derived_unit pattern (AREA_UNIT((#derived_uni
 kind = "in_enum"
 enum_name = "derived_unit"
 reason = "13 corpus instances, same situation as area_unit — AP203 e1 named_unit subtype vs e2+ derived_unit subtype. Corpus uses derived_unit pattern only."
+
+[entity.datum_feature]
+kind = "concrete_supertype"
+reason = "102 corpus instances. AP242 declares datum_feature SUPERTYPE OF (ONEOF (dimensional_location_with_datum_feature, dimensional_size_with_datum_feature)); AP203e2 / AP214e3 declare plain SUBTYPE OF (shape_aspect). 4-schema unification keeps AP242's ONEOF, so variant.rs Rule 2 misclassifies as enum_base. Only one child (dimensional_size_with_datum_feature, corpus 2) is live, so reshape's collapse_single_child_enum_bases collapses datum_feature away — the 102 plain DATUM_FEATURE instances lose their IR entry. datum_feature is non-abstract with no own attrs (name/description/of_shape/product_definitional all inherited from shape_aspect). NIST geometric_tolerance.toleranced_shape_aspect points at DATUM_FEATURE instances. Same root pattern as group / derived_unit."

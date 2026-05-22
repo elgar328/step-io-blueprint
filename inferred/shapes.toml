@@ -117,3 +117,9 @@ shape = "base_parallel"
 # 자연스러움.
 [entity.derived_unit]                      # 5,022 self / 30 live children (17+13), ratio ~0 — parent dominant
 shape = "base_parallel"
+
+# Plan 3.34 — datum_feature: variants_overrides 로 ConcreteSupertype.
+# dimensional_size_with_datum_feature (corpus 2) 가 살아남는 InEnum child
+# → SingleStruct 자동 변환 대상 아님. 102 self / 2 child, parent-dominant.
+[entity.datum_feature]                     # 102 self / 2 live child, ratio ~0 — parent dominant
+shape = "base_parallel"
