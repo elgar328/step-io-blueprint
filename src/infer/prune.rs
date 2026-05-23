@@ -15,13 +15,12 @@
 //! pass marks more entities as unused (monotone increasing) or downgrades
 //! a classification (one-way), so the loop is confluent and terminates.
 
-use std::collections::{BTreeMap, BTreeSet, HashMap};
+use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use std::fs;
 use std::io::{BufReader, Read};
 use std::path::{Path, PathBuf};
 
 use backhand::{FilesystemReader, InnerNode, SquashfsFileReader};
-use regex::Regex;
 use serde::{Deserialize, Serialize};
 
 use crate::infer::arena::ArenaSpec;
@@ -61,10 +60,31 @@ fn load_prune_overrides() -> Result<PruneOverridesFile, String> {
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct UsageRecord {
-    /// Number of `\bENTITY_NAME\s*\(` matches across every `.stp` /
-    /// `.step` file under the supplied corpus path. 0 means the entity
-    /// did not appear in any sampled STEP file — candidate for pruning.
+    /// Total occurrences across every `.stp` / `.step` file under the
+    /// supplied corpus path = `standalone_count + complex_part_count`.
+    /// 0 means the entity did not appear in any sampled STEP file —
+    /// candidate for pruning. Kept as the headline number for backward
+    /// compatibility; consumers needing standalone-vs-complex must read
+    /// the split fields below.
     pub instance_count: usize,
+
+    /// Occurrences as a part of a complex MI instance — i.e. the
+    /// `NAME(` token sat inside an `#N=( ... NAME(...) ... );` block.
+    /// 0 means every occurrence was a standalone `#N=NAME(...)`.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub complex_part_count: usize,
+
+    /// Other entity names that appeared in the same complex-MI block
+    /// as this entity, anywhere in the corpus. Empty when the entity
+    /// is never seen inside a complex block. Order: sorted ascending
+    /// so the catalog is deterministic. step-io reads this to know
+    /// which leaf-set to bundle in a `#[step_entity_complex]` handler.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub co_instantiated_with: Vec<String>,
+}
+
+fn is_zero(n: &usize) -> bool {
+    *n == 0
 }
 
 pub fn run(corpus_path: &Path, allow_pending: bool) -> Result<(), String> {
@@ -118,10 +138,11 @@ pub fn run(corpus_path: &Path, allow_pending: bool) -> Result<(), String> {
         entity_names.len()
     );
 
-    // 2. Walk corpus + count instances.
-    let counts = count_instances(corpus_path, &entity_names);
+    // 2. Walk corpus + count instances. Splits each token into
+    // standalone vs complex-part and gathers per-entity leaf-set.
+    let tally = count_instances(corpus_path, &entity_names);
     let total = entity_names.len();
-    let used = counts.values().filter(|&&c| c > 0).count();
+    let used = tally.total.values().filter(|&&c| c > 0).count();
     let unused = total - used;
     eprintln!("infer prune: {total} entities (used={used} unused={unused})");
 
@@ -129,10 +150,19 @@ pub fn run(corpus_path: &Path, allow_pending: bool) -> Result<(), String> {
     let usage: BTreeMap<String, UsageRecord> = entity_names
         .iter()
         .map(|n| {
+            let total_n = tally.total.get(n).copied().unwrap_or(0);
+            let complex = tally.complex_part.get(n).copied().unwrap_or(0);
+            let coinst: Vec<String> = tally
+                .co_instantiated_with
+                .get(n)
+                .map(|s| s.iter().cloned().collect())
+                .unwrap_or_default();
             (
                 n.clone(),
                 UsageRecord {
-                    instance_count: counts.get(n).copied().unwrap_or(0),
+                    instance_count: total_n,
+                    complex_part_count: complex,
+                    co_instantiated_with: coinst,
                 },
             )
         })
@@ -152,7 +182,7 @@ pub fn run(corpus_path: &Path, allow_pending: bool) -> Result<(), String> {
         }
     }
     let keep_set: BTreeSet<String> = prune_overrides.keep.keys().cloned().collect();
-    let pruned_variants = prune_transitive_with_keep(&variants, &counts, &keep_set);
+    let pruned_variants = prune_transitive_with_keep(&variants, &tally.total, &keep_set);
     eprintln!(
         "infer prune: variants_pruned has {} entities (vs {} original, {} kept by overrides)",
         pruned_variants.len(),
@@ -210,11 +240,192 @@ fn list_sqfs_containers(root: &Path) -> Vec<PathBuf> {
     paths
 }
 
-fn tally_entity_matches(re: &Regex, text: &str, counts: &mut HashMap<String, usize>) {
-    for cap in re.captures_iter(text) {
-        let name = cap[1].to_lowercase();
-        *counts.entry(name).or_insert(0) += 1;
+/// Per-corpus tally produced by `scan_step_text`. `total` lets callers
+/// keep using a single number for "used at all"; consumers needing the
+/// split read `complex_part` and `co_instantiated_with` separately.
+#[derive(Debug, Default)]
+struct ScanTally {
+    total: HashMap<String, usize>,
+    complex_part: HashMap<String, usize>,
+    co_instantiated_with: HashMap<String, BTreeSet<String>>,
+}
+
+impl ScanTally {
+    fn bump_total(&mut self, name: &str) {
+        *self.total.entry(name.to_string()).or_insert(0) += 1;
     }
+    fn bump_complex(&mut self, name: &str) {
+        *self.complex_part.entry(name.to_string()).or_insert(0) += 1;
+    }
+    fn record_complex_group(&mut self, leaves: &[String]) {
+        // Each leaf records every other leaf in the same complex block.
+        for (i, leaf) in leaves.iter().enumerate() {
+            let entry = self
+                .co_instantiated_with
+                .entry(leaf.clone())
+                .or_default();
+            for (j, other) in leaves.iter().enumerate() {
+                if i != j {
+                    entry.insert(other.clone());
+                }
+            }
+        }
+    }
+}
+
+/// Scan one STEP P21 file. For each instance declaration `#N=<body>;`:
+///   - If `<body>` starts with `(`, treat it as a complex MI block and
+///     count every `NAME\s*\(` token inside as a `complex_part` for
+///     that NAME; also gather the set of NAMEs as a leaf-set.
+///   - Otherwise it's a standalone instance whose head NAME counts
+///     once as standalone.
+/// `total` is always bumped (standalone + complex_part). The scanner
+/// respects P21 string literals (`'...'`, with `''` as an escaped
+/// quote) so parentheses inside strings do not perturb the paren-depth
+/// state machine.
+fn scan_step_text(text: &str, recognised: &HashSet<String>, tally: &mut ScanTally) {
+    let bytes = text.as_bytes();
+    let mut i = 0;
+    let len = bytes.len();
+    while i < len {
+        // Find next instance start: '#' digit+ optional ws '='.
+        if bytes[i] != b'#' {
+            i += 1;
+            continue;
+        }
+        let mut j = i + 1;
+        while j < len && bytes[j].is_ascii_digit() {
+            j += 1;
+        }
+        if j == i + 1 {
+            i = j;
+            continue; // '#' not followed by digits — not an instance ref.
+        }
+        // Skip ws then expect '='.
+        while j < len && (bytes[j] == b' ' || bytes[j] == b'\t') {
+            j += 1;
+        }
+        if j >= len || bytes[j] != b'=' {
+            i = j;
+            continue;
+        }
+        j += 1;
+        // Skip ws / newlines after '='.
+        while j < len && bytes[j].is_ascii_whitespace() {
+            j += 1;
+        }
+        if j >= len {
+            break;
+        }
+        if bytes[j] == b'(' {
+            // Complex MI block. Walk to the matching ')' at depth 0,
+            // tallying every `NAME\s*\(` token along the way.
+            let (consumed, leaves) = walk_complex_block(&bytes[j..], recognised);
+            for name in &leaves {
+                tally.bump_total(name);
+                tally.bump_complex(name);
+            }
+            tally.record_complex_group(&leaves);
+            i = j + consumed;
+        } else if bytes[j].is_ascii_alphabetic() || bytes[j] == b'_' {
+            // Standalone instance — its head NAME is `[j..k)` where k
+            // is the first non-identifier byte.
+            let name_start = j;
+            while j < len
+                && (bytes[j].is_ascii_alphanumeric() || bytes[j] == b'_')
+            {
+                j += 1;
+            }
+            let name = std::str::from_utf8(&bytes[name_start..j])
+                .unwrap_or("")
+                .to_ascii_lowercase();
+            if recognised.contains(&name) {
+                tally.bump_total(&name);
+                // standalone — no complex_part bump.
+            }
+            i = j;
+        } else {
+            i = j + 1;
+        }
+    }
+}
+
+/// Walk forward starting at a `(` (the opening of a complex MI block).
+/// Returns `(bytes_consumed, leaf_names_in_order_seen)` where consumed
+/// includes the closing `)` (or end-of-text on malformed input — a best-
+/// effort safety net). Skips parentheses that appear inside P21 string
+/// literals.
+fn walk_complex_block(bytes: &[u8], recognised: &HashSet<String>) -> (usize, Vec<String>) {
+    let mut depth: i32 = 0;
+    let mut i = 0;
+    let len = bytes.len();
+    let mut in_string = false;
+    let mut leaves: Vec<String> = Vec::new();
+    let mut leaf_set: BTreeSet<String> = BTreeSet::new();
+    while i < len {
+        let c = bytes[i];
+        if in_string {
+            if c == b'\'' {
+                // `''` is an escaped single-quote inside the literal.
+                if i + 1 < len && bytes[i + 1] == b'\'' {
+                    i += 2;
+                    continue;
+                }
+                in_string = false;
+            }
+            i += 1;
+            continue;
+        }
+        match c {
+            b'\'' => {
+                in_string = true;
+                i += 1;
+            }
+            b'(' => {
+                depth += 1;
+                i += 1;
+            }
+            b')' => {
+                depth -= 1;
+                i += 1;
+                if depth == 0 {
+                    return (i, leaves_dedup(leaves, leaf_set));
+                }
+            }
+            b'A'..=b'Z' | b'a'..=b'z' | b'_' => {
+                // Candidate NAME — read identifier, then check '('.
+                let start = i;
+                while i < len
+                    && (bytes[i].is_ascii_alphanumeric() || bytes[i] == b'_')
+                {
+                    i += 1;
+                }
+                // Skip ws before '('.
+                let mut k = i;
+                while k < len && bytes[k].is_ascii_whitespace() {
+                    k += 1;
+                }
+                if k < len && bytes[k] == b'(' {
+                    let name = std::str::from_utf8(&bytes[start..i])
+                        .unwrap_or("")
+                        .to_ascii_lowercase();
+                    if recognised.contains(&name) && leaf_set.insert(name.clone()) {
+                        leaves.push(name);
+                    }
+                }
+                // Don't advance past the '(' here — the outer loop will
+                // see it and increment depth.
+            }
+            _ => i += 1,
+        }
+    }
+    (i, leaves_dedup(leaves, leaf_set))
+}
+
+fn leaves_dedup(leaves: Vec<String>, _seen: BTreeSet<String>) -> Vec<String> {
+    // `_seen` already enforces uniqueness during insertion; `leaves`
+    // preserves first-seen order. Returned as-is.
+    leaves
 }
 
 /// Walk every `*.sqfs` container in `root` and invoke `cb` with each
@@ -262,33 +473,22 @@ where
     }
 }
 
-/// Build a single regex matching every entity name (alternation, longest
-/// first to defeat prefix shadowing) and run it against every STEP file
-/// inside every `*.sqfs` container in `corpus_path`. Returns
-/// `entity_name → instance_count`.
-fn count_instances(
-    corpus_path: &Path,
-    entity_names: &[String],
-) -> HashMap<String, usize> {
+/// Walk every STEP file under `corpus_path` and tally each entity in
+/// `entity_names`. Returns a `ScanTally` with split standalone/complex
+/// counts and a corpus-wide co-instantiation catalogue. The split is
+/// driven by the STEP P21 instance grammar — an instance whose body
+/// starts with `(` is a complex MI block; everything inside it is a
+/// complex_part. Everything else is a standalone occurrence.
+fn count_instances(corpus_path: &Path, entity_names: &[String]) -> ScanTally {
+    let mut tally = ScanTally::default();
     if entity_names.is_empty() {
-        return HashMap::new();
+        return tally;
     }
-    let mut alt: Vec<String> = entity_names.iter().map(|n| n.to_uppercase()).collect();
-    alt.sort_by_key(|s| std::cmp::Reverse(s.len()));
-    let pattern = format!(
-        r"\b({})\s*\(",
-        alt.iter()
-            .map(|s| regex::escape(s))
-            .collect::<Vec<_>>()
-            .join("|")
-    );
-    let re = Regex::new(&pattern).expect("entity-name alternation regex must compile");
-
-    let mut counts: HashMap<String, usize> = HashMap::new();
+    let recognised: HashSet<String> = entity_names.iter().cloned().collect();
     for_each_step_file_in_corpus(corpus_path, |text| {
-        tally_entity_matches(&re, text, &mut counts);
+        scan_step_text(text, &recognised, &mut tally);
     });
-    counts
+    tally
 }
 
 /// Apply the P-2 transitive pruning rules to `variants` until a fixpoint
@@ -594,28 +794,94 @@ mod tests {
     use crate::infer::variant::VariantSpec;
     use tempfile::TempDir;
 
+    fn recognised(names: &[&str]) -> HashSet<String> {
+        names.iter().map(|s| s.to_string()).collect()
+    }
+
     #[test]
-    fn tally_entity_matches_simple() {
-        let names = ["cartesian_point", "line"];
-        let mut alt: Vec<String> = names.iter().map(|n| n.to_uppercase()).collect();
-        alt.sort_by_key(|s| std::cmp::Reverse(s.len()));
-        let pattern = format!(
-            r"\b({})\s*\(",
-            alt.iter()
-                .map(|s| regex::escape(s))
-                .collect::<Vec<_>>()
-                .join("|")
-        );
-        let re = Regex::new(&pattern).unwrap();
-        let text = "ISO-10303-21;\n\
-                    #1 = CARTESIAN_POINT('', (0, 0, 0));\n\
+    fn scan_standalone_only() {
+        let r = recognised(&["cartesian_point", "line"]);
+        let text = "#1 = CARTESIAN_POINT('', (0, 0, 0));\n\
                     #2 = CARTESIAN_POINT('', (1, 1, 1));\n\
-                    #3 = LINE('', #1, #4);\n\
-                    END-ISO-10303-21;\n";
-        let mut counts: HashMap<String, usize> = HashMap::new();
-        tally_entity_matches(&re, text, &mut counts);
-        assert_eq!(counts.get("cartesian_point").copied(), Some(2));
-        assert_eq!(counts.get("line").copied(), Some(1));
+                    #3 = LINE('', #1, #4);\n";
+        let mut t = ScanTally::default();
+        scan_step_text(text, &r, &mut t);
+        assert_eq!(t.total.get("cartesian_point").copied(), Some(2));
+        assert_eq!(t.total.get("line").copied(), Some(1));
+        // Standalone-only — complex_part stays 0.
+        assert!(t.complex_part.is_empty());
+        assert!(t.co_instantiated_with.is_empty());
+    }
+
+    #[test]
+    fn scan_complex_block_one_line() {
+        let r = recognised(&["geometric_tolerance", "position_tolerance", "geometric_tolerance_with_modifiers"]);
+        // A real-shape complex MI instance on a single line.
+        let text = "#16940=(GEOMETRIC_TOLERANCE('Position.4','',#16938,#16890)\
+                   GEOMETRIC_TOLERANCE_WITH_MODIFIERS((.STATISTICAL_TOLERANCE.))\
+                   POSITION_TOLERANCE()) ;\n";
+        let mut t = ScanTally::default();
+        scan_step_text(text, &r, &mut t);
+        // All 3 leaves counted once each, all as complex-part.
+        assert_eq!(t.total.get("geometric_tolerance").copied(), Some(1));
+        assert_eq!(t.total.get("position_tolerance").copied(), Some(1));
+        assert_eq!(t.total.get("geometric_tolerance_with_modifiers").copied(), Some(1));
+        assert_eq!(t.complex_part.get("geometric_tolerance").copied(), Some(1));
+        assert_eq!(t.complex_part.get("position_tolerance").copied(), Some(1));
+        assert_eq!(t.complex_part.get("geometric_tolerance_with_modifiers").copied(), Some(1));
+        // Standalone count is total - complex_part, so 0 for each.
+        // co_instantiated_with: each leaf records the other two.
+        let pos = t.co_instantiated_with.get("position_tolerance").unwrap();
+        assert!(pos.contains("geometric_tolerance"));
+        assert!(pos.contains("geometric_tolerance_with_modifiers"));
+        assert!(!pos.contains("position_tolerance"));
+    }
+
+    #[test]
+    fn scan_complex_block_multiline() {
+        let r = recognised(&["flatness_tolerance", "geometric_tolerance", "geometric_tolerance_with_defined_unit"]);
+        let text = "#37=(\n\
+                    FLATNESS_TOLERANCE()\n\
+                    GEOMETRIC_TOLERANCE('Flatness.1','',#232,#1113)\n\
+                    GEOMETRIC_TOLERANCE_WITH_DEFINED_UNIT(#233)\n\
+                    );\n";
+        let mut t = ScanTally::default();
+        scan_step_text(text, &r, &mut t);
+        assert_eq!(t.complex_part.get("flatness_tolerance").copied(), Some(1));
+        assert_eq!(t.complex_part.get("geometric_tolerance").copied(), Some(1));
+        assert_eq!(t.complex_part.get("geometric_tolerance_with_defined_unit").copied(), Some(1));
+    }
+
+    #[test]
+    fn scan_mixed_standalone_and_complex() {
+        let r = recognised(&["cartesian_point", "position_tolerance", "geometric_tolerance"]);
+        let text = "#1=CARTESIAN_POINT('',(0,0,0));\n\
+                    #2=CARTESIAN_POINT('',(1,1,1));\n\
+                    #99=(GEOMETRIC_TOLERANCE('p','',#1,#2)POSITION_TOLERANCE());\n";
+        let mut t = ScanTally::default();
+        scan_step_text(text, &r, &mut t);
+        // cartesian_point: 2 standalone, 0 complex-part.
+        assert_eq!(t.total.get("cartesian_point").copied(), Some(2));
+        assert_eq!(t.complex_part.get("cartesian_point").copied().unwrap_or(0), 0);
+        // geometric_tolerance + position_tolerance: each 1 complex-part.
+        assert_eq!(t.complex_part.get("geometric_tolerance").copied(), Some(1));
+        assert_eq!(t.complex_part.get("position_tolerance").copied(), Some(1));
+    }
+
+    #[test]
+    fn scan_paren_inside_string_literal() {
+        // A single-quoted string containing `)` must not close the
+        // complex block early.
+        let r = recognised(&["foo", "bar"]);
+        let text = "#1=(FOO('has ) inside','also ('') doubled')BAR());\n";
+        let mut t = ScanTally::default();
+        scan_step_text(text, &r, &mut t);
+        assert_eq!(t.complex_part.get("foo").copied(), Some(1));
+        assert_eq!(
+            t.complex_part.get("bar").copied(),
+            Some(1),
+            "BAR must still be tallied — string-literal escape must not bleed out"
+        );
     }
 
     #[test]
@@ -628,8 +894,8 @@ mod tests {
     fn count_instances_empty_corpus() {
         let dir = TempDir::new().unwrap();
         let names = vec!["cartesian_point".to_string()];
-        let counts = count_instances(dir.path(), &names);
-        assert!(counts.is_empty() || counts.get("cartesian_point").copied() == Some(0));
+        let tally = count_instances(dir.path(), &names);
+        assert!(tally.total.is_empty());
     }
 
     fn variants_with(pairs: &[(&str, VariantSpec)]) -> BTreeMap<String, VariantSpec> {

@@ -59,6 +59,17 @@ pub struct EntitySummary {
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub shape: Option<ConcreteSupertypeShape>,
     pub instance_count: usize,
+    /// Subset of `instance_count` that appeared inside complex MI
+    /// blocks (`#N=( ... NAME(...) ... );`). 0 means every occurrence
+    /// was a standalone declaration `#N=NAME(...)`. step-io reads this
+    /// to decide between a standalone vs `#[step_entity_complex]` handler.
+    #[serde(default, skip_serializing_if = "is_zero_usize")]
+    pub complex_part_count: usize,
+    /// Other entities seen in the same complex MI block as this one,
+    /// anywhere in the corpus (sorted). Empty when never seen in a
+    /// complex block.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub co_instantiated_with: Vec<String>,
 
     // Reshape stage metadata — shape stage leaves these at default,
     // reshape fills them when applying splits / merges.
@@ -75,6 +86,10 @@ pub struct EntitySummary {
     /// (split first variant, merge target).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub reasons: Option<String>,
+}
+
+fn is_zero_usize(n: &usize) -> bool {
+    *n == 0
 }
 
 fn is_false(b: &bool) -> bool {
@@ -173,7 +188,16 @@ fn compile_entities(
             .arena
             .clone();
         let shape = shapes.get(entity).copied();
-        let instance_count = usage.get(entity).map(|u| u.instance_count).unwrap_or(0);
+        let (instance_count, complex_part_count, co_instantiated_with) = usage
+            .get(entity)
+            .map(|u| {
+                (
+                    u.instance_count,
+                    u.complex_part_count,
+                    u.co_instantiated_with.clone(),
+                )
+            })
+            .unwrap_or((0, 0, Vec::new()));
         out.insert(
             entity.clone(),
             EntitySummary {
@@ -182,6 +206,8 @@ fn compile_entities(
                 arena,
                 shape,
                 instance_count,
+                complex_part_count,
+                co_instantiated_with,
                 split_from: None,
                 split_context: None,
                 merge_absorbs: Vec::new(),
@@ -411,6 +437,8 @@ shape = "base_parallel"
                     k.to_string(),
                     UsageRecord {
                         instance_count: *n,
+                        complex_part_count: 0,
+                        co_instantiated_with: Vec::new(),
                     },
                 )
             })

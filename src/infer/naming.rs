@@ -101,6 +101,20 @@ struct IrEntity {
     #[serde(default, skip_serializing_if = "is_zero")]
     instance_count: usize,
 
+    /// Subset of `instance_count` that came from complex MI instances
+    /// (`#N=( ... NAME(...) ... );`). If equal to `instance_count` the
+    /// entity is corpus complex-part-only; if 0 it's standalone-only.
+    /// See `co_instantiated_with` for the leaf-set companions.
+    #[serde(default, skip_serializing_if = "is_zero")]
+    complex_part_count: usize,
+
+    /// Other entities seen in the same complex MI block as this one,
+    /// anywhere in the corpus (sorted). Empty when never seen in a
+    /// complex block. step-io uses this to scope a
+    /// `#[step_entity_complex(required=[...])]` handler.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    co_instantiated_with: Vec<String>,
+
     // Reshape stage metadata — present only when the entity is a
     // split / merge product. step-io reads ir.toml as the single
     // reference and uses these to understand abstraction provenance.
@@ -695,6 +709,8 @@ fn compile_ir(
                 chain,
                 fields,
                 instance_count: summary.instance_count,
+                complex_part_count: summary.complex_part_count,
+                co_instantiated_with: summary.co_instantiated_with.clone(),
                 split_from: summary.split_from.clone(),
                 split_context: summary.split_context.clone(),
                 merge_absorbs: summary.merge_absorbs.clone(),
@@ -987,6 +1003,8 @@ mod tests {
             arena: arena.to_string(),
             shape,
             instance_count: 0,
+            complex_part_count: 0,
+            co_instantiated_with: Vec::new(),
             split_from: None,
             split_context: None,
             merge_absorbs: Vec::new(),
@@ -1192,6 +1210,8 @@ mod tests {
             chain: Vec::new(),
             fields,
             instance_count: 5,
+            complex_part_count: 0,
+            co_instantiated_with: Vec::new(),
             split_from: None,
             split_context: None,
             merge_absorbs: Vec::new(),
