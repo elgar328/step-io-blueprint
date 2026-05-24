@@ -19,9 +19,6 @@ pool = "plm"
 [arena.application_protocol_definition]
 pool = "plm"
 
-[arena.applied_organization_assignment]
-pool = "plm"
-
 [arena.approval]
 pool = "plm"
 
@@ -49,9 +46,6 @@ pool = "geometry"
 [arena.characterized_object]
 pool = "shape_rep"
 
-[arena.classification_role]
-pool = "plm"
-
 [arena.colour]
 pool = "visualization"
 
@@ -75,9 +69,6 @@ pool = "geometry"
 
 [arena.curve_style]
 pool = "visualization"
-
-[arena.data_environment]
-pool = "plm"
 
 [arena.date_and_time]
 pool = "plm"
@@ -206,9 +197,6 @@ pool = "units"
 pool = "plm"
 
 [arena.organization]
-pool = "plm"
-
-[arena.organization_role]
 pool = "plm"
 
 [arena.oriented_edge]
@@ -374,9 +362,6 @@ pool = "plm"
 [arena.approval_assignment]
 pool = "plm"
 
-[arena.classification_assignment]
-pool = "plm"
-
 [arena.date]
 pool = "plm"
 
@@ -492,7 +477,4 @@ pool = "visualization"
 pool = "visualization"
 
 # form_features
-[arena.feature_definition]
-pool = "form_features"
-
 # property
