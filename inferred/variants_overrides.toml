@@ -63,3 +63,15 @@ reason = "102 corpus instances. AP242 declares datum_feature SUPERTYPE OF (ONEOF
 [entity.shape_aspect]
 kind = "concrete_supertype"
 reason = "3,320 corpus instances. AP203 / AP203e2 / AP214e3 declare plain ENTITY shape_aspect; AP242 alone adds SUPERTYPE OF (ONEOF (6 children)). 4-schema unification keeps AP242's ONEOF, so variant.rs Rule 2 misclassifies as enum_base — which has no struct (has_type/has_fields=false), so the 3,320 plain SHAPE_ASPECT instances cannot be represented. shape_aspect is non-abstract with own attrs name/description/of_shape/product_definitional. Live in_enum children (datum_system/datum_target/tolerance_zone/placed_datum_target_feature) keep it ConcreteSupertype past prune. Same root pattern as group / derived_unit / datum_feature."
+
+# Plan 3.38 — same root pattern as group / datum_feature / shape_aspect.
+# property_definition is a polymorphic dispatch host in 12+ SELECT types
+# in AP242 (lines 222/252/285/397/504/592/...); without the override the
+# 13,696 plain PROPERTY_DEFINITION instances are lost when prune.rs Rule
+# 2's nc==1 lone_child branch promotes product_definition_shape (corpus
+# 253,440) to SingleStruct and drops the parent. Side effect:
+# product_definition_shape reclassifies SingleStruct -> InEnum (same
+# precedent as datum_feature -> dimensional_size_with_datum_feature).
+[entity.property_definition]
+kind = "concrete_supertype"
+reason = "13,696 corpus instances. AP242 alone declares SUPERTYPE OF (ONEOF (kinematic_property_definition, product_definition_relationship_kinematics, product_definition_shape)); AP203e2 / AP214e3 declare plain ENTITY property_definition. 4-schema unification keeps AP242's ONEOF, so variant.rs Rule 2 misclassifies as enum_base. The kinematic_* children have corpus 0, but product_definition_shape (253,440 corpus) is live — prune.rs Rule 2's nc==1 lone_child branch promotes product_definition_shape to SingleStruct and unuses property_definition, so the 13,696 plain PROPERTY_DEFINITION instances cannot be represented. property_definition is a polymorphic dispatch host in 12+ AP242 SELECT types. ConcreteSupertype override + carrier shape mirrors the colour pattern. Own attrs name/description/definition."

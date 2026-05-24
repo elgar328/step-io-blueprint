@@ -129,3 +129,10 @@ shape = "base_parallel"
 # placed_datum_target_feature) 으로 ConcreteSupertype 유지.
 [entity.shape_aspect]                      # 3,320 self / ~313 live children, ratio ~0 — parent dominant
 shape = "base_parallel"
+
+# Plan 3.38 — property_definition: variants_overrides 로 ConcreteSupertype.
+# 13,696 self / 253,440 live child (product_definition_shape), ratio 18.5 —
+# children dominant. document (carrier, ratio 1.93) / representation_relationship
+# (carrier, ratio 1024) 패턴.
+[entity.property_definition]               # 13,696 self / 253,440 live child (product_definition_shape), ratio 18.5 — children dominant
+shape = "carrier"

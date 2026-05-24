@@ -521,12 +521,22 @@ fn prune_transitive_with_keep(
     let auto_keep: BTreeSet<String> = pruned
         .iter()
         .filter_map(|(name, spec)| {
+            // Self-reference InEnum (variant.rs polymorphic-target fallback
+            // assigns enum_name = self when a parent without a SUPERTYPE OF
+            // clause is targeted by SUBTYPE OF children) acts as an enum
+            // host just like EnumBase. Include it here so the parent is not
+            // pruned to unused — otherwise Rule 3-5 cascades and drops the
+            // live children too (Plan 3.38: pre_defined_curve_font /
+            // pre_defined_symbol case).
             let is_supertype = matches!(
                 spec,
                 VariantSpec::EnumBase { .. }
                     | VariantSpec::ConcreteSupertype
                     | VariantSpec::ComplexSupertype { .. }
                     | VariantSpec::CompositeOneOf { .. }
+            ) || matches!(
+                spec,
+                VariantSpec::InEnum { enum_name } if enum_name == name
             );
             if !is_supertype {
                 return None;
@@ -1032,6 +1042,67 @@ mod tests {
             pruned.get("executed_action"),
             Some(VariantSpec::InEnum { .. })
         ));
+    }
+
+    #[test]
+    fn prune_self_reference_in_enum_parent_kept_via_live_child() {
+        // Plan 3.38: variant.rs polymorphic-target fallback classifies a
+        // parent without a SUPERTYPE OF clause (but with SUBTYPE OF
+        // children) as InEnum { enum_name = self }. auto_keep must
+        // recognize this self-reference InEnum as a supertype so the
+        // parent survives and Rule 3-5 cannot cascade-prune its live
+        // child. Without the fix, the parent (corpus 0) is dropped and
+        // the 100-corpus child cascades to unused.
+        let variants = variants_with(&[
+            (
+                "parent_pdc",
+                VariantSpec::InEnum {
+                    enum_name: "parent_pdc".into(),
+                },
+            ),
+            (
+                "child_dpdc",
+                VariantSpec::InEnum {
+                    enum_name: "parent_pdc".into(),
+                },
+            ),
+        ]);
+        let counts: HashMap<String, usize> =
+            [("child_dpdc".to_string(), 100)].into_iter().collect();
+        let pruned = prune_transitive(&variants, &counts);
+        assert!(pruned.contains_key("parent_pdc"));
+        assert!(pruned.contains_key("child_dpdc"));
+        // Parent's spec is unchanged (still self-reference InEnum).
+        assert!(matches!(
+            pruned.get("parent_pdc"),
+            Some(VariantSpec::InEnum { enum_name }) if enum_name == "parent_pdc"
+        ));
+    }
+
+    #[test]
+    fn prune_self_reference_in_enum_drops_when_no_live_child() {
+        // Regression guard for the auto_keep extension: when neither
+        // the self-reference parent nor any child has corpus, both
+        // entities must still be pruned (auto_keep requires self_live
+        // OR has_live_child).
+        let variants = variants_with(&[
+            (
+                "parent_pdc",
+                VariantSpec::InEnum {
+                    enum_name: "parent_pdc".into(),
+                },
+            ),
+            (
+                "child_dpdc",
+                VariantSpec::InEnum {
+                    enum_name: "parent_pdc".into(),
+                },
+            ),
+        ]);
+        let counts: HashMap<String, usize> = HashMap::new();
+        let pruned = prune_transitive(&variants, &counts);
+        assert!(!pruned.contains_key("parent_pdc"));
+        assert!(!pruned.contains_key("child_dpdc"));
     }
 
     #[test]

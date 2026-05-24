@@ -217,7 +217,13 @@ pool = "plm"
 [arena.plus_minus_tolerance]
 pool = "pmi"
 
+[arena.pre_defined_curve_font]
+pool = "visualization"
+
 [arena.pre_defined_marker]
+pool = "visualization"
+
+[arena.pre_defined_symbol]
 pool = "visualization"
 
 [arena.presentation_layer_assignment]
