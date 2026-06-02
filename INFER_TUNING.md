@@ -212,7 +212,7 @@ struct) 결정은 **step-io 측 lowering 의 책임**. 입력으로:
 ## 우선순위 (제안)
 
 전체 작업 흐름은 IR_DESIGN.md 의 *IR Roadmap plan 의 작업 항목* 섹션과
-align. schema-check 측 단계만 이곳에서 추적.
+align. blueprint 측 단계만 이곳에서 추적.
 
 ```
 Plan 1 ✓ — SUPERTYPE 절 파서 정확도 (commit 6a19d83)
@@ -290,7 +290,7 @@ Plan 3.28 ✓ — camera_model arena 의 pool 매핑 pmi → visualization. PMI 
   설계의 약점*. 모든 attr 는 *typed* (필요 시 default 값 제공). round-trip
   비교의 정확성 (의미적 동등성, ISO 의무 placeholder 무시 등) 은 step-io
   측 round-trip 테스트의 책임 → Phase 2.2 / 운영 영역으로 이관. lossy
-  marker / lossy_overrides 산출 X. schema-check 측 결정 면적 축소
+  marker / lossy_overrides 산출 X. blueprint 측 결정 면적 축소
 - **3e (pool) ✓** — `infer pool` sub-command. 100% 수동 입력 + strict
   gate (shape 패턴 복제). 사용자가 `pools.toml` 직접 작성 (arena 별 1
   entry: `[arena.X] pool = "Y"`); 도구는 `arenas_pruned.toml` 의 130
@@ -310,8 +310,8 @@ Plan 3.28 ✓ — camera_model arena 의 pool 매핑 pmi → visualization. PMI 
   변동 자연 흡수
 
 **책임 분리 원칙**: 모든 분류 / 사람 결정 / 통계 가지치기가 본 도구
-(schema-check) 측. step-io 측은 schema-check 의 최종 산출만 받아 *기계적*
-IR 코드 생성. step-io 자기완결성을 위해 schema-check 의 외부 fixtures
+(blueprint) 측. step-io 측은 blueprint 의 최종 산출만 받아 *기계적*
+IR 코드 생성. step-io 자기완결성을 위해 blueprint 의 외부 fixtures
 의존 (53k corpus 경로 인자) 은 OK — 외부 도구 간 상호 의존 허용.
 
 **기존 INFER_TUNING.md § 항목과 새 plan 의 매핑**:

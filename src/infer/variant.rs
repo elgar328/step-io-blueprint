@@ -102,7 +102,7 @@ pub enum VariantSpec {
     /// Carrier enum (`enum E { Itself(EData), ChildA, ... }`), base
     /// struct + parallel enum (`struct E { ... } enum EKind { ... }`),
     /// or just SingleStruct (when 53k stats show children are unused).
-    /// The schema-check stage captures only the structural fact; the IR
+    /// The blueprint inference stage captures only the structural fact; the IR
     /// shape is a step-io lowering concern.
     ///
     /// The enum name is implicitly the entity's own name — children's
