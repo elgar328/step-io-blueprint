@@ -182,7 +182,19 @@ pub fn run(corpus_path: &Path, allow_pending: bool) -> Result<(), String> {
         }
     }
     let keep_set: BTreeSet<String> = prune_overrides.keep.keys().cloned().collect();
-    let pruned_variants = prune_transitive_with_keep(&variants, &tally.total, &keep_set);
+    // Standalone counts (total minus complex-MI part occurrences) — a supertype
+    // that only ever appears as a complex part (curve/surface/...) has
+    // standalone 0 and must NOT be treated as directly instantiated.
+    let standalone: HashMap<String, usize> = tally
+        .total
+        .iter()
+        .map(|(n, &t)| {
+            let c = tally.complex_part.get(n).copied().unwrap_or(0);
+            (n.clone(), t.saturating_sub(c))
+        })
+        .collect();
+    let pruned_variants =
+        prune_transitive_with_keep(&variants, &tally.total, &standalone, &keep_set);
     eprintln!(
         "infer prune: variants_pruned has {} entities (vs {} original, {} kept by overrides)",
         pruned_variants.len(),
@@ -499,7 +511,8 @@ fn prune_transitive(
     variants: &BTreeMap<String, VariantSpec>,
     counts: &HashMap<String, usize>,
 ) -> BTreeMap<String, VariantSpec> {
-    prune_transitive_with_keep(variants, counts, &BTreeSet::new())
+    // Test fixtures model no complex-MI parts, so standalone == total.
+    prune_transitive_with_keep(variants, counts, counts, &BTreeSet::new())
 }
 
 /// Same as `prune_transitive`, but honors `keep_overrides` — entities in
@@ -509,6 +522,7 @@ fn prune_transitive(
 fn prune_transitive_with_keep(
     variants: &BTreeMap<String, VariantSpec>,
     counts: &HashMap<String, usize>,
+    standalone: &HashMap<String, usize>,
     keep_overrides: &BTreeSet<String>,
 ) -> BTreeMap<String, VariantSpec> {
     let mut pruned: BTreeMap<String, VariantSpec> = variants.clone();
@@ -603,6 +617,60 @@ fn prune_transitive_with_keep(
         eprintln!(
             "infer prune: specialized {} childless ConcreteSupertype(s) to SingleStruct: {}{}",
             to_specialize.len(),
+            preview.join(", "),
+            suffix,
+        );
+    }
+
+    // Corpus-recovery: an EnumBase that is itself directly instantiated as a
+    // STANDALONE (non-complex) instance must retain a struct — EnumBase emits
+    // no struct (naming.rs has_type=false/has_fields=false), so its direct
+    // instances would have nowhere to live. This generalizes the per-entity
+    // variants_overrides.toml ConcreteSupertype patches. The schema cannot
+    // distinguish these from genuinely struct-less dispatch supertypes
+    // (edge/face/surface) — both are non-abstract with own_attrs and
+    // SUPERTYPE OF (ONEOF(...)); the discriminator is the STANDALONE corpus
+    // count. NOTE: use `standalone`, not `counts` (= standalone + complex_part):
+    // abstract roots like curve/surface/representation_item appear only as
+    // complex-MI parts (e.g. `(CURVE() BOUNDED_CURVE() B_SPLINE_CURVE() ...)`),
+    // so their `counts` are large but `standalone` is 0 — they must stay EnumBase.
+    //
+    //   standalone>0, no surviving InEnum child  -> SingleStruct (no dispatch)
+    //   standalone>0, >=1 surviving InEnum child -> ConcreteSupertype (struct + dispatch)
+    //   standalone==0                            -> leave EnumBase (pure dispatch root)
+    let self_live_enum_bases: Vec<String> = pruned
+        .iter()
+        .filter(|(name, spec)| {
+            matches!(spec, VariantSpec::EnumBase { .. })
+                && standalone.get(*name).copied().unwrap_or(0) > 0
+        })
+        .map(|(n, _)| n.clone())
+        .collect();
+    for name in &self_live_enum_bases {
+        let has_surviving_child = pruned.iter().any(|(child, child_spec)| {
+            matches!(
+                child_spec,
+                VariantSpec::InEnum { enum_name } if enum_name == name
+            ) && (counts.get(child).copied().unwrap_or(0) > 0
+                || keep_overrides.contains(child))
+        });
+        let new_spec = if has_surviving_child {
+            VariantSpec::ConcreteSupertype
+        } else {
+            VariantSpec::SingleStruct
+        };
+        pruned.insert(name.clone(), new_spec);
+    }
+    if !self_live_enum_bases.is_empty() {
+        let preview: Vec<&str> = self_live_enum_bases
+            .iter()
+            .take(8)
+            .map(|s| s.as_str())
+            .collect();
+        let suffix = if self_live_enum_bases.len() > 8 { ", ..." } else { "" };
+        eprintln!(
+            "infer prune: recovered {} self-instantiated EnumBase(s) (-> ConcreteSupertype/SingleStruct): {}{}",
+            self_live_enum_bases.len(),
             preview.join(", "),
             suffix,
         );
@@ -1175,7 +1243,8 @@ mod tests {
         ]);
         let counts: HashMap<String, usize> = [("used".to_string(), 5)].into_iter().collect();
         let baseline = prune_transitive(&variants, &counts);
-        let with_empty = prune_transitive_with_keep(&variants, &counts, &BTreeSet::new());
+        let with_empty =
+            prune_transitive_with_keep(&variants, &counts, &counts, &BTreeSet::new());
         assert_eq!(baseline, with_empty);
     }
 
@@ -1189,7 +1258,7 @@ mod tests {
         let counts: HashMap<String, usize> =
             [("seen".to_string(), 3)].into_iter().collect();
         let pruned =
-            prune_transitive_with_keep(&variants, &counts, &keep_set(&["zero_used"]));
+            prune_transitive_with_keep(&variants, &counts, &counts, &keep_set(&["zero_used"]));
         assert!(pruned.contains_key("zero_used"));
         assert!(pruned.contains_key("seen"));
     }
@@ -1238,7 +1307,7 @@ mod tests {
         // preserving the variants too is the auto-keep rule's job and
         // requires corpus > 0 on at least one child.
         let with_keep =
-            prune_transitive_with_keep(&variants, &counts, &keep_set(&["curve"]));
+            prune_transitive_with_keep(&variants, &counts, &counts, &keep_set(&["curve"]));
         assert!(with_keep.contains_key("curve"));
         assert!(!with_keep.contains_key("line"));
         assert!(!with_keep.contains_key("ray"));
@@ -1314,5 +1383,200 @@ mod tests {
         let pruned = prune_transitive(&variants, &counts);
         assert!(!pruned.contains_key("curve"));
         assert!(!pruned.contains_key("line"));
+    }
+
+    // --- Corpus-recovery: self-instantiated EnumBase -> struct ---
+    // An EnumBase emits no struct (naming.rs has_type=false), so an entity
+    // that is directly instantiated standalone (#N=NAME(...)) but classified
+    // EnumBase would lose its instances. The recovery rule keys on the
+    // STANDALONE count (total - complex_part), not total. These tests pin
+    // each branch and guard against the standalone/total confusion.
+
+    #[test]
+    fn corpus_recovery_self_live_no_live_child_becomes_single_struct() {
+        // group case: 5793 standalone GROUP(...) instances, the only declared
+        // child (change_group) has corpus 0 -> no surviving InEnum child ->
+        // SingleStruct (no dispatch). The dead child is pruned.
+        let variants = variants_with(&[
+            (
+                "group",
+                VariantSpec::EnumBase {
+                    enum_name: "group".into(),
+                },
+            ),
+            (
+                "change_group",
+                VariantSpec::InEnum {
+                    enum_name: "group".into(),
+                },
+            ),
+        ]);
+        let counts: HashMap<String, usize> = [("group".to_string(), 5793)].into_iter().collect();
+        let standalone = counts.clone();
+        let pruned =
+            prune_transitive_with_keep(&variants, &counts, &standalone, &BTreeSet::new());
+        assert!(matches!(
+            pruned.get("group"),
+            Some(VariantSpec::SingleStruct)
+        ));
+        assert!(!pruned.contains_key("change_group"));
+    }
+
+    #[test]
+    fn corpus_recovery_self_live_with_live_child_becomes_concrete_supertype() {
+        // shape_aspect case: 3320 standalone instances plus a live in_enum
+        // child (datum_system) -> needs both a struct and dispatch ->
+        // ConcreteSupertype, child stays InEnum.
+        let variants = variants_with(&[
+            (
+                "shape_aspect",
+                VariantSpec::EnumBase {
+                    enum_name: "shape_aspect".into(),
+                },
+            ),
+            (
+                "datum_system",
+                VariantSpec::InEnum {
+                    enum_name: "shape_aspect".into(),
+                },
+            ),
+        ]);
+        let counts: HashMap<String, usize> = [
+            ("shape_aspect".to_string(), 3320),
+            ("datum_system".to_string(), 5),
+        ]
+        .into_iter()
+        .collect();
+        let standalone = counts.clone();
+        let pruned =
+            prune_transitive_with_keep(&variants, &counts, &standalone, &BTreeSet::new());
+        assert!(matches!(
+            pruned.get("shape_aspect"),
+            Some(VariantSpec::ConcreteSupertype)
+        ));
+        assert!(matches!(
+            pruned.get("datum_system"),
+            Some(VariantSpec::InEnum { .. })
+        ));
+    }
+
+    #[test]
+    fn corpus_recovery_skips_abstract_supertype_zero_standalone() {
+        // edge/face/placement case: the supertype is never instantiated
+        // standalone (standalone 0) and is a pure dispatch root. Even with a
+        // huge live child it must stay EnumBase — recovery does not fire.
+        let variants = variants_with(&[
+            (
+                "placement",
+                VariantSpec::EnumBase {
+                    enum_name: "placement".into(),
+                },
+            ),
+            (
+                "axis2_placement_3d",
+                VariantSpec::InEnum {
+                    enum_name: "placement".into(),
+                },
+            ),
+        ]);
+        let counts: HashMap<String, usize> =
+            [("axis2_placement_3d".to_string(), 9_000_000)]
+                .into_iter()
+                .collect();
+        // placement absent from standalone -> 0.
+        let standalone = counts.clone();
+        let pruned =
+            prune_transitive_with_keep(&variants, &counts, &standalone, &BTreeSet::new());
+        assert!(matches!(
+            pruned.get("placement"),
+            Some(VariantSpec::EnumBase { .. })
+        ));
+        assert!(matches!(
+            pruned.get("axis2_placement_3d"),
+            Some(VariantSpec::InEnum { .. })
+        ));
+    }
+
+    #[test]
+    fn corpus_recovery_self_live_single_child_not_collapsed() {
+        // property_definition pin: a self-live EnumBase with a SINGLE live
+        // child must become ConcreteSupertype, NOT collapse to its lone child
+        // (the EnumBase nc==1 lone-child rule would have promoted the child to
+        // SingleStruct and dropped the 13696 standalone PROPERTY_DEFINITION
+        // instances). The child stays InEnum.
+        let variants = variants_with(&[
+            (
+                "property_definition",
+                VariantSpec::EnumBase {
+                    enum_name: "property_definition".into(),
+                },
+            ),
+            (
+                "product_definition_shape",
+                VariantSpec::InEnum {
+                    enum_name: "property_definition".into(),
+                },
+            ),
+        ]);
+        let counts: HashMap<String, usize> = [
+            ("property_definition".to_string(), 13_696),
+            ("product_definition_shape".to_string(), 253_440),
+        ]
+        .into_iter()
+        .collect();
+        let standalone = counts.clone();
+        let pruned =
+            prune_transitive_with_keep(&variants, &counts, &standalone, &BTreeSet::new());
+        assert!(matches!(
+            pruned.get("property_definition"),
+            Some(VariantSpec::ConcreteSupertype)
+        ));
+        assert!(matches!(
+            pruned.get("product_definition_shape"),
+            Some(VariantSpec::InEnum { .. })
+        ));
+    }
+
+    #[test]
+    fn corpus_recovery_complex_part_only_stays_enum_base() {
+        // THE guard for this fix's core bug: curve/surface/representation_item
+        // appear only as complex-MI parts (e.g. (CURVE() B_SPLINE_CURVE() ...))
+        // with empty `()`. Their TOTAL count is large but STANDALONE is 0, so
+        // they need no struct and must stay EnumBase. Keying recovery on total
+        // instead of standalone would over-recover them into dead structs.
+        let variants = variants_with(&[
+            (
+                "curve",
+                VariantSpec::EnumBase {
+                    enum_name: "curve".into(),
+                },
+            ),
+            (
+                "line",
+                VariantSpec::InEnum {
+                    enum_name: "curve".into(),
+                },
+            ),
+        ]);
+        // total: curve 330000 (all complex-part), line 50.
+        let counts: HashMap<String, usize> = [
+            ("curve".to_string(), 330_000),
+            ("line".to_string(), 50),
+        ]
+        .into_iter()
+        .collect();
+        // standalone: curve 0 (never a standalone instance), line 50.
+        let standalone: HashMap<String, usize> =
+            [("line".to_string(), 50)].into_iter().collect();
+        let pruned =
+            prune_transitive_with_keep(&variants, &counts, &standalone, &BTreeSet::new());
+        assert!(
+            matches!(pruned.get("curve"), Some(VariantSpec::EnumBase { .. })),
+            "curve appears only as a complex part (standalone 0) -> must stay EnumBase"
+        );
+        assert!(matches!(
+            pruned.get("line"),
+            Some(VariantSpec::InEnum { .. })
+        ));
     }
 }
