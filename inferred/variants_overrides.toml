@@ -1,41 +1,27 @@
 # Manually authored — entity-level VariantSpec override.
 # Use when the automatic variant classification (variant.rs) lands on
 # a shape that doesn't match the entity's actual IR role.
-
-# Plan 3.23 — auto-classified as EnumBase because the entity has
-# SUPERTYPE OF (...). Variants (children) all have corpus 0, but the
-# supertype itself has substantial corpus instances and is a primary
-# entity in its own right. Re-classify as ConcreteSupertype so it
-# survives reshape's empty-enum_base cleanup and carries its own
-# struct in the IR blueprint.
+#
+# NOTE: the "non-abstract supertype with STANDALONE corpus instances
+# misclassified as EnumBase" pattern (formerly Plan 3.23/3.26/3.38 — group,
+# product_definition, shape_aspect, datum_feature, dimensional_size,
+# descriptive_representation_item, property_definition, derived_unit) is now
+# handled generically by prune.rs corpus-recovery (self-STANDALONE > 0 EnumBase
+# -> ConcreteSupertype / SingleStruct), so those per-entity overrides were
+# removed. EnumBase only loses a struct when the entity is directly
+# instantiated standalone (#N=NAME(...)), which the corpus standalone count
+# (instance_count - complex_part_count) detects. Entities that appear ONLY as
+# complex-MI parts but still carry their own field data (geometric_
+# representation_context below) are a separate class the corpus-recovery rule
+# does not cover, and keep their override.
 
 [entity.geometric_representation_context]
 kind = "concrete_supertype"
-reason = "230,734 corpus instances. Unit context gateway in step-io; the EnumBase children (geometric_representation_context_with_parameter etc.) all have corpus 0. Plan 3.26 prune-stage specialization then re-classifies it to SingleStruct because no InEnum child survives — this override only ensures the entity is not dropped as an empty EnumBase first."
-
-[entity.product_definition]
-kind = "concrete_supertype"
-reason = "216,632 corpus instances. Central entity in every assembly chain; most EnumBase children (mechanical / electronic variants) have corpus 0, but product_definition_with_associated_documents (43 corpus) survives, so the Plan 3.26 prune-stage specialization keeps it as ConcreteSupertype."
-
-[entity.group]
-kind = "concrete_supertype"
-reason = "5,793 corpus instances. AP242 alone declares group as SUPERTYPE OF (ONEOF (change_group, change_element)), the other three schemas (AP203 / AP203e2 / AP214e3) declare plain ENTITY group; — the 4-schema unification keeps AP242's ONEOF, which triggers variant.rs Rule 2 to misclassify as EnumBase. AP242's group is also NOT abstract and has own_attrs (name, description) — plain GROUP(...) instances are valid per EXPRESS semantics and corpus confirms 5,793 of them. AGA / ACA point assigned_group / assigned_class at plain GROUP. Same pattern as geometric_representation_context / product_definition. Plan 3.26 prune-stage specialization then collapses it to SingleStruct because all 16 declared variants have corpus 0."
-
-[entity.derived_unit]
-kind = "concrete_supertype"
-reason = "5,022 corpus instances. AP242 / AP203e2 / AP214e3 declare derived_unit as SUPERTYPE OF (ONEOF (area_unit, volume_unit, ...)), non-abstract, with own_attr elements : SET[1:?] OF derived_unit_element. The ONEOF children (area_unit/volume_unit etc.) are multi-inherited from named_unit and classified as InEnum of named_unit, so derived_unit has 0 live InEnum children of its own — prune_empty_enum_bases drops it. Override forces ConcreteSupertype; Plan 3.26 prune-stage specialization then collapses to SingleStruct. Same pattern as group / grc / pd."
-
-[entity.descriptive_representation_item]
-kind = "concrete_supertype"
-reason = "6,734 corpus instances. AP242 / AP203e2 declare as SUPERTYPE OF (ONEOF (tagged_text_item, uniform_resource_identifier)), non-abstract, with own_attr description : text. Both ONEOF children have corpus 0 → pruned → no live InEnum children → prune_empty_enum_bases drops. Plan 3.26 will specialize to SingleStruct. Same pattern as group."
-
-[entity.dimensional_size]
-kind = "concrete_supertype"
-reason = "212 corpus instances. AP242 declares as SUPERTYPE OF (ONEOF (angular_size, dimensional_size_with_path)), non-abstract, with own_attrs applies_to, name. angular_size has corpus 1 (live) so prune-stage specialization does NOT collapse to SingleStruct — stays ConcreteSupertype. shape decision: 212 self / 1 live child → parent-dominant → base_parallel."
+reason = "230,707 corpus instances, ALL as complex-MI parts (#N=(GEOMETRIC_REPRESENTATION_CONTEXT(dim) GLOBAL_UNIT_ASSIGNED_CONTEXT(...) ...)); standalone count is 0. The complex part carries its own data (coordinate_space_dimension), so it needs a struct — but prune.rs corpus-recovery keys on STANDALONE count and so leaves it EnumBase. Override forces ConcreteSupertype; prune-stage specialization then collapses to SingleStruct (all InEnum children corpus 0). Unlike curve/surface (also complex-part-only) this entity's part is non-empty, so the override is required until corpus-recovery is extended to complex-part-with-data entities."
 
 [entity.compound_representation_item]
 kind = "concrete_supertype"
-reason = "7 corpus instances. AP242 declares as SUPERTYPE OF (ONEOF (point_and_vector, point_path) ANDOR ONEOF (row_representation_item, table_representation_item)), non-abstract, with own_attr item_element : compound_item_definition. All 4 ONEOF children have corpus 0 → no live InEnum children → Plan 3.26 specialization to SingleStruct. (NOTE: the ANDOR/ONEOF shape should plausibly match variant.rs Rule 1 ComplexSupertype but was classified as EnumBase — root cause TBD; override bypasses the misclassification.)"
+reason = "7 corpus instances. AP242 declares as SUPERTYPE OF (ONEOF (point_and_vector, point_path) ANDOR ONEOF (row_representation_item, table_representation_item)), non-abstract, with own_attr item_element : compound_item_definition. All 4 ONEOF children have corpus 0 → no live InEnum children → Plan 3.26 specialization to SingleStruct. (NOTE: the ANDOR/ONEOF shape should plausibly match variant.rs Rule 1 ComplexSupertype but was classified as EnumBase — root cause TBD; override bypasses the misclassification. Kept because its fate is coupled to that latent Rule 1 bug, independent of the corpus-recovery fix.)"
 
 # Plan 3.31 — e1 vs e2+ parent declaration conflict. AP203 e1 declares
 # these as SUBTYPE OF (named_unit) but AP203e2 / AP214e3 / AP242 declare
@@ -55,23 +41,3 @@ reason = "17 corpus instances, all derived_unit pattern (AREA_UNIT((#derived_uni
 kind = "in_enum"
 enum_name = "derived_unit"
 reason = "13 corpus instances, same situation as area_unit — AP203 e1 named_unit subtype vs e2+ derived_unit subtype. Corpus uses derived_unit pattern only."
-
-[entity.datum_feature]
-kind = "concrete_supertype"
-reason = "102 corpus instances. AP242 declares datum_feature SUPERTYPE OF (ONEOF (dimensional_location_with_datum_feature, dimensional_size_with_datum_feature)); AP203e2 / AP214e3 declare plain SUBTYPE OF (shape_aspect). 4-schema unification keeps AP242's ONEOF, so variant.rs Rule 2 misclassifies as enum_base. Only one child (dimensional_size_with_datum_feature, corpus 2) is live, so reshape's collapse_single_child_enum_bases collapses datum_feature away — the 102 plain DATUM_FEATURE instances lose their IR entry. datum_feature is non-abstract with no own attrs (name/description/of_shape/product_definitional all inherited from shape_aspect). NIST geometric_tolerance.toleranced_shape_aspect points at DATUM_FEATURE instances. Same root pattern as group / derived_unit."
-
-[entity.shape_aspect]
-kind = "concrete_supertype"
-reason = "3,320 corpus instances. AP203 / AP203e2 / AP214e3 declare plain ENTITY shape_aspect; AP242 alone adds SUPERTYPE OF (ONEOF (6 children)). 4-schema unification keeps AP242's ONEOF, so variant.rs Rule 2 misclassifies as enum_base — which has no struct (has_type/has_fields=false), so the 3,320 plain SHAPE_ASPECT instances cannot be represented. shape_aspect is non-abstract with own attrs name/description/of_shape/product_definitional. Live in_enum children (datum_system/datum_target/tolerance_zone/placed_datum_target_feature) keep it ConcreteSupertype past prune. Same root pattern as group / derived_unit / datum_feature."
-
-# Plan 3.38 — same root pattern as group / datum_feature / shape_aspect.
-# property_definition is a polymorphic dispatch host in 12+ SELECT types
-# in AP242 (lines 222/252/285/397/504/592/...); without the override the
-# 13,696 plain PROPERTY_DEFINITION instances are lost when prune.rs Rule
-# 2's nc==1 lone_child branch promotes product_definition_shape (corpus
-# 253,440) to SingleStruct and drops the parent. Side effect:
-# product_definition_shape reclassifies SingleStruct -> InEnum (same
-# precedent as datum_feature -> dimensional_size_with_datum_feature).
-[entity.property_definition]
-kind = "concrete_supertype"
-reason = "13,696 corpus instances. AP242 alone declares SUPERTYPE OF (ONEOF (kinematic_property_definition, product_definition_relationship_kinematics, product_definition_shape)); AP203e2 / AP214e3 declare plain ENTITY property_definition. 4-schema unification keeps AP242's ONEOF, so variant.rs Rule 2 misclassifies as enum_base. The kinematic_* children have corpus 0, but product_definition_shape (253,440 corpus) is live — prune.rs Rule 2's nc==1 lone_child branch promotes product_definition_shape to SingleStruct and unuses property_definition, so the 13,696 plain PROPERTY_DEFINITION instances cannot be represented. property_definition is a polymorphic dispatch host in 12+ AP242 SELECT types. ConcreteSupertype override + carrier shape mirrors the colour pattern. Own attrs name/description/definition."

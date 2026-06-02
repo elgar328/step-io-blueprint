@@ -136,3 +136,30 @@ shape = "base_parallel"
 # (carrier, ratio 1024) 패턴.
 [entity.property_definition]               # 13,696 self / 253,440 live child (product_definition_shape), ratio 18.5 — children dominant
 shape = "carrier"
+
+# Corpus-recovery (prune.rs) — six non-abstract supertypes whose STANDALONE
+# instances (instance_count - complex_part_count) were silently lost while
+# classified EnumBase. Now recovered to ConcreteSupertype generically (no
+# per-entity override). Shape by the same ratio rule: children-dominant
+# (ratio = children_standalone / self_standalone > 1) -> carrier; parent
+# dominant -> base_parallel. Counts are standalone (post Plan 3.35).
+
+[entity.representation]                     # 13,065 self / 458,791 children, ratio 35 — children dominant
+shape = "carrier"
+
+[entity.measure_with_unit]                  # 66 self / 217,828 children, ratio 3300 — children dominant
+shape = "carrier"
+
+[entity.annotation_occurrence]              # 144 self / 1,618 children, ratio 11.2 — children dominant
+shape = "carrier"
+
+[entity.composite_shape_aspect]            # 357 self / 155 child (composite_group_shape_aspect), ratio 0.43 — parent dominant
+shape = "base_parallel"
+
+[entity.dimensional_location]              # 48 self / 5 children (angular_location, directed_dimensional_location), ratio 0.10 — parent dominant
+shape = "base_parallel"
+
+# annotation_curve_occurrence: lone child leader_curve appears only as a
+# complex-MI part (standalone 0), so no standalone dispatch — parent dominant.
+[entity.annotation_curve_occurrence]       # 22 self / 0 standalone child (leader_curve = complex-part only), ratio ~0 — parent dominant
+shape = "base_parallel"
