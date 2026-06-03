@@ -73,16 +73,17 @@ Each stage refuses to run while an upstream `*_pending.toml` exists (the
 
 ## Schemas
 
-Six schemas are read as a union — four from
-[STEPCode](https://github.com/stepcode/stepcode), two AP242 editions from
-MBx-IF (CAx-IF):
+Six schemas are read as a union — most from
+[MBx-IF](https://www.mbx-if.org/home/mbx/resources/express-schemas/), two from
+[STEPCode](https://github.com/stepcode/stepcode) (the editions MBx-IF does not
+provide identically):
 
 | schema | source |
 |---|---|
-| `ap203.exp` | STEPCode `data/ap203/ap203.exp` |
-| `ap203e2_mim_lf.exp` | STEPCode `data/ap203e2/ap203e2_mim_lf.exp` |
-| `ap214e3.exp` | STEPCode `data/ap214e3/AP214E3_2010.exp` |
-| `ap242_mim_lf.exp` | STEPCode `data/ap242/242_n8324_mim_lf.exp` |
+| `ap203.exp` | STEPCode (AP203 ed1; not offered by MBx-IF) |
+| `ap203e2_mim_lf.exp` | MBx-IF (AP203 ed2, 2011) |
+| `ap214e3.exp` | MBx-IF (AP214 ed3, 2010) |
+| `ap242_mim_lf.exp` | STEPCode (AP242 ed1, 2014; MBx-IF's IS longform differs) |
 | `ap242ed2_dis2_mim_lf_v1.101.exp` | MBx-IF (AP242 ed2, 2019 / N10517) |
 | `ap242ed3_mim_lf_v1.152.exp` | MBx-IF (AP242 ed3, 2022) |
 
@@ -108,7 +109,7 @@ src/
     ├── pool.rs          6 — validate arena → pool assignment
     └── naming.rs        7 — name + merge everything → ir.toml
 schemas/                 the six .exp schema files
-inferred/                hand-authored inputs + generated outputs (all tracked)
+inferred/                hand-authored inputs + generated outputs
 ```
 
 `inferred/` holds two kinds of file: **hand-authored inputs** (the
