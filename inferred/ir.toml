@@ -1090,12 +1090,12 @@ from = "surface_curve"
 
 [entity.brep_with_voids]
 kind = "in_enum"
-arena = "geometric_representation_item"
-pool = "geometry"
+arena = "manifold_solid_brep"
+pool = "topology"
 type = "BrepWithVoids"
-id = "GeometricRepresentationItemId"
+id = "ManifoldSolidBrepId"
 variant = "BrepWithVoids"
-enum_of = "geometric_representation_item"
+enum_of = "manifold_solid_brep"
 instance_count = 1144
 
 [[entity.brep_with_voids.fields]]
@@ -4837,13 +4837,14 @@ ty = "ref_measure_with_unit"
 from = "make_from_usage_option"
 
 [entity.manifold_solid_brep]
-kind = "in_enum"
-arena = "geometric_representation_item"
-pool = "geometry"
+kind = "concrete_supertype"
+arena = "manifold_solid_brep"
+pool = "topology"
+shape = "base_parallel"
 type = "ManifoldSolidBrep"
-id = "GeometricRepresentationItemId"
-variant = "ManifoldSolidBrep"
-enum_of = "geometric_representation_item"
+id = "ManifoldSolidBrepId"
+variant = "Plain"
+kind_enum = "ManifoldSolidBrepKind"
 instance_count = 140177
 
 [[entity.manifold_solid_brep.fields]]

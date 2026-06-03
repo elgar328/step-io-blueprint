@@ -209,7 +209,7 @@ enum_name = "surface_curve"
 
 [entity.brep_with_voids]
 kind = "in_enum"
-enum_name = "geometric_representation_item"
+enum_name = "manifold_solid_brep"
 
 [entity.calendar_date]
 kind = "in_enum"
@@ -769,8 +769,7 @@ kind = "in_enum"
 enum_name = "product_definition_relationship"
 
 [entity.manifold_solid_brep]
-kind = "in_enum"
-enum_name = "geometric_representation_item"
+kind = "concrete_supertype"
 
 [entity.manifold_surface_shape_representation]
 kind = "in_enum"

@@ -338,9 +338,9 @@ instance_count = 0
 
 [entity.brep_with_voids]
 kind = "in_enum"
-enum_name = "geometric_representation_item"
-group = "geometric_representation_item"
-arena = "geometric_representation_item"
+enum_name = "manifold_solid_brep"
+group = "manifold_solid_brep"
+arena = "manifold_solid_brep"
 instance_count = 1144
 
 [entity.calendar_date]
@@ -1606,10 +1606,10 @@ arena = "product_definition_relationship"
 instance_count = 3
 
 [entity.manifold_solid_brep]
-kind = "in_enum"
-enum_name = "geometric_representation_item"
-group = "geometric_representation_item"
-arena = "geometric_representation_item"
+kind = "concrete_supertype"
+group = "manifold_solid_brep"
+arena = "manifold_solid_brep"
+shape = "base_parallel"
 instance_count = 140177
 
 [entity.manifold_surface_shape_representation]

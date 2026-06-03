@@ -103,3 +103,8 @@ shape = "base_parallel"
 
 [entity.dimensional_location]               # 48 self / few live children, parent dominant
 shape = "base_parallel"
+
+# B-rep solid kept in topology by the pool-boundary gate. Parent-dominant
+# (manifold_solid_brep self ≫ brep_with_voids / faceted_brep children).
+[entity.manifold_solid_brep]                # 140K self / few children, parent dominant
+shape = "base_parallel"

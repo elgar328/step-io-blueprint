@@ -471,5 +471,12 @@ pool = "visualization"
 [arena.text_literal]
 pool = "visualization"
 
+# B-rep solid — `solid_model` is structurally a geometric_representation_item,
+# but a boundary-representation solid is a topological construct (its outer is
+# a CLOSED_SHELL; built from shells/faces/edges). Domain home is topology, with
+# the rest of the B-rep structure. brep_with_voids / faceted_brep follow.
+[arena.manifold_solid_brep]
+pool = "topology"
+
 # form_features
 # property

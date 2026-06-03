@@ -238,6 +238,9 @@ arena = "local_time"
 [group.loop]
 arena = "loop"
 
+[group.manifold_solid_brep]
+arena = "manifold_solid_brep"
+
 [group.measure_qualification]
 arena = "measure_qualification"
 
