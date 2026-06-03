@@ -1,0 +1,404 @@
+[group.address]
+arena = "address"
+
+[group.annotation_placeholder_leader_line]
+arena = "annotation_placeholder_leader_line"
+
+[group.application_context]
+arena = "application_context"
+
+[group.application_context_element]
+arena = "application_context_element"
+
+[group.application_protocol_definition]
+arena = "application_protocol_definition"
+
+[group.applied_presented_item]
+arena = "applied_presented_item"
+
+[group.approval]
+arena = "approval"
+
+[group.approval_assignment]
+arena = "approval_assignment"
+
+[group.approval_date_time]
+arena = "approval_date_time"
+
+[group.approval_person_organization]
+arena = "approval_person_organization"
+
+[group.approval_role]
+arena = "approval_role"
+
+[group.approval_status]
+arena = "approval_status"
+
+[group.area_in_set]
+arena = "area_in_set"
+
+[group.assembly_component_usage]
+arena = "assembly_component_usage"
+
+[group.b_spline_curve]
+arena = "b_spline_curve"
+
+[group.b_spline_surface]
+arena = "b_spline_surface"
+
+[group.bounded_curve]
+arena = "surface_curve"
+
+[group.bounded_surface]
+arena = "bounded_surface"
+
+[group.camera_model]
+arena = "camera_model"
+
+[group.characterized_object]
+arena = "characterized_object"
+
+[group.colour]
+arena = "colour"
+
+[group.conic]
+arena = "conic"
+
+[group.connected_face_set]
+arena = "connected_face_set"
+
+[group.context_dependent_shape_representation]
+arena = "context_dependent_shape_representation"
+
+[group.continuous_shape_aspect]
+arena = "continuous_shape_aspect"
+
+[group.conversion_based_unit]
+arena = "conversion_based_unit"
+
+[group.coordinated_universal_time_offset]
+arena = "coordinated_universal_time_offset"
+
+[group.curve]
+arena = "curve"
+
+[group.date]
+arena = "date"
+
+[group.date_and_time]
+arena = "date_and_time"
+
+[group.date_and_time_assignment]
+arena = "date_and_time_assignment"
+
+[group.date_time_role]
+arena = "date_time_role"
+
+[group.derived_shape_aspect]
+arena = "derived_shape_aspect"
+
+[group.derived_unit]
+arena = "derived_unit"
+
+[group.derived_unit_element]
+arena = "derived_unit_element"
+
+[group.description_attribute]
+arena = "description_attribute"
+
+[group.dimensional_characteristic_representation]
+arena = "dimensional_characteristic_representation"
+
+[group.dimensional_exponents]
+arena = "dimensional_exponents"
+
+[group.dimensional_size]
+arena = "dimensional_size"
+
+[group.document]
+arena = "document"
+
+[group.document_product_equivalence]
+arena = "document_product_equivalence"
+
+[group.document_reference]
+arena = "document_reference"
+
+[group.document_representation_type]
+arena = "document_representation_type"
+
+[group.document_type]
+arena = "document_type"
+
+[group.draughting_callout]
+arena = "draughting_callout"
+
+[group.draughting_callout_relationship]
+arena = "draughting_callout_relationship"
+
+[group.draughting_model_item_association]
+arena = "draughting_model_item_association"
+
+[group.draughting_pre_defined_text_font]
+arena = "draughting_pre_defined_text_font"
+
+[group.edge]
+arena = "edge"
+
+[group.elementary_surface]
+arena = "elementary_surface"
+
+[group.external_identification_assignment]
+arena = "external_identification_assignment"
+
+[group.external_source]
+arena = "external_source"
+
+[group.face]
+arena = "face"
+
+[group.fill_area_style_colour]
+arena = "fill_area_style_colour"
+
+[group.founded_item]
+arena = "founded_item"
+
+[group.general_datum_reference]
+arena = "general_datum_reference"
+
+[group.general_property]
+arena = "general_property"
+
+[group.general_property_association]
+arena = "general_property_association"
+
+[group.geometric_item_specific_usage]
+arena = "geometric_item_specific_usage"
+
+[group.geometric_representation_context]
+arena = "geometric_representation_context"
+
+[group.geometric_representation_item]
+arena = "geometric_representation_item"
+
+[group.geometric_tolerance]
+arena = "geometric_tolerance"
+
+[group.geometric_tolerance_relationship]
+arena = "geometric_tolerance_relationship"
+
+[group.geometric_tolerance_with_datum_reference]
+arena = "geometric_tolerance_with_datum_reference"
+
+[group.group]
+arena = "group"
+
+[group.group_assignment]
+arena = "group_assignment"
+
+[group.id_attribute]
+arena = "id_attribute"
+
+[group.identification_role]
+arena = "identification_role"
+
+[group.invisibility]
+arena = "invisibility"
+
+[group.item_defined_transformation]
+arena = "item_defined_transformation"
+
+[group.item_identified_representation_usage]
+arena = "item_identified_representation_usage"
+
+[group.limits_and_fits]
+arena = "limits_and_fits"
+
+[group.local_time]
+arena = "local_time"
+
+[group.loop]
+arena = "loop"
+
+[group.measure_qualification]
+arena = "measure_qualification"
+
+[group.measure_with_unit]
+arena = "measure_with_unit"
+
+[group.name_attribute]
+arena = "name_attribute"
+
+[group.named_unit]
+arena = "named_unit"
+
+[group.object_role]
+arena = "object_role"
+
+[group.organization]
+arena = "organization"
+
+[group.person]
+arena = "person"
+
+[group.person_and_organization]
+arena = "person_and_organization"
+
+[group.person_and_organization_assignment]
+arena = "person_and_organization_assignment"
+
+[group.person_and_organization_role]
+arena = "person_and_organization_role"
+
+[group.placement]
+arena = "placement"
+
+[group.planar_extent]
+arena = "planar_extent"
+
+[group.plus_minus_tolerance]
+arena = "plus_minus_tolerance"
+
+[group.point]
+arena = "point"
+
+[group.pre_defined_curve_font]
+arena = "pre_defined_curve_font"
+
+[group.pre_defined_marker]
+arena = "pre_defined_marker"
+
+[group.pre_defined_symbol]
+arena = "pre_defined_symbol"
+
+[group.presentation_layer_assignment]
+arena = "presentation_layer_assignment"
+
+[group.presentation_representation]
+arena = "presentation_representation"
+
+[group.presentation_size]
+arena = "presentation_size"
+
+[group.presented_item_representation]
+arena = "presented_item_representation"
+
+[group.primitive_2d]
+arena = "primitive_2d"
+
+[group.product]
+arena = "product"
+
+[group.product_category]
+arena = "product_category"
+
+[group.product_category_relationship]
+arena = "product_category_relationship"
+
+[group.product_definition]
+arena = "product_definition"
+
+[group.product_definition_context_association]
+arena = "product_definition_context_association"
+
+[group.product_definition_context_role]
+arena = "product_definition_context_role"
+
+[group.product_definition_formation]
+arena = "product_definition_formation"
+
+[group.product_definition_relationship]
+arena = "product_definition_relationship"
+
+[group.property_definition]
+arena = "property_definition"
+
+[group.property_definition_representation]
+arena = "property_definition_representation"
+
+[group.representation]
+arena = "representation"
+
+[group.representation_context]
+arena = "representation_context"
+
+[group.representation_item]
+arena = "representation_item"
+
+[group.representation_map]
+arena = "representation_map"
+
+[group.representation_relationship]
+arena = "representation_relationship"
+
+[group.representation_relationship_with_transformation]
+arena = "representation_relationship_with_transformation"
+
+[group.role_association]
+arena = "role_association"
+
+[group.security_classification]
+arena = "security_classification"
+
+[group.security_classification_assignment]
+arena = "security_classification_assignment"
+
+[group.security_classification_level]
+arena = "security_classification_level"
+
+[group.shape_aspect]
+arena = "shape_aspect"
+
+[group.shape_aspect_relationship]
+arena = "shape_aspect_relationship"
+
+[group.surface]
+arena = "surface"
+
+[group.surface_curve]
+arena = "surface_curve"
+
+[group.surface_style_rendering]
+arena = "surface_style_rendering"
+
+[group.surface_style_transparent]
+arena = "surface_style_transparent"
+
+[group.swept_surface]
+arena = "swept_surface"
+
+[group.symbol_colour]
+arena = "symbol_colour"
+
+[group.tessellated_face]
+arena = "tessellated_face"
+
+[group.tessellated_item]
+arena = "tessellated_item"
+
+[group.tessellated_surface_set]
+arena = "tessellated_surface_set"
+
+[group.text_style]
+arena = "text_style"
+
+[group.text_style_for_defined_font]
+arena = "text_style_for_defined_font"
+
+[group.tolerance_value]
+arena = "tolerance_value"
+
+[group.tolerance_zone_definition]
+arena = "tolerance_zone_definition"
+
+[group.tolerance_zone_form]
+arena = "tolerance_zone_form"
+
+[group.topological_representation_item]
+arena = "topological_representation_item"
+
+[group.type_qualifier]
+arena = "type_qualifier"
+
+[group.value_format_type_qualifier]
+arena = "value_format_type_qualifier"

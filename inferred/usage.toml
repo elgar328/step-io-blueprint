@@ -1,0 +1,7227 @@
+[entity.a3m_equivalence_accuracy_association]
+instance_count = 0
+
+[entity.a3m_equivalence_assessment_by_logical_test]
+instance_count = 0
+
+[entity.a3m_equivalence_assessment_by_numerical_test]
+instance_count = 0
+
+[entity.a3m_equivalence_criteria_representation]
+instance_count = 0
+
+[entity.a3m_equivalence_criterion]
+instance_count = 0
+
+[entity.a3m_equivalence_criterion_for_assembly]
+instance_count = 0
+
+[entity.a3m_equivalence_criterion_for_shape]
+instance_count = 0
+
+[entity.a3m_equivalence_criterion_of_assembly_data_structure]
+instance_count = 0
+
+[entity.a3m_equivalence_criterion_of_component_property_difference]
+instance_count = 0
+
+[entity.a3m_equivalence_criterion_of_detailed_assembly_data_content]
+instance_count = 0
+
+[entity.a3m_equivalence_criterion_of_detailed_shape_data_content]
+instance_count = 0
+
+[entity.a3m_equivalence_criterion_of_representative_assembly_property_value]
+instance_count = 0
+
+[entity.a3m_equivalence_criterion_of_representative_shape_property_value]
+instance_count = 0
+
+[entity.a3m_equivalence_criterion_of_shape_data_structure]
+instance_count = 0
+
+[entity.a3m_equivalence_criterion_report_item_with_measured_value]
+instance_count = 0
+
+[entity.a3m_equivalence_criterion_with_specified_elements]
+instance_count = 0
+
+[entity.a3m_equivalence_inspection_instance_report_item]
+instance_count = 0
+
+[entity.a3m_equivalence_inspection_requirement_with_values]
+instance_count = 0
+
+[entity.a3m_equivalence_inspection_result_representation]
+instance_count = 0
+
+[entity.a3m_equivalence_inspection_result_representation_for_assembly]
+instance_count = 0
+
+[entity.a3m_equivalence_inspection_result_representation_for_shape]
+instance_count = 0
+
+[entity.a3m_equivalence_summary_report_request_with_representative_value]
+instance_count = 0
+
+[entity.a3m_inspected_model_and_inspection_result_relationship]
+instance_count = 0
+
+[entity.a3ma_assembly_and_shape_criteria_relationship]
+instance_count = 0
+
+[entity.a3ma_equivalence_criterion_assessment_threshold_relationship]
+instance_count = 0
+
+[entity.a3ma_equivalence_inspection_result]
+instance_count = 0
+
+[entity.a3ma_length_measure_and_context_dependent_measure_pair]
+instance_count = 0
+
+[entity.a3ms_equivalence_criterion_with_specified_elements]
+instance_count = 0
+
+[entity.a3ms_equivalence_inspection_result]
+instance_count = 0
+
+[entity.abrupt_change_of_surface_normal]
+instance_count = 0
+
+[entity.abs_function]
+instance_count = 0
+
+[entity.absorbed_dose_measure_with_unit]
+instance_count = 0
+
+[entity.absorbed_dose_unit]
+instance_count = 0
+
+[entity.abstract_variable]
+instance_count = 0
+
+[entity.abstracted_expression_function]
+instance_count = 0
+
+[entity.acceleration_measure_with_unit]
+instance_count = 0
+
+[entity.acceleration_unit]
+instance_count = 0
+
+[entity.acos_function]
+instance_count = 0
+
+[entity.action]
+instance_count = 0
+
+[entity.action_actual]
+instance_count = 0
+
+[entity.action_assignment]
+instance_count = 0
+
+[entity.action_directive]
+instance_count = 0
+
+[entity.action_directive_relationship]
+instance_count = 0
+
+[entity.action_happening]
+instance_count = 0
+
+[entity.action_method]
+instance_count = 0
+
+[entity.action_method_assignment]
+instance_count = 0
+
+[entity.action_method_relationship]
+instance_count = 0
+
+[entity.action_method_role]
+instance_count = 0
+
+[entity.action_property]
+instance_count = 0
+
+[entity.action_property_representation]
+instance_count = 0
+
+[entity.action_relationship]
+instance_count = 0
+
+[entity.action_request_assignment]
+instance_count = 0
+
+[entity.action_request_solution]
+instance_count = 0
+
+[entity.action_request_status]
+instance_count = 0
+
+[entity.action_resource]
+instance_count = 0
+
+[entity.action_resource_relationship]
+instance_count = 0
+
+[entity.action_resource_requirement]
+instance_count = 0
+
+[entity.action_resource_type]
+instance_count = 0
+
+[entity.action_status]
+instance_count = 0
+
+[entity.actuated_kinematic_pair]
+instance_count = 0
+
+[entity.add_element]
+instance_count = 0
+
+[entity.additive_manufacturing_build_plate_relationship]
+instance_count = 0
+
+[entity.additive_manufacturing_setup]
+instance_count = 0
+
+[entity.additive_manufacturing_setup_relationship]
+instance_count = 0
+
+[entity.additive_manufacturing_setup_workpiece_relationship]
+instance_count = 0
+
+[entity.additive_manufacturing_support_structure_geometry_relationship]
+instance_count = 0
+
+[entity.address]
+instance_count = 0
+
+[entity.advanced_brep_shape_representation]
+instance_count = 124425
+
+[entity.advanced_face]
+instance_count = 5624546
+
+[entity.agc_with_dimension]
+instance_count = 0
+
+[entity.aggregate_id_attribute]
+instance_count = 0
+
+[entity.all_around_shape_aspect]
+instance_count = 22
+
+[entity.alternate_product_relationship]
+instance_count = 0
+
+[entity.alternative_solution_relationship]
+instance_count = 0
+
+[entity.amount_of_substance_measure_with_unit]
+instance_count = 0
+
+[entity.amount_of_substance_unit]
+instance_count = 0
+
+[entity.analysis_assignment]
+instance_count = 0
+
+[entity.analysis_item]
+instance_count = 0
+
+[entity.analysis_model]
+instance_count = 0
+
+[entity.analysis_representation_context]
+instance_count = 0
+
+[entity.and_expression]
+instance_count = 0
+
+[entity.angle_assembly_constraint_with_dimension]
+instance_count = 0
+
+[entity.angle_direction_reference]
+instance_count = 0
+
+[entity.angle_geometric_constraint]
+instance_count = 0
+
+[entity.angular_dimension]
+instance_count = 0
+
+[entity.angular_location]
+instance_count = 1
+
+[entity.angular_size]
+instance_count = 1
+
+[entity.angularity_tolerance]
+instance_count = 1
+
+[entity.annotation_curve_occurrence]
+instance_count = 138
+complex_part_count = 116
+co_instantiated_with = [
+    "annotation_occurrence",
+    "draughting_annotation_occurrence",
+    "geometric_representation_item",
+    "leader_curve",
+    "representation_item",
+    "styled_item",
+]
+
+[entity.annotation_fill_area]
+instance_count = 0
+
+[entity.annotation_fill_area_occurrence]
+instance_count = 0
+
+[entity.annotation_occurrence]
+instance_count = 492
+complex_part_count = 348
+co_instantiated_with = [
+    "annotation_curve_occurrence",
+    "annotation_symbol_occurrence",
+    "annotation_text_occurrence",
+    "draughting_annotation_occurrence",
+    "geometric_representation_item",
+    "leader_curve",
+    "leader_terminator",
+    "representation_item",
+    "styled_item",
+    "terminator_symbol",
+]
+
+[entity.annotation_occurrence_associativity]
+instance_count = 116
+
+[entity.annotation_occurrence_relationship]
+instance_count = 0
+
+[entity.annotation_placeholder_leader_line]
+instance_count = 0
+
+[entity.annotation_placeholder_occurrence]
+instance_count = 239
+
+[entity.annotation_placeholder_occurrence_with_leader_line]
+instance_count = 116
+
+[entity.annotation_plane]
+instance_count = 838
+
+[entity.annotation_point_occurrence]
+instance_count = 0
+
+[entity.annotation_subfigure_occurrence]
+instance_count = 0
+
+[entity.annotation_symbol]
+instance_count = 0
+
+[entity.annotation_symbol_occurrence]
+instance_count = 116
+complex_part_count = 116
+co_instantiated_with = [
+    "annotation_occurrence",
+    "draughting_annotation_occurrence",
+    "geometric_representation_item",
+    "leader_terminator",
+    "representation_item",
+    "styled_item",
+    "terminator_symbol",
+]
+
+[entity.annotation_text]
+instance_count = 0
+
+[entity.annotation_text_character]
+instance_count = 0
+
+[entity.annotation_text_occurrence]
+instance_count = 116
+complex_part_count = 116
+co_instantiated_with = [
+    "annotation_occurrence",
+    "draughting_annotation_occurrence",
+    "geometric_representation_item",
+    "representation_item",
+    "styled_item",
+]
+
+[entity.annotation_to_annotation_leader_line]
+instance_count = 0
+
+[entity.annotation_to_model_leader_line]
+instance_count = 144
+
+[entity.ap242_assignment_object_relationship]
+instance_count = 0
+
+[entity.apex]
+instance_count = 0
+
+[entity.apll_point]
+instance_count = 468
+
+[entity.apll_point_with_surface]
+instance_count = 5
+
+[entity.application_context]
+instance_count = 68550
+
+[entity.application_context_element]
+instance_count = 0
+
+[entity.application_context_relationship]
+instance_count = 0
+
+[entity.application_defined_function]
+instance_count = 0
+
+[entity.application_protocol_definition]
+instance_count = 68499
+
+[entity.applied_action_assignment]
+instance_count = 0
+
+[entity.applied_action_method_assignment]
+instance_count = 0
+
+[entity.applied_action_request_assignment]
+instance_count = 0
+
+[entity.applied_approval_assignment]
+instance_count = 21
+
+[entity.applied_area]
+instance_count = 0
+
+[entity.applied_attribute_classification_assignment]
+instance_count = 0
+
+[entity.applied_certification_assignment]
+instance_count = 0
+
+[entity.applied_classification_assignment]
+instance_count = 0
+
+[entity.applied_classification_assignment_relationship]
+instance_count = 0
+
+[entity.applied_contract_assignment]
+instance_count = 0
+
+[entity.applied_date_and_time_assignment]
+instance_count = 3472
+
+[entity.applied_date_assignment]
+instance_count = 0
+
+[entity.applied_description_text_assignment]
+instance_count = 0
+
+[entity.applied_description_text_assignment_relationship]
+instance_count = 0
+
+[entity.applied_directed_action_assignment]
+instance_count = 0
+
+[entity.applied_document_reference]
+instance_count = 153
+
+[entity.applied_document_usage_constraint_assignment]
+instance_count = 0
+
+[entity.applied_effectivity_assignment]
+instance_count = 0
+
+[entity.applied_event_occurrence_assignment]
+instance_count = 0
+
+[entity.applied_external_identification_assignment]
+instance_count = 129
+
+[entity.applied_external_identification_assignment_relationship]
+instance_count = 0
+
+[entity.applied_group_assignment]
+instance_count = 5751
+
+[entity.applied_identification_assignment]
+instance_count = 0
+
+[entity.applied_ineffectivity_assignment]
+instance_count = 0
+
+[entity.applied_location_assignment]
+instance_count = 0
+
+[entity.applied_location_representation_assignment]
+instance_count = 0
+
+[entity.applied_name_assignment]
+instance_count = 0
+
+[entity.applied_organization_assignment]
+instance_count = 0
+
+[entity.applied_organization_type_assignment]
+instance_count = 0
+
+[entity.applied_organizational_project_assignment]
+instance_count = 0
+
+[entity.applied_person_and_organization_assignment]
+instance_count = 35
+
+[entity.applied_presented_item]
+instance_count = 18
+
+[entity.applied_security_classification_assignment]
+instance_count = 7
+
+[entity.applied_state_observed_assignment]
+instance_count = 0
+
+[entity.applied_state_type_assignment]
+instance_count = 0
+
+[entity.applied_time_interval_assignment]
+instance_count = 0
+
+[entity.applied_usage_right]
+instance_count = 0
+
+[entity.approval]
+instance_count = 34059
+
+[entity.approval_assignment]
+instance_count = 0
+
+[entity.approval_date_time]
+instance_count = 34059
+
+[entity.approval_person_organization]
+instance_count = 33725
+
+[entity.approval_relationship]
+instance_count = 0
+
+[entity.approval_role]
+instance_count = 33725
+
+[entity.approval_status]
+instance_count = 34059
+
+[entity.approximation_tolerance]
+instance_count = 0
+
+[entity.approximation_tolerance_deviation]
+instance_count = 0
+
+[entity.approximation_tolerance_parameter]
+instance_count = 0
+
+[entity.area_in_set]
+instance_count = 18
+
+[entity.area_measure_with_unit]
+instance_count = 0
+
+[entity.area_unit]
+instance_count = 17
+
+[entity.area_with_outer_boundary]
+instance_count = 0
+
+[entity.array_placement_group]
+instance_count = 0
+
+[entity.ascribable_state]
+instance_count = 0
+
+[entity.ascribable_state_relationship]
+instance_count = 0
+
+[entity.asin_function]
+instance_count = 0
+
+[entity.assembly_bond_definition]
+instance_count = 0
+
+[entity.assembly_component]
+instance_count = 0
+
+[entity.assembly_component_usage]
+instance_count = 0
+
+[entity.assembly_component_usage_substitute]
+instance_count = 0
+
+[entity.assembly_geometric_constraint]
+instance_count = 0
+
+[entity.assembly_group_component]
+instance_count = 0
+
+[entity.assembly_group_component_definition_placement_link]
+instance_count = 0
+
+[entity.assembly_joint]
+instance_count = 0
+
+[entity.assembly_shape_constraint]
+instance_count = 0
+
+[entity.assembly_shape_constraint_item_relationship]
+instance_count = 0
+
+[entity.assembly_shape_joint]
+instance_count = 0
+
+[entity.assembly_shape_joint_item_relationship]
+instance_count = 0
+
+[entity.assigned_analysis]
+instance_count = 0
+
+[entity.assigned_requirement]
+instance_count = 0
+
+[entity.assignment_object_relationship]
+instance_count = 0
+
+[entity.atan_function]
+instance_count = 0
+
+[entity.atom_based_literal]
+instance_count = 0
+
+[entity.atomic_formula]
+instance_count = 0
+
+[entity.attachment_slot_as_planned]
+instance_count = 0
+
+[entity.attachment_slot_as_realized]
+instance_count = 0
+
+[entity.attachment_slot_design]
+instance_count = 0
+
+[entity.attachment_slot_design_to_planned]
+instance_count = 0
+
+[entity.attachment_slot_design_to_realized]
+instance_count = 0
+
+[entity.attachment_slot_on_product]
+instance_count = 0
+
+[entity.attachment_slot_planned_to_realized]
+instance_count = 0
+
+[entity.attribute_assertion]
+instance_count = 0
+
+[entity.attribute_classification_assignment]
+instance_count = 0
+
+[entity.attribute_language_assignment]
+instance_count = 0
+
+[entity.attribute_value_assignment]
+instance_count = 0
+
+[entity.attribute_value_role]
+instance_count = 0
+
+[entity.auxiliary_geometric_representation_item]
+instance_count = 0
+
+[entity.auxiliary_leader_line]
+instance_count = 6
+
+[entity.axis1_placement]
+instance_count = 25892
+
+[entity.axis2_placement_2d]
+instance_count = 1556
+
+[entity.axis2_placement_3d]
+instance_count = 8995366
+
+[entity.b_spline_basis]
+instance_count = 0
+
+[entity.b_spline_curve]
+instance_count = 333842
+complex_part_count = 333842
+co_instantiated_with = [
+    "b_spline_curve_with_knots",
+    "bounded_curve",
+    "curve",
+    "geometric_representation_item",
+    "quasi_uniform_curve",
+    "rational_b_spline_curve",
+    "representation_item",
+]
+
+[entity.b_spline_curve_knot_locator]
+instance_count = 0
+
+[entity.b_spline_curve_segment]
+instance_count = 0
+
+[entity.b_spline_curve_with_knots]
+instance_count = 3167947
+complex_part_count = 333132
+co_instantiated_with = [
+    "b_spline_curve",
+    "bounded_curve",
+    "curve",
+    "geometric_representation_item",
+    "rational_b_spline_curve",
+    "representation_item",
+]
+
+[entity.b_spline_function]
+instance_count = 0
+
+[entity.b_spline_surface]
+instance_count = 337583
+complex_part_count = 337583
+co_instantiated_with = [
+    "b_spline_surface_with_knots",
+    "bounded_surface",
+    "geometric_representation_item",
+    "quasi_uniform_surface",
+    "rational_b_spline_surface",
+    "representation_item",
+    "surface",
+]
+
+[entity.b_spline_surface_knot_locator]
+instance_count = 0
+
+[entity.b_spline_surface_patch]
+instance_count = 0
+
+[entity.b_spline_surface_strip]
+instance_count = 0
+
+[entity.b_spline_surface_with_knots]
+instance_count = 844733
+complex_part_count = 337297
+co_instantiated_with = [
+    "b_spline_surface",
+    "bounded_surface",
+    "geometric_representation_item",
+    "rational_b_spline_surface",
+    "representation_item",
+    "surface",
+]
+
+[entity.b_spline_volume]
+instance_count = 0
+
+[entity.b_spline_volume_with_knots]
+instance_count = 0
+
+[entity.back_chaining_rule]
+instance_count = 0
+
+[entity.back_chaining_rule_body]
+instance_count = 0
+
+[entity.background_colour]
+instance_count = 0
+
+[entity.banded_matrix]
+instance_count = 0
+
+[entity.barring_hole]
+instance_count = 0
+
+[entity.basic_round_hole]
+instance_count = 0
+
+[entity.basic_round_hole_occurrence]
+instance_count = 0
+
+[entity.basic_round_hole_occurrence_in_assembly]
+instance_count = 0
+
+[entity.basic_sparse_matrix]
+instance_count = 0
+
+[entity.bead]
+instance_count = 0
+
+[entity.bead_end]
+instance_count = 0
+
+[entity.between_shape_aspect]
+instance_count = 0
+
+[entity.beveled_sheet_representation]
+instance_count = 0
+
+[entity.bezier_curve]
+instance_count = 0
+
+[entity.bezier_surface]
+instance_count = 0
+
+[entity.bezier_volume]
+instance_count = 0
+
+[entity.binary_assembly_constraint]
+instance_count = 0
+
+[entity.binary_boolean_expression]
+instance_count = 0
+
+[entity.binary_function_call]
+instance_count = 0
+
+[entity.binary_generic_expression]
+instance_count = 0
+
+[entity.binary_literal]
+instance_count = 0
+
+[entity.binary_numeric_expression]
+instance_count = 0
+
+[entity.binary_representation_item]
+instance_count = 0
+
+[entity.block]
+instance_count = 0
+
+[entity.block_volume]
+instance_count = 0
+
+[entity.boolean_defined_function]
+instance_count = 0
+
+[entity.boolean_expression]
+instance_count = 0
+
+[entity.boolean_literal]
+instance_count = 0
+
+[entity.boolean_representation_item]
+instance_count = 0
+
+[entity.boolean_result]
+instance_count = 0
+
+[entity.boolean_result_2d]
+instance_count = 0
+
+[entity.boolean_variable]
+instance_count = 0
+
+[entity.boss]
+instance_count = 0
+
+[entity.boss_top]
+instance_count = 0
+
+[entity.bound_parameter_environment]
+instance_count = 0
+
+[entity.bound_variable_semantics]
+instance_count = 0
+
+[entity.bound_variational_parameter]
+instance_count = 0
+
+[entity.boundary_curve]
+instance_count = 0
+
+[entity.boundary_curve_of_b_spline_or_rectangular_composite_surface]
+instance_count = 0
+
+[entity.bounded_curve]
+instance_count = 333842
+complex_part_count = 333842
+co_instantiated_with = [
+    "b_spline_curve",
+    "b_spline_curve_with_knots",
+    "curve",
+    "geometric_representation_item",
+    "quasi_uniform_curve",
+    "rational_b_spline_curve",
+    "representation_item",
+]
+
+[entity.bounded_curve_with_length]
+instance_count = 0
+
+[entity.bounded_pcurve]
+instance_count = 0
+
+[entity.bounded_surface]
+instance_count = 337583
+complex_part_count = 337583
+co_instantiated_with = [
+    "b_spline_surface",
+    "b_spline_surface_with_knots",
+    "geometric_representation_item",
+    "quasi_uniform_surface",
+    "rational_b_spline_surface",
+    "representation_item",
+    "surface",
+]
+
+[entity.bounded_surface_curve]
+instance_count = 0
+
+[entity.box_domain]
+instance_count = 0
+
+[entity.boxed_half_space]
+instance_count = 0
+
+[entity.breakdown_context]
+instance_count = 0
+
+[entity.breakdown_element_group_assignment]
+instance_count = 0
+
+[entity.breakdown_element_realization]
+instance_count = 0
+
+[entity.breakdown_element_usage]
+instance_count = 0
+
+[entity.breakdown_of]
+instance_count = 0
+
+[entity.brep_with_voids]
+instance_count = 1144
+
+[entity.bytes_representation_item]
+instance_count = 0
+
+[entity.calendar_date]
+instance_count = 63437
+
+[entity.camera_image]
+instance_count = 18
+complex_part_count = 18
+co_instantiated_with = [
+    "camera_image_3d_with_scale",
+    "geometric_representation_item",
+    "mapped_item",
+    "representation_item",
+]
+
+[entity.camera_image_2d_with_scale]
+instance_count = 0
+
+[entity.camera_image_3d_with_scale]
+instance_count = 18
+complex_part_count = 18
+co_instantiated_with = [
+    "camera_image",
+    "geometric_representation_item",
+    "mapped_item",
+    "representation_item",
+]
+
+[entity.camera_model]
+instance_count = 0
+
+[entity.camera_model_d2]
+instance_count = 0
+
+[entity.camera_model_d3]
+instance_count = 279
+
+[entity.camera_model_d3_multi_clipping]
+instance_count = 1
+
+[entity.camera_model_d3_multi_clipping_intersection]
+instance_count = 0
+
+[entity.camera_model_d3_multi_clipping_union]
+instance_count = 0
+
+[entity.camera_model_d3_with_hlhsr]
+instance_count = 18
+
+[entity.camera_model_with_light_sources]
+instance_count = 0
+
+[entity.camera_usage]
+instance_count = 18
+
+[entity.capacitance_measure_with_unit]
+instance_count = 0
+
+[entity.capacitance_unit]
+instance_count = 0
+
+[entity.cartesian_11]
+instance_count = 0
+
+[entity.cartesian_complex_number_region]
+instance_count = 0
+
+[entity.cartesian_point]
+instance_count = 127896438
+
+[entity.cartesian_transformation_operator]
+instance_count = 0
+
+[entity.cartesian_transformation_operator_2d]
+instance_count = 0
+
+[entity.cartesian_transformation_operator_3d]
+instance_count = 0
+
+[entity.cc_design_approval]
+instance_count = 34038
+
+[entity.cc_design_certification]
+instance_count = 0
+
+[entity.cc_design_contract]
+instance_count = 0
+
+[entity.cc_design_date_and_time_assignment]
+instance_count = 26138
+
+[entity.cc_design_person_and_organization_assignment]
+instance_count = 50313
+
+[entity.cc_design_security_classification]
+instance_count = 17815
+
+[entity.cc_design_specification_reference]
+instance_count = 0
+
+[entity.cdgc_with_dimension]
+instance_count = 0
+
+[entity.celsius_temperature_measure_with_unit]
+instance_count = 0
+
+[entity.centre_of_symmetry]
+instance_count = 23
+
+[entity.certification]
+instance_count = 0
+
+[entity.certification_assignment]
+instance_count = 0
+
+[entity.certification_type]
+instance_count = 0
+
+[entity.chain_based_geometric_item_specific_usage]
+instance_count = 0
+
+[entity.chain_based_item_identified_representation_usage]
+instance_count = 0
+
+[entity.chamfer]
+instance_count = 0
+
+[entity.chamfer_offset]
+instance_count = 0
+
+[entity.change]
+instance_count = 0
+
+[entity.change_composition_relationship]
+instance_count = 0
+
+[entity.change_element]
+instance_count = 0
+
+[entity.change_element_sequence]
+instance_count = 0
+
+[entity.change_group]
+instance_count = 0
+
+[entity.change_group_assignment]
+instance_count = 0
+
+[entity.change_request]
+instance_count = 0
+
+[entity.character_glyph_font_usage]
+instance_count = 0
+
+[entity.character_glyph_style_outline]
+instance_count = 0
+
+[entity.character_glyph_style_stroke]
+instance_count = 0
+
+[entity.character_glyph_symbol]
+instance_count = 0
+
+[entity.character_glyph_symbol_outline]
+instance_count = 0
+
+[entity.character_glyph_symbol_stroke]
+instance_count = 0
+
+[entity.characteristic_data_column_header]
+instance_count = 0
+
+[entity.characteristic_data_column_header_link]
+instance_count = 0
+
+[entity.characteristic_data_table_header]
+instance_count = 0
+
+[entity.characteristic_data_table_header_decomposition]
+instance_count = 0
+
+[entity.characteristic_type]
+instance_count = 0
+
+[entity.characterized_chain_based_item_within_representation]
+instance_count = 0
+
+[entity.characterized_class]
+instance_count = 0
+
+[entity.characterized_item_within_representation]
+instance_count = 561
+
+[entity.characterized_location_object]
+instance_count = 0
+
+[entity.characterized_object]
+instance_count = 48
+complex_part_count = 48
+co_instantiated_with = [
+    "characterized_representation",
+    "draughting_model",
+    "representation",
+    "shape_representation",
+    "tessellated_shape_representation",
+]
+
+[entity.characterized_object_relationship]
+instance_count = 0
+
+[entity.characterized_product_concept_feature]
+instance_count = 0
+
+[entity.characterized_product_concept_feature_category]
+instance_count = 0
+
+[entity.characterized_representation]
+instance_count = 48
+complex_part_count = 48
+co_instantiated_with = [
+    "characterized_object",
+    "draughting_model",
+    "representation",
+    "shape_representation",
+    "tessellated_shape_representation",
+]
+
+[entity.circle]
+instance_count = 3323221
+
+[entity.circular_area]
+instance_count = 1
+
+[entity.circular_closed_profile]
+instance_count = 0
+
+[entity.circular_involute]
+instance_count = 0
+
+[entity.circular_path]
+instance_count = 0
+
+[entity.circular_pattern]
+instance_count = 0
+
+[entity.circular_runout_tolerance]
+instance_count = 4
+complex_part_count = 1
+co_instantiated_with = [
+    "geometric_tolerance",
+    "geometric_tolerance_with_datum_reference",
+    "geometric_tolerance_with_modifiers",
+]
+
+[entity.class]
+instance_count = 0
+
+[entity.class_by_extension]
+instance_count = 0
+
+[entity.class_by_intension]
+instance_count = 0
+
+[entity.class_system]
+instance_count = 0
+
+[entity.class_usage_effectivity_context_assignment]
+instance_count = 0
+
+[entity.classification_assignment]
+instance_count = 0
+
+[entity.classification_assignment_relationship]
+instance_count = 0
+
+[entity.classification_role]
+instance_count = 0
+
+[entity.clgc_with_dimension]
+instance_count = 0
+
+[entity.closed_curve_style_parameters]
+instance_count = 0
+
+[entity.closed_path_profile]
+instance_count = 0
+
+[entity.closed_shell]
+instance_count = 230321
+
+[entity.clothoid]
+instance_count = 0
+
+[entity.coaxial_assembly_constraint]
+instance_count = 0
+
+[entity.coaxial_geometric_constraint]
+instance_count = 0
+
+[entity.coaxiality_tolerance]
+instance_count = 0
+
+[entity.collection]
+instance_count = 0
+
+[entity.collection_assignment]
+instance_count = 0
+
+[entity.collection_membership]
+instance_count = 0
+
+[entity.collection_relationship]
+instance_count = 0
+
+[entity.collection_version]
+instance_count = 0
+
+[entity.collection_version_relationship]
+instance_count = 0
+
+[entity.collection_version_sequence_relationship]
+instance_count = 0
+
+[entity.collection_view_definition]
+instance_count = 0
+
+[entity.colour]
+instance_count = 246
+
+[entity.colour_rgb]
+instance_count = 4137421
+
+[entity.colour_specification]
+instance_count = 0
+
+[entity.common_datum]
+instance_count = 0
+
+[entity.comparison_equal]
+instance_count = 0
+
+[entity.comparison_expression]
+instance_count = 0
+
+[entity.comparison_greater]
+instance_count = 0
+
+[entity.comparison_greater_equal]
+instance_count = 0
+
+[entity.comparison_less]
+instance_count = 0
+
+[entity.comparison_less_equal]
+instance_count = 0
+
+[entity.comparison_not_equal]
+instance_count = 0
+
+[entity.complex_area]
+instance_count = 0
+
+[entity.complex_clause]
+instance_count = 0
+
+[entity.complex_conjunctive_clause]
+instance_count = 0
+
+[entity.complex_disjunctive_clause]
+instance_count = 0
+
+[entity.complex_number_literal]
+instance_count = 0
+
+[entity.complex_number_literal_polar]
+instance_count = 0
+
+[entity.complex_shelled_solid]
+instance_count = 0
+
+[entity.complex_triangulated_face]
+instance_count = 59904
+
+[entity.complex_triangulated_surface_set]
+instance_count = 1254
+
+[entity.component_definition]
+instance_count = 0
+
+[entity.component_feature]
+instance_count = 0
+
+[entity.component_feature_joint]
+instance_count = 0
+
+[entity.component_feature_relationship]
+instance_count = 0
+
+[entity.component_mating_constraint_condition]
+instance_count = 0
+
+[entity.component_path_shape_aspect]
+instance_count = 0
+
+[entity.component_terminal]
+instance_count = 0
+
+[entity.composite_assembly_definition]
+instance_count = 0
+
+[entity.composite_assembly_sequence_definition]
+instance_count = 0
+
+[entity.composite_assembly_table]
+instance_count = 0
+
+[entity.composite_curve]
+instance_count = 432
+
+[entity.composite_curve_on_surface]
+instance_count = 0
+
+[entity.composite_curve_segment]
+instance_count = 4028
+
+[entity.composite_curve_transition_locator]
+instance_count = 0
+
+[entity.composite_group_shape_aspect]
+instance_count = 164
+complex_part_count = 9
+co_instantiated_with = [
+    "composite_shape_aspect",
+    "datum_feature",
+    "shape_aspect",
+]
+
+[entity.composite_hole]
+instance_count = 0
+
+[entity.composite_material_designation]
+instance_count = 0
+
+[entity.composite_shape_aspect]
+instance_count = 378
+complex_part_count = 21
+co_instantiated_with = [
+    "composite_group_shape_aspect",
+    "datum_feature",
+    "shape_aspect",
+]
+
+[entity.composite_sheet_representation]
+instance_count = 0
+
+[entity.composite_text]
+instance_count = 1
+
+[entity.composite_text_with_associated_curves]
+instance_count = 0
+
+[entity.composite_text_with_blanking_box]
+instance_count = 0
+
+[entity.composite_text_with_delineation]
+instance_count = 0
+
+[entity.composite_text_with_extent]
+instance_count = 0
+
+[entity.composite_unit_shape_aspect]
+instance_count = 0
+
+[entity.compound_feature]
+instance_count = 0
+
+[entity.compound_representation_item]
+instance_count = 7
+
+[entity.compound_shape_representation]
+instance_count = 0
+
+[entity.concat_expression]
+instance_count = 0
+
+[entity.concentricity_tolerance]
+instance_count = 1
+
+[entity.concept_feature_operator]
+instance_count = 0
+
+[entity.concept_feature_relationship]
+instance_count = 0
+
+[entity.concept_feature_relationship_with_condition]
+instance_count = 0
+
+[entity.condition]
+instance_count = 0
+
+[entity.conditional_concept_feature]
+instance_count = 0
+
+[entity.conditional_effectivity]
+instance_count = 0
+
+[entity.conductance_measure_with_unit]
+instance_count = 0
+
+[entity.conductance_unit]
+instance_count = 0
+
+[entity.configurable_item]
+instance_count = 0
+
+[entity.configuration_definition]
+instance_count = 0
+
+[entity.configuration_design]
+instance_count = 0
+
+[entity.configuration_effectivity]
+instance_count = 0
+
+[entity.configuration_interpolation]
+instance_count = 0
+
+[entity.configuration_item]
+instance_count = 0
+
+[entity.configuration_item_hierarchical_relationship]
+instance_count = 0
+
+[entity.configuration_item_relationship]
+instance_count = 0
+
+[entity.configuration_item_revision_sequence]
+instance_count = 0
+
+[entity.configured_effectivity_assignment]
+instance_count = 0
+
+[entity.configured_effectivity_context_assignment]
+instance_count = 0
+
+[entity.conic]
+instance_count = 0
+
+[entity.conical_stepped_hole_transition]
+instance_count = 0
+
+[entity.conical_surface]
+instance_count = 207848
+
+[entity.connected_edge_set]
+instance_count = 0
+
+[entity.connected_edge_sub_set]
+instance_count = 0
+
+[entity.connected_edge_with_length_set_representation]
+instance_count = 0
+
+[entity.connected_face_set]
+instance_count = 0
+
+[entity.connected_face_sub_set]
+instance_count = 0
+
+[entity.connected_volume_set]
+instance_count = 0
+
+[entity.connected_volume_sub_set]
+instance_count = 0
+
+[entity.connection_zone_based_assembly_joint]
+instance_count = 0
+
+[entity.connection_zone_interface_plane_relationship]
+instance_count = 0
+
+[entity.connectivity_definition]
+instance_count = 0
+
+[entity.connectivity_definition_item_relationship]
+instance_count = 0
+
+[entity.constant_function]
+instance_count = 0
+
+[entity.constituent_shape_aspect]
+instance_count = 0
+
+[entity.constrained_kinematic_motion_representation]
+instance_count = 0
+
+[entity.constructive_geometry_representation]
+instance_count = 96
+
+[entity.constructive_geometry_representation_relationship]
+instance_count = 96
+
+[entity.contact_feature]
+instance_count = 0
+
+[entity.contact_feature_definition]
+instance_count = 0
+
+[entity.contact_feature_definition_fit_relationship]
+instance_count = 0
+
+[entity.contact_feature_fit_relationship]
+instance_count = 0
+
+[entity.contact_ratio_representation]
+instance_count = 0
+
+[entity.contacting_feature]
+instance_count = 0
+
+[entity.containing_message]
+instance_count = 0
+
+[entity.context_dependent_invisibility]
+instance_count = 0
+
+[entity.context_dependent_kinematic_link_representation]
+instance_count = 0
+
+[entity.context_dependent_over_riding_styled_item]
+instance_count = 8553
+
+[entity.context_dependent_shape_representation]
+instance_count = 36796
+
+[entity.context_dependent_unit]
+instance_count = 0
+
+[entity.continuous_shape_aspect]
+instance_count = 0
+
+[entity.contract]
+instance_count = 0
+
+[entity.contract_assignment]
+instance_count = 0
+
+[entity.contract_relationship]
+instance_count = 0
+
+[entity.contract_type]
+instance_count = 0
+
+[entity.conversion_based_unit]
+instance_count = 35054
+complex_part_count = 35054
+co_instantiated_with = [
+    "length_unit",
+    "mass_unit",
+    "named_unit",
+    "plane_angle_unit",
+]
+
+[entity.convex_hexahedron]
+instance_count = 0
+
+[entity.coordinated_universal_time_offset]
+instance_count = 63409
+
+[entity.coordinates_list]
+instance_count = 6493
+
+[entity.cos_function]
+instance_count = 0
+
+[entity.counterbore_hole_definition]
+instance_count = 0
+
+[entity.counterbore_hole_occurrence]
+instance_count = 0
+
+[entity.counterbore_hole_occurrence_in_assembly]
+instance_count = 0
+
+[entity.counterdrill_hole_definition]
+instance_count = 0
+
+[entity.counterdrill_hole_occurrence]
+instance_count = 0
+
+[entity.counterdrill_hole_occurrence_in_assembly]
+instance_count = 0
+
+[entity.countersink_hole_definition]
+instance_count = 0
+
+[entity.countersink_hole_occurrence]
+instance_count = 0
+
+[entity.countersink_hole_occurrence_in_assembly]
+instance_count = 0
+
+[entity.criterion_report_item_with_number_of_instances]
+instance_count = 0
+
+[entity.criterion_report_item_with_value]
+instance_count = 0
+
+[entity.cross_sectional_alternative_shape_element]
+instance_count = 0
+
+[entity.cross_sectional_group_shape_element]
+instance_count = 0
+
+[entity.cross_sectional_group_shape_element_with_lacing]
+instance_count = 0
+
+[entity.cross_sectional_group_shape_element_with_tubular_cover]
+instance_count = 0
+
+[entity.cross_sectional_occurrence_shape_element]
+instance_count = 0
+
+[entity.cross_sectional_part_shape_element]
+instance_count = 0
+
+[entity.csg_2d_shape_representation]
+instance_count = 0
+
+[entity.csg_primitive_solid_2d]
+instance_count = 0
+
+[entity.csg_shape_representation]
+instance_count = 0
+
+[entity.csg_solid]
+instance_count = 0
+
+[entity.csg_solid_2d]
+instance_count = 0
+
+[entity.cubic_bezier_tessellated_edge]
+instance_count = 0
+
+[entity.cubic_bezier_triangulated_face]
+instance_count = 0
+
+[entity.cubic_tessellated_connecting_edge]
+instance_count = 0
+
+[entity.currency]
+instance_count = 0
+
+[entity.currency_measure_with_unit]
+instance_count = 0
+
+[entity.current_change_element_assignment]
+instance_count = 0
+
+[entity.curve]
+instance_count = 333842
+complex_part_count = 333842
+co_instantiated_with = [
+    "b_spline_curve",
+    "b_spline_curve_with_knots",
+    "bounded_curve",
+    "geometric_representation_item",
+    "quasi_uniform_curve",
+    "rational_b_spline_curve",
+    "representation_item",
+]
+
+[entity.curve_11]
+instance_count = 0
+
+[entity.curve_based_path]
+instance_count = 0
+
+[entity.curve_based_path_with_orientation]
+instance_count = 0
+
+[entity.curve_based_path_with_orientation_and_parameters]
+instance_count = 0
+
+[entity.curve_bounded_surface]
+instance_count = 0
+
+[entity.curve_dimension]
+instance_count = 0
+
+[entity.curve_distance_geometric_constraint]
+instance_count = 0
+
+[entity.curve_length_geometric_constraint]
+instance_count = 0
+
+[entity.curve_replica]
+instance_count = 0
+
+[entity.curve_segment_set]
+instance_count = 0
+
+[entity.curve_smoothness_geometric_constraint]
+instance_count = 0
+
+[entity.curve_style]
+instance_count = 155165
+
+[entity.curve_style_font]
+instance_count = 0
+
+[entity.curve_style_font_and_scaling]
+instance_count = 0
+
+[entity.curve_style_font_pattern]
+instance_count = 0
+
+[entity.curve_style_parameters_representation]
+instance_count = 0
+
+[entity.curve_style_parameters_with_ends]
+instance_count = 0
+
+[entity.curve_style_rendering]
+instance_count = 0
+
+[entity.curve_swept_solid_shape_representation]
+instance_count = 0
+
+[entity.curve_with_excessive_segments]
+instance_count = 0
+
+[entity.curve_with_small_curvature_radius]
+instance_count = 0
+
+[entity.cyclide_segment_solid]
+instance_count = 0
+
+[entity.cylindrical_11]
+instance_count = 0
+
+[entity.cylindrical_pair]
+instance_count = 0
+
+[entity.cylindrical_pair_range]
+instance_count = 0
+
+[entity.cylindrical_pair_value]
+instance_count = 0
+
+[entity.cylindrical_pair_with_range]
+instance_count = 0
+
+[entity.cylindrical_point]
+instance_count = 0
+
+[entity.cylindrical_surface]
+instance_count = 1418371
+
+[entity.cylindrical_volume]
+instance_count = 0
+
+[entity.cylindricity_tolerance]
+instance_count = 4
+
+[entity.data_environment]
+instance_count = 0
+
+[entity.data_equivalence_assessment_specification]
+instance_count = 0
+
+[entity.data_equivalence_criteria_representation]
+instance_count = 0
+
+[entity.data_equivalence_criterion]
+instance_count = 0
+
+[entity.data_equivalence_criterion_assessment_association]
+instance_count = 0
+
+[entity.data_equivalence_criterion_inspection_association]
+instance_count = 0
+
+[entity.data_equivalence_definition]
+instance_count = 0
+
+[entity.data_equivalence_definition_relationship]
+instance_count = 0
+
+[entity.data_equivalence_definition_representation_relationship]
+instance_count = 0
+
+[entity.data_equivalence_inspected_element_pair]
+instance_count = 0
+
+[entity.data_equivalence_inspection_criterion_report]
+instance_count = 0
+
+[entity.data_equivalence_inspection_criterion_report_item]
+instance_count = 0
+
+[entity.data_equivalence_inspection_instance_report]
+instance_count = 0
+
+[entity.data_equivalence_inspection_instance_report_item]
+instance_count = 0
+
+[entity.data_equivalence_inspection_report]
+instance_count = 0
+
+[entity.data_equivalence_inspection_requirement]
+instance_count = 0
+
+[entity.data_equivalence_inspection_result]
+instance_count = 0
+
+[entity.data_equivalence_inspection_result_representation]
+instance_count = 0
+
+[entity.data_equivalence_inspection_result_with_judgement]
+instance_count = 0
+
+[entity.data_equivalence_report_request]
+instance_count = 0
+
+[entity.data_quality_assessment_measurement_association]
+instance_count = 0
+
+[entity.data_quality_assessment_specification]
+instance_count = 0
+
+[entity.data_quality_criteria_representation]
+instance_count = 0
+
+[entity.data_quality_criterion]
+instance_count = 0
+
+[entity.data_quality_criterion_assessment_association]
+instance_count = 0
+
+[entity.data_quality_criterion_measurement_association]
+instance_count = 0
+
+[entity.data_quality_definition]
+instance_count = 0
+
+[entity.data_quality_definition_relationship]
+instance_count = 0
+
+[entity.data_quality_definition_representation_relationship]
+instance_count = 0
+
+[entity.data_quality_inspection_criterion_report]
+instance_count = 0
+
+[entity.data_quality_inspection_criterion_report_item]
+instance_count = 0
+
+[entity.data_quality_inspection_instance_report]
+instance_count = 0
+
+[entity.data_quality_inspection_instance_report_item]
+instance_count = 0
+
+[entity.data_quality_inspection_report]
+instance_count = 0
+
+[entity.data_quality_inspection_result]
+instance_count = 0
+
+[entity.data_quality_inspection_result_representation]
+instance_count = 0
+
+[entity.data_quality_inspection_result_with_judgement]
+instance_count = 0
+
+[entity.data_quality_measurement_requirement]
+instance_count = 0
+
+[entity.data_quality_report_measurement_association]
+instance_count = 0
+
+[entity.data_quality_report_request]
+instance_count = 0
+
+[entity.date]
+instance_count = 0
+
+[entity.date_and_time]
+instance_count = 63437
+
+[entity.date_and_time_assignment]
+instance_count = 0
+
+[entity.date_assignment]
+instance_count = 0
+
+[entity.date_representation_item]
+instance_count = 0
+
+[entity.date_role]
+instance_count = 0
+
+[entity.date_time_representation_item]
+instance_count = 0
+
+[entity.date_time_role]
+instance_count = 29612
+
+[entity.dated_effectivity]
+instance_count = 0
+
+[entity.datum]
+instance_count = 114
+
+[entity.datum_feature]
+instance_count = 102
+complex_part_count = 21
+co_instantiated_with = [
+    "composite_group_shape_aspect",
+    "composite_shape_aspect",
+    "shape_aspect",
+]
+
+[entity.datum_feature_callout]
+instance_count = 0
+
+[entity.datum_reference]
+instance_count = 0
+
+[entity.datum_reference_compartment]
+instance_count = 272
+
+[entity.datum_reference_element]
+instance_count = 14
+
+[entity.datum_reference_modifier_with_value]
+instance_count = 0
+
+[entity.datum_system]
+instance_count = 122
+
+[entity.datum_target]
+instance_count = 4
+
+[entity.datum_target_callout]
+instance_count = 0
+
+[entity.default_model_geometric_view]
+instance_count = 4
+
+[entity.default_tolerance_table]
+instance_count = 0
+
+[entity.default_tolerance_table_cell]
+instance_count = 0
+
+[entity.defined_character_glyph]
+instance_count = 0
+
+[entity.defined_constraint]
+instance_count = 0
+
+[entity.defined_function]
+instance_count = 0
+
+[entity.defined_symbol]
+instance_count = 116
+
+[entity.definite_integral_expression]
+instance_count = 0
+
+[entity.definite_integral_function]
+instance_count = 0
+
+[entity.definitional_product_definition_usage]
+instance_count = 0
+
+[entity.definitional_representation]
+instance_count = 69051
+
+[entity.definitional_representation_relationship]
+instance_count = 0
+
+[entity.definitional_representation_relationship_with_same_context]
+instance_count = 0
+
+[entity.degenerate_pcurve]
+instance_count = 0
+
+[entity.degenerate_toroidal_surface]
+instance_count = 1027
+
+[entity.delete_element]
+instance_count = 0
+
+[entity.dependent_variable_definition]
+instance_count = 0
+
+[entity.derived_shape_aspect]
+instance_count = 0
+
+[entity.derived_unit]
+instance_count = 5022
+
+[entity.derived_unit_element]
+instance_count = 9834
+
+[entity.derived_unit_variable]
+instance_count = 0
+
+[entity.description_attribute]
+instance_count = 12
+
+[entity.description_text]
+instance_count = 0
+
+[entity.description_text_assignment]
+instance_count = 0
+
+[entity.description_text_assignment_relationship]
+instance_count = 0
+
+[entity.descriptive_representation_item]
+instance_count = 6734
+
+[entity.design_context]
+instance_count = 8509
+
+[entity.design_make_from_relationship]
+instance_count = 0
+
+[entity.detailed_equivalence_report_request]
+instance_count = 0
+
+[entity.detailed_equivalence_report_request_with_number_of_instances]
+instance_count = 0
+
+[entity.detailed_report_request]
+instance_count = 0
+
+[entity.detailed_report_request_with_number_of_data]
+instance_count = 0
+
+[entity.diameter_dimension]
+instance_count = 0
+
+[entity.dielectric_constant_measure_with_unit]
+instance_count = 0
+
+[entity.different_angle_of_assembly_constraint]
+instance_count = 0
+
+[entity.different_assembly_centroid]
+instance_count = 0
+
+[entity.different_assembly_centroid_using_notional_solid]
+instance_count = 0
+
+[entity.different_assembly_constraint_type]
+instance_count = 0
+
+[entity.different_assembly_volume]
+instance_count = 0
+
+[entity.different_bounding_box]
+instance_count = 0
+
+[entity.different_centroid]
+instance_count = 0
+
+[entity.different_component_identification_via_multi_level_reference]
+instance_count = 0
+
+[entity.different_component_shape]
+instance_count = 0
+
+[entity.different_component_type]
+instance_count = 0
+
+[entity.different_curve_length]
+instance_count = 0
+
+[entity.different_length_of_assembly_constraint]
+instance_count = 0
+
+[entity.different_number_of_closed_shell]
+instance_count = 0
+
+[entity.different_number_of_components]
+instance_count = 0
+
+[entity.different_number_of_geometric_elements]
+instance_count = 0
+
+[entity.different_number_of_geometric_elements_wireframe_model]
+instance_count = 0
+
+[entity.different_number_of_topological_elements]
+instance_count = 0
+
+[entity.different_number_of_topological_elements_wireframe_model]
+instance_count = 0
+
+[entity.different_placement_of_component]
+instance_count = 0
+
+[entity.different_surface_area]
+instance_count = 0
+
+[entity.different_surface_normal]
+instance_count = 0
+
+[entity.different_volume]
+instance_count = 0
+
+[entity.dimension_callout]
+instance_count = 0
+
+[entity.dimension_callout_component_relationship]
+instance_count = 0
+
+[entity.dimension_callout_relationship]
+instance_count = 0
+
+[entity.dimension_curve]
+instance_count = 0
+
+[entity.dimension_curve_directed_callout]
+instance_count = 0
+
+[entity.dimension_curve_terminator]
+instance_count = 0
+
+[entity.dimension_curve_terminator_to_projection_curve_associativity]
+instance_count = 0
+
+[entity.dimension_pair]
+instance_count = 0
+
+[entity.dimension_related_tolerance_zone_element]
+instance_count = 0
+
+[entity.dimension_text_associativity]
+instance_count = 0
+
+[entity.dimensional_characteristic_representation]
+instance_count = 263
+
+[entity.dimensional_exponents]
+instance_count = 47660
+
+[entity.dimensional_location]
+instance_count = 48
+
+[entity.dimensional_location_with_datum_feature]
+instance_count = 0
+
+[entity.dimensional_location_with_path]
+instance_count = 0
+
+[entity.dimensional_size]
+instance_count = 212
+
+[entity.dimensional_size_with_datum_feature]
+instance_count = 2
+
+[entity.dimensional_size_with_path]
+instance_count = 0
+
+[entity.directed_action]
+instance_count = 0
+
+[entity.directed_action_assignment]
+instance_count = 0
+
+[entity.directed_angle]
+instance_count = 0
+
+[entity.directed_dimensional_location]
+instance_count = 4
+
+[entity.directed_tolerance_zone]
+instance_count = 0
+
+[entity.direction]
+instance_count = 27017417
+
+[entity.direction_shape_representation]
+instance_count = 0
+
+[entity.disallowed_assembly_relationship_usage]
+instance_count = 0
+
+[entity.disconnected_face_set]
+instance_count = 0
+
+[entity.discontinuous_geometry]
+instance_count = 0
+
+[entity.div_expression]
+instance_count = 0
+
+[entity.document]
+instance_count = 67
+
+[entity.document_file]
+instance_count = 129
+
+[entity.document_identifier]
+instance_count = 0
+
+[entity.document_identifier_assignment]
+instance_count = 0
+
+[entity.document_product_association]
+instance_count = 0
+
+[entity.document_product_equivalence]
+instance_count = 24
+
+[entity.document_reference]
+instance_count = 0
+
+[entity.document_relationship]
+instance_count = 0
+
+[entity.document_representation_type]
+instance_count = 21
+
+[entity.document_type]
+instance_count = 196
+
+[entity.document_usage_constraint]
+instance_count = 0
+
+[entity.document_usage_constraint_assignment]
+instance_count = 0
+
+[entity.document_usage_role]
+instance_count = 0
+
+[entity.document_with_class]
+instance_count = 0
+
+[entity.dose_equivalent_measure_with_unit]
+instance_count = 0
+
+[entity.dose_equivalent_unit]
+instance_count = 0
+
+[entity.double_offset_shelled_solid]
+instance_count = 0
+
+[entity.draped_defined_transformation]
+instance_count = 0
+
+[entity.draped_orientation_angle]
+instance_count = 0
+
+[entity.draughting_annotation_occurrence]
+instance_count = 348
+complex_part_count = 348
+co_instantiated_with = [
+    "annotation_curve_occurrence",
+    "annotation_occurrence",
+    "annotation_symbol_occurrence",
+    "annotation_text_occurrence",
+    "geometric_representation_item",
+    "leader_curve",
+    "leader_terminator",
+    "representation_item",
+    "styled_item",
+    "terminator_symbol",
+]
+
+[entity.draughting_callout]
+instance_count = 842
+
+[entity.draughting_callout_relationship]
+instance_count = 76
+
+[entity.draughting_elements]
+instance_count = 0
+
+[entity.draughting_model]
+instance_count = 964
+complex_part_count = 96
+co_instantiated_with = [
+    "characterized_object",
+    "characterized_representation",
+    "representation",
+    "shape_representation",
+    "tessellated_shape_representation",
+]
+
+[entity.draughting_model_item_association]
+instance_count = 2237
+
+[entity.draughting_model_item_association_with_placeholder]
+instance_count = 363
+
+[entity.draughting_pre_defined_colour]
+instance_count = 266
+
+[entity.draughting_pre_defined_curve_font]
+instance_count = 104179
+
+[entity.draughting_pre_defined_text_font]
+instance_count = 116
+
+[entity.draughting_specification_reference]
+instance_count = 0
+
+[entity.draughting_subfigure_representation]
+instance_count = 0
+
+[entity.draughting_symbol_representation]
+instance_count = 0
+
+[entity.draughting_text_literal_with_delineation]
+instance_count = 0
+
+[entity.draughting_title]
+instance_count = 0
+
+[entity.drawing_definition]
+instance_count = 0
+
+[entity.drawing_revision]
+instance_count = 0
+
+[entity.drawing_revision_sequence]
+instance_count = 0
+
+[entity.drawing_sheet_layout]
+instance_count = 0
+
+[entity.drawing_sheet_revision]
+instance_count = 0
+
+[entity.drawing_sheet_revision_sequence]
+instance_count = 0
+
+[entity.drawing_sheet_revision_usage]
+instance_count = 0
+
+[entity.dupin_cyclide_surface]
+instance_count = 0
+
+[entity.eccentric_cone]
+instance_count = 0
+
+[entity.eccentric_conical_volume]
+instance_count = 0
+
+[entity.edge]
+instance_count = 0
+
+[entity.edge_based_topological_representation_with_length_constraint]
+instance_count = 0
+
+[entity.edge_based_wireframe_model]
+instance_count = 0
+
+[entity.edge_based_wireframe_shape_representation]
+instance_count = 0
+
+[entity.edge_blended_solid]
+instance_count = 0
+
+[entity.edge_bounded_curve_with_length]
+instance_count = 0
+
+[entity.edge_curve]
+instance_count = 15617775
+
+[entity.edge_loop]
+instance_count = 7198770
+
+[entity.edge_round]
+instance_count = 0
+
+[entity.edge_with_excessive_segments]
+instance_count = 0
+
+[entity.edge_with_length]
+instance_count = 0
+
+[entity.effectivity]
+instance_count = 0
+
+[entity.effectivity_assignment]
+instance_count = 0
+
+[entity.effectivity_context_assignment]
+instance_count = 0
+
+[entity.effectivity_context_role]
+instance_count = 0
+
+[entity.effectivity_relationship]
+instance_count = 0
+
+[entity.electric_charge_measure_with_unit]
+instance_count = 0
+
+[entity.electric_charge_unit]
+instance_count = 0
+
+[entity.electric_current_measure_with_unit]
+instance_count = 0
+
+[entity.electric_current_unit]
+instance_count = 0
+
+[entity.electric_potential_measure_with_unit]
+instance_count = 0
+
+[entity.electric_potential_unit]
+instance_count = 0
+
+[entity.element_delivery]
+instance_count = 0
+
+[entity.elementary_brep_shape_representation]
+instance_count = 0
+
+[entity.elementary_function]
+instance_count = 0
+
+[entity.elementary_space]
+instance_count = 0
+
+[entity.elementary_surface]
+instance_count = 0
+
+[entity.ellipse]
+instance_count = 215258
+
+[entity.ellipsoid]
+instance_count = 0
+
+[entity.ellipsoid_volume]
+instance_count = 0
+
+[entity.elliptic_area]
+instance_count = 0
+
+[entity.energy_measure_with_unit]
+instance_count = 0
+
+[entity.energy_unit]
+instance_count = 0
+
+[entity.entirely_narrow_face]
+instance_count = 0
+
+[entity.entirely_narrow_solid]
+instance_count = 0
+
+[entity.entirely_narrow_surface]
+instance_count = 0
+
+[entity.entity_assertion]
+instance_count = 0
+
+[entity.enum_reference_prefix]
+instance_count = 0
+
+[entity.envelope]
+instance_count = 0
+
+[entity.envelope_relationship]
+instance_count = 0
+
+[entity.environment]
+instance_count = 0
+
+[entity.equal_parameter_constraint]
+instance_count = 0
+
+[entity.equals_expression]
+instance_count = 0
+
+[entity.equivalence_instance_report_item_with_notable_instances]
+instance_count = 0
+
+[entity.equivalence_notable_instance]
+instance_count = 0
+
+[entity.erroneous_b_spline_curve_definition]
+instance_count = 0
+
+[entity.erroneous_b_spline_surface_definition]
+instance_count = 0
+
+[entity.erroneous_data]
+instance_count = 0
+
+[entity.erroneous_geometry]
+instance_count = 0
+
+[entity.erroneous_manifold_solid_brep]
+instance_count = 0
+
+[entity.erroneous_topology]
+instance_count = 0
+
+[entity.erroneous_topology_and_geometry_relationship]
+instance_count = 0
+
+[entity.evaluated_characteristic]
+instance_count = 0
+
+[entity.evaluated_characteristic_of_product_as_individual_test_result]
+instance_count = 0
+
+[entity.evaluated_degenerate_pcurve]
+instance_count = 0
+
+[entity.evaluation_product_definition]
+instance_count = 0
+
+[entity.event_occurrence]
+instance_count = 0
+
+[entity.event_occurrence_assignment]
+instance_count = 0
+
+[entity.event_occurrence_context_assignment]
+instance_count = 0
+
+[entity.event_occurrence_context_role]
+instance_count = 0
+
+[entity.event_occurrence_relationship]
+instance_count = 0
+
+[entity.event_occurrence_role]
+instance_count = 0
+
+[entity.evidence]
+instance_count = 0
+
+[entity.excessive_use_of_groups]
+instance_count = 0
+
+[entity.excessive_use_of_layers]
+instance_count = 0
+
+[entity.excessively_high_degree_curve]
+instance_count = 0
+
+[entity.excessively_high_degree_surface]
+instance_count = 0
+
+[entity.exclusive_product_concept_feature_category]
+instance_count = 0
+
+[entity.executed_action]
+instance_count = 0
+
+[entity.exp_function]
+instance_count = 0
+
+[entity.expanded_uncertainty]
+instance_count = 0
+
+[entity.explicit_composite_hole]
+instance_count = 0
+
+[entity.explicit_constraint]
+instance_count = 0
+
+[entity.explicit_geometric_constraint]
+instance_count = 0
+
+[entity.explicit_procedural_geometric_representation_item_relationship]
+instance_count = 0
+
+[entity.explicit_procedural_representation_item_relationship]
+instance_count = 0
+
+[entity.explicit_procedural_representation_relationship]
+instance_count = 0
+
+[entity.explicit_procedural_shape_representation_relationship]
+instance_count = 0
+
+[entity.explicit_round_hole]
+instance_count = 0
+
+[entity.explicit_table_function]
+instance_count = 0
+
+[entity.expression]
+instance_count = 0
+
+[entity.expression_conversion_based_unit]
+instance_count = 0
+
+[entity.expression_denoted_function]
+instance_count = 0
+
+[entity.expression_extension_numeric]
+instance_count = 0
+
+[entity.expression_extension_string]
+instance_count = 0
+
+[entity.expression_extension_to_select]
+instance_count = 0
+
+[entity.extended_tuple_space]
+instance_count = 0
+
+[entity.extension]
+instance_count = 0
+
+[entity.extent]
+instance_count = 0
+
+[entity.external_class_library]
+instance_count = 0
+
+[entity.external_identification_assignment]
+instance_count = 0
+
+[entity.external_identification_assignment_relationship]
+instance_count = 0
+
+[entity.external_source]
+instance_count = 129
+
+[entity.external_source_relationship]
+instance_count = 0
+
+[entity.externally_conditioned_data_quality_criteria_representation]
+instance_count = 0
+
+[entity.externally_conditioned_data_quality_criterion]
+instance_count = 0
+
+[entity.externally_conditioned_data_quality_inspection_instance_report_item]
+instance_count = 0
+
+[entity.externally_conditioned_data_quality_inspection_result]
+instance_count = 0
+
+[entity.externally_conditioned_data_quality_inspection_result_representation]
+instance_count = 0
+
+[entity.externally_defined_character_glyph]
+instance_count = 0
+
+[entity.externally_defined_class]
+instance_count = 0
+
+[entity.externally_defined_colour]
+instance_count = 0
+
+[entity.externally_defined_context_dependent_unit]
+instance_count = 0
+
+[entity.externally_defined_conversion_based_unit]
+instance_count = 0
+
+[entity.externally_defined_currency]
+instance_count = 0
+
+[entity.externally_defined_curve_font]
+instance_count = 0
+
+[entity.externally_defined_dimension_definition]
+instance_count = 0
+
+[entity.externally_defined_feature_definition]
+instance_count = 0
+
+[entity.externally_defined_general_property]
+instance_count = 0
+
+[entity.externally_defined_hatch_style]
+instance_count = 0
+
+[entity.externally_defined_item]
+instance_count = 0
+
+[entity.externally_defined_item_relationship]
+instance_count = 0
+
+[entity.externally_defined_item_with_multiple_references]
+instance_count = 0
+
+[entity.externally_defined_marker]
+instance_count = 0
+
+[entity.externally_defined_picture_representation_item]
+instance_count = 0
+
+[entity.externally_defined_representation]
+instance_count = 0
+
+[entity.externally_defined_representation_item]
+instance_count = 0
+
+[entity.externally_defined_string]
+instance_count = 0
+
+[entity.externally_defined_style]
+instance_count = 0
+
+[entity.externally_defined_symbol]
+instance_count = 0
+
+[entity.externally_defined_terminator_symbol]
+instance_count = 0
+
+[entity.externally_defined_text_font]
+instance_count = 0
+
+[entity.externally_defined_tile]
+instance_count = 0
+
+[entity.externally_defined_tile_style]
+instance_count = 0
+
+[entity.externally_listed_data]
+instance_count = 0
+
+[entity.extreme_instance]
+instance_count = 0
+
+[entity.extreme_patch_width_variation]
+instance_count = 0
+
+[entity.extruded_area_solid]
+instance_count = 0
+
+[entity.extruded_face_solid]
+instance_count = 0
+
+[entity.extruded_face_solid_with_draft_angle]
+instance_count = 0
+
+[entity.extruded_face_solid_with_multiple_draft_angles]
+instance_count = 0
+
+[entity.extruded_face_solid_with_trim_conditions]
+instance_count = 0
+
+[entity.face]
+instance_count = 0
+
+[entity.face_based_surface_model]
+instance_count = 0
+
+[entity.face_bound]
+instance_count = 1567696
+
+[entity.face_outer_bound]
+instance_count = 5649812
+
+[entity.face_shape_representation]
+instance_count = 0
+
+[entity.face_shape_representation_relationship]
+instance_count = 0
+
+[entity.face_surface]
+instance_count = 495496
+
+[entity.face_surface_with_excessive_patches_in_one_direction]
+instance_count = 0
+
+[entity.faceted_brep]
+instance_count = 0
+
+[entity.faceted_brep_shape_representation]
+instance_count = 0
+
+[entity.faceted_primitive]
+instance_count = 0
+
+[entity.fact_type]
+instance_count = 0
+
+[entity.feature_component_definition]
+instance_count = 0
+
+[entity.feature_component_relationship]
+instance_count = 0
+
+[entity.feature_definition]
+instance_count = 0
+
+[entity.feature_definition_with_connection_area]
+instance_count = 0
+
+[entity.feature_for_datum_target_relationship]
+instance_count = 15
+
+[entity.feature_in_panel]
+instance_count = 0
+
+[entity.feature_pattern]
+instance_count = 0
+
+[entity.featured_shape]
+instance_count = 0
+
+[entity.fill_area_style]
+instance_count = 4085021
+
+[entity.fill_area_style_colour]
+instance_count = 4085021
+
+[entity.fill_area_style_hatching]
+instance_count = 0
+
+[entity.fill_area_style_tile_coloured_region]
+instance_count = 0
+
+[entity.fill_area_style_tile_curve_with_style]
+instance_count = 0
+
+[entity.fill_area_style_tile_symbol_with_style]
+instance_count = 0
+
+[entity.fill_area_style_tiles]
+instance_count = 0
+
+[entity.fillet]
+instance_count = 0
+
+[entity.final_solution]
+instance_count = 0
+
+[entity.finite_function]
+instance_count = 0
+
+[entity.finite_integer_interval]
+instance_count = 0
+
+[entity.finite_real_interval]
+instance_count = 0
+
+[entity.finite_space]
+instance_count = 0
+
+[entity.fixed_constituent_assembly_constraint]
+instance_count = 0
+
+[entity.fixed_element_geometric_constraint]
+instance_count = 0
+
+[entity.fixed_instance_attribute_set]
+instance_count = 0
+
+[entity.fixed_reference_swept_surface]
+instance_count = 0
+
+[entity.flat_face]
+instance_count = 0
+
+[entity.flat_pattern_ply_representation_relationship]
+instance_count = 0
+
+[entity.flatness_tolerance]
+instance_count = 22
+complex_part_count = 6
+co_instantiated_with = [
+    "geometric_tolerance",
+    "geometric_tolerance_with_defined_area_unit",
+    "geometric_tolerance_with_defined_unit",
+    "geometric_tolerance_with_modifiers",
+]
+
+[entity.force_measure_with_unit]
+instance_count = 0
+
+[entity.force_unit]
+instance_count = 0
+
+[entity.format_function]
+instance_count = 0
+
+[entity.forward_chaining_rule]
+instance_count = 0
+
+[entity.forward_chaining_rule_premise]
+instance_count = 0
+
+[entity.founded_item]
+instance_count = 0
+
+[entity.founded_kinematic_path]
+instance_count = 0
+
+[entity.free_edge]
+instance_count = 0
+
+[entity.free_form_assignment]
+instance_count = 0
+
+[entity.free_form_constraint]
+instance_count = 0
+
+[entity.free_form_relation]
+instance_count = 0
+
+[entity.free_kinematic_motion_representation]
+instance_count = 0
+
+[entity.free_variable_semantics]
+instance_count = 0
+
+[entity.frequency_measure_with_unit]
+instance_count = 0
+
+[entity.frequency_unit]
+instance_count = 0
+
+[entity.frozen_assignment]
+instance_count = 0
+
+[entity.fully_constrained_pair]
+instance_count = 0
+
+[entity.func]
+instance_count = 0
+
+[entity.function_application]
+instance_count = 0
+
+[entity.function_space]
+instance_count = 0
+
+[entity.functional_breakdown_context]
+instance_count = 0
+
+[entity.functional_element_usage]
+instance_count = 0
+
+[entity.functionally_defined_transformation]
+instance_count = 0
+
+[entity.g1_discontinuity_between_adjacent_faces]
+instance_count = 0
+
+[entity.g1_discontinuous_curve]
+instance_count = 0
+
+[entity.g1_discontinuous_surface]
+instance_count = 0
+
+[entity.g2_discontinuity_between_adjacent_faces]
+instance_count = 0
+
+[entity.g2_discontinuous_curve]
+instance_count = 0
+
+[entity.g2_discontinuous_surface]
+instance_count = 0
+
+[entity.gap_between_adjacent_edges_in_loop]
+instance_count = 0
+
+[entity.gap_between_edge_and_base_surface]
+instance_count = 0
+
+[entity.gap_between_faces_related_to_an_edge]
+instance_count = 0
+
+[entity.gap_between_pcurves_related_to_an_edge]
+instance_count = 0
+
+[entity.gap_between_vertex_and_base_surface]
+instance_count = 0
+
+[entity.gap_between_vertex_and_edge]
+instance_count = 0
+
+[entity.gear]
+instance_count = 0
+
+[entity.gear_pair]
+instance_count = 0
+
+[entity.gear_pair_range]
+instance_count = 0
+
+[entity.gear_pair_value]
+instance_count = 0
+
+[entity.gear_pair_with_range]
+instance_count = 0
+
+[entity.general_datum_reference]
+instance_count = 0
+
+[entity.general_feature]
+instance_count = 0
+
+[entity.general_linear_function]
+instance_count = 0
+
+[entity.general_material_property]
+instance_count = 0
+
+[entity.general_property]
+instance_count = 1564
+
+[entity.general_property_association]
+instance_count = 1607
+
+[entity.general_property_relationship]
+instance_count = 0
+
+[entity.generated_finite_numeric_space]
+instance_count = 0
+
+[entity.generic_character_glyph_symbol]
+instance_count = 0
+
+[entity.generic_expression]
+instance_count = 0
+
+[entity.generic_literal]
+instance_count = 0
+
+[entity.generic_product_definition_reference]
+instance_count = 0
+
+[entity.generic_property_relationship]
+instance_count = 0
+
+[entity.generic_variable]
+instance_count = 0
+
+[entity.geometric_alignment]
+instance_count = 0
+
+[entity.geometric_contact]
+instance_count = 0
+
+[entity.geometric_curve_set]
+instance_count = 4206
+
+[entity.geometric_gap_in_topology]
+instance_count = 0
+
+[entity.geometric_intersection]
+instance_count = 0
+
+[entity.geometric_item_specific_usage]
+instance_count = 2901
+
+[entity.geometric_model_element_relationship]
+instance_count = 0
+
+[entity.geometric_representation_context]
+instance_count = 230707
+complex_part_count = 230707
+co_instantiated_with = [
+    "global_uncertainty_assigned_context",
+    "global_unit_assigned_context",
+    "parametric_representation_context",
+    "representation_context",
+]
+
+[entity.geometric_representation_context_with_parameter]
+instance_count = 0
+
+[entity.geometric_representation_item]
+instance_count = 672176
+complex_part_count = 672176
+co_instantiated_with = [
+    "annotation_curve_occurrence",
+    "annotation_occurrence",
+    "annotation_symbol_occurrence",
+    "annotation_text_occurrence",
+    "b_spline_curve",
+    "b_spline_curve_with_knots",
+    "b_spline_surface",
+    "b_spline_surface_with_knots",
+    "bounded_curve",
+    "bounded_surface",
+    "camera_image",
+    "camera_image_3d_with_scale",
+    "curve",
+    "draughting_annotation_occurrence",
+    "leader_curve",
+    "leader_terminator",
+    "mapped_item",
+    "quasi_uniform_curve",
+    "quasi_uniform_surface",
+    "rational_b_spline_curve",
+    "rational_b_spline_surface",
+    "repositioned_tessellated_item",
+    "representation_item",
+    "styled_item",
+    "surface",
+    "terminator_symbol",
+    "tessellated_geometric_set",
+    "tessellated_item",
+]
+
+[entity.geometric_set]
+instance_count = 400
+
+[entity.geometric_tolerance]
+instance_count = 288
+complex_part_count = 288
+co_instantiated_with = [
+    "circular_runout_tolerance",
+    "flatness_tolerance",
+    "geometric_tolerance_with_datum_reference",
+    "geometric_tolerance_with_defined_area_unit",
+    "geometric_tolerance_with_defined_unit",
+    "geometric_tolerance_with_modifiers",
+    "line_profile_tolerance",
+    "parallelism_tolerance",
+    "perpendicularity_tolerance",
+    "position_tolerance",
+    "roundness_tolerance",
+    "straightness_tolerance",
+    "surface_profile_tolerance",
+    "unequally_disposed_geometric_tolerance",
+]
+
+[entity.geometric_tolerance_auxiliary_classification]
+instance_count = 0
+
+[entity.geometric_tolerance_relationship]
+instance_count = 42
+
+[entity.geometric_tolerance_with_datum_reference]
+instance_count = 279
+complex_part_count = 279
+co_instantiated_with = [
+    "circular_runout_tolerance",
+    "geometric_tolerance",
+    "geometric_tolerance_with_modifiers",
+    "line_profile_tolerance",
+    "parallelism_tolerance",
+    "perpendicularity_tolerance",
+    "position_tolerance",
+    "surface_profile_tolerance",
+    "unequally_disposed_geometric_tolerance",
+]
+
+[entity.geometric_tolerance_with_defined_area_unit]
+instance_count = 3
+complex_part_count = 3
+co_instantiated_with = [
+    "flatness_tolerance",
+    "geometric_tolerance",
+    "geometric_tolerance_with_defined_unit",
+]
+
+[entity.geometric_tolerance_with_defined_unit]
+instance_count = 5
+complex_part_count = 5
+co_instantiated_with = [
+    "flatness_tolerance",
+    "geometric_tolerance",
+    "geometric_tolerance_with_defined_area_unit",
+    "straightness_tolerance",
+]
+
+[entity.geometric_tolerance_with_maximum_tolerance]
+instance_count = 0
+
+[entity.geometric_tolerance_with_modifiers]
+instance_count = 73
+complex_part_count = 73
+co_instantiated_with = [
+    "circular_runout_tolerance",
+    "flatness_tolerance",
+    "geometric_tolerance",
+    "geometric_tolerance_with_datum_reference",
+    "parallelism_tolerance",
+    "perpendicularity_tolerance",
+    "position_tolerance",
+    "roundness_tolerance",
+    "surface_profile_tolerance",
+]
+
+[entity.geometrical_tolerance_callout]
+instance_count = 0
+
+[entity.geometrically_bounded_2d_wireframe_representation]
+instance_count = 0
+
+[entity.geometrically_bounded_surface_shape_representation]
+instance_count = 45
+
+[entity.geometrically_bounded_wireframe_shape_representation]
+instance_count = 3133
+
+[entity.geometry_to_topology_item_association]
+instance_count = 0
+
+[entity.geometry_to_topology_model_association]
+instance_count = 0
+
+[entity.geometry_with_local_irregularity]
+instance_count = 0
+
+[entity.geometry_with_local_near_degeneracy]
+instance_count = 0
+
+[entity.global_assignment]
+instance_count = 0
+
+[entity.global_uncertainty_assigned_context]
+instance_count = 182509
+complex_part_count = 182509
+co_instantiated_with = [
+    "geometric_representation_context",
+    "global_unit_assigned_context",
+    "representation_context",
+]
+
+[entity.global_unit_assigned_context]
+instance_count = 182510
+complex_part_count = 182509
+co_instantiated_with = [
+    "geometric_representation_context",
+    "global_uncertainty_assigned_context",
+    "representation_context",
+]
+
+[entity.gps_filter]
+instance_count = 0
+
+[entity.gps_filtration_specification]
+instance_count = 0
+
+[entity.ground_fact]
+instance_count = 0
+
+[entity.group]
+instance_count = 5751
+
+[entity.group_assignment]
+instance_count = 0
+
+[entity.group_relationship]
+instance_count = 0
+
+[entity.half_space_2d]
+instance_count = 0
+
+[entity.half_space_solid]
+instance_count = 0
+
+[entity.hardness_representation]
+instance_count = 0
+
+[entity.harness_node]
+instance_count = 0
+
+[entity.harness_segment]
+instance_count = 0
+
+[entity.hexahedron_volume]
+instance_count = 0
+
+[entity.hidden_element_over_riding_styled_item]
+instance_count = 0
+
+[entity.hierarchical_interface_connection]
+instance_count = 0
+
+[entity.high_degree_axi_symmetric_surface]
+instance_count = 0
+
+[entity.high_degree_conic]
+instance_count = 0
+
+[entity.high_degree_linear_curve]
+instance_count = 0
+
+[entity.high_degree_planar_surface]
+instance_count = 0
+
+[entity.high_order_kinematic_pair]
+instance_count = 0
+
+[entity.hole_bottom]
+instance_count = 0
+
+[entity.hole_in_panel]
+instance_count = 0
+
+[entity.homogeneous_linear_function]
+instance_count = 0
+
+[entity.homokinetic_pair]
+instance_count = 0
+
+[entity.hyperbola]
+instance_count = 38
+
+[entity.id_attribute]
+instance_count = 3303
+
+[entity.identification_assignment]
+instance_count = 0
+
+[entity.identification_assignment_relationship]
+instance_count = 0
+
+[entity.identification_role]
+instance_count = 129
+
+[entity.idrm_classification_assignment]
+instance_count = 0
+
+[entity.illuminance_measure_with_unit]
+instance_count = 0
+
+[entity.illuminance_unit]
+instance_count = 0
+
+[entity.implicit_explicit_positioned_sketch_relationship]
+instance_count = 0
+
+[entity.implicit_intersection_curve]
+instance_count = 0
+
+[entity.implicit_model_intersection_curve]
+instance_count = 0
+
+[entity.implicit_planar_curve]
+instance_count = 0
+
+[entity.implicit_planar_intersection_point]
+instance_count = 0
+
+[entity.implicit_planar_projection_point]
+instance_count = 0
+
+[entity.implicit_point_on_plane]
+instance_count = 0
+
+[entity.implicit_projected_curve]
+instance_count = 0
+
+[entity.implicit_silhouette_curve]
+instance_count = 0
+
+[entity.imported_curve_function]
+instance_count = 0
+
+[entity.imported_point_function]
+instance_count = 0
+
+[entity.imported_surface_function]
+instance_count = 0
+
+[entity.imported_volume_function]
+instance_count = 0
+
+[entity.in_zone]
+instance_count = 0
+
+[entity.inappropriate_element_visibility]
+instance_count = 0
+
+[entity.inappropriate_use_of_layer]
+instance_count = 0
+
+[entity.inapt_data]
+instance_count = 0
+
+[entity.inapt_geometry]
+instance_count = 0
+
+[entity.inapt_manifold_solid_brep]
+instance_count = 0
+
+[entity.inapt_topology]
+instance_count = 0
+
+[entity.inapt_topology_and_geometry_relationship]
+instance_count = 0
+
+[entity.incidence_assembly_constraint]
+instance_count = 0
+
+[entity.incidence_geometric_constraint]
+instance_count = 0
+
+[entity.included_text_block]
+instance_count = 0
+
+[entity.inclusion_product_concept_feature]
+instance_count = 0
+
+[entity.inconsistent_adjacent_face_normals]
+instance_count = 0
+
+[entity.inconsistent_curve_transition_code]
+instance_count = 0
+
+[entity.inconsistent_edge_and_curve_directions]
+instance_count = 0
+
+[entity.inconsistent_element_reference]
+instance_count = 0
+
+[entity.inconsistent_face_and_closed_shell_normals]
+instance_count = 0
+
+[entity.inconsistent_face_and_surface_normals]
+instance_count = 0
+
+[entity.inconsistent_surface_transition_code]
+instance_count = 0
+
+[entity.index_expression]
+instance_count = 0
+
+[entity.indirectly_selected_elements]
+instance_count = 0
+
+[entity.indirectly_selected_shape_elements]
+instance_count = 0
+
+[entity.indistinct_curve_knots]
+instance_count = 0
+
+[entity.indistinct_surface_knots]
+instance_count = 0
+
+[entity.inductance_measure_with_unit]
+instance_count = 0
+
+[entity.inductance_unit]
+instance_count = 0
+
+[entity.information_right]
+instance_count = 0
+
+[entity.information_usage_right]
+instance_count = 0
+
+[entity.initial_state]
+instance_count = 0
+
+[entity.instance_attribute_reference]
+instance_count = 0
+
+[entity.instance_report_item_with_extreme_instances]
+instance_count = 0
+
+[entity.instance_usage_context_assignment]
+instance_count = 0
+
+[entity.instanced_feature]
+instance_count = 0
+
+[entity.int_literal]
+instance_count = 0
+
+[entity.int_numeric_variable]
+instance_count = 0
+
+[entity.int_value_function]
+instance_count = 0
+
+[entity.integer_defined_function]
+instance_count = 0
+
+[entity.integer_interval_from_min]
+instance_count = 0
+
+[entity.integer_interval_to_max]
+instance_count = 0
+
+[entity.integer_representation_item]
+instance_count = 877
+
+[entity.integer_tuple_literal]
+instance_count = 0
+
+[entity.interface_component]
+instance_count = 0
+
+[entity.interface_connection]
+instance_count = 0
+
+[entity.interface_connector_as_planned]
+instance_count = 0
+
+[entity.interface_connector_as_realized]
+instance_count = 0
+
+[entity.interface_connector_definition]
+instance_count = 0
+
+[entity.interface_connector_design]
+instance_count = 0
+
+[entity.interface_connector_design_to_planned]
+instance_count = 0
+
+[entity.interface_connector_design_to_realized]
+instance_count = 0
+
+[entity.interface_connector_occurrence]
+instance_count = 0
+
+[entity.interface_connector_planned_to_realized]
+instance_count = 0
+
+[entity.interface_connector_version]
+instance_count = 0
+
+[entity.interface_definition_connection]
+instance_count = 0
+
+[entity.interface_definition_for]
+instance_count = 0
+
+[entity.interface_specification_definition]
+instance_count = 0
+
+[entity.interface_specification_version]
+instance_count = 0
+
+[entity.interfaced_group_component]
+instance_count = 0
+
+[entity.interpolated_configuration_representation]
+instance_count = 0
+
+[entity.interpolated_configuration_segment]
+instance_count = 0
+
+[entity.interpolated_configuration_sequence]
+instance_count = 0
+
+[entity.intersecting_connected_face_sets]
+instance_count = 0
+
+[entity.intersecting_loops_in_face]
+instance_count = 0
+
+[entity.intersecting_shells_in_solid]
+instance_count = 0
+
+[entity.intersection_curve]
+instance_count = 0
+
+[entity.interval_expression]
+instance_count = 0
+
+[entity.invisibility]
+instance_count = 417
+
+[entity.iso4217_currency]
+instance_count = 0
+
+[entity.item_defined_transformation]
+instance_count = 36796
+
+[entity.item_identified_representation_usage]
+instance_count = 54
+
+[entity.item_link_motion_relationship]
+instance_count = 0
+
+[entity.joggle]
+instance_count = 0
+
+[entity.joggle_termination]
+instance_count = 0
+
+[entity.kinematic_analysis_consistency]
+instance_count = 0
+
+[entity.kinematic_analysis_result]
+instance_count = 0
+
+[entity.kinematic_control]
+instance_count = 0
+
+[entity.kinematic_frame_background_representation]
+instance_count = 0
+
+[entity.kinematic_frame_background_representation_association]
+instance_count = 0
+
+[entity.kinematic_frame_based_transformation]
+instance_count = 0
+
+[entity.kinematic_ground_representation]
+instance_count = 0
+
+[entity.kinematic_joint]
+instance_count = 0
+
+[entity.kinematic_link]
+instance_count = 0
+
+[entity.kinematic_link_representation]
+instance_count = 0
+
+[entity.kinematic_link_representation_association]
+instance_count = 0
+
+[entity.kinematic_link_representation_relation]
+instance_count = 0
+
+[entity.kinematic_loop]
+instance_count = 0
+
+[entity.kinematic_pair]
+instance_count = 0
+
+[entity.kinematic_path]
+instance_count = 0
+
+[entity.kinematic_path_defined_by_curves]
+instance_count = 0
+
+[entity.kinematic_path_defined_by_nodes]
+instance_count = 0
+
+[entity.kinematic_path_segment]
+instance_count = 0
+
+[entity.kinematic_property_definition]
+instance_count = 0
+
+[entity.kinematic_property_definition_representation]
+instance_count = 0
+
+[entity.kinematic_property_mechanism_representation]
+instance_count = 0
+
+[entity.kinematic_property_representation_relation]
+instance_count = 0
+
+[entity.kinematic_property_topology_representation]
+instance_count = 0
+
+[entity.kinematic_structure]
+instance_count = 0
+
+[entity.kinematic_topology_directed_structure]
+instance_count = 0
+
+[entity.kinematic_topology_network_structure]
+instance_count = 0
+
+[entity.kinematic_topology_structure]
+instance_count = 0
+
+[entity.kinematic_topology_substructure]
+instance_count = 0
+
+[entity.kinematic_topology_tree_structure]
+instance_count = 0
+
+[entity.known_source]
+instance_count = 0
+
+[entity.laid_defined_transformation]
+instance_count = 0
+
+[entity.laid_orientation_angle]
+instance_count = 0
+
+[entity.laminate_table]
+instance_count = 0
+
+[entity.language]
+instance_count = 0
+
+[entity.language_assignment]
+instance_count = 0
+
+[entity.leader_curve]
+instance_count = 116
+complex_part_count = 116
+co_instantiated_with = [
+    "annotation_curve_occurrence",
+    "annotation_occurrence",
+    "draughting_annotation_occurrence",
+    "geometric_representation_item",
+    "representation_item",
+    "styled_item",
+]
+
+[entity.leader_directed_callout]
+instance_count = 116
+
+[entity.leader_directed_dimension]
+instance_count = 0
+
+[entity.leader_terminator]
+instance_count = 116
+complex_part_count = 116
+co_instantiated_with = [
+    "annotation_occurrence",
+    "annotation_symbol_occurrence",
+    "draughting_annotation_occurrence",
+    "geometric_representation_item",
+    "representation_item",
+    "styled_item",
+    "terminator_symbol",
+]
+
+[entity.length_function]
+instance_count = 0
+
+[entity.length_measure_with_unit]
+instance_count = 20101
+complex_part_count = 529
+co_instantiated_with = [
+    "measure_representation_item",
+    "measure_with_unit",
+    "qualified_representation_item",
+    "representation_item",
+]
+
+[entity.length_unit]
+instance_count = 151996
+complex_part_count = 151996
+co_instantiated_with = [
+    "conversion_based_unit",
+    "named_unit",
+    "si_unit",
+]
+
+[entity.light_source]
+instance_count = 0
+
+[entity.light_source_ambient]
+instance_count = 0
+
+[entity.light_source_directional]
+instance_count = 0
+
+[entity.light_source_positional]
+instance_count = 0
+
+[entity.light_source_spot]
+instance_count = 0
+
+[entity.like_expression]
+instance_count = 0
+
+[entity.limits_and_fits]
+instance_count = 6
+
+[entity.line]
+instance_count = 9059330
+
+[entity.line_profile_tolerance]
+instance_count = 1
+complex_part_count = 1
+co_instantiated_with = [
+    "geometric_tolerance",
+    "geometric_tolerance_with_datum_reference",
+]
+
+[entity.linear_array_component_definition_link]
+instance_count = 0
+
+[entity.linear_array_placement_group_component]
+instance_count = 0
+
+[entity.linear_dimension]
+instance_count = 0
+
+[entity.linear_flexible_and_pinion_pair]
+instance_count = 0
+
+[entity.linear_flexible_and_planar_curve_pair]
+instance_count = 0
+
+[entity.linear_flexible_link_representation]
+instance_count = 0
+
+[entity.linear_path]
+instance_count = 0
+
+[entity.linear_profile]
+instance_count = 0
+
+[entity.linearized_table_function]
+instance_count = 0
+
+[entity.link_motion_relationship]
+instance_count = 0
+
+[entity.link_motion_representation_along_path]
+instance_count = 0
+
+[entity.link_motion_transformation]
+instance_count = 0
+
+[entity.listed_complex_number_data]
+instance_count = 0
+
+[entity.listed_data]
+instance_count = 0
+
+[entity.listed_integer_data]
+instance_count = 0
+
+[entity.listed_logical_data]
+instance_count = 0
+
+[entity.listed_product_space]
+instance_count = 0
+
+[entity.listed_real_data]
+instance_count = 0
+
+[entity.listed_string_data]
+instance_count = 0
+
+[entity.literal_conjunction]
+instance_count = 0
+
+[entity.literal_disjunction]
+instance_count = 0
+
+[entity.literal_number]
+instance_count = 0
+
+[entity.local_b_spline]
+instance_count = 0
+
+[entity.local_time]
+instance_count = 63437
+
+[entity.locally_refined_spline_curve]
+instance_count = 0
+
+[entity.locally_refined_spline_surface]
+instance_count = 0
+
+[entity.locally_refined_spline_volume]
+instance_count = 0
+
+[entity.location]
+instance_count = 0
+
+[entity.location_assignment]
+instance_count = 0
+
+[entity.location_in_aggregate_representation_item]
+instance_count = 0
+
+[entity.location_relationship]
+instance_count = 0
+
+[entity.location_representation_assignment]
+instance_count = 0
+
+[entity.location_representation_role]
+instance_count = 0
+
+[entity.location_role]
+instance_count = 0
+
+[entity.location_shape_representation]
+instance_count = 0
+
+[entity.locator]
+instance_count = 0
+
+[entity.log10_function]
+instance_count = 0
+
+[entity.log2_function]
+instance_count = 0
+
+[entity.log_function]
+instance_count = 0
+
+[entity.logical_literal]
+instance_count = 0
+
+[entity.logical_representation_item]
+instance_count = 0
+
+[entity.loop]
+instance_count = 0
+
+[entity.loss_tangent_measure_with_unit]
+instance_count = 0
+
+[entity.lot_effectivity]
+instance_count = 0
+
+[entity.low_order_kinematic_pair]
+instance_count = 0
+
+[entity.low_order_kinematic_pair_value]
+instance_count = 0
+
+[entity.low_order_kinematic_pair_with_motion_coupling]
+instance_count = 0
+
+[entity.low_order_kinematic_pair_with_range]
+instance_count = 0
+
+[entity.luminous_flux_measure_with_unit]
+instance_count = 0
+
+[entity.luminous_flux_unit]
+instance_count = 0
+
+[entity.luminous_intensity_measure_with_unit]
+instance_count = 0
+
+[entity.luminous_intensity_unit]
+instance_count = 0
+
+[entity.machining_process_executable]
+instance_count = 0
+
+[entity.magnetic_flux_density_measure_with_unit]
+instance_count = 0
+
+[entity.magnetic_flux_density_unit]
+instance_count = 0
+
+[entity.magnetic_flux_measure_with_unit]
+instance_count = 0
+
+[entity.magnetic_flux_unit]
+instance_count = 0
+
+[entity.make_from_feature_relationship]
+instance_count = 0
+
+[entity.make_from_usage_option]
+instance_count = 3
+
+[entity.manifold_solid_brep]
+instance_count = 140177
+
+[entity.manifold_subsurface_shape_representation]
+instance_count = 0
+
+[entity.manifold_surface_shape_representation]
+instance_count = 85976
+
+[entity.mapped_item]
+instance_count = 906
+complex_part_count = 18
+co_instantiated_with = [
+    "camera_image",
+    "camera_image_3d_with_scale",
+    "geometric_representation_item",
+    "representation_item",
+]
+
+[entity.marking]
+instance_count = 0
+
+[entity.mass_measure_with_unit]
+instance_count = 85
+
+[entity.mass_unit]
+instance_count = 677
+complex_part_count = 677
+co_instantiated_with = [
+    "conversion_based_unit",
+    "named_unit",
+    "si_unit",
+]
+
+[entity.mated_part_relationship]
+instance_count = 0
+
+[entity.material_designation]
+instance_count = 0
+
+[entity.material_designation_characterization]
+instance_count = 0
+
+[entity.material_property]
+instance_count = 0
+
+[entity.material_property_representation]
+instance_count = 0
+
+[entity.mathematical_description]
+instance_count = 0
+
+[entity.maths_boolean_variable]
+instance_count = 0
+
+[entity.maths_enum_literal]
+instance_count = 0
+
+[entity.maths_function]
+instance_count = 0
+
+[entity.maths_integer_variable]
+instance_count = 0
+
+[entity.maths_real_variable]
+instance_count = 0
+
+[entity.maths_space]
+instance_count = 0
+
+[entity.maths_string_variable]
+instance_count = 0
+
+[entity.maths_tuple_literal]
+instance_count = 0
+
+[entity.maths_value_precision_qualifier]
+instance_count = 0
+
+[entity.maths_variable]
+instance_count = 0
+
+[entity.mating_material]
+instance_count = 0
+
+[entity.mating_material_items]
+instance_count = 0
+
+[entity.maximum_function]
+instance_count = 0
+
+[entity.measure_qualification]
+instance_count = 212
+
+[entity.measure_representation_item]
+instance_count = 7114
+complex_part_count = 534
+co_instantiated_with = [
+    "length_measure_with_unit",
+    "measure_with_unit",
+    "plane_angle_measure_with_unit",
+    "qualified_representation_item",
+    "ratio_measure_with_unit",
+    "representation_item",
+]
+
+[entity.measure_with_unit]
+instance_count = 600
+complex_part_count = 534
+co_instantiated_with = [
+    "length_measure_with_unit",
+    "measure_representation_item",
+    "plane_angle_measure_with_unit",
+    "qualified_representation_item",
+    "ratio_measure_with_unit",
+    "representation_item",
+]
+
+[entity.mechanical_context]
+instance_count = 8795
+
+[entity.mechanical_design_and_draughting_relationship]
+instance_count = 253
+
+[entity.mechanical_design_geometric_presentation_area]
+instance_count = 0
+
+[entity.mechanical_design_geometric_presentation_representation]
+instance_count = 112060
+
+[entity.mechanical_design_presentation_representation_with_draughting]
+instance_count = 0
+
+[entity.mechanical_design_requirement_item_association]
+instance_count = 0
+
+[entity.mechanical_design_shaded_presentation_area]
+instance_count = 0
+
+[entity.mechanical_design_shaded_presentation_representation]
+instance_count = 0
+
+[entity.mechanism]
+instance_count = 0
+
+[entity.mechanism_base_placement]
+instance_count = 0
+
+[entity.mechanism_representation]
+instance_count = 0
+
+[entity.mechanism_state_representation]
+instance_count = 0
+
+[entity.message_contents_assignment]
+instance_count = 0
+
+[entity.message_contents_group]
+instance_count = 0
+
+[entity.message_relationship]
+instance_count = 0
+
+[entity.min_and_major_ply_orientation_basis]
+instance_count = 0
+
+[entity.minimum_function]
+instance_count = 0
+
+[entity.minus_expression]
+instance_count = 0
+
+[entity.minus_function]
+instance_count = 0
+
+[entity.mismatch_of_arcwise_connected_curves]
+instance_count = 0
+
+[entity.mismatch_of_arcwise_connected_surfaces]
+instance_count = 0
+
+[entity.mismatch_of_arcwise_connected_surfaces_boundary]
+instance_count = 0
+
+[entity.mismatch_of_component]
+instance_count = 0
+
+[entity.mismatch_of_edges]
+instance_count = 0
+
+[entity.mismatch_of_faces]
+instance_count = 0
+
+[entity.mismatch_of_point_cloud_and_related_geometry]
+instance_count = 0
+
+[entity.mismatch_of_points]
+instance_count = 0
+
+[entity.mismatch_of_underlying_edge_geometry]
+instance_count = 0
+
+[entity.mismatch_of_underlying_face_geometry]
+instance_count = 0
+
+[entity.missing_assembly_constraint]
+instance_count = 0
+
+[entity.missing_component]
+instance_count = 0
+
+[entity.missing_edge]
+instance_count = 0
+
+[entity.missing_face]
+instance_count = 0
+
+[entity.mod_expression]
+instance_count = 0
+
+[entity.model_geometric_view]
+instance_count = 52
+
+[entity.modified_geometric_tolerance]
+instance_count = 0
+
+[entity.modified_pattern]
+instance_count = 0
+
+[entity.modified_solid]
+instance_count = 0
+
+[entity.modified_solid_with_placed_configuration]
+instance_count = 0
+
+[entity.modify_element]
+instance_count = 0
+
+[entity.moments_of_inertia_representation]
+instance_count = 0
+
+[entity.motion_link_relationship]
+instance_count = 0
+
+[entity.mult_expression]
+instance_count = 0
+
+[entity.multi_language_attribute_assignment]
+instance_count = 0
+
+[entity.multi_level_reference_designator]
+instance_count = 0
+
+[entity.multiple_arity_boolean_expression]
+instance_count = 0
+
+[entity.multiple_arity_function_call]
+instance_count = 0
+
+[entity.multiple_arity_generic_expression]
+instance_count = 0
+
+[entity.multiple_arity_numeric_expression]
+instance_count = 0
+
+[entity.multiply_defined_cartesian_points]
+instance_count = 0
+
+[entity.multiply_defined_curves]
+instance_count = 0
+
+[entity.multiply_defined_directions]
+instance_count = 0
+
+[entity.multiply_defined_edges]
+instance_count = 0
+
+[entity.multiply_defined_faces]
+instance_count = 0
+
+[entity.multiply_defined_geometry]
+instance_count = 0
+
+[entity.multiply_defined_placements]
+instance_count = 0
+
+[entity.multiply_defined_solids]
+instance_count = 0
+
+[entity.multiply_defined_surfaces]
+instance_count = 0
+
+[entity.multiply_defined_vertices]
+instance_count = 0
+
+[entity.name_assignment]
+instance_count = 0
+
+[entity.name_attribute]
+instance_count = 19
+
+[entity.named_unit]
+instance_count = 432440
+complex_part_count = 432437
+co_instantiated_with = [
+    "conversion_based_unit",
+    "length_unit",
+    "mass_unit",
+    "plane_angle_unit",
+    "si_unit",
+    "solid_angle_unit",
+]
+
+[entity.named_unit_variable]
+instance_count = 0
+
+[entity.narrow_surface_patch]
+instance_count = 0
+
+[entity.near_point_relationship]
+instance_count = 0
+
+[entity.nearly_degenerate_geometry]
+instance_count = 0
+
+[entity.nearly_degenerate_surface_boundary]
+instance_count = 0
+
+[entity.nearly_degenerate_surface_patch]
+instance_count = 0
+
+[entity.neutral_sketch_representation]
+instance_count = 0
+
+[entity.next_assembly_usage_occurrence]
+instance_count = 36796
+
+[entity.ngon_closed_profile]
+instance_count = 0
+
+[entity.non_agreed_accuracy_parameter_usage]
+instance_count = 0
+
+[entity.non_agreed_scale_usage]
+instance_count = 0
+
+[entity.non_agreed_unit_usage]
+instance_count = 0
+
+[entity.non_manifold_at_edge]
+instance_count = 0
+
+[entity.non_manifold_at_vertex]
+instance_count = 0
+
+[entity.non_manifold_surface_shape_representation]
+instance_count = 0
+
+[entity.non_referenced_coordinate_system]
+instance_count = 0
+
+[entity.non_smooth_geometry_transition_across_edge]
+instance_count = 0
+
+[entity.non_uniform_zone_definition]
+instance_count = 0
+
+[entity.not_expression]
+instance_count = 0
+
+[entity.null_representation_item]
+instance_count = 0
+
+[entity.numeric_defined_function]
+instance_count = 0
+
+[entity.numeric_expression]
+instance_count = 0
+
+[entity.numeric_variable]
+instance_count = 0
+
+[entity.object_role]
+instance_count = 153
+
+[entity.odd_function]
+instance_count = 0
+
+[entity.offset_curve_2d]
+instance_count = 0
+
+[entity.offset_curve_3d]
+instance_count = 0
+
+[entity.offset_surface]
+instance_count = 3516
+
+[entity.one_direction_repeat_factor]
+instance_count = 0
+
+[entity.open_closed_shell]
+instance_count = 0
+
+[entity.open_edge_loop]
+instance_count = 0
+
+[entity.open_path]
+instance_count = 0
+
+[entity.open_path_profile]
+instance_count = 0
+
+[entity.open_shell]
+instance_count = 9286
+
+[entity.or_expression]
+instance_count = 0
+
+[entity.ordinal_date]
+instance_count = 0
+
+[entity.ordinate_dimension]
+instance_count = 0
+
+[entity.organization]
+instance_count = 78641
+
+[entity.organization_assignment]
+instance_count = 0
+
+[entity.organization_relationship]
+instance_count = 0
+
+[entity.organization_role]
+instance_count = 0
+
+[entity.organization_type]
+instance_count = 0
+
+[entity.organization_type_assignment]
+instance_count = 0
+
+[entity.organization_type_role]
+instance_count = 0
+
+[entity.organizational_address]
+instance_count = 0
+
+[entity.organizational_project]
+instance_count = 0
+
+[entity.organizational_project_assignment]
+instance_count = 0
+
+[entity.organizational_project_relationship]
+instance_count = 0
+
+[entity.organizational_project_role]
+instance_count = 0
+
+[entity.oriented_closed_shell]
+instance_count = 3361
+
+[entity.oriented_edge]
+instance_count = 29362931
+
+[entity.oriented_face]
+instance_count = 0
+
+[entity.oriented_joint]
+instance_count = 0
+
+[entity.oriented_open_shell]
+instance_count = 0
+
+[entity.oriented_path]
+instance_count = 0
+
+[entity.oriented_surface]
+instance_count = 0
+
+[entity.oriented_tolerance_zone]
+instance_count = 0
+
+[entity.outer_boundary_curve]
+instance_count = 0
+
+[entity.outer_round]
+instance_count = 0
+
+[entity.outside_profile]
+instance_count = 0
+
+[entity.over_riding_styled_item]
+instance_count = 45576
+
+[entity.over_used_vertex]
+instance_count = 0
+
+[entity.overcomplex_geometry]
+instance_count = 0
+
+[entity.overcomplex_topology_and_geometry_relationship]
+instance_count = 0
+
+[entity.overlapping_geometry]
+instance_count = 0
+
+[entity.package_product_concept_feature]
+instance_count = 0
+
+[entity.pair_actuator]
+instance_count = 0
+
+[entity.pair_representation_relationship]
+instance_count = 0
+
+[entity.pair_value]
+instance_count = 0
+
+[entity.parabola]
+instance_count = 0
+
+[entity.parallel_assembly_constraint]
+instance_count = 0
+
+[entity.parallel_assembly_constraint_with_dimension]
+instance_count = 0
+
+[entity.parallel_composed_function]
+instance_count = 0
+
+[entity.parallel_geometric_constraint]
+instance_count = 0
+
+[entity.parallel_offset]
+instance_count = 0
+
+[entity.parallel_offset_geometric_constraint]
+instance_count = 0
+
+[entity.parallelism_tolerance]
+instance_count = 12
+complex_part_count = 6
+co_instantiated_with = [
+    "geometric_tolerance",
+    "geometric_tolerance_with_datum_reference",
+    "geometric_tolerance_with_modifiers",
+]
+
+[entity.parametric_representation_context]
+instance_count = 48198
+complex_part_count = 48198
+co_instantiated_with = [
+    "geometric_representation_context",
+    "representation_context",
+]
+
+[entity.part_laminate_table]
+instance_count = 0
+
+[entity.partial_circular_profile]
+instance_count = 0
+
+[entity.partial_derivative_expression]
+instance_count = 0
+
+[entity.partial_derivative_function]
+instance_count = 0
+
+[entity.partial_document_with_structured_text_representation_assignment]
+instance_count = 0
+
+[entity.partly_overlapping_curves]
+instance_count = 0
+
+[entity.partly_overlapping_edges]
+instance_count = 0
+
+[entity.partly_overlapping_faces]
+instance_count = 0
+
+[entity.partly_overlapping_solids]
+instance_count = 0
+
+[entity.partly_overlapping_surfaces]
+instance_count = 0
+
+[entity.path]
+instance_count = 0
+
+[entity.path_area_with_parameters]
+instance_count = 0
+
+[entity.path_feature_component]
+instance_count = 0
+
+[entity.path_node]
+instance_count = 0
+
+[entity.path_parameter_representation]
+instance_count = 0
+
+[entity.path_parameter_representation_context]
+instance_count = 0
+
+[entity.path_shape_representation]
+instance_count = 0
+
+[entity.pattern_offset_membership]
+instance_count = 0
+
+[entity.pattern_omit_membership]
+instance_count = 0
+
+[entity.pcurve]
+instance_count = 69051
+
+[entity.pdgc_with_dimension]
+instance_count = 0
+
+[entity.percentage_laminate_definition]
+instance_count = 0
+
+[entity.percentage_laminate_table]
+instance_count = 0
+
+[entity.percentage_ply_definition]
+instance_count = 0
+
+[entity.perpendicular_assembly_constraint]
+instance_count = 0
+
+[entity.perpendicular_geometric_constraint]
+instance_count = 0
+
+[entity.perpendicular_to]
+instance_count = 0
+
+[entity.perpendicularity_tolerance]
+instance_count = 36
+complex_part_count = 3
+co_instantiated_with = [
+    "geometric_tolerance",
+    "geometric_tolerance_with_datum_reference",
+    "geometric_tolerance_with_modifiers",
+]
+
+[entity.person]
+instance_count = 78560
+
+[entity.person_and_organization]
+instance_count = 82537
+
+[entity.person_and_organization_address]
+instance_count = 0
+
+[entity.person_and_organization_assignment]
+instance_count = 0
+
+[entity.person_and_organization_role]
+instance_count = 50278
+
+[entity.personal_address]
+instance_count = 12
+
+[entity.pgc_with_dimension]
+instance_count = 0
+
+[entity.physical_breakdown_context]
+instance_count = 0
+
+[entity.physical_component]
+instance_count = 0
+
+[entity.physical_component_feature]
+instance_count = 0
+
+[entity.physical_component_interface_terminal]
+instance_count = 0
+
+[entity.physical_component_terminal]
+instance_count = 0
+
+[entity.physical_element_usage]
+instance_count = 0
+
+[entity.physically_modelled_product_definition]
+instance_count = 0
+
+[entity.picture_representation]
+instance_count = 0
+
+[entity.picture_representation_item]
+instance_count = 0
+
+[entity.placed_datum_target_feature]
+instance_count = 17
+
+[entity.placed_feature]
+instance_count = 0
+
+[entity.placement]
+instance_count = 0
+
+[entity.planar_box]
+instance_count = 435
+
+[entity.planar_curve_pair]
+instance_count = 0
+
+[entity.planar_curve_pair_range]
+instance_count = 0
+
+[entity.planar_extent]
+instance_count = 0
+
+[entity.planar_pair]
+instance_count = 0
+
+[entity.planar_pair_range]
+instance_count = 0
+
+[entity.planar_pair_value]
+instance_count = 0
+
+[entity.planar_pair_with_range]
+instance_count = 0
+
+[entity.planar_shape_representation]
+instance_count = 0
+
+[entity.plane]
+instance_count = 3314597
+
+[entity.plane_angle_and_length_pair]
+instance_count = 0
+
+[entity.plane_angle_and_ratio_pair]
+instance_count = 0
+
+[entity.plane_angle_measure_with_unit]
+instance_count = 15993
+complex_part_count = 4
+co_instantiated_with = [
+    "measure_representation_item",
+    "measure_with_unit",
+    "representation_item",
+]
+
+[entity.plane_angle_unit]
+instance_count = 147867
+complex_part_count = 147867
+co_instantiated_with = [
+    "conversion_based_unit",
+    "named_unit",
+    "si_unit",
+]
+
+[entity.plus_expression]
+instance_count = 0
+
+[entity.plus_minus_tolerance]
+instance_count = 199
+
+[entity.ply_angle_representation]
+instance_count = 0
+
+[entity.ply_laminate_definition]
+instance_count = 0
+
+[entity.ply_laminate_sequence_definition]
+instance_count = 0
+
+[entity.ply_laminate_table]
+instance_count = 0
+
+[entity.ply_orientation_angle]
+instance_count = 0
+
+[entity.pmi_requirement_item_association]
+instance_count = 0
+
+[entity.pocket]
+instance_count = 0
+
+[entity.pocket_bottom]
+instance_count = 0
+
+[entity.pogc_with_dimension]
+instance_count = 0
+
+[entity.point]
+instance_count = 0
+
+[entity.point_and_vector]
+instance_count = 0
+
+[entity.point_array]
+instance_count = 0
+
+[entity.point_cloud_dataset]
+instance_count = 0
+
+[entity.point_cloud_dataset_with_colours]
+instance_count = 0
+
+[entity.point_cloud_dataset_with_intensities]
+instance_count = 0
+
+[entity.point_cloud_dataset_with_normals]
+instance_count = 0
+
+[entity.point_cloud_superdataset]
+instance_count = 0
+
+[entity.point_distance_geometric_constraint]
+instance_count = 0
+
+[entity.point_in_volume]
+instance_count = 0
+
+[entity.point_on_curve]
+instance_count = 0
+
+[entity.point_on_edge_curve]
+instance_count = 0
+
+[entity.point_on_face_surface]
+instance_count = 0
+
+[entity.point_on_planar_curve_pair]
+instance_count = 0
+
+[entity.point_on_planar_curve_pair_range]
+instance_count = 0
+
+[entity.point_on_planar_curve_pair_value]
+instance_count = 0
+
+[entity.point_on_planar_curve_pair_with_range]
+instance_count = 0
+
+[entity.point_on_surface]
+instance_count = 0
+
+[entity.point_on_surface_pair]
+instance_count = 0
+
+[entity.point_on_surface_pair_range]
+instance_count = 0
+
+[entity.point_on_surface_pair_value]
+instance_count = 0
+
+[entity.point_on_surface_pair_with_range]
+instance_count = 0
+
+[entity.point_path]
+instance_count = 0
+
+[entity.point_placement_shape_representation]
+instance_count = 0
+
+[entity.point_replica]
+instance_count = 0
+
+[entity.point_style]
+instance_count = 317
+
+[entity.point_to_point_path]
+instance_count = 0
+
+[entity.polar_11]
+instance_count = 0
+
+[entity.polar_complex_number_literal]
+instance_count = 0
+
+[entity.polar_complex_number_region]
+instance_count = 0
+
+[entity.polar_point]
+instance_count = 0
+
+[entity.poly_loop]
+instance_count = 0
+
+[entity.polygonal_area]
+instance_count = 0
+
+[entity.polyline]
+instance_count = 8640
+
+[entity.position_tolerance]
+instance_count = 157
+complex_part_count = 157
+co_instantiated_with = [
+    "geometric_tolerance",
+    "geometric_tolerance_with_datum_reference",
+    "geometric_tolerance_with_modifiers",
+]
+
+[entity.positioned_sketch]
+instance_count = 0
+
+[entity.positive_length_measure_with_unit]
+instance_count = 0
+
+[entity.positive_plane_angle_measure_with_unit]
+instance_count = 0
+
+[entity.power_expression]
+instance_count = 0
+
+[entity.power_measure_with_unit]
+instance_count = 0
+
+[entity.power_unit]
+instance_count = 0
+
+[entity.pre_defined_character_glyph]
+instance_count = 0
+
+[entity.pre_defined_colour]
+instance_count = 0
+
+[entity.pre_defined_curve_font]
+instance_count = 0
+
+[entity.pre_defined_dimension_symbol]
+instance_count = 0
+
+[entity.pre_defined_geometrical_tolerance_symbol]
+instance_count = 0
+
+[entity.pre_defined_item]
+instance_count = 0
+
+[entity.pre_defined_marker]
+instance_count = 64
+
+[entity.pre_defined_point_marker_symbol]
+instance_count = 6
+
+[entity.pre_defined_presentation_style]
+instance_count = 0
+
+[entity.pre_defined_surface_condition_symbol]
+instance_count = 0
+
+[entity.pre_defined_surface_side_style]
+instance_count = 0
+
+[entity.pre_defined_symbol]
+instance_count = 0
+
+[entity.pre_defined_terminator_symbol]
+instance_count = 116
+
+[entity.pre_defined_text_font]
+instance_count = 0
+
+[entity.pre_defined_tile]
+instance_count = 0
+
+[entity.precision_qualifier]
+instance_count = 0
+
+[entity.predefined_picture_representation_item]
+instance_count = 0
+
+[entity.prescribed_path]
+instance_count = 0
+
+[entity.presentation_area]
+instance_count = 18
+
+[entity.presentation_layer_assignment]
+instance_count = 57803
+
+[entity.presentation_representation]
+instance_count = 0
+
+[entity.presentation_set]
+instance_count = 18
+
+[entity.presentation_size]
+instance_count = 18
+
+[entity.presentation_style_assignment]
+instance_count = 4238058
+
+[entity.presentation_style_by_context]
+instance_count = 7
+
+[entity.presentation_view]
+instance_count = 18
+
+[entity.presented_item]
+instance_count = 0
+
+[entity.presented_item_representation]
+instance_count = 18
+
+[entity.pressure_measure_with_unit]
+instance_count = 0
+
+[entity.pressure_unit]
+instance_count = 0
+
+[entity.previous_change_element_assignment]
+instance_count = 0
+
+[entity.primitive_2d]
+instance_count = 0
+
+[entity.primitive_2d_with_inner_boundary]
+instance_count = 0
+
+[entity.prismatic_pair]
+instance_count = 0
+
+[entity.prismatic_pair_range]
+instance_count = 0
+
+[entity.prismatic_pair_value]
+instance_count = 0
+
+[entity.prismatic_pair_with_range]
+instance_count = 0
+
+[entity.procedural_representation]
+instance_count = 0
+
+[entity.procedural_representation_sequence]
+instance_count = 0
+
+[entity.procedural_shape_representation]
+instance_count = 0
+
+[entity.procedural_shape_representation_sequence]
+instance_count = 0
+
+[entity.procedural_solid_representation_sequence]
+instance_count = 0
+
+[entity.process_operation]
+instance_count = 0
+
+[entity.process_plan]
+instance_count = 0
+
+[entity.process_product_association]
+instance_count = 0
+
+[entity.process_property_association]
+instance_count = 0
+
+[entity.product]
+instance_count = 216678
+
+[entity.product_as_planned]
+instance_count = 0
+
+[entity.product_category]
+instance_count = 18833
+
+[entity.product_category_relationship]
+instance_count = 160201
+
+[entity.product_class]
+instance_count = 0
+
+[entity.product_concept]
+instance_count = 0
+
+[entity.product_concept_context]
+instance_count = 0
+
+[entity.product_concept_feature]
+instance_count = 0
+
+[entity.product_concept_feature_association]
+instance_count = 0
+
+[entity.product_concept_feature_category]
+instance_count = 0
+
+[entity.product_concept_feature_category_usage]
+instance_count = 0
+
+[entity.product_concept_relationship]
+instance_count = 0
+
+[entity.product_context]
+instance_count = 59141
+
+[entity.product_data_and_data_equivalence_relationship]
+instance_count = 0
+
+[entity.product_data_and_data_quality_relationship]
+instance_count = 0
+
+[entity.product_definition]
+instance_count = 216611
+
+[entity.product_definition_context]
+instance_count = 59135
+
+[entity.product_definition_context_association]
+instance_count = 21
+
+[entity.product_definition_context_role]
+instance_count = 21
+
+[entity.product_definition_effectivity]
+instance_count = 0
+
+[entity.product_definition_element_relationship]
+instance_count = 0
+
+[entity.product_definition_formation]
+instance_count = 50570
+
+[entity.product_definition_formation_relationship]
+instance_count = 0
+
+[entity.product_definition_formation_resource]
+instance_count = 0
+
+[entity.product_definition_formation_with_specified_source]
+instance_count = 166093
+
+[entity.product_definition_group_assignment]
+instance_count = 0
+
+[entity.product_definition_kinematics]
+instance_count = 0
+
+[entity.product_definition_occurrence]
+instance_count = 0
+
+[entity.product_definition_occurrence_reference]
+instance_count = 0
+
+[entity.product_definition_occurrence_reference_with_local_representation]
+instance_count = 0
+
+[entity.product_definition_occurrence_relationship]
+instance_count = 0
+
+[entity.product_definition_process]
+instance_count = 0
+
+[entity.product_definition_reference]
+instance_count = 0
+
+[entity.product_definition_reference_with_local_representation]
+instance_count = 0
+
+[entity.product_definition_relationship]
+instance_count = 0
+
+[entity.product_definition_relationship_kinematics]
+instance_count = 0
+
+[entity.product_definition_relationship_relationship]
+instance_count = 0
+
+[entity.product_definition_resource]
+instance_count = 0
+
+[entity.product_definition_shape]
+instance_count = 253440
+
+[entity.product_definition_specified_occurrence]
+instance_count = 0
+
+[entity.product_definition_substitute]
+instance_count = 0
+
+[entity.product_definition_usage]
+instance_count = 0
+
+[entity.product_definition_usage_relationship]
+instance_count = 0
+
+[entity.product_definition_with_associated_documents]
+instance_count = 43
+
+[entity.product_design_to_individual]
+instance_count = 0
+
+[entity.product_design_version_to_individual]
+instance_count = 0
+
+[entity.product_group]
+instance_count = 0
+
+[entity.product_group_attribute_assignment]
+instance_count = 0
+
+[entity.product_group_attribute_set]
+instance_count = 0
+
+[entity.product_group_attributes]
+instance_count = 0
+
+[entity.product_group_context]
+instance_count = 0
+
+[entity.product_group_membership]
+instance_count = 0
+
+[entity.product_group_membership_rules]
+instance_count = 0
+
+[entity.product_group_purpose]
+instance_count = 0
+
+[entity.product_group_relationship]
+instance_count = 0
+
+[entity.product_group_rule]
+instance_count = 0
+
+[entity.product_group_rule_assignment]
+instance_count = 0
+
+[entity.product_group_rules]
+instance_count = 0
+
+[entity.product_identification]
+instance_count = 0
+
+[entity.product_in_attachment_slot]
+instance_count = 0
+
+[entity.product_material_composition_relationship]
+instance_count = 0
+
+[entity.product_planned_to_realized]
+instance_count = 0
+
+[entity.product_process_plan]
+instance_count = 0
+
+[entity.product_related_product_category]
+instance_count = 215544
+
+[entity.product_relationship]
+instance_count = 0
+
+[entity.product_resource]
+instance_count = 0
+
+[entity.product_specification]
+instance_count = 0
+
+[entity.profile_floor]
+instance_count = 0
+
+[entity.projected_zone_definition]
+instance_count = 27
+
+[entity.projected_zone_definition_with_offset]
+instance_count = 0
+
+[entity.projection_curve]
+instance_count = 0
+
+[entity.projection_directed_callout]
+instance_count = 0
+
+[entity.promissory_usage_occurrence]
+instance_count = 0
+
+[entity.property_definition]
+instance_count = 13696
+
+[entity.property_definition_relationship]
+instance_count = 0
+
+[entity.property_definition_representation]
+instance_count = 13335
+
+[entity.property_process]
+instance_count = 0
+
+[entity.protrusion]
+instance_count = 0
+
+[entity.pyramid_volume]
+instance_count = 0
+
+[entity.qualified_representation_item]
+instance_count = 409
+complex_part_count = 409
+co_instantiated_with = [
+    "length_measure_with_unit",
+    "measure_representation_item",
+    "measure_with_unit",
+    "representation_item",
+]
+
+[entity.qualitative_uncertainty]
+instance_count = 0
+
+[entity.quantified_assembly_component_usage]
+instance_count = 0
+
+[entity.quantifier_expression]
+instance_count = 0
+
+[entity.quasi_uniform_curve]
+instance_count = 4513
+complex_part_count = 710
+co_instantiated_with = [
+    "b_spline_curve",
+    "bounded_curve",
+    "curve",
+    "geometric_representation_item",
+    "rational_b_spline_curve",
+    "representation_item",
+]
+
+[entity.quasi_uniform_surface]
+instance_count = 400
+complex_part_count = 286
+co_instantiated_with = [
+    "b_spline_surface",
+    "bounded_surface",
+    "geometric_representation_item",
+    "rational_b_spline_surface",
+    "representation_item",
+    "surface",
+]
+
+[entity.quasi_uniform_volume]
+instance_count = 0
+
+[entity.rack_and_pinion_pair]
+instance_count = 0
+
+[entity.rack_and_pinion_pair_range]
+instance_count = 0
+
+[entity.rack_and_pinion_pair_value]
+instance_count = 0
+
+[entity.rack_and_pinion_pair_with_range]
+instance_count = 0
+
+[entity.radioactivity_measure_with_unit]
+instance_count = 0
+
+[entity.radioactivity_unit]
+instance_count = 0
+
+[entity.radius_dimension]
+instance_count = 0
+
+[entity.radius_geometric_constraint]
+instance_count = 0
+
+[entity.range_characteristic]
+instance_count = 0
+
+[entity.ratio_measure_with_unit]
+instance_count = 1
+complex_part_count = 1
+co_instantiated_with = [
+    "measure_representation_item",
+    "measure_with_unit",
+    "representation_item",
+]
+
+[entity.ratio_unit]
+instance_count = 1
+
+[entity.rational_b_spline_curve]
+instance_count = 333842
+complex_part_count = 333842
+co_instantiated_with = [
+    "b_spline_curve",
+    "b_spline_curve_with_knots",
+    "bounded_curve",
+    "curve",
+    "geometric_representation_item",
+    "quasi_uniform_curve",
+    "representation_item",
+]
+
+[entity.rational_b_spline_surface]
+instance_count = 337583
+complex_part_count = 337583
+co_instantiated_with = [
+    "b_spline_surface",
+    "b_spline_surface_with_knots",
+    "bounded_surface",
+    "geometric_representation_item",
+    "quasi_uniform_surface",
+    "representation_item",
+    "surface",
+]
+
+[entity.rational_b_spline_volume]
+instance_count = 0
+
+[entity.rational_locally_refined_spline_curve]
+instance_count = 0
+
+[entity.rational_locally_refined_spline_surface]
+instance_count = 0
+
+[entity.rational_locally_refined_spline_volume]
+instance_count = 0
+
+[entity.rational_representation_item]
+instance_count = 0
+
+[entity.rationalize_function]
+instance_count = 0
+
+[entity.real_defined_function]
+instance_count = 0
+
+[entity.real_interval_from_min]
+instance_count = 0
+
+[entity.real_interval_to_max]
+instance_count = 0
+
+[entity.real_literal]
+instance_count = 0
+
+[entity.real_numeric_variable]
+instance_count = 0
+
+[entity.real_representation_item]
+instance_count = 365
+
+[entity.real_tuple_literal]
+instance_count = 0
+
+[entity.rectangular_area]
+instance_count = 0
+
+[entity.rectangular_array_placement_group_component]
+instance_count = 0
+
+[entity.rectangular_closed_profile]
+instance_count = 0
+
+[entity.rectangular_composite_surface]
+instance_count = 0
+
+[entity.rectangular_composite_surface_transition_locator]
+instance_count = 0
+
+[entity.rectangular_pattern]
+instance_count = 0
+
+[entity.rectangular_pyramid]
+instance_count = 0
+
+[entity.rectangular_trimmed_surface]
+instance_count = 0
+
+[entity.referenced_modified_datum]
+instance_count = 0
+
+[entity.regular_table_function]
+instance_count = 0
+
+[entity.reindexed_array_function]
+instance_count = 0
+
+[entity.reinforcement_orientation_basis]
+instance_count = 0
+
+[entity.relative_event_occurrence]
+instance_count = 0
+
+[entity.removal_volume]
+instance_count = 0
+
+[entity.rep_item_group]
+instance_count = 0
+
+[entity.repackaging_function]
+instance_count = 0
+
+[entity.reparametrised_composite_curve_segment]
+instance_count = 0
+
+[entity.replicate_feature]
+instance_count = 0
+
+[entity.repositioned_neutral_sketch]
+instance_count = 0
+
+[entity.repositioned_tessellated_item]
+instance_count = 385
+complex_part_count = 385
+co_instantiated_with = [
+    "geometric_representation_item",
+    "representation_item",
+    "tessellated_geometric_set",
+    "tessellated_item",
+]
+
+[entity.representation]
+instance_count = 13161
+complex_part_count = 96
+co_instantiated_with = [
+    "characterized_object",
+    "characterized_representation",
+    "draughting_model",
+    "shape_representation",
+    "tessellated_shape_representation",
+]
+
+[entity.representation_context]
+instance_count = 230728
+complex_part_count = 230707
+co_instantiated_with = [
+    "geometric_representation_context",
+    "global_uncertainty_assigned_context",
+    "global_unit_assigned_context",
+    "parametric_representation_context",
+]
+
+[entity.representation_context_reference]
+instance_count = 0
+
+[entity.representation_item]
+instance_count = 672710
+complex_part_count = 672710
+co_instantiated_with = [
+    "annotation_curve_occurrence",
+    "annotation_occurrence",
+    "annotation_symbol_occurrence",
+    "annotation_text_occurrence",
+    "b_spline_curve",
+    "b_spline_curve_with_knots",
+    "b_spline_surface",
+    "b_spline_surface_with_knots",
+    "bounded_curve",
+    "bounded_surface",
+    "camera_image",
+    "camera_image_3d_with_scale",
+    "curve",
+    "draughting_annotation_occurrence",
+    "geometric_representation_item",
+    "leader_curve",
+    "leader_terminator",
+    "length_measure_with_unit",
+    "mapped_item",
+    "measure_representation_item",
+    "measure_with_unit",
+    "plane_angle_measure_with_unit",
+    "qualified_representation_item",
+    "quasi_uniform_curve",
+    "quasi_uniform_surface",
+    "ratio_measure_with_unit",
+    "rational_b_spline_curve",
+    "rational_b_spline_surface",
+    "repositioned_tessellated_item",
+    "styled_item",
+    "surface",
+    "terminator_symbol",
+    "tessellated_geometric_set",
+    "tessellated_item",
+]
+
+[entity.representation_item_relationship]
+instance_count = 0
+
+[entity.representation_map]
+instance_count = 888
+
+[entity.representation_proxy_item]
+instance_count = 0
+
+[entity.representation_reference]
+instance_count = 0
+
+[entity.representation_relationship]
+instance_count = 36804
+complex_part_count = 36796
+co_instantiated_with = [
+    "representation_relationship_with_transformation",
+    "shape_representation_relationship",
+]
+
+[entity.representation_relationship_with_transformation]
+instance_count = 36796
+complex_part_count = 36796
+co_instantiated_with = [
+    "representation_relationship",
+    "shape_representation_relationship",
+]
+
+[entity.representative_shape_representation]
+instance_count = 0
+
+[entity.requirement_assigned_object]
+instance_count = 0
+
+[entity.requirement_assignment]
+instance_count = 0
+
+[entity.requirement_for_action_resource]
+instance_count = 0
+
+[entity.requirement_source]
+instance_count = 0
+
+[entity.requirement_view_definition_relationship]
+instance_count = 0
+
+[entity.resistance_measure_with_unit]
+instance_count = 0
+
+[entity.resistance_unit]
+instance_count = 0
+
+[entity.resource_property]
+instance_count = 0
+
+[entity.resource_property_representation]
+instance_count = 0
+
+[entity.resource_requirement_type]
+instance_count = 0
+
+[entity.restriction_function]
+instance_count = 0
+
+[entity.resulting_path]
+instance_count = 0
+
+[entity.retention]
+instance_count = 0
+
+[entity.revolute_pair]
+instance_count = 0
+
+[entity.revolute_pair_range]
+instance_count = 0
+
+[entity.revolute_pair_value]
+instance_count = 0
+
+[entity.revolute_pair_with_range]
+instance_count = 0
+
+[entity.revolved_area_solid]
+instance_count = 0
+
+[entity.revolved_face_solid]
+instance_count = 0
+
+[entity.revolved_face_solid_with_trim_conditions]
+instance_count = 0
+
+[entity.revolved_profile]
+instance_count = 0
+
+[entity.rgc_with_dimension]
+instance_count = 0
+
+[entity.rib]
+instance_count = 0
+
+[entity.rib_top]
+instance_count = 0
+
+[entity.rib_top_floor]
+instance_count = 0
+
+[entity.right_angular_wedge]
+instance_count = 0
+
+[entity.right_circular_cone]
+instance_count = 0
+
+[entity.right_circular_cylinder]
+instance_count = 0
+
+[entity.right_to_usage_association]
+instance_count = 0
+
+[entity.rigid_link_representation]
+instance_count = 0
+
+[entity.rigid_subsketch]
+instance_count = 0
+
+[entity.role_association]
+instance_count = 153
+
+[entity.rolling_curve_pair]
+instance_count = 0
+
+[entity.rolling_curve_pair_value]
+instance_count = 0
+
+[entity.rolling_surface_pair]
+instance_count = 0
+
+[entity.rolling_surface_pair_value]
+instance_count = 0
+
+[entity.rotation_about_direction]
+instance_count = 0
+
+[entity.round_hole]
+instance_count = 0
+
+[entity.rounded_end]
+instance_count = 0
+
+[entity.rounded_u_profile]
+instance_count = 0
+
+[entity.roundness_tolerance]
+instance_count = 2
+complex_part_count = 1
+co_instantiated_with = [
+    "geometric_tolerance",
+    "geometric_tolerance_with_modifiers",
+]
+
+[entity.row_representation_item]
+instance_count = 0
+
+[entity.row_value]
+instance_count = 0
+
+[entity.row_variable]
+instance_count = 0
+
+[entity.rule_action]
+instance_count = 0
+
+[entity.rule_condition]
+instance_count = 0
+
+[entity.rule_definition]
+instance_count = 0
+
+[entity.rule_set]
+instance_count = 0
+
+[entity.rule_set_group]
+instance_count = 0
+
+[entity.rule_software_definition]
+instance_count = 0
+
+[entity.rule_superseded_assignment]
+instance_count = 0
+
+[entity.rule_supersedence]
+instance_count = 0
+
+[entity.ruled_surface_swept_area_solid]
+instance_count = 0
+
+[entity.runout_zone_definition]
+instance_count = 0
+
+[entity.runout_zone_orientation]
+instance_count = 0
+
+[entity.runout_zone_orientation_reference_direction]
+instance_count = 0
+
+[entity.same_as_external_item_assignment]
+instance_count = 0
+
+[entity.satisfied_requirement]
+instance_count = 0
+
+[entity.satisfies_requirement]
+instance_count = 0
+
+[entity.satisfying_item]
+instance_count = 0
+
+[entity.scalar_variable]
+instance_count = 0
+
+[entity.scan_3d_model]
+instance_count = 0
+
+[entity.scan_data_shape_representation]
+instance_count = 0
+
+[entity.scanned_data_item]
+instance_count = 0
+
+[entity.scanner_basic_properties]
+instance_count = 0
+
+[entity.scanner_property]
+instance_count = 0
+
+[entity.scattering_parameter]
+instance_count = 0
+
+[entity.screw_pair]
+instance_count = 0
+
+[entity.screw_pair_range]
+instance_count = 0
+
+[entity.screw_pair_value]
+instance_count = 0
+
+[entity.screw_pair_with_range]
+instance_count = 0
+
+[entity.sculptured_solid]
+instance_count = 0
+
+[entity.sdgc_with_dimension]
+instance_count = 0
+
+[entity.seam_curve]
+instance_count = 275
+
+[entity.seam_edge]
+instance_count = 0
+
+[entity.security_classification]
+instance_count = 17822
+
+[entity.security_classification_assignment]
+instance_count = 0
+
+[entity.security_classification_level]
+instance_count = 17822
+
+[entity.selector_function]
+instance_count = 0
+
+[entity.self_intersecting_curve]
+instance_count = 0
+
+[entity.self_intersecting_geometry]
+instance_count = 0
+
+[entity.self_intersecting_loop]
+instance_count = 0
+
+[entity.self_intersecting_shell]
+instance_count = 0
+
+[entity.self_intersecting_surface]
+instance_count = 0
+
+[entity.serial_numbered_effectivity]
+instance_count = 0
+
+[entity.series_composed_function]
+instance_count = 0
+
+[entity.shape_aspect]
+instance_count = 3320
+complex_part_count = 21
+co_instantiated_with = [
+    "composite_group_shape_aspect",
+    "composite_shape_aspect",
+    "datum_feature",
+]
+
+[entity.shape_aspect_associativity]
+instance_count = 116
+
+[entity.shape_aspect_deriving_relationship]
+instance_count = 23
+
+[entity.shape_aspect_occurrence]
+instance_count = 0
+
+[entity.shape_aspect_relationship]
+instance_count = 2321
+
+[entity.shape_aspect_relationship_representation_association]
+instance_count = 0
+
+[entity.shape_aspect_transition]
+instance_count = 0
+
+[entity.shape_criteria_representation_with_accuracy]
+instance_count = 0
+
+[entity.shape_data_quality_assessment_by_logical_test]
+instance_count = 0
+
+[entity.shape_data_quality_assessment_by_numerical_test]
+instance_count = 0
+
+[entity.shape_data_quality_criteria_representation]
+instance_count = 0
+
+[entity.shape_data_quality_criterion]
+instance_count = 0
+
+[entity.shape_data_quality_criterion_and_accuracy_association]
+instance_count = 0
+
+[entity.shape_data_quality_inspected_shape_and_result_relationship]
+instance_count = 0
+
+[entity.shape_data_quality_inspection_criterion_report]
+instance_count = 0
+
+[entity.shape_data_quality_inspection_instance_report]
+instance_count = 0
+
+[entity.shape_data_quality_inspection_instance_report_item]
+instance_count = 0
+
+[entity.shape_data_quality_inspection_result]
+instance_count = 0
+
+[entity.shape_data_quality_inspection_result_representation]
+instance_count = 0
+
+[entity.shape_data_quality_lower_value_limit]
+instance_count = 0
+
+[entity.shape_data_quality_upper_value_limit]
+instance_count = 0
+
+[entity.shape_data_quality_value_limit]
+instance_count = 0
+
+[entity.shape_data_quality_value_range]
+instance_count = 0
+
+[entity.shape_defining_relationship]
+instance_count = 0
+
+[entity.shape_definition_representation]
+instance_count = 217110
+
+[entity.shape_dimension_representation]
+instance_count = 263
+
+[entity.shape_feature_definition]
+instance_count = 0
+
+[entity.shape_feature_definition_element_relationship]
+instance_count = 0
+
+[entity.shape_feature_definition_fit_relationship]
+instance_count = 0
+
+[entity.shape_feature_definition_relationship]
+instance_count = 0
+
+[entity.shape_feature_fit_relationship]
+instance_count = 0
+
+[entity.shape_inspection_result_accuracy_association]
+instance_count = 0
+
+[entity.shape_inspection_result_representation_with_accuracy]
+instance_count = 0
+
+[entity.shape_measurement_accuracy]
+instance_count = 0
+
+[entity.shape_representation]
+instance_count = 62820
+complex_part_count = 80
+co_instantiated_with = [
+    "characterized_object",
+    "characterized_representation",
+    "draughting_model",
+    "representation",
+    "tessellated_shape_representation",
+]
+
+[entity.shape_representation_reference]
+instance_count = 0
+
+[entity.shape_representation_relationship]
+instance_count = 96040
+complex_part_count = 36796
+co_instantiated_with = [
+    "representation_relationship",
+    "representation_relationship_with_transformation",
+]
+
+[entity.shape_representation_with_parameters]
+instance_count = 17
+
+[entity.shape_summary_request_with_representative_value]
+instance_count = 0
+
+[entity.shell_based_surface_model]
+instance_count = 94439
+
+[entity.shell_based_wireframe_model]
+instance_count = 0
+
+[entity.shell_based_wireframe_shape_representation]
+instance_count = 0
+
+[entity.shelled_solid]
+instance_count = 0
+
+[entity.short_length_curve]
+instance_count = 0
+
+[entity.short_length_curve_segment]
+instance_count = 0
+
+[entity.short_length_edge]
+instance_count = 0
+
+[entity.si_absorbed_dose_unit]
+instance_count = 0
+
+[entity.si_capacitance_unit]
+instance_count = 0
+
+[entity.si_conductance_unit]
+instance_count = 0
+
+[entity.si_dose_equivalent_unit]
+instance_count = 0
+
+[entity.si_electric_charge_unit]
+instance_count = 0
+
+[entity.si_electric_potential_unit]
+instance_count = 0
+
+[entity.si_energy_unit]
+instance_count = 0
+
+[entity.si_force_unit]
+instance_count = 0
+
+[entity.si_frequency_unit]
+instance_count = 0
+
+[entity.si_illuminance_unit]
+instance_count = 0
+
+[entity.si_inductance_unit]
+instance_count = 0
+
+[entity.si_magnetic_flux_density_unit]
+instance_count = 0
+
+[entity.si_magnetic_flux_unit]
+instance_count = 0
+
+[entity.si_power_unit]
+instance_count = 0
+
+[entity.si_pressure_unit]
+instance_count = 0
+
+[entity.si_radioactivity_unit]
+instance_count = 0
+
+[entity.si_resistance_unit]
+instance_count = 0
+
+[entity.si_unit]
+instance_count = 397383
+complex_part_count = 397383
+co_instantiated_with = [
+    "length_unit",
+    "mass_unit",
+    "named_unit",
+    "plane_angle_unit",
+    "solid_angle_unit",
+]
+
+[entity.simple_boolean_expression]
+instance_count = 0
+
+[entity.simple_clause]
+instance_count = 0
+
+[entity.simple_generic_expression]
+instance_count = 0
+
+[entity.simple_numeric_expression]
+instance_count = 0
+
+[entity.simple_pair_range]
+instance_count = 0
+
+[entity.simple_string_expression]
+instance_count = 0
+
+[entity.simplified_counterbore_hole_definition]
+instance_count = 0
+
+[entity.simplified_counterdrill_hole_definition]
+instance_count = 0
+
+[entity.simplified_countersink_hole_definition]
+instance_count = 0
+
+[entity.simplified_spotface_hole_definition]
+instance_count = 0
+
+[entity.simultaneous_constraint_group]
+instance_count = 0
+
+[entity.sin_function]
+instance_count = 0
+
+[entity.single_area_csg_2d_shape_representation]
+instance_count = 0
+
+[entity.single_boundary_csg_2d_shape_representation]
+instance_count = 0
+
+[entity.single_property_is_definition]
+instance_count = 0
+
+[entity.single_texture_style_tessellation_specification]
+instance_count = 0
+
+[entity.skew_line_distance_geometric_constraint]
+instance_count = 0
+
+[entity.slash_expression]
+instance_count = 0
+
+[entity.sliding_curve_pair]
+instance_count = 0
+
+[entity.sliding_curve_pair_value]
+instance_count = 0
+
+[entity.sliding_surface_pair]
+instance_count = 0
+
+[entity.sliding_surface_pair_value]
+instance_count = 0
+
+[entity.slot]
+instance_count = 0
+
+[entity.slot_end]
+instance_count = 0
+
+[entity.small_area_face]
+instance_count = 0
+
+[entity.small_area_surface]
+instance_count = 0
+
+[entity.small_area_surface_patch]
+instance_count = 0
+
+[entity.small_volume_solid]
+instance_count = 0
+
+[entity.smeared_material_definition]
+instance_count = 0
+
+[entity.software_for_data_quality_check]
+instance_count = 0
+
+[entity.solid_angle_measure_with_unit]
+instance_count = 0
+
+[entity.solid_angle_unit]
+instance_count = 131897
+complex_part_count = 131897
+co_instantiated_with = [
+    "named_unit",
+    "si_unit",
+]
+
+[entity.solid_curve_font]
+instance_count = 0
+
+[entity.solid_model]
+instance_count = 0
+
+[entity.solid_replica]
+instance_count = 0
+
+[entity.solid_with_angle_based_chamfer]
+instance_count = 0
+
+[entity.solid_with_chamfered_edges]
+instance_count = 0
+
+[entity.solid_with_circular_pattern]
+instance_count = 0
+
+[entity.solid_with_circular_pocket]
+instance_count = 0
+
+[entity.solid_with_circular_protrusion]
+instance_count = 0
+
+[entity.solid_with_conical_bottom_round_hole]
+instance_count = 0
+
+[entity.solid_with_constant_radius_edge_blend]
+instance_count = 0
+
+[entity.solid_with_curved_slot]
+instance_count = 0
+
+[entity.solid_with_depression]
+instance_count = 0
+
+[entity.solid_with_double_offset_chamfer]
+instance_count = 0
+
+[entity.solid_with_excessive_number_of_voids]
+instance_count = 0
+
+[entity.solid_with_flat_bottom_round_hole]
+instance_count = 0
+
+[entity.solid_with_general_pocket]
+instance_count = 0
+
+[entity.solid_with_general_protrusion]
+instance_count = 0
+
+[entity.solid_with_groove]
+instance_count = 0
+
+[entity.solid_with_hole]
+instance_count = 0
+
+[entity.solid_with_incomplete_circular_pattern]
+instance_count = 0
+
+[entity.solid_with_incomplete_rectangular_pattern]
+instance_count = 0
+
+[entity.solid_with_pocket]
+instance_count = 0
+
+[entity.solid_with_protrusion]
+instance_count = 0
+
+[entity.solid_with_rectangular_pattern]
+instance_count = 0
+
+[entity.solid_with_rectangular_pocket]
+instance_count = 0
+
+[entity.solid_with_rectangular_protrusion]
+instance_count = 0
+
+[entity.solid_with_shape_element_pattern]
+instance_count = 0
+
+[entity.solid_with_single_offset_chamfer]
+instance_count = 0
+
+[entity.solid_with_slot]
+instance_count = 0
+
+[entity.solid_with_spherical_bottom_round_hole]
+instance_count = 0
+
+[entity.solid_with_stepped_round_hole]
+instance_count = 0
+
+[entity.solid_with_stepped_round_hole_and_conical_transitions]
+instance_count = 0
+
+[entity.solid_with_straight_slot]
+instance_count = 0
+
+[entity.solid_with_tee_section_slot]
+instance_count = 0
+
+[entity.solid_with_through_depression]
+instance_count = 0
+
+[entity.solid_with_trapezoidal_section_slot]
+instance_count = 0
+
+[entity.solid_with_variable_radius_edge_blend]
+instance_count = 0
+
+[entity.solid_with_wrong_number_of_voids]
+instance_count = 0
+
+[entity.source_for_requirement]
+instance_count = 0
+
+[entity.sourced_requirement]
+instance_count = 0
+
+[entity.specification_definition]
+instance_count = 0
+
+[entity.specified_higher_usage_occurrence]
+instance_count = 0
+
+[entity.sphere]
+instance_count = 0
+
+[entity.spherical_cap]
+instance_count = 0
+
+[entity.spherical_pair]
+instance_count = 0
+
+[entity.spherical_pair_range]
+instance_count = 0
+
+[entity.spherical_pair_value]
+instance_count = 0
+
+[entity.spherical_pair_with_pin]
+instance_count = 0
+
+[entity.spherical_pair_with_pin_and_range]
+instance_count = 0
+
+[entity.spherical_pair_with_range]
+instance_count = 0
+
+[entity.spherical_point]
+instance_count = 0
+
+[entity.spherical_surface]
+instance_count = 66580
+
+[entity.spherical_volume]
+instance_count = 0
+
+[entity.spotface_definition]
+instance_count = 0
+
+[entity.spotface_hole_definition]
+instance_count = 0
+
+[entity.spotface_occurrence]
+instance_count = 0
+
+[entity.spotface_occurrence_in_assembly]
+instance_count = 0
+
+[entity.sql_mappable_defined_function]
+instance_count = 0
+
+[entity.square_root_function]
+instance_count = 0
+
+[entity.square_u_profile]
+instance_count = 0
+
+[entity.standard_table_function]
+instance_count = 0
+
+[entity.standard_uncertainty]
+instance_count = 0
+
+[entity.start_request]
+instance_count = 0
+
+[entity.start_work]
+instance_count = 0
+
+[entity.state_definition_to_state_assignment_relationship]
+instance_count = 0
+
+[entity.state_observed]
+instance_count = 0
+
+[entity.state_observed_assignment]
+instance_count = 0
+
+[entity.state_observed_relationship]
+instance_count = 0
+
+[entity.state_observed_role]
+instance_count = 0
+
+[entity.state_predicted]
+instance_count = 0
+
+[entity.state_type]
+instance_count = 0
+
+[entity.state_type_assignment]
+instance_count = 0
+
+[entity.state_type_relationship]
+instance_count = 0
+
+[entity.state_type_role]
+instance_count = 0
+
+[entity.statechar_applied_object]
+instance_count = 0
+
+[entity.statechar_object]
+instance_count = 0
+
+[entity.statechar_relationship_object]
+instance_count = 0
+
+[entity.statechar_type_applied_object]
+instance_count = 0
+
+[entity.statechar_type_object]
+instance_count = 0
+
+[entity.statechar_type_relationship_object]
+instance_count = 0
+
+[entity.steep_angle_between_adjacent_edges]
+instance_count = 0
+
+[entity.steep_angle_between_adjacent_faces]
+instance_count = 0
+
+[entity.steep_geometry_transition_across_edge]
+instance_count = 0
+
+[entity.step]
+instance_count = 0
+
+[entity.straightness_tolerance]
+instance_count = 3
+complex_part_count = 2
+co_instantiated_with = [
+    "geometric_tolerance",
+    "geometric_tolerance_with_defined_unit",
+]
+
+[entity.strict_triangular_matrix]
+instance_count = 0
+
+[entity.string_defined_function]
+instance_count = 0
+
+[entity.string_expression]
+instance_count = 0
+
+[entity.string_literal]
+instance_count = 0
+
+[entity.string_variable]
+instance_count = 0
+
+[entity.structured_dimension_callout]
+instance_count = 0
+
+[entity.structured_message]
+instance_count = 0
+
+[entity.structured_text_composition]
+instance_count = 0
+
+[entity.structured_text_representation]
+instance_count = 0
+
+[entity.styled_item]
+instance_count = 4394363
+complex_part_count = 348
+co_instantiated_with = [
+    "annotation_curve_occurrence",
+    "annotation_occurrence",
+    "annotation_symbol_occurrence",
+    "annotation_text_occurrence",
+    "draughting_annotation_occurrence",
+    "geometric_representation_item",
+    "leader_curve",
+    "leader_terminator",
+    "representation_item",
+    "terminator_symbol",
+]
+
+[entity.styled_tessellated_item_with_colours]
+instance_count = 0
+
+[entity.su_parameters]
+instance_count = 0
+
+[entity.subedge]
+instance_count = 0
+
+[entity.subface]
+instance_count = 0
+
+[entity.subpath]
+instance_count = 0
+
+[entity.subsketch]
+instance_count = 0
+
+[entity.substring_expression]
+instance_count = 0
+
+[entity.summary_report_request]
+instance_count = 0
+
+[entity.summary_report_request_with_number_of_instances]
+instance_count = 0
+
+[entity.supplied_part_relationship]
+instance_count = 0
+
+[entity.surface]
+instance_count = 337583
+complex_part_count = 337583
+co_instantiated_with = [
+    "b_spline_surface",
+    "b_spline_surface_with_knots",
+    "bounded_surface",
+    "geometric_representation_item",
+    "quasi_uniform_surface",
+    "rational_b_spline_surface",
+    "representation_item",
+]
+
+[entity.surface_condition_callout]
+instance_count = 0
+
+[entity.surface_curve]
+instance_count = 35755
+
+[entity.surface_curve_swept_area_solid]
+instance_count = 0
+
+[entity.surface_curve_swept_surface]
+instance_count = 0
+
+[entity.surface_distance_assembly_constraint_with_dimension]
+instance_count = 0
+
+[entity.surface_distance_geometric_constraint]
+instance_count = 0
+
+[entity.surface_of_linear_extrusion]
+instance_count = 52760
+
+[entity.surface_of_revolution]
+instance_count = 25892
+
+[entity.surface_pair]
+instance_count = 0
+
+[entity.surface_pair_range]
+instance_count = 0
+
+[entity.surface_pair_with_range]
+instance_count = 0
+
+[entity.surface_patch]
+instance_count = 0
+
+[entity.surface_patch_set]
+instance_count = 0
+
+[entity.surface_profile_tolerance]
+instance_count = 115
+complex_part_count = 111
+co_instantiated_with = [
+    "geometric_tolerance",
+    "geometric_tolerance_with_datum_reference",
+    "geometric_tolerance_with_modifiers",
+    "unequally_disposed_geometric_tolerance",
+]
+
+[entity.surface_rendering_properties]
+instance_count = 0
+
+[entity.surface_replica]
+instance_count = 0
+
+[entity.surface_side_style]
+instance_count = 4084780
+
+[entity.surface_smoothness_geometric_constraint]
+instance_count = 0
+
+[entity.surface_style_boundary]
+instance_count = 7
+
+[entity.surface_style_control_grid]
+instance_count = 0
+
+[entity.surface_style_fill_area]
+instance_count = 4084775
+
+[entity.surface_style_parameter_line]
+instance_count = 7
+
+[entity.surface_style_reflectance_ambient]
+instance_count = 0
+
+[entity.surface_style_reflectance_ambient_diffuse]
+instance_count = 0
+
+[entity.surface_style_reflectance_ambient_diffuse_specular]
+instance_count = 0
+
+[entity.surface_style_rendering]
+instance_count = 0
+
+[entity.surface_style_rendering_with_properties]
+instance_count = 988196
+
+[entity.surface_style_segmentation_curve]
+instance_count = 0
+
+[entity.surface_style_silhouette]
+instance_count = 0
+
+[entity.surface_style_transparent]
+instance_count = 988196
+
+[entity.surface_style_usage]
+instance_count = 4084780
+
+[entity.surface_texture_representation]
+instance_count = 0
+
+[entity.surface_with_excessive_patches_in_one_direction]
+instance_count = 0
+
+[entity.surface_with_small_curvature_radius]
+instance_count = 0
+
+[entity.surfaced_open_shell]
+instance_count = 0
+
+[entity.swept_area_solid]
+instance_count = 0
+
+[entity.swept_curve_surface_geometric_constraint]
+instance_count = 0
+
+[entity.swept_disk_solid]
+instance_count = 0
+
+[entity.swept_face_solid]
+instance_count = 0
+
+[entity.swept_point_curve_geometric_constraint]
+instance_count = 0
+
+[entity.swept_surface]
+instance_count = 0
+
+[entity.symbol]
+instance_count = 0
+
+[entity.symbol_colour]
+instance_count = 116
+
+[entity.symbol_representation]
+instance_count = 0
+
+[entity.symbol_representation_map]
+instance_count = 0
+
+[entity.symbol_style]
+instance_count = 116
+
+[entity.symbol_target]
+instance_count = 116
+
+[entity.symmetric_banded_matrix]
+instance_count = 0
+
+[entity.symmetric_matrix]
+instance_count = 0
+
+[entity.symmetric_shape_aspect]
+instance_count = 0
+
+[entity.symmetry_geometric_constraint]
+instance_count = 0
+
+[entity.symmetry_tolerance]
+instance_count = 2
+
+[entity.system_breakdown_context]
+instance_count = 0
+
+[entity.system_element_usage]
+instance_count = 0
+
+[entity.table_representation_item]
+instance_count = 0
+
+[entity.tactile_appearance_representation]
+instance_count = 0
+
+[entity.tagged_text_format]
+instance_count = 0
+
+[entity.tagged_text_item]
+instance_count = 0
+
+[entity.tan_function]
+instance_count = 0
+
+[entity.tangent]
+instance_count = 0
+
+[entity.tangent_assembly_constraint]
+instance_count = 0
+
+[entity.tangent_geometric_constraint]
+instance_count = 0
+
+[entity.taper]
+instance_count = 0
+
+[entity.tee_profile]
+instance_count = 0
+
+[entity.terminal_feature]
+instance_count = 0
+
+[entity.terminal_location_group]
+instance_count = 0
+
+[entity.terminator_symbol]
+instance_count = 116
+complex_part_count = 116
+co_instantiated_with = [
+    "annotation_occurrence",
+    "annotation_symbol_occurrence",
+    "draughting_annotation_occurrence",
+    "geometric_representation_item",
+    "leader_terminator",
+    "representation_item",
+    "styled_item",
+]
+
+[entity.tessellated_annotation_occurrence]
+instance_count = 780
+
+[entity.tessellated_connecting_edge]
+instance_count = 0
+
+[entity.tessellated_curve_set]
+instance_count = 4987
+
+[entity.tessellated_edge]
+instance_count = 0
+
+[entity.tessellated_face]
+instance_count = 0
+
+[entity.tessellated_geometric_set]
+instance_count = 780
+complex_part_count = 385
+co_instantiated_with = [
+    "geometric_representation_item",
+    "repositioned_tessellated_item",
+    "representation_item",
+    "tessellated_item",
+]
+
+[entity.tessellated_item]
+instance_count = 385
+complex_part_count = 385
+co_instantiated_with = [
+    "geometric_representation_item",
+    "repositioned_tessellated_item",
+    "representation_item",
+    "tessellated_geometric_set",
+]
+
+[entity.tessellated_point_set]
+instance_count = 0
+
+[entity.tessellated_shape_representation]
+instance_count = 197
+complex_part_count = 80
+co_instantiated_with = [
+    "characterized_object",
+    "characterized_representation",
+    "draughting_model",
+    "representation",
+    "shape_representation",
+]
+
+[entity.tessellated_shape_representation_with_accuracy_parameters]
+instance_count = 0
+
+[entity.tessellated_shell]
+instance_count = 49
+
+[entity.tessellated_solid]
+instance_count = 137
+
+[entity.tessellated_structured_item]
+instance_count = 0
+
+[entity.tessellated_surface_set]
+instance_count = 0
+
+[entity.tessellated_vertex]
+instance_count = 0
+
+[entity.tessellated_wire]
+instance_count = 0
+
+[entity.tetrahedron]
+instance_count = 0
+
+[entity.tetrahedron_volume]
+instance_count = 0
+
+[entity.text_font]
+instance_count = 0
+
+[entity.text_font_family]
+instance_count = 0
+
+[entity.text_font_in_family]
+instance_count = 0
+
+[entity.text_literal]
+instance_count = 117
+
+[entity.text_literal_with_associated_curves]
+instance_count = 0
+
+[entity.text_literal_with_blanking_box]
+instance_count = 0
+
+[entity.text_literal_with_delineation]
+instance_count = 0
+
+[entity.text_literal_with_extent]
+instance_count = 0
+
+[entity.text_string_representation]
+instance_count = 0
+
+[entity.text_style]
+instance_count = 0
+
+[entity.text_style_for_defined_font]
+instance_count = 116
+
+[entity.text_style_with_box_characteristics]
+instance_count = 116
+
+[entity.text_style_with_mirror]
+instance_count = 0
+
+[entity.text_style_with_spacing]
+instance_count = 0
+
+[entity.texture_style_specification]
+instance_count = 0
+
+[entity.texture_style_tessellation_specification]
+instance_count = 0
+
+[entity.thermal_component]
+instance_count = 0
+
+[entity.thermal_resistance_measure_with_unit]
+instance_count = 0
+
+[entity.thermal_resistance_unit]
+instance_count = 0
+
+[entity.thermodynamic_temperature_measure_with_unit]
+instance_count = 0
+
+[entity.thermodynamic_temperature_unit]
+instance_count = 0
+
+[entity.thickened_face_solid]
+instance_count = 0
+
+[entity.thickness_laminate_definition]
+instance_count = 0
+
+[entity.thickness_laminate_table]
+instance_count = 0
+
+[entity.thread]
+instance_count = 0
+
+[entity.thread_runout]
+instance_count = 0
+
+[entity.time_interval]
+instance_count = 0
+
+[entity.time_interval_assignment]
+instance_count = 0
+
+[entity.time_interval_based_effectivity]
+instance_count = 0
+
+[entity.time_interval_relationship]
+instance_count = 0
+
+[entity.time_interval_role]
+instance_count = 0
+
+[entity.time_interval_with_bounds]
+instance_count = 0
+
+[entity.time_measure_with_unit]
+instance_count = 0
+
+[entity.time_unit]
+instance_count = 0
+
+[entity.tolerance_value]
+instance_count = 193
+
+[entity.tolerance_zone]
+instance_count = 170
+
+[entity.tolerance_zone_definition]
+instance_count = 0
+
+[entity.tolerance_zone_form]
+instance_count = 170
+
+[entity.tolerance_zone_with_datum]
+instance_count = 0
+
+[entity.topological_representation_item]
+instance_count = 0
+
+[entity.topology_related_to_multiply_defined_geometry]
+instance_count = 0
+
+[entity.topology_related_to_nearly_degenerate_geometry]
+instance_count = 0
+
+[entity.topology_related_to_overlapping_geometry]
+instance_count = 0
+
+[entity.topology_related_to_self_intersecting_geometry]
+instance_count = 0
+
+[entity.topology_to_geometry_item_association]
+instance_count = 0
+
+[entity.topology_to_geometry_model_association]
+instance_count = 0
+
+[entity.toroidal_surface]
+instance_count = 197758
+
+[entity.toroidal_volume]
+instance_count = 0
+
+[entity.torus]
+instance_count = 0
+
+[entity.total_runout_tolerance]
+instance_count = 2
+
+[entity.track_blended_solid]
+instance_count = 0
+
+[entity.track_blended_solid_with_end_conditions]
+instance_count = 0
+
+[entity.transformation_with_derived_angle]
+instance_count = 0
+
+[entity.transition_feature]
+instance_count = 0
+
+[entity.transport_feature]
+instance_count = 0
+
+[entity.triangular_matrix]
+instance_count = 0
+
+[entity.triangulated_face]
+instance_count = 0
+
+[entity.triangulated_point_cloud_dataset]
+instance_count = 0
+
+[entity.triangulated_surface_set]
+instance_count = 0
+
+[entity.trimmed_curve]
+instance_count = 15429
+
+[entity.turned_knurl]
+instance_count = 0
+
+[entity.twisted_cross_sectional_group_shape_element]
+instance_count = 0
+
+[entity.two_direction_repeat_factor]
+instance_count = 0
+
+[entity.type_qualifier]
+instance_count = 9
+
+[entity.unary_boolean_expression]
+instance_count = 0
+
+[entity.unary_function_call]
+instance_count = 0
+
+[entity.unary_generic_expression]
+instance_count = 0
+
+[entity.unary_numeric_expression]
+instance_count = 0
+
+[entity.unbound_parameter_environment]
+instance_count = 0
+
+[entity.unbound_variational_parameter]
+instance_count = 0
+
+[entity.unbound_variational_parameter_semantics]
+instance_count = 0
+
+[entity.uncertainty_assigned_representation]
+instance_count = 0
+
+[entity.uncertainty_measure_with_unit]
+instance_count = 182182
+
+[entity.uncertainty_qualifier]
+instance_count = 0
+
+[entity.unconstrained_pair]
+instance_count = 0
+
+[entity.unconstrained_pair_value]
+instance_count = 0
+
+[entity.unequally_disposed_geometric_tolerance]
+instance_count = 3
+complex_part_count = 3
+co_instantiated_with = [
+    "geometric_tolerance",
+    "geometric_tolerance_with_datum_reference",
+    "surface_profile_tolerance",
+]
+
+[entity.uniform_curve]
+instance_count = 0
+
+[entity.uniform_product_space]
+instance_count = 0
+
+[entity.uniform_resource_identifier]
+instance_count = 0
+
+[entity.uniform_surface]
+instance_count = 0
+
+[entity.uniform_volume]
+instance_count = 0
+
+[entity.universal_pair]
+instance_count = 0
+
+[entity.universal_pair_range]
+instance_count = 0
+
+[entity.universal_pair_value]
+instance_count = 0
+
+[entity.universal_pair_with_range]
+instance_count = 0
+
+[entity.unused_patches]
+instance_count = 0
+
+[entity.unused_shape_element]
+instance_count = 0
+
+[entity.usage_association]
+instance_count = 0
+
+[entity.user_defined_11]
+instance_count = 0
+
+[entity.user_defined_curve_font]
+instance_count = 0
+
+[entity.user_defined_marker]
+instance_count = 0
+
+[entity.user_defined_terminator_symbol]
+instance_count = 0
+
+[entity.user_selected_elements]
+instance_count = 0
+
+[entity.user_selected_shape_elements]
+instance_count = 0
+
+[entity.validation]
+instance_count = 0
+
+[entity.validation_software_identification]
+instance_count = 0
+
+[entity.value_format_type_qualifier]
+instance_count = 334
+
+[entity.value_function]
+instance_count = 0
+
+[entity.value_range]
+instance_count = 0
+
+[entity.value_representation_item]
+instance_count = 172
+
+[entity.variable]
+instance_count = 0
+
+[entity.variable_expression]
+instance_count = 0
+
+[entity.variable_semantics]
+instance_count = 0
+
+[entity.variational_current_representation_relationship]
+instance_count = 0
+
+[entity.variational_parameter]
+instance_count = 0
+
+[entity.variational_representation]
+instance_count = 0
+
+[entity.variational_representation_item]
+instance_count = 0
+
+[entity.vector]
+instance_count = 9112090
+
+[entity.vector_style]
+instance_count = 0
+
+[entity.vee_profile]
+instance_count = 0
+
+[entity.velocity_measure_with_unit]
+instance_count = 0
+
+[entity.velocity_unit]
+instance_count = 0
+
+[entity.verification]
+instance_count = 0
+
+[entity.verification_relationship]
+instance_count = 0
+
+[entity.versioned_action_request]
+instance_count = 0
+
+[entity.versioned_action_request_relationship]
+instance_count = 0
+
+[entity.vertex]
+instance_count = 0
+
+[entity.vertex_loop]
+instance_count = 18738
+
+[entity.vertex_on_edge]
+instance_count = 0
+
+[entity.vertex_point]
+instance_count = 10747911
+
+[entity.vertex_shell]
+instance_count = 0
+
+[entity.view_volume]
+instance_count = 298
+
+[entity.visual_appearance_representation]
+instance_count = 0
+
+[entity.volume]
+instance_count = 0
+
+[entity.volume_measure_with_unit]
+instance_count = 0
+
+[entity.volume_unit]
+instance_count = 13
+
+[entity.volume_with_faces]
+instance_count = 0
+
+[entity.volume_with_parametric_boundary]
+instance_count = 0
+
+[entity.volume_with_shell]
+instance_count = 0
+
+[entity.wedge_volume]
+instance_count = 0
+
+[entity.week_of_year_and_day_date]
+instance_count = 0
+
+[entity.wire_shell]
+instance_count = 0
+
+[entity.wrong_element_name]
+instance_count = 0
+
+[entity.wrongly_oriented_void]
+instance_count = 0
+
+[entity.wrongly_placed_loop]
+instance_count = 0
+
+[entity.wrongly_placed_void]
+instance_count = 0
+
+[entity.xor_expression]
+instance_count = 0
+
+[entity.year_month]
+instance_count = 0
+
+[entity.zero_surface_normal]
+instance_count = 0
+
+[entity.zone_breakdown_context]
+instance_count = 0
+
+[entity.zone_element_usage]
+instance_count = 0
+
+[entity.zone_structural_makeup]
+instance_count = 0

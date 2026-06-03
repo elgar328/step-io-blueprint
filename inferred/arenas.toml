@@ -1,0 +1,1691 @@
+[group.a3m_equivalence_accuracy_association]
+arena = "a3m_equivalence_accuracy_association"
+
+[group.a3m_equivalence_criterion]
+arena = "a3m_equivalence_criterion"
+
+[group.a3m_equivalence_criterion_for_assembly]
+arena = "a3m_equivalence_criterion_for_assembly"
+
+[group.a3m_equivalence_criterion_for_shape]
+arena = "a3m_equivalence_criterion_for_shape"
+
+[group.a3m_equivalence_criterion_of_assembly_data_structure]
+arena = "a3m_equivalence_criterion_of_assembly_data_structure"
+
+[group.a3m_equivalence_criterion_of_detailed_assembly_data_content]
+arena = "a3m_equivalence_criterion_of_detailed_assembly_data_content"
+
+[group.a3m_equivalence_criterion_of_detailed_shape_data_content]
+arena = "a3m_equivalence_criterion_of_detailed_shape_data_content"
+
+[group.a3m_equivalence_criterion_of_representative_assembly_property_value]
+arena = "a3m_equivalence_criterion_of_representative_assembly_property_value"
+
+[group.a3m_equivalence_criterion_of_representative_shape_property_value]
+arena = "a3m_equivalence_criterion_of_representative_shape_property_value"
+
+[group.a3m_equivalence_criterion_of_shape_data_structure]
+arena = "a3m_equivalence_criterion_of_shape_data_structure"
+
+[group.a3m_equivalence_inspection_requirement_with_values]
+arena = "a3m_equivalence_inspection_requirement_with_values"
+
+[group.a3m_equivalence_summary_report_request_with_representative_value]
+arena = "a3m_equivalence_summary_report_request_with_representative_value"
+
+[group.a3m_inspected_model_and_inspection_result_relationship]
+arena = "a3m_inspected_model_and_inspection_result_relationship"
+
+[group.a3ma_assembly_and_shape_criteria_relationship]
+arena = "a3ma_assembly_and_shape_criteria_relationship"
+
+[group.a3ma_equivalence_criterion_assessment_threshold_relationship]
+arena = "a3ma_equivalence_criterion_assessment_threshold_relationship"
+
+[group.action]
+arena = "action"
+
+[group.action_assignment]
+arena = "action_assignment"
+
+[group.action_directive]
+arena = "action_directive"
+
+[group.action_directive_relationship]
+arena = "action_directive_relationship"
+
+[group.action_method]
+arena = "action_method"
+
+[group.action_method_relationship]
+arena = "action_method_relationship"
+
+[group.action_method_role]
+arena = "action_method_role"
+
+[group.action_property]
+arena = "action_property"
+
+[group.action_property_representation]
+arena = "action_property_representation"
+
+[group.action_relationship]
+arena = "action_relationship"
+
+[group.action_request_assignment]
+arena = "action_request_assignment"
+
+[group.action_request_solution]
+arena = "action_request_solution"
+
+[group.action_request_status]
+arena = "action_request_status"
+
+[group.action_resource]
+arena = "action_resource"
+
+[group.action_resource_relationship]
+arena = "action_resource_relationship"
+
+[group.action_resource_requirement]
+arena = "action_resource_requirement"
+
+[group.action_resource_type]
+arena = "action_resource_type"
+
+[group.action_status]
+arena = "action_status"
+
+[group.additive_manufacturing_setup_relationship]
+arena = "additive_manufacturing_setup_relationship"
+
+[group.address]
+arena = "address"
+
+[group.aggregate_id_attribute]
+arena = "aggregate_id_attribute"
+
+[group.alternate_product_relationship]
+arena = "alternate_product_relationship"
+
+[group.annotation_curve_occurrence]
+arena = "annotation_curve_occurrence"
+
+[group.annotation_occurrence]
+arena = "annotation_occurrence"
+
+[group.annotation_occurrence_relationship]
+arena = "annotation_occurrence_relationship"
+
+[group.annotation_placeholder_leader_line]
+arena = "annotation_placeholder_leader_line"
+
+[group.annotation_placeholder_occurrence]
+arena = "annotation_placeholder_occurrence"
+
+[group.application_context]
+arena = "application_context"
+
+[group.application_context_element]
+arena = "application_context_element"
+
+[group.application_context_relationship]
+arena = "application_context_relationship"
+
+[group.application_protocol_definition]
+arena = "application_protocol_definition"
+
+[group.applied_action_assignment]
+arena = "applied_action_assignment"
+
+[group.applied_action_method_assignment]
+arena = "applied_action_method_assignment"
+
+[group.applied_classification_assignment_relationship]
+arena = "applied_classification_assignment_relationship"
+
+[group.applied_date_assignment]
+arena = "applied_date_assignment"
+
+[group.applied_description_text_assignment]
+arena = "applied_description_text_assignment"
+
+[group.applied_description_text_assignment_relationship]
+arena = "applied_description_text_assignment_relationship"
+
+[group.applied_directed_action_assignment]
+arena = "applied_directed_action_assignment"
+
+[group.applied_document_usage_constraint_assignment]
+arena = "applied_document_usage_constraint_assignment"
+
+[group.applied_event_occurrence_assignment]
+arena = "applied_event_occurrence_assignment"
+
+[group.applied_external_identification_assignment_relationship]
+arena = "applied_external_identification_assignment_relationship"
+
+[group.applied_location_assignment]
+arena = "applied_location_assignment"
+
+[group.applied_location_representation_assignment]
+arena = "applied_location_representation_assignment"
+
+[group.applied_name_assignment]
+arena = "applied_name_assignment"
+
+[group.applied_organization_assignment]
+arena = "applied_organization_assignment"
+
+[group.applied_organization_type_assignment]
+arena = "applied_organization_type_assignment"
+
+[group.applied_organizational_project_assignment]
+arena = "applied_organizational_project_assignment"
+
+[group.applied_presented_item]
+arena = "applied_presented_item"
+
+[group.applied_time_interval_assignment]
+arena = "applied_time_interval_assignment"
+
+[group.approval]
+arena = "approval"
+
+[group.approval_assignment]
+arena = "approval_assignment"
+
+[group.approval_date_time]
+arena = "approval_date_time"
+
+[group.approval_person_organization]
+arena = "approval_person_organization"
+
+[group.approval_relationship]
+arena = "approval_relationship"
+
+[group.approval_role]
+arena = "approval_role"
+
+[group.approval_status]
+arena = "approval_status"
+
+[group.area_in_set]
+arena = "area_in_set"
+
+[group.array_placement_group]
+arena = "array_placement_group"
+
+[group.ascribable_state]
+arena = "ascribable_state"
+
+[group.ascribable_state_relationship]
+arena = "ascribable_state_relationship"
+
+[group.assembly_component_usage]
+arena = "assembly_component_usage"
+
+[group.assembly_component_usage_substitute]
+arena = "assembly_component_usage_substitute"
+
+[group.assembly_geometric_constraint]
+arena = "assembly_geometric_constraint"
+
+[group.assignment_object_relationship]
+arena = "assignment_object_relationship"
+
+[group.attribute_classification_assignment]
+arena = "attribute_classification_assignment"
+
+[group.attribute_value_role]
+arena = "attribute_value_role"
+
+[group.b_spline_curve]
+arena = "b_spline_curve"
+
+[group.b_spline_surface]
+arena = "b_spline_surface"
+
+[group.b_spline_volume]
+arena = "b_spline_volume"
+
+[group.binary_assembly_constraint]
+arena = "binary_assembly_constraint"
+
+[group.binary_boolean_expression]
+arena = "binary_boolean_expression"
+
+[group.binary_generic_expression]
+arena = "binary_generic_expression"
+
+[group.binary_numeric_expression]
+arena = "binary_numeric_expression"
+
+[group.boolean_expression]
+arena = "boolean_expression"
+
+[group.boolean_result]
+arena = "boolean_result"
+
+[group.bound_parameter_environment]
+arena = "bound_parameter_environment"
+
+[group.bounded_curve]
+arena = "surface_curve"
+
+[group.bounded_surface]
+arena = "bounded_surface"
+
+[group.camera_model]
+arena = "camera_model"
+
+[group.cartesian_point]
+arena = "cartesian_point"
+
+[group.certification]
+arena = "certification"
+
+[group.certification_assignment]
+arena = "certification_assignment"
+
+[group.certification_type]
+arena = "certification_type"
+
+[group.chain_based_geometric_item_specific_usage]
+arena = "chain_based_geometric_item_specific_usage"
+
+[group.chain_based_item_identified_representation_usage]
+arena = "chain_based_item_identified_representation_usage"
+
+[group.change_element]
+arena = "change_element"
+
+[group.character_glyph_font_usage]
+arena = "character_glyph_font_usage"
+
+[group.characterized_object]
+arena = "characterized_object"
+
+[group.characterized_object_relationship]
+arena = "characterized_object_relationship"
+
+[group.classification_assignment]
+arena = "classification_assignment"
+
+[group.classification_assignment_relationship]
+arena = "classification_assignment_relationship"
+
+[group.classification_role]
+arena = "classification_role"
+
+[group.colour]
+arena = "colour"
+
+[group.comparison_expression]
+arena = "comparison_expression"
+
+[group.complex_area]
+arena = "complex_area"
+
+[group.complex_number_literal]
+arena = "complex_number_literal"
+
+[group.composite_curve]
+arena = "composite_curve"
+
+[group.composite_curve_segment]
+arena = "composite_curve_segment"
+
+[group.composite_shape_aspect]
+arena = "composite_shape_aspect"
+
+[group.composite_text]
+arena = "composite_text"
+
+[group.compound_representation_item]
+arena = "compound_representation_item"
+
+[group.concept_feature_operator]
+arena = "concept_feature_operator"
+
+[group.concept_feature_relationship]
+arena = "concept_feature_relationship"
+
+[group.concept_feature_relationship_with_condition]
+arena = "concept_feature_relationship_with_condition"
+
+[group.configuration_definition]
+arena = "configuration_definition"
+
+[group.configuration_design]
+arena = "configuration_design"
+
+[group.configuration_interpolation]
+arena = "configuration_interpolation"
+
+[group.configuration_item]
+arena = "configuration_item"
+
+[group.configuration_item_relationship]
+arena = "configuration_item_relationship"
+
+[group.conic]
+arena = "conic"
+
+[group.connected_edge_set]
+arena = "connected_edge_set"
+
+[group.connected_face_set]
+arena = "connected_face_set"
+
+[group.connected_volume_set]
+arena = "connected_volume_set"
+
+[group.context_dependent_kinematic_link_representation]
+arena = "context_dependent_kinematic_link_representation"
+
+[group.context_dependent_shape_representation]
+arena = "context_dependent_shape_representation"
+
+[group.context_dependent_unit]
+arena = "context_dependent_unit"
+
+[group.continuous_shape_aspect]
+arena = "continuous_shape_aspect"
+
+[group.contract]
+arena = "contract"
+
+[group.contract_assignment]
+arena = "contract_assignment"
+
+[group.contract_relationship]
+arena = "contract_relationship"
+
+[group.contract_type]
+arena = "contract_type"
+
+[group.conversion_based_unit]
+arena = "conversion_based_unit"
+
+[group.coordinated_universal_time_offset]
+arena = "coordinated_universal_time_offset"
+
+[group.cross_sectional_group_shape_element]
+arena = "cross_sectional_group_shape_element"
+
+[group.cross_sectional_part_shape_element]
+arena = "cross_sectional_part_shape_element"
+
+[group.currency]
+arena = "currency"
+
+[group.curve]
+arena = "curve"
+
+[group.curve_style]
+arena = "curve_style"
+
+[group.curve_style_font]
+arena = "curve_style_font"
+
+[group.curve_style_rendering]
+arena = "curve_style_rendering"
+
+[group.cylindrical_pair_range]
+arena = "cylindrical_pair_range"
+
+[group.data_environment]
+arena = "data_environment"
+
+[group.data_equivalence_assessment_specification]
+arena = "data_equivalence_assessment_specification"
+
+[group.data_equivalence_criterion_assessment_association]
+arena = "data_equivalence_criterion_assessment_association"
+
+[group.data_equivalence_criterion_inspection_association]
+arena = "data_equivalence_criterion_inspection_association"
+
+[group.data_equivalence_definition]
+arena = "data_equivalence_definition"
+
+[group.data_equivalence_definition_relationship]
+arena = "data_equivalence_definition_relationship"
+
+[group.data_equivalence_definition_representation_relationship]
+arena = "data_equivalence_definition_representation_relationship"
+
+[group.data_equivalence_inspection_criterion_report_item]
+arena = "data_equivalence_inspection_criterion_report_item"
+
+[group.data_equivalence_inspection_instance_report_item]
+arena = "data_equivalence_inspection_instance_report_item"
+
+[group.data_equivalence_inspection_report]
+arena = "data_equivalence_inspection_report"
+
+[group.data_equivalence_inspection_result]
+arena = "data_equivalence_inspection_result"
+
+[group.data_equivalence_inspection_result_representation]
+arena = "data_equivalence_inspection_result_representation"
+
+[group.data_equivalence_report_request]
+arena = "data_equivalence_report_request"
+
+[group.data_quality_assessment_measurement_association]
+arena = "data_quality_assessment_measurement_association"
+
+[group.data_quality_assessment_specification]
+arena = "data_quality_assessment_specification"
+
+[group.data_quality_criterion_assessment_association]
+arena = "data_quality_criterion_assessment_association"
+
+[group.data_quality_criterion_measurement_association]
+arena = "data_quality_criterion_measurement_association"
+
+[group.data_quality_definition]
+arena = "data_quality_definition"
+
+[group.data_quality_definition_relationship]
+arena = "data_quality_definition_relationship"
+
+[group.data_quality_definition_representation_relationship]
+arena = "data_quality_definition_representation_relationship"
+
+[group.data_quality_inspection_instance_report_item]
+arena = "data_quality_inspection_instance_report_item"
+
+[group.data_quality_inspection_report]
+arena = "data_quality_inspection_report"
+
+[group.data_quality_inspection_result]
+arena = "data_quality_inspection_result"
+
+[group.data_quality_inspection_result_representation]
+arena = "data_quality_inspection_result_representation"
+
+[group.data_quality_report_measurement_association]
+arena = "data_quality_report_measurement_association"
+
+[group.data_quality_report_request]
+arena = "data_quality_report_request"
+
+[group.date]
+arena = "date"
+
+[group.date_and_time]
+arena = "date_and_time"
+
+[group.date_and_time_assignment]
+arena = "date_and_time_assignment"
+
+[group.date_role]
+arena = "date_role"
+
+[group.date_time_role]
+arena = "date_time_role"
+
+[group.datum]
+arena = "datum"
+
+[group.datum_feature]
+arena = "datum_feature"
+
+[group.datum_reference]
+arena = "datum_reference"
+
+[group.datum_reference_modifier_with_value]
+arena = "datum_reference_modifier_with_value"
+
+[group.defined_constraint]
+arena = "defined_constraint"
+
+[group.defined_function]
+arena = "defined_function"
+
+[group.derived_shape_aspect]
+arena = "derived_shape_aspect"
+
+[group.derived_unit]
+arena = "derived_unit"
+
+[group.derived_unit_element]
+arena = "derived_unit_element"
+
+[group.description_attribute]
+arena = "description_attribute"
+
+[group.description_text]
+arena = "description_text"
+
+[group.description_text_assignment_relationship]
+arena = "description_text_assignment_relationship"
+
+[group.descriptive_representation_item]
+arena = "descriptive_representation_item"
+
+[group.detailed_equivalence_report_request]
+arena = "detailed_equivalence_report_request"
+
+[group.dimension_callout_component_relationship]
+arena = "dimension_callout_component_relationship"
+
+[group.dimension_callout_relationship]
+arena = "dimension_callout_relationship"
+
+[group.dimension_curve_terminator_to_projection_curve_associativity]
+arena = "dimension_curve_terminator_to_projection_curve_associativity"
+
+[group.dimension_pair]
+arena = "dimension_pair"
+
+[group.dimension_related_tolerance_zone_element]
+arena = "dimension_related_tolerance_zone_element"
+
+[group.dimensional_characteristic_representation]
+arena = "dimensional_characteristic_representation"
+
+[group.dimensional_exponents]
+arena = "dimensional_exponents"
+
+[group.dimensional_location]
+arena = "dimensional_location"
+
+[group.dimensional_size]
+arena = "dimensional_size"
+
+[group.discontinuous_geometry]
+arena = "discontinuous_geometry"
+
+[group.document]
+arena = "document"
+
+[group.document_product_equivalence]
+arena = "document_product_equivalence"
+
+[group.document_reference]
+arena = "document_reference"
+
+[group.document_relationship]
+arena = "document_relationship"
+
+[group.document_representation_type]
+arena = "document_representation_type"
+
+[group.document_type]
+arena = "document_type"
+
+[group.document_usage_constraint]
+arena = "document_usage_constraint"
+
+[group.document_usage_role]
+arena = "document_usage_role"
+
+[group.draughting_callout]
+arena = "draughting_callout"
+
+[group.draughting_callout_relationship]
+arena = "draughting_callout_relationship"
+
+[group.draughting_model_item_association]
+arena = "draughting_model_item_association"
+
+[group.draughting_pre_defined_text_font]
+arena = "draughting_pre_defined_text_font"
+
+[group.draughting_title]
+arena = "draughting_title"
+
+[group.drawing_definition]
+arena = "drawing_definition"
+
+[group.drawing_revision]
+arena = "drawing_revision"
+
+[group.drawing_revision_sequence]
+arena = "drawing_revision_sequence"
+
+[group.edge]
+arena = "edge"
+
+[group.edge_blended_solid]
+arena = "edge_blended_solid"
+
+[group.edge_curve]
+arena = "edge_curve"
+
+[group.effectivity]
+arena = "effectivity"
+
+[group.effectivity_assignment]
+arena = "effectivity_assignment"
+
+[group.effectivity_context_assignment]
+arena = "effectivity_context_assignment"
+
+[group.effectivity_context_role]
+arena = "effectivity_context_role"
+
+[group.effectivity_relationship]
+arena = "effectivity_relationship"
+
+[group.elementary_surface]
+arena = "elementary_surface"
+
+[group.environment]
+arena = "environment"
+
+[group.equivalence_notable_instance]
+arena = "equivalence_notable_instance"
+
+[group.erroneous_data]
+arena = "erroneous_data"
+
+[group.erroneous_geometry]
+arena = "erroneous_geometry"
+
+[group.erroneous_manifold_solid_brep]
+arena = "erroneous_manifold_solid_brep"
+
+[group.erroneous_topology]
+arena = "erroneous_topology"
+
+[group.erroneous_topology_and_geometry_relationship]
+arena = "erroneous_topology_and_geometry_relationship"
+
+[group.event_occurrence]
+arena = "event_occurrence"
+
+[group.event_occurrence_context_assignment]
+arena = "event_occurrence_context_assignment"
+
+[group.event_occurrence_context_role]
+arena = "event_occurrence_context_role"
+
+[group.event_occurrence_relationship]
+arena = "event_occurrence_relationship"
+
+[group.event_occurrence_role]
+arena = "event_occurrence_role"
+
+[group.explicit_constraint]
+arena = "explicit_constraint"
+
+[group.explicit_geometric_constraint]
+arena = "explicit_geometric_constraint"
+
+[group.explicit_procedural_geometric_representation_item_relationship]
+arena = "explicit_procedural_geometric_representation_item_relationship"
+
+[group.explicit_procedural_representation_item_relationship]
+arena = "explicit_procedural_representation_item_relationship"
+
+[group.explicit_round_hole]
+arena = "explicit_round_hole"
+
+[group.explicit_table_function]
+arena = "explicit_table_function"
+
+[group.expression]
+arena = "expression"
+
+[group.expression_extension_to_select]
+arena = "expression_extension_to_select"
+
+[group.external_identification_assignment]
+arena = "external_identification_assignment"
+
+[group.external_identification_assignment_relationship]
+arena = "external_identification_assignment_relationship"
+
+[group.external_source]
+arena = "external_source"
+
+[group.external_source_relationship]
+arena = "external_source_relationship"
+
+[group.externally_defined_item]
+arena = "externally_defined_item"
+
+[group.externally_defined_item_relationship]
+arena = "externally_defined_item_relationship"
+
+[group.extreme_instance]
+arena = "extreme_instance"
+
+[group.extruded_face_solid_with_trim_conditions]
+arena = "extruded_face_solid_with_trim_conditions"
+
+[group.face]
+arena = "face"
+
+[group.face_bound]
+arena = "face_bound"
+
+[group.face_surface]
+arena = "face_surface"
+
+[group.faceted_primitive]
+arena = "faceted_primitive"
+
+[group.feature_component_relationship]
+arena = "feature_component_relationship"
+
+[group.feature_definition]
+arena = "feature_definition"
+
+[group.fill_area_style_colour]
+arena = "fill_area_style_colour"
+
+[group.founded_item]
+arena = "founded_item"
+
+[group.free_form_constraint]
+arena = "free_form_constraint"
+
+[group.functionally_defined_transformation]
+arena = "functionally_defined_transformation"
+
+[group.gear_pair_range]
+arena = "gear_pair_range"
+
+[group.general_datum_reference]
+arena = "general_datum_reference"
+
+[group.general_property]
+arena = "general_property"
+
+[group.general_property_association]
+arena = "general_property_association"
+
+[group.general_property_relationship]
+arena = "general_property_relationship"
+
+[group.generic_expression]
+arena = "generic_expression"
+
+[group.generic_literal]
+arena = "generic_literal"
+
+[group.generic_product_definition_reference]
+arena = "generic_product_definition_reference"
+
+[group.generic_property_relationship]
+arena = "generic_property_relationship"
+
+[group.generic_variable]
+arena = "generic_variable"
+
+[group.geometric_gap_in_topology]
+arena = "geometric_gap_in_topology"
+
+[group.geometric_item_specific_usage]
+arena = "geometric_item_specific_usage"
+
+[group.geometric_representation_context]
+arena = "geometric_representation_context"
+
+[group.geometric_representation_item]
+arena = "geometric_representation_item"
+
+[group.geometric_tolerance]
+arena = "geometric_tolerance"
+
+[group.geometric_tolerance_auxiliary_classification]
+arena = "geometric_tolerance_auxiliary_classification"
+
+[group.geometric_tolerance_relationship]
+arena = "geometric_tolerance_relationship"
+
+[group.geometric_tolerance_with_datum_reference]
+arena = "geometric_tolerance_with_datum_reference"
+
+[group.geometry_with_local_irregularity]
+arena = "geometry_with_local_irregularity"
+
+[group.geometry_with_local_near_degeneracy]
+arena = "geometry_with_local_near_degeneracy"
+
+[group.global_assignment]
+arena = "global_assignment"
+
+[group.gps_filter]
+arena = "gps_filter"
+
+[group.gps_filtration_specification]
+arena = "gps_filtration_specification"
+
+[group.group]
+arena = "group"
+
+[group.group_assignment]
+arena = "group_assignment"
+
+[group.group_relationship]
+arena = "group_relationship"
+
+[group.high_order_kinematic_pair]
+arena = "high_order_kinematic_pair"
+
+[group.id_attribute]
+arena = "id_attribute"
+
+[group.identification_assignment]
+arena = "identification_assignment"
+
+[group.identification_assignment_relationship]
+arena = "identification_assignment_relationship"
+
+[group.identification_role]
+arena = "identification_role"
+
+[group.implicit_explicit_positioned_sketch_relationship]
+arena = "implicit_explicit_positioned_sketch_relationship"
+
+[group.implicit_planar_curve]
+arena = "implicit_planar_curve"
+
+[group.implicit_point_on_plane]
+arena = "implicit_point_on_plane"
+
+[group.inapt_data]
+arena = "inapt_data"
+
+[group.inapt_geometry]
+arena = "inapt_geometry"
+
+[group.inapt_manifold_solid_brep]
+arena = "inapt_manifold_solid_brep"
+
+[group.inapt_topology]
+arena = "inapt_topology"
+
+[group.inapt_topology_and_geometry_relationship]
+arena = "inapt_topology_and_geometry_relationship"
+
+[group.initial_state]
+arena = "initial_state"
+
+[group.invisibility]
+arena = "invisibility"
+
+[group.item_defined_transformation]
+arena = "item_defined_transformation"
+
+[group.item_identified_representation_usage]
+arena = "item_identified_representation_usage"
+
+[group.kinematic_analysis_consistency]
+arena = "kinematic_analysis_consistency"
+
+[group.kinematic_analysis_result]
+arena = "kinematic_analysis_result"
+
+[group.kinematic_control]
+arena = "kinematic_control"
+
+[group.kinematic_link_representation]
+arena = "kinematic_link_representation"
+
+[group.kinematic_link_representation_relation]
+arena = "kinematic_link_representation_relation"
+
+[group.kinematic_pair]
+arena = "kinematic_pair"
+
+[group.kinematic_path]
+arena = "kinematic_path"
+
+[group.kinematic_path_segment]
+arena = "kinematic_path_segment"
+
+[group.kinematic_property_definition_representation]
+arena = "kinematic_property_definition_representation"
+
+[group.kinematic_structure]
+arena = "kinematic_structure"
+
+[group.kinematic_topology_directed_structure]
+arena = "kinematic_topology_directed_structure"
+
+[group.laminate_table]
+arena = "laminate_table"
+
+[group.light_source]
+arena = "light_source"
+
+[group.limits_and_fits]
+arena = "limits_and_fits"
+
+[group.linearized_table_function]
+arena = "linearized_table_function"
+
+[group.link_motion_representation_along_path]
+arena = "link_motion_representation_along_path"
+
+[group.literal_number]
+arena = "literal_number"
+
+[group.local_time]
+arena = "local_time"
+
+[group.location]
+arena = "location"
+
+[group.location_relationship]
+arena = "location_relationship"
+
+[group.location_representation_role]
+arena = "location_representation_role"
+
+[group.location_role]
+arena = "location_role"
+
+[group.loop]
+arena = "loop"
+
+[group.low_order_kinematic_pair]
+arena = "low_order_kinematic_pair"
+
+[group.low_order_kinematic_pair_with_motion_coupling]
+arena = "low_order_kinematic_pair_with_motion_coupling"
+
+[group.manifold_solid_brep]
+arena = "manifold_solid_brep"
+
+[group.mapped_item]
+arena = "mapped_item"
+
+[group.material_designation]
+arena = "material_designation"
+
+[group.material_designation_characterization]
+arena = "material_designation_characterization"
+
+[group.mathematical_description]
+arena = "mathematical_description"
+
+[group.maths_function]
+arena = "maths_function"
+
+[group.maths_space]
+arena = "maths_space"
+
+[group.maths_value_precision_qualifier]
+arena = "maths_value_precision_qualifier"
+
+[group.maths_variable]
+arena = "maths_variable"
+
+[group.measure_qualification]
+arena = "measure_qualification"
+
+[group.measure_with_unit]
+arena = "measure_with_unit"
+
+[group.mechanical_design_requirement_item_association]
+arena = "mechanical_design_requirement_item_association"
+
+[group.mechanism]
+arena = "mechanism"
+
+[group.modified_solid]
+arena = "modified_solid"
+
+[group.modified_solid_with_placed_configuration]
+arena = "modified_solid_with_placed_configuration"
+
+[group.multi_language_attribute_assignment]
+arena = "multi_language_attribute_assignment"
+
+[group.multiple_arity_boolean_expression]
+arena = "multiple_arity_boolean_expression"
+
+[group.multiple_arity_function_call]
+arena = "multiple_arity_function_call"
+
+[group.multiple_arity_generic_expression]
+arena = "multiple_arity_generic_expression"
+
+[group.multiple_arity_numeric_expression]
+arena = "multiple_arity_numeric_expression"
+
+[group.multiply_defined_geometry]
+arena = "multiply_defined_geometry"
+
+[group.name_attribute]
+arena = "name_attribute"
+
+[group.named_unit]
+arena = "named_unit"
+
+[group.near_point_relationship]
+arena = "near_point_relationship"
+
+[group.nearly_degenerate_geometry]
+arena = "nearly_degenerate_geometry"
+
+[group.non_smooth_geometry_transition_across_edge]
+arena = "non_smooth_geometry_transition_across_edge"
+
+[group.numeric_defined_function]
+arena = "numeric_defined_function"
+
+[group.numeric_expression]
+arena = "numeric_expression"
+
+[group.numeric_variable]
+arena = "numeric_variable"
+
+[group.object_role]
+arena = "object_role"
+
+[group.one_direction_repeat_factor]
+arena = "one_direction_repeat_factor"
+
+[group.organization]
+arena = "organization"
+
+[group.organization_relationship]
+arena = "organization_relationship"
+
+[group.organization_role]
+arena = "organization_role"
+
+[group.organization_type]
+arena = "organization_type"
+
+[group.organization_type_role]
+arena = "organization_type_role"
+
+[group.organizational_address]
+arena = "organizational_address"
+
+[group.organizational_project]
+arena = "organizational_project"
+
+[group.organizational_project_relationship]
+arena = "organizational_project_relationship"
+
+[group.organizational_project_role]
+arena = "organizational_project_role"
+
+[group.oriented_edge]
+arena = "oriented_edge"
+
+[group.overcomplex_geometry]
+arena = "overcomplex_geometry"
+
+[group.overcomplex_topology_and_geometry_relationship]
+arena = "overcomplex_topology_and_geometry_relationship"
+
+[group.overlapping_geometry]
+arena = "overlapping_geometry"
+
+[group.pair_actuator]
+arena = "pair_actuator"
+
+[group.pair_value]
+arena = "pair_value"
+
+[group.part_laminate_table]
+arena = "part_laminate_table"
+
+[group.path]
+arena = "path"
+
+[group.path_node]
+arena = "path_node"
+
+[group.pcurve]
+arena = "pcurve"
+
+[group.person]
+arena = "person"
+
+[group.person_and_organization]
+arena = "person_and_organization"
+
+[group.person_and_organization_assignment]
+arena = "person_and_organization_assignment"
+
+[group.person_and_organization_role]
+arena = "person_and_organization_role"
+
+[group.physical_component_feature]
+arena = "physical_component_feature"
+
+[group.picture_representation_item]
+arena = "picture_representation_item"
+
+[group.placement]
+arena = "placement"
+
+[group.planar_curve_pair]
+arena = "planar_curve_pair"
+
+[group.planar_extent]
+arena = "planar_extent"
+
+[group.planar_pair_range]
+arena = "planar_pair_range"
+
+[group.plus_minus_tolerance]
+arena = "plus_minus_tolerance"
+
+[group.pmi_requirement_item_association]
+arena = "pmi_requirement_item_association"
+
+[group.point]
+arena = "point"
+
+[group.point_cloud_dataset]
+arena = "point_cloud_dataset"
+
+[group.point_on_curve]
+arena = "point_on_curve"
+
+[group.point_on_planar_curve_pair_range]
+arena = "point_on_planar_curve_pair_range"
+
+[group.point_on_surface]
+arena = "point_on_surface"
+
+[group.point_on_surface_pair_range]
+arena = "point_on_surface_pair_range"
+
+[group.pre_defined_character_glyph]
+arena = "pre_defined_character_glyph"
+
+[group.pre_defined_curve_font]
+arena = "pre_defined_curve_font"
+
+[group.pre_defined_item]
+arena = "pre_defined_item"
+
+[group.pre_defined_marker]
+arena = "pre_defined_marker"
+
+[group.pre_defined_surface_side_style]
+arena = "pre_defined_surface_side_style"
+
+[group.pre_defined_symbol]
+arena = "pre_defined_symbol"
+
+[group.pre_defined_text_font]
+arena = "pre_defined_text_font"
+
+[group.pre_defined_tile]
+arena = "pre_defined_tile"
+
+[group.precision_qualifier]
+arena = "precision_qualifier"
+
+[group.presentation_layer_assignment]
+arena = "presentation_layer_assignment"
+
+[group.presentation_representation]
+arena = "presentation_representation"
+
+[group.presentation_size]
+arena = "presentation_size"
+
+[group.presentation_style_assignment]
+arena = "presentation_style_assignment"
+
+[group.presented_item_representation]
+arena = "presented_item_representation"
+
+[group.primitive_2d]
+arena = "primitive_2d"
+
+[group.prismatic_pair_range]
+arena = "prismatic_pair_range"
+
+[group.process_product_association]
+arena = "process_product_association"
+
+[group.process_property_association]
+arena = "process_property_association"
+
+[group.product]
+arena = "product"
+
+[group.product_category]
+arena = "product_category"
+
+[group.product_category_relationship]
+arena = "product_category_relationship"
+
+[group.product_concept]
+arena = "product_concept"
+
+[group.product_concept_feature]
+arena = "product_concept_feature"
+
+[group.product_concept_feature_association]
+arena = "product_concept_feature_association"
+
+[group.product_concept_relationship]
+arena = "product_concept_relationship"
+
+[group.product_context]
+arena = "product_context"
+
+[group.product_data_and_data_equivalence_relationship]
+arena = "product_data_and_data_equivalence_relationship"
+
+[group.product_data_and_data_quality_relationship]
+arena = "product_data_and_data_quality_relationship"
+
+[group.product_definition]
+arena = "product_definition"
+
+[group.product_definition_context]
+arena = "product_definition_context"
+
+[group.product_definition_context_association]
+arena = "product_definition_context_association"
+
+[group.product_definition_context_role]
+arena = "product_definition_context_role"
+
+[group.product_definition_formation]
+arena = "product_definition_formation"
+
+[group.product_definition_formation_relationship]
+arena = "product_definition_formation_relationship"
+
+[group.product_definition_occurrence]
+arena = "product_definition_occurrence"
+
+[group.product_definition_occurrence_relationship]
+arena = "product_definition_occurrence_relationship"
+
+[group.product_definition_process]
+arena = "product_definition_process"
+
+[group.product_definition_relationship]
+arena = "product_definition_relationship"
+
+[group.product_definition_relationship_relationship]
+arena = "product_definition_relationship_relationship"
+
+[group.product_definition_substitute]
+arena = "product_definition_substitute"
+
+[group.product_definition_usage_relationship]
+arena = "product_definition_usage_relationship"
+
+[group.product_relationship]
+arena = "product_relationship"
+
+[group.property_definition]
+arena = "property_definition"
+
+[group.property_definition_relationship]
+arena = "property_definition_relationship"
+
+[group.property_definition_representation]
+arena = "property_definition_representation"
+
+[group.quantifier_expression]
+arena = "quantifier_expression"
+
+[group.rack_and_pinion_pair_range]
+arena = "rack_and_pinion_pair_range"
+
+[group.replicate_feature]
+arena = "replicate_feature"
+
+[group.representation]
+arena = "representation"
+
+[group.representation_context]
+arena = "representation_context"
+
+[group.representation_context_reference]
+arena = "representation_context_reference"
+
+[group.representation_item]
+arena = "representation_item"
+
+[group.representation_item_relationship]
+arena = "representation_item_relationship"
+
+[group.representation_map]
+arena = "representation_map"
+
+[group.representation_reference]
+arena = "representation_reference"
+
+[group.representation_relationship]
+arena = "representation_relationship"
+
+[group.representation_relationship_with_transformation]
+arena = "representation_relationship_with_transformation"
+
+[group.resource_property]
+arena = "resource_property"
+
+[group.resource_property_representation]
+arena = "resource_property_representation"
+
+[group.resource_requirement_type]
+arena = "resource_requirement_type"
+
+[group.revolute_pair_range]
+arena = "revolute_pair_range"
+
+[group.role_association]
+arena = "role_association"
+
+[group.round_hole]
+arena = "round_hole"
+
+[group.runout_zone_orientation]
+arena = "runout_zone_orientation"
+
+[group.scanned_data_item]
+arena = "scanned_data_item"
+
+[group.screw_pair_range]
+arena = "screw_pair_range"
+
+[group.security_classification]
+arena = "security_classification"
+
+[group.security_classification_assignment]
+arena = "security_classification_assignment"
+
+[group.security_classification_level]
+arena = "security_classification_level"
+
+[group.self_intersecting_geometry]
+arena = "self_intersecting_geometry"
+
+[group.shape_aspect]
+arena = "shape_aspect"
+
+[group.shape_aspect_relationship]
+arena = "shape_aspect_relationship"
+
+[group.shape_aspect_relationship_representation_association]
+arena = "shape_aspect_relationship_representation_association"
+
+[group.shape_data_quality_criterion]
+arena = "shape_data_quality_criterion"
+
+[group.shape_data_quality_criterion_and_accuracy_association]
+arena = "shape_data_quality_criterion_and_accuracy_association"
+
+[group.shape_data_quality_value_limit]
+arena = "shape_data_quality_value_limit"
+
+[group.shape_inspection_result_accuracy_association]
+arena = "shape_inspection_result_accuracy_association"
+
+[group.shape_measurement_accuracy]
+arena = "shape_measurement_accuracy"
+
+[group.shape_representation_reference]
+arena = "shape_representation_reference"
+
+[group.shelled_solid]
+arena = "shelled_solid"
+
+[group.simple_boolean_expression]
+arena = "simple_boolean_expression"
+
+[group.simple_generic_expression]
+arena = "simple_generic_expression"
+
+[group.simple_numeric_expression]
+arena = "simple_numeric_expression"
+
+[group.simple_pair_range]
+arena = "simple_pair_range"
+
+[group.simple_string_expression]
+arena = "simple_string_expression"
+
+[group.software_for_data_quality_check]
+arena = "software_for_data_quality_check"
+
+[group.solid_with_chamfered_edges]
+arena = "solid_with_chamfered_edges"
+
+[group.solid_with_depression]
+arena = "solid_with_depression"
+
+[group.solid_with_pocket]
+arena = "solid_with_pocket"
+
+[group.solid_with_protrusion]
+arena = "solid_with_protrusion"
+
+[group.solid_with_shape_element_pattern]
+arena = "solid_with_shape_element_pattern"
+
+[group.solid_with_slot]
+arena = "solid_with_slot"
+
+[group.solid_with_stepped_round_hole]
+arena = "solid_with_stepped_round_hole"
+
+[group.spherical_pair_range]
+arena = "spherical_pair_range"
+
+[group.state_observed]
+arena = "state_observed"
+
+[group.state_observed_assignment]
+arena = "state_observed_assignment"
+
+[group.state_observed_relationship]
+arena = "state_observed_relationship"
+
+[group.state_observed_role]
+arena = "state_observed_role"
+
+[group.state_type]
+arena = "state_type"
+
+[group.state_type_assignment]
+arena = "state_type_assignment"
+
+[group.state_type_relationship]
+arena = "state_type_relationship"
+
+[group.state_type_role]
+arena = "state_type_role"
+
+[group.steep_geometry_transition_across_edge]
+arena = "steep_geometry_transition_across_edge"
+
+[group.string_expression]
+arena = "string_expression"
+
+[group.styled_item]
+arena = "styled_item"
+
+[group.subsketch]
+arena = "subsketch"
+
+[group.summary_report_request_with_number_of_instances]
+arena = "summary_report_request_with_number_of_instances"
+
+[group.surface]
+arena = "surface"
+
+[group.surface_curve]
+arena = "surface_curve"
+
+[group.surface_pair]
+arena = "surface_pair"
+
+[group.surface_pair_range]
+arena = "surface_pair_range"
+
+[group.surface_rendering_properties]
+arena = "surface_rendering_properties"
+
+[group.surface_style_reflectance_ambient]
+arena = "surface_style_reflectance_ambient"
+
+[group.surface_style_rendering]
+arena = "surface_style_rendering"
+
+[group.surface_style_transparent]
+arena = "surface_style_transparent"
+
+[group.swept_area_solid]
+arena = "swept_area_solid"
+
+[group.swept_face_solid]
+arena = "swept_face_solid"
+
+[group.swept_surface]
+arena = "swept_surface"
+
+[group.symbol_colour]
+arena = "symbol_colour"
+
+[group.tessellated_edge]
+arena = "tessellated_edge"
+
+[group.tessellated_face]
+arena = "tessellated_face"
+
+[group.tessellated_item]
+arena = "tessellated_item"
+
+[group.tessellated_structured_item]
+arena = "tessellated_structured_item"
+
+[group.tessellated_surface_set]
+arena = "tessellated_surface_set"
+
+[group.text_font]
+arena = "text_font"
+
+[group.text_font_family]
+arena = "text_font_family"
+
+[group.text_font_in_family]
+arena = "text_font_in_family"
+
+[group.text_literal]
+arena = "text_literal"
+
+[group.text_style]
+arena = "text_style"
+
+[group.text_style_for_defined_font]
+arena = "text_style_for_defined_font"
+
+[group.time_interval]
+arena = "time_interval"
+
+[group.time_interval_relationship]
+arena = "time_interval_relationship"
+
+[group.time_interval_role]
+arena = "time_interval_role"
+
+[group.tolerance_value]
+arena = "tolerance_value"
+
+[group.tolerance_zone]
+arena = "tolerance_zone"
+
+[group.tolerance_zone_definition]
+arena = "tolerance_zone_definition"
+
+[group.tolerance_zone_form]
+arena = "tolerance_zone_form"
+
+[group.tolerance_zone_with_datum]
+arena = "tolerance_zone_with_datum"
+
+[group.topological_representation_item]
+arena = "topological_representation_item"
+
+[group.topology_related_to_multiply_defined_geometry]
+arena = "topology_related_to_multiply_defined_geometry"
+
+[group.topology_related_to_nearly_degenerate_geometry]
+arena = "topology_related_to_nearly_degenerate_geometry"
+
+[group.topology_related_to_overlapping_geometry]
+arena = "topology_related_to_overlapping_geometry"
+
+[group.topology_related_to_self_intersecting_geometry]
+arena = "topology_related_to_self_intersecting_geometry"
+
+[group.track_blended_solid]
+arena = "track_blended_solid"
+
+[group.transformation_with_derived_angle]
+arena = "transformation_with_derived_angle"
+
+[group.transition_feature]
+arena = "transition_feature"
+
+[group.type_qualifier]
+arena = "type_qualifier"
+
+[group.unary_boolean_expression]
+arena = "unary_boolean_expression"
+
+[group.unary_function_call]
+arena = "unary_function_call"
+
+[group.unary_generic_expression]
+arena = "unary_generic_expression"
+
+[group.unbound_parameter_environment]
+arena = "unbound_parameter_environment"
+
+[group.uncertainty_qualifier]
+arena = "uncertainty_qualifier"
+
+[group.universal_pair_range]
+arena = "universal_pair_range"
+
+[group.validation_software_identification]
+arena = "validation_software_identification"
+
+[group.value_format_type_qualifier]
+arena = "value_format_type_qualifier"
+
+[group.variable]
+arena = "variable"
+
+[group.variable_semantics]
+arena = "variable_semantics"
+
+[group.variational_parameter]
+arena = "variational_parameter"
+
+[group.variational_representation_item]
+arena = "variational_representation_item"
+
+[group.versioned_action_request]
+arena = "versioned_action_request"
+
+[group.versioned_action_request_relationship]
+arena = "versioned_action_request_relationship"
+
+[group.volume]
+arena = "volume"
+
+[group.volume_with_faces]
+arena = "volume_with_faces"
+
+[group.zone_structural_makeup]
+arena = "zone_structural_makeup"

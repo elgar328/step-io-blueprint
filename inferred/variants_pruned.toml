@@ -1,0 +1,1442 @@
+[entity.address]
+kind = "concrete_supertype"
+
+[entity.advanced_brep_shape_representation]
+kind = "in_enum"
+enum_name = "representation"
+
+[entity.advanced_face]
+kind = "in_enum"
+enum_name = "face"
+
+[entity.all_around_shape_aspect]
+kind = "in_enum"
+enum_name = "continuous_shape_aspect"
+
+[entity.angular_location]
+kind = "in_enum"
+enum_name = "shape_aspect_relationship"
+
+[entity.angular_size]
+kind = "in_enum"
+enum_name = "dimensional_size"
+
+[entity.angularity_tolerance]
+kind = "in_enum"
+enum_name = "geometric_tolerance_with_datum_reference"
+
+[entity.annotation_curve_occurrence]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.annotation_occurrence]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.annotation_placeholder_leader_line]
+kind = "enum_base"
+enum_name = "annotation_placeholder_leader_line"
+
+[entity.annotation_placeholder_occurrence]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.annotation_placeholder_occurrence_with_leader_line]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.annotation_plane]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.annotation_symbol_occurrence]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.annotation_text_occurrence]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.annotation_to_model_leader_line]
+kind = "in_enum"
+enum_name = "annotation_placeholder_leader_line"
+
+[entity.apll_point]
+kind = "in_enum"
+enum_name = "point"
+
+[entity.apll_point_with_surface]
+kind = "in_enum"
+enum_name = "point"
+
+[entity.application_context]
+kind = "single_struct"
+
+[entity.application_context_element]
+kind = "enum_base"
+enum_name = "application_context_element"
+
+[entity.application_protocol_definition]
+kind = "single_struct"
+
+[entity.applied_approval_assignment]
+kind = "in_enum"
+enum_name = "approval_assignment"
+
+[entity.applied_date_and_time_assignment]
+kind = "in_enum"
+enum_name = "date_and_time_assignment"
+
+[entity.applied_document_reference]
+kind = "in_enum"
+enum_name = "document_reference"
+
+[entity.applied_external_identification_assignment]
+kind = "in_enum"
+enum_name = "external_identification_assignment"
+
+[entity.applied_group_assignment]
+kind = "in_enum"
+enum_name = "group_assignment"
+
+[entity.applied_person_and_organization_assignment]
+kind = "in_enum"
+enum_name = "person_and_organization_assignment"
+
+[entity.applied_presented_item]
+kind = "single_struct"
+
+[entity.applied_security_classification_assignment]
+kind = "in_enum"
+enum_name = "security_classification_assignment"
+
+[entity.approval]
+kind = "single_struct"
+
+[entity.approval_assignment]
+kind = "enum_base"
+enum_name = "approval_assignment"
+
+[entity.approval_date_time]
+kind = "single_struct"
+
+[entity.approval_person_organization]
+kind = "single_struct"
+
+[entity.approval_role]
+kind = "single_struct"
+
+[entity.approval_status]
+kind = "single_struct"
+
+[entity.area_in_set]
+kind = "single_struct"
+
+[entity.area_unit]
+kind = "in_enum"
+enum_name = "derived_unit"
+
+[entity.assembly_component_usage]
+kind = "enum_base"
+enum_name = "assembly_component_usage"
+
+[entity.auxiliary_leader_line]
+kind = "in_enum"
+enum_name = "annotation_placeholder_leader_line"
+
+[entity.axis1_placement]
+kind = "in_enum"
+enum_name = "placement"
+
+[entity.axis2_placement_2d]
+kind = "in_enum"
+enum_name = "placement"
+
+[entity.axis2_placement_3d]
+kind = "in_enum"
+enum_name = "placement"
+
+[entity.b_spline_curve]
+kind = "complex_supertype"
+mixin_pattern = "andor"
+oneof_children = [
+    "uniform_curve",
+    "b_spline_curve_with_knots",
+    "quasi_uniform_curve",
+    "bezier_curve",
+]
+
+[entity.b_spline_curve.mixin]
+kind = "entity"
+name = "rational_b_spline_curve"
+
+[entity.b_spline_curve_with_knots]
+kind = "in_enum"
+enum_name = "b_spline_curve"
+
+[entity.b_spline_surface]
+kind = "complex_supertype"
+mixin_pattern = "andor"
+oneof_children = [
+    "b_spline_surface_with_knots",
+    "uniform_surface",
+    "quasi_uniform_surface",
+    "bezier_surface",
+]
+
+[entity.b_spline_surface.mixin]
+kind = "entity"
+name = "rational_b_spline_surface"
+
+[entity.b_spline_surface_with_knots]
+kind = "in_enum"
+enum_name = "b_spline_surface"
+
+[entity.bounded_curve]
+kind = "enum_base"
+enum_name = "bounded_curve"
+
+[entity.bounded_pcurve]
+kind = "in_enum"
+enum_name = "curve"
+
+[entity.bounded_surface]
+kind = "enum_base"
+enum_name = "bounded_surface"
+
+[entity.bounded_surface_curve]
+kind = "in_enum"
+enum_name = "surface_curve"
+
+[entity.brep_with_voids]
+kind = "in_enum"
+enum_name = "geometric_representation_item"
+
+[entity.calendar_date]
+kind = "in_enum"
+enum_name = "date"
+
+[entity.camera_image]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.camera_image_3d_with_scale]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.camera_model]
+kind = "enum_base"
+enum_name = "camera_model"
+
+[entity.camera_model_d3]
+kind = "in_enum"
+enum_name = "camera_model"
+
+[entity.camera_model_d3_multi_clipping]
+kind = "in_enum"
+enum_name = "camera_model"
+
+[entity.camera_model_d3_with_hlhsr]
+kind = "in_enum"
+enum_name = "camera_model"
+
+[entity.camera_usage]
+kind = "in_enum"
+enum_name = "representation_map"
+
+[entity.cartesian_point]
+kind = "in_enum"
+enum_name = "point"
+
+[entity.cc_design_approval]
+kind = "in_enum"
+enum_name = "approval_assignment"
+
+[entity.cc_design_date_and_time_assignment]
+kind = "in_enum"
+enum_name = "date_and_time_assignment"
+
+[entity.cc_design_person_and_organization_assignment]
+kind = "in_enum"
+enum_name = "person_and_organization_assignment"
+
+[entity.cc_design_security_classification]
+kind = "in_enum"
+enum_name = "security_classification_assignment"
+
+[entity.centre_of_symmetry]
+kind = "in_enum"
+enum_name = "derived_shape_aspect"
+
+[entity.characterized_item_within_representation]
+kind = "in_enum"
+enum_name = "characterized_object"
+
+[entity.characterized_object]
+kind = "concrete_supertype"
+
+[entity.characterized_representation]
+kind = "in_enum"
+enum_name = "representation"
+
+[entity.circle]
+kind = "in_enum"
+enum_name = "conic"
+
+[entity.circular_area]
+kind = "in_enum"
+enum_name = "primitive_2d"
+
+[entity.circular_runout_tolerance]
+kind = "in_enum"
+enum_name = "geometric_tolerance_with_datum_reference"
+
+[entity.closed_shell]
+kind = "in_enum"
+enum_name = "connected_face_set"
+
+[entity.colour]
+kind = "in_enum"
+enum_name = "colour"
+
+[entity.colour_rgb]
+kind = "in_enum"
+enum_name = "colour"
+
+[entity.complex_triangulated_face]
+kind = "in_enum"
+enum_name = "tessellated_face"
+
+[entity.complex_triangulated_surface_set]
+kind = "in_enum"
+enum_name = "tessellated_surface_set"
+
+[entity.composite_curve]
+kind = "in_enum"
+enum_name = "bounded_curve"
+
+[entity.composite_curve_segment]
+kind = "in_enum"
+enum_name = "founded_item"
+
+[entity.composite_group_shape_aspect]
+kind = "in_enum"
+enum_name = "shape_aspect"
+
+[entity.composite_shape_aspect]
+kind = "in_enum"
+enum_name = "shape_aspect"
+
+[entity.composite_text]
+kind = "in_enum"
+enum_name = "geometric_representation_item"
+
+[entity.compound_representation_item]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.concentricity_tolerance]
+kind = "in_enum"
+enum_name = "geometric_tolerance_with_datum_reference"
+
+[entity.conic]
+kind = "enum_base"
+enum_name = "conic"
+
+[entity.conical_surface]
+kind = "in_enum"
+enum_name = "elementary_surface"
+
+[entity.connected_face_set]
+kind = "enum_base"
+enum_name = "connected_face_set"
+
+[entity.constructive_geometry_representation]
+kind = "in_enum"
+enum_name = "representation"
+
+[entity.constructive_geometry_representation_relationship]
+kind = "in_enum"
+enum_name = "representation_relationship"
+
+[entity.context_dependent_over_riding_styled_item]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.context_dependent_shape_representation]
+kind = "single_struct"
+
+[entity.continuous_shape_aspect]
+kind = "enum_base"
+enum_name = "continuous_shape_aspect"
+
+[entity.conversion_based_unit]
+kind = "single_struct"
+
+[entity.coordinated_universal_time_offset]
+kind = "single_struct"
+
+[entity.coordinates_list]
+kind = "in_enum"
+enum_name = "tessellated_item"
+
+[entity.curve]
+kind = "enum_base"
+enum_name = "curve"
+
+[entity.curve_bounded_surface]
+kind = "in_enum"
+enum_name = "bounded_surface"
+
+[entity.curve_style]
+kind = "in_enum"
+enum_name = "founded_item"
+
+[entity.cylindrical_surface]
+kind = "in_enum"
+enum_name = "elementary_surface"
+
+[entity.cylindricity_tolerance]
+kind = "in_enum"
+enum_name = "geometric_tolerance"
+
+[entity.date]
+kind = "enum_base"
+enum_name = "date"
+
+[entity.date_and_time]
+kind = "single_struct"
+
+[entity.date_and_time_assignment]
+kind = "enum_base"
+enum_name = "date_and_time_assignment"
+
+[entity.date_time_role]
+kind = "single_struct"
+
+[entity.datum]
+kind = "in_enum"
+enum_name = "shape_aspect"
+
+[entity.datum_feature]
+kind = "in_enum"
+enum_name = "shape_aspect"
+
+[entity.datum_reference_compartment]
+kind = "in_enum"
+enum_name = "general_datum_reference"
+
+[entity.datum_reference_element]
+kind = "in_enum"
+enum_name = "general_datum_reference"
+
+[entity.datum_system]
+kind = "in_enum"
+enum_name = "shape_aspect"
+
+[entity.datum_target]
+kind = "in_enum"
+enum_name = "shape_aspect"
+
+[entity.default_model_geometric_view]
+kind = "in_enum"
+enum_name = "shape_aspect"
+
+[entity.defined_symbol]
+kind = "in_enum"
+enum_name = "geometric_representation_item"
+
+[entity.definitional_representation]
+kind = "in_enum"
+enum_name = "representation"
+
+[entity.degenerate_toroidal_surface]
+kind = "in_enum"
+enum_name = "elementary_surface"
+
+[entity.derived_shape_aspect]
+kind = "enum_base"
+enum_name = "derived_shape_aspect"
+
+[entity.derived_unit]
+kind = "concrete_supertype"
+
+[entity.derived_unit_element]
+kind = "single_struct"
+
+[entity.description_attribute]
+kind = "single_struct"
+
+[entity.descriptive_representation_item]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.design_context]
+kind = "in_enum"
+enum_name = "application_context_element"
+
+[entity.dimensional_characteristic_representation]
+kind = "single_struct"
+
+[entity.dimensional_exponents]
+kind = "single_struct"
+
+[entity.dimensional_location]
+kind = "in_enum"
+enum_name = "shape_aspect_relationship"
+
+[entity.dimensional_size]
+kind = "concrete_supertype"
+
+[entity.dimensional_size_with_datum_feature]
+kind = "in_enum"
+enum_name = "shape_aspect"
+
+[entity.directed_dimensional_location]
+kind = "in_enum"
+enum_name = "shape_aspect_relationship"
+
+[entity.direction]
+kind = "in_enum"
+enum_name = "geometric_representation_item"
+
+[entity.document]
+kind = "concrete_supertype"
+
+[entity.document_file]
+kind = "in_enum"
+enum_name = "document"
+
+[entity.document_product_equivalence]
+kind = "single_struct"
+
+[entity.document_reference]
+kind = "enum_base"
+enum_name = "document_reference"
+
+[entity.document_representation_type]
+kind = "single_struct"
+
+[entity.document_type]
+kind = "single_struct"
+
+[entity.draughting_annotation_occurrence]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.draughting_callout]
+kind = "complex_supertype"
+mixin_pattern = "andor"
+oneof_children = [
+    "datum_feature_callout",
+    "datum_target_callout",
+    "dimension_curve_directed_callout",
+    "draughting_elements",
+    "geometrical_tolerance_callout",
+    "leader_directed_callout",
+    "projection_directed_callout",
+    "structured_dimension_callout",
+]
+
+[entity.draughting_callout.mixin]
+kind = "entity"
+name = "surface_condition_callout"
+
+[entity.draughting_callout_relationship]
+kind = "single_struct"
+
+[entity.draughting_model]
+kind = "in_enum"
+enum_name = "representation"
+
+[entity.draughting_model_item_association]
+kind = "single_struct"
+
+[entity.draughting_model_item_association_with_placeholder]
+kind = "nested_field"
+into = "draughting_model_item_association"
+as_field = "annotation_placeholder"
+added_attr_count = 1
+
+[entity.draughting_pre_defined_colour]
+kind = "in_enum"
+enum_name = "colour"
+
+[entity.draughting_pre_defined_curve_font]
+kind = "in_enum"
+enum_name = "pre_defined_curve_font"
+
+[entity.draughting_pre_defined_text_font]
+kind = "single_struct"
+
+[entity.edge]
+kind = "enum_base"
+enum_name = "edge"
+
+[entity.edge_curve]
+kind = "in_enum"
+enum_name = "edge"
+
+[entity.edge_loop]
+kind = "in_enum"
+enum_name = "loop"
+
+[entity.elementary_surface]
+kind = "enum_base"
+enum_name = "elementary_surface"
+
+[entity.ellipse]
+kind = "in_enum"
+enum_name = "conic"
+
+[entity.external_identification_assignment]
+kind = "enum_base"
+enum_name = "external_identification_assignment"
+
+[entity.external_source]
+kind = "single_struct"
+
+[entity.face]
+kind = "enum_base"
+enum_name = "face"
+
+[entity.face_bound]
+kind = "in_enum"
+enum_name = "topological_representation_item"
+
+[entity.face_outer_bound]
+kind = "in_enum"
+enum_name = "topological_representation_item"
+
+[entity.face_surface]
+kind = "in_enum"
+enum_name = "face"
+
+[entity.feature_for_datum_target_relationship]
+kind = "in_enum"
+enum_name = "shape_aspect_relationship"
+
+[entity.fill_area_style]
+kind = "in_enum"
+enum_name = "founded_item"
+
+[entity.fill_area_style_colour]
+kind = "single_struct"
+
+[entity.flatness_tolerance]
+kind = "in_enum"
+enum_name = "geometric_tolerance"
+
+[entity.founded_item]
+kind = "enum_base"
+enum_name = "founded_item"
+
+[entity.general_datum_reference]
+kind = "enum_base"
+enum_name = "general_datum_reference"
+
+[entity.general_property]
+kind = "single_struct"
+
+[entity.general_property_association]
+kind = "single_struct"
+
+[entity.geometric_curve_set]
+kind = "in_enum"
+enum_name = "geometric_representation_item"
+
+[entity.geometric_item_specific_usage]
+kind = "single_struct"
+
+[entity.geometric_representation_context]
+kind = "single_struct"
+
+[entity.geometric_representation_item]
+kind = "enum_base"
+enum_name = "geometric_representation_item"
+
+[entity.geometric_set]
+kind = "in_enum"
+enum_name = "geometric_representation_item"
+
+[entity.geometric_tolerance]
+kind = "enum_base"
+enum_name = "geometric_tolerance"
+
+[entity.geometric_tolerance_relationship]
+kind = "single_struct"
+
+[entity.geometric_tolerance_with_datum_reference]
+kind = "enum_base"
+enum_name = "geometric_tolerance_with_datum_reference"
+
+[entity.geometric_tolerance_with_defined_area_unit]
+kind = "in_enum"
+enum_name = "geometric_tolerance"
+
+[entity.geometric_tolerance_with_defined_unit]
+kind = "in_enum"
+enum_name = "geometric_tolerance"
+
+[entity.geometric_tolerance_with_modifiers]
+kind = "in_enum"
+enum_name = "geometric_tolerance"
+
+[entity.geometrically_bounded_surface_shape_representation]
+kind = "in_enum"
+enum_name = "representation"
+
+[entity.geometrically_bounded_wireframe_shape_representation]
+kind = "in_enum"
+enum_name = "representation"
+
+[entity.global_uncertainty_assigned_context]
+kind = "in_enum"
+enum_name = "representation_context"
+
+[entity.global_unit_assigned_context]
+kind = "in_enum"
+enum_name = "representation_context"
+
+[entity.group]
+kind = "single_struct"
+
+[entity.group_assignment]
+kind = "enum_base"
+enum_name = "group_assignment"
+
+[entity.hyperbola]
+kind = "in_enum"
+enum_name = "conic"
+
+[entity.id_attribute]
+kind = "single_struct"
+
+[entity.identification_role]
+kind = "single_struct"
+
+[entity.integer_representation_item]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.intersection_curve]
+kind = "in_enum"
+enum_name = "surface_curve"
+
+[entity.invisibility]
+kind = "single_struct"
+
+[entity.item_defined_transformation]
+kind = "single_struct"
+
+[entity.item_identified_representation_usage]
+kind = "single_struct"
+
+[entity.leader_curve]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.leader_directed_callout]
+kind = "in_enum"
+enum_name = "draughting_callout"
+
+[entity.leader_terminator]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.length_measure_with_unit]
+kind = "in_enum"
+enum_name = "measure_with_unit"
+
+[entity.length_unit]
+kind = "in_enum"
+enum_name = "named_unit"
+
+[entity.limits_and_fits]
+kind = "single_struct"
+
+[entity.line]
+kind = "in_enum"
+enum_name = "curve"
+
+[entity.line_profile_tolerance]
+kind = "in_enum"
+enum_name = "geometric_tolerance"
+
+[entity.local_time]
+kind = "single_struct"
+
+[entity.loop]
+kind = "enum_base"
+enum_name = "loop"
+
+[entity.make_from_usage_option]
+kind = "in_enum"
+enum_name = "product_definition_relationship"
+
+[entity.manifold_solid_brep]
+kind = "in_enum"
+enum_name = "geometric_representation_item"
+
+[entity.manifold_surface_shape_representation]
+kind = "in_enum"
+enum_name = "representation"
+
+[entity.mapped_item]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.mass_measure_with_unit]
+kind = "in_enum"
+enum_name = "measure_with_unit"
+
+[entity.mass_unit]
+kind = "in_enum"
+enum_name = "named_unit"
+
+[entity.measure_qualification]
+kind = "single_struct"
+
+[entity.measure_representation_item]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.measure_with_unit]
+kind = "concrete_supertype"
+
+[entity.mechanical_context]
+kind = "in_enum"
+enum_name = "application_context_element"
+
+[entity.mechanical_design_and_draughting_relationship]
+kind = "in_enum"
+enum_name = "representation_relationship"
+
+[entity.mechanical_design_geometric_presentation_representation]
+kind = "in_enum"
+enum_name = "representation"
+
+[entity.model_geometric_view]
+kind = "in_enum"
+enum_name = "characterized_object"
+
+[entity.name_attribute]
+kind = "single_struct"
+
+[entity.named_unit]
+kind = "complex_supertype"
+mixin_pattern = "andor"
+oneof_children = [
+    "si_unit",
+    "conversion_based_unit",
+    "context_dependent_unit",
+]
+
+[entity.named_unit.mixin]
+kind = "one_of"
+
+[[entity.named_unit.mixin.children]]
+kind = "entity"
+name = "length_unit"
+
+[[entity.named_unit.mixin.children]]
+kind = "entity"
+name = "mass_unit"
+
+[[entity.named_unit.mixin.children]]
+kind = "entity"
+name = "plane_angle_unit"
+
+[[entity.named_unit.mixin.children]]
+kind = "entity"
+name = "solid_angle_unit"
+
+[[entity.named_unit.mixin.children]]
+kind = "entity"
+name = "area_unit"
+
+[[entity.named_unit.mixin.children]]
+kind = "entity"
+name = "volume_unit"
+
+[entity.next_assembly_usage_occurrence]
+kind = "in_enum"
+enum_name = "assembly_component_usage"
+
+[entity.object_role]
+kind = "single_struct"
+
+[entity.offset_curve_3d]
+kind = "in_enum"
+enum_name = "curve"
+
+[entity.offset_surface]
+kind = "in_enum"
+enum_name = "surface"
+
+[entity.open_shell]
+kind = "in_enum"
+enum_name = "connected_face_set"
+
+[entity.organization]
+kind = "single_struct"
+
+[entity.oriented_closed_shell]
+kind = "in_enum"
+enum_name = "connected_face_set"
+
+[entity.oriented_edge]
+kind = "in_enum"
+enum_name = "edge"
+
+[entity.over_riding_styled_item]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.parabola]
+kind = "in_enum"
+enum_name = "conic"
+
+[entity.parallelism_tolerance]
+kind = "in_enum"
+enum_name = "geometric_tolerance_with_datum_reference"
+
+[entity.parametric_representation_context]
+kind = "in_enum"
+enum_name = "representation_context"
+
+[entity.pcurve]
+kind = "in_enum"
+enum_name = "curve"
+
+[entity.perpendicularity_tolerance]
+kind = "in_enum"
+enum_name = "geometric_tolerance_with_datum_reference"
+
+[entity.person]
+kind = "single_struct"
+
+[entity.person_and_organization]
+kind = "single_struct"
+
+[entity.person_and_organization_assignment]
+kind = "enum_base"
+enum_name = "person_and_organization_assignment"
+
+[entity.person_and_organization_role]
+kind = "single_struct"
+
+[entity.personal_address]
+kind = "in_enum"
+enum_name = "address"
+
+[entity.placed_datum_target_feature]
+kind = "in_enum"
+enum_name = "shape_aspect"
+
+[entity.placement]
+kind = "enum_base"
+enum_name = "placement"
+
+[entity.planar_box]
+kind = "in_enum"
+enum_name = "planar_extent"
+
+[entity.planar_extent]
+kind = "concrete_supertype"
+
+[entity.plane]
+kind = "in_enum"
+enum_name = "elementary_surface"
+
+[entity.plane_angle_measure_with_unit]
+kind = "in_enum"
+enum_name = "measure_with_unit"
+
+[entity.plane_angle_unit]
+kind = "in_enum"
+enum_name = "named_unit"
+
+[entity.plus_minus_tolerance]
+kind = "single_struct"
+
+[entity.point]
+kind = "enum_base"
+enum_name = "point"
+
+[entity.point_style]
+kind = "in_enum"
+enum_name = "founded_item"
+
+[entity.polyline]
+kind = "in_enum"
+enum_name = "bounded_curve"
+
+[entity.position_tolerance]
+kind = "in_enum"
+enum_name = "geometric_tolerance"
+
+[entity.pre_defined_curve_font]
+kind = "in_enum"
+enum_name = "pre_defined_curve_font"
+
+[entity.pre_defined_marker]
+kind = "in_enum"
+enum_name = "pre_defined_marker"
+
+[entity.pre_defined_point_marker_symbol]
+kind = "in_enum"
+enum_name = "pre_defined_marker"
+
+[entity.pre_defined_symbol]
+kind = "in_enum"
+enum_name = "pre_defined_symbol"
+
+[entity.pre_defined_terminator_symbol]
+kind = "in_enum"
+enum_name = "pre_defined_symbol"
+
+[entity.presentation_area]
+kind = "in_enum"
+enum_name = "presentation_representation"
+
+[entity.presentation_layer_assignment]
+kind = "single_struct"
+
+[entity.presentation_representation]
+kind = "enum_base"
+enum_name = "presentation_representation"
+
+[entity.presentation_size]
+kind = "single_struct"
+
+[entity.presentation_style_assignment]
+kind = "in_enum"
+enum_name = "founded_item"
+
+[entity.presentation_style_by_context]
+kind = "in_enum"
+enum_name = "founded_item"
+
+[entity.presentation_view]
+kind = "in_enum"
+enum_name = "presentation_representation"
+
+[entity.presented_item_representation]
+kind = "single_struct"
+
+[entity.primitive_2d]
+kind = "enum_base"
+enum_name = "primitive_2d"
+
+[entity.product]
+kind = "single_struct"
+
+[entity.product_category]
+kind = "concrete_supertype"
+
+[entity.product_category_relationship]
+kind = "single_struct"
+
+[entity.product_context]
+kind = "in_enum"
+enum_name = "application_context_element"
+
+[entity.product_definition]
+kind = "concrete_supertype"
+
+[entity.product_definition_context]
+kind = "in_enum"
+enum_name = "application_context_element"
+
+[entity.product_definition_context_association]
+kind = "single_struct"
+
+[entity.product_definition_context_role]
+kind = "single_struct"
+
+[entity.product_definition_formation]
+kind = "concrete_supertype"
+
+[entity.product_definition_formation_with_specified_source]
+kind = "in_enum"
+enum_name = "product_definition_formation"
+
+[entity.product_definition_relationship]
+kind = "concrete_supertype"
+
+[entity.product_definition_shape]
+kind = "in_enum"
+enum_name = "property_definition"
+
+[entity.product_definition_with_associated_documents]
+kind = "in_enum"
+enum_name = "product_definition"
+
+[entity.product_related_product_category]
+kind = "in_enum"
+enum_name = "product_category"
+
+[entity.projected_zone_definition]
+kind = "in_enum"
+enum_name = "tolerance_zone_definition"
+
+[entity.property_definition]
+kind = "concrete_supertype"
+
+[entity.property_definition_representation]
+kind = "concrete_supertype"
+
+[entity.qualified_representation_item]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.quasi_uniform_curve]
+kind = "in_enum"
+enum_name = "b_spline_curve"
+
+[entity.quasi_uniform_surface]
+kind = "in_enum"
+enum_name = "b_spline_surface"
+
+[entity.ratio_measure_with_unit]
+kind = "in_enum"
+enum_name = "measure_with_unit"
+
+[entity.ratio_unit]
+kind = "in_enum"
+enum_name = "named_unit"
+
+[entity.rational_b_spline_curve]
+kind = "in_enum"
+enum_name = "b_spline_curve"
+
+[entity.rational_b_spline_surface]
+kind = "in_enum"
+enum_name = "b_spline_surface"
+
+[entity.real_representation_item]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.rectangular_trimmed_surface]
+kind = "in_enum"
+enum_name = "bounded_surface"
+
+[entity.repositioned_tessellated_item]
+kind = "in_enum"
+enum_name = "tessellated_item"
+
+[entity.representation]
+kind = "concrete_supertype"
+
+[entity.representation_context]
+kind = "concrete_supertype"
+
+[entity.representation_item]
+kind = "enum_base"
+enum_name = "representation_item"
+
+[entity.representation_map]
+kind = "concrete_supertype"
+
+[entity.representation_relationship]
+kind = "concrete_supertype"
+
+[entity.representation_relationship_with_transformation]
+kind = "enum_base"
+enum_name = "representation_relationship_with_transformation"
+
+[entity.role_association]
+kind = "single_struct"
+
+[entity.roundness_tolerance]
+kind = "in_enum"
+enum_name = "geometric_tolerance"
+
+[entity.seam_curve]
+kind = "in_enum"
+enum_name = "surface_curve"
+
+[entity.security_classification]
+kind = "single_struct"
+
+[entity.security_classification_assignment]
+kind = "enum_base"
+enum_name = "security_classification_assignment"
+
+[entity.security_classification_level]
+kind = "single_struct"
+
+[entity.shape_aspect]
+kind = "concrete_supertype"
+
+[entity.shape_aspect_associativity]
+kind = "in_enum"
+enum_name = "shape_aspect_relationship"
+
+[entity.shape_aspect_deriving_relationship]
+kind = "in_enum"
+enum_name = "shape_aspect_relationship"
+
+[entity.shape_aspect_relationship]
+kind = "concrete_supertype"
+
+[entity.shape_definition_representation]
+kind = "in_enum"
+enum_name = "property_definition_representation"
+
+[entity.shape_dimension_representation]
+kind = "in_enum"
+enum_name = "representation"
+
+[entity.shape_representation]
+kind = "in_enum"
+enum_name = "representation"
+
+[entity.shape_representation_relationship]
+kind = "in_enum"
+enum_name = "representation_relationship"
+
+[entity.shape_representation_with_parameters]
+kind = "in_enum"
+enum_name = "representation"
+
+[entity.shell_based_surface_model]
+kind = "in_enum"
+enum_name = "geometric_representation_item"
+
+[entity.si_unit]
+kind = "in_enum"
+enum_name = "named_unit"
+
+[entity.solid_angle_unit]
+kind = "in_enum"
+enum_name = "named_unit"
+
+[entity.spherical_surface]
+kind = "in_enum"
+enum_name = "elementary_surface"
+
+[entity.straightness_tolerance]
+kind = "in_enum"
+enum_name = "geometric_tolerance"
+
+[entity.styled_item]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.surface]
+kind = "enum_base"
+enum_name = "surface"
+
+[entity.surface_curve]
+kind = "complex_supertype"
+mixin_pattern = "andor"
+oneof_children = [
+    "intersection_curve",
+    "seam_curve",
+]
+
+[entity.surface_curve.mixin]
+kind = "entity"
+name = "bounded_surface_curve"
+
+[entity.surface_of_linear_extrusion]
+kind = "in_enum"
+enum_name = "swept_surface"
+
+[entity.surface_of_revolution]
+kind = "in_enum"
+enum_name = "swept_surface"
+
+[entity.surface_profile_tolerance]
+kind = "in_enum"
+enum_name = "geometric_tolerance"
+
+[entity.surface_side_style]
+kind = "in_enum"
+enum_name = "founded_item"
+
+[entity.surface_style_boundary]
+kind = "in_enum"
+enum_name = "founded_item"
+
+[entity.surface_style_fill_area]
+kind = "in_enum"
+enum_name = "founded_item"
+
+[entity.surface_style_parameter_line]
+kind = "in_enum"
+enum_name = "founded_item"
+
+[entity.surface_style_rendering]
+kind = "concrete_supertype"
+
+[entity.surface_style_rendering_with_properties]
+kind = "in_enum"
+enum_name = "surface_style_rendering"
+
+[entity.surface_style_transparent]
+kind = "single_struct"
+
+[entity.surface_style_usage]
+kind = "in_enum"
+enum_name = "founded_item"
+
+[entity.swept_surface]
+kind = "enum_base"
+enum_name = "swept_surface"
+
+[entity.symbol_colour]
+kind = "single_struct"
+
+[entity.symbol_style]
+kind = "in_enum"
+enum_name = "founded_item"
+
+[entity.symbol_target]
+kind = "in_enum"
+enum_name = "geometric_representation_item"
+
+[entity.symmetry_tolerance]
+kind = "in_enum"
+enum_name = "geometric_tolerance_with_datum_reference"
+
+[entity.terminator_symbol]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.tessellated_annotation_occurrence]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.tessellated_curve_set]
+kind = "in_enum"
+enum_name = "tessellated_item"
+
+[entity.tessellated_face]
+kind = "enum_base"
+enum_name = "tessellated_face"
+
+[entity.tessellated_geometric_set]
+kind = "in_enum"
+enum_name = "tessellated_item"
+
+[entity.tessellated_item]
+kind = "enum_base"
+enum_name = "tessellated_item"
+
+[entity.tessellated_shape_representation]
+kind = "in_enum"
+enum_name = "representation"
+
+[entity.tessellated_shell]
+kind = "in_enum"
+enum_name = "tessellated_item"
+
+[entity.tessellated_solid]
+kind = "in_enum"
+enum_name = "tessellated_item"
+
+[entity.tessellated_surface_set]
+kind = "enum_base"
+enum_name = "tessellated_surface_set"
+
+[entity.text_literal]
+kind = "in_enum"
+enum_name = "geometric_representation_item"
+
+[entity.text_style]
+kind = "concrete_supertype"
+
+[entity.text_style_for_defined_font]
+kind = "single_struct"
+
+[entity.text_style_with_box_characteristics]
+kind = "in_enum"
+enum_name = "text_style"
+
+[entity.tolerance_value]
+kind = "single_struct"
+
+[entity.tolerance_zone]
+kind = "in_enum"
+enum_name = "shape_aspect"
+
+[entity.tolerance_zone_definition]
+kind = "enum_base"
+enum_name = "tolerance_zone_definition"
+
+[entity.tolerance_zone_form]
+kind = "single_struct"
+
+[entity.topological_representation_item]
+kind = "composite_one_of"
+simple_alternatives = [
+    "vertex",
+    "edge",
+    "face_bound",
+    "face",
+    "vertex_shell",
+    "wire_shell",
+    "connected_edge_set",
+    "connected_face_set",
+]
+
+[[entity.topological_representation_item.composite_alternatives]]
+kind = "and_or"
+children = [
+    "loop",
+    "path",
+]
+
+[entity.toroidal_surface]
+kind = "in_enum"
+enum_name = "elementary_surface"
+
+[entity.total_runout_tolerance]
+kind = "in_enum"
+enum_name = "geometric_tolerance_with_datum_reference"
+
+[entity.trimmed_curve]
+kind = "in_enum"
+enum_name = "bounded_curve"
+
+[entity.type_qualifier]
+kind = "single_struct"
+
+[entity.uncertainty_measure_with_unit]
+kind = "in_enum"
+enum_name = "measure_with_unit"
+
+[entity.unequally_disposed_geometric_tolerance]
+kind = "in_enum"
+enum_name = "geometric_tolerance"
+
+[entity.value_format_type_qualifier]
+kind = "single_struct"
+
+[entity.value_representation_item]
+kind = "in_enum"
+enum_name = "representation_item"
+
+[entity.vector]
+kind = "in_enum"
+enum_name = "geometric_representation_item"
+
+[entity.vertex_loop]
+kind = "in_enum"
+enum_name = "loop"
+
+[entity.vertex_point]
+kind = "in_enum"
+enum_name = "geometric_representation_item"
+
+[entity.view_volume]
+kind = "in_enum"
+enum_name = "founded_item"
+
+[entity.volume_unit]
+kind = "in_enum"
+enum_name = "derived_unit"

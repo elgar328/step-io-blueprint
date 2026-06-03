@@ -1,16 +1,6 @@
 /target
 
-# infer pipeline outputs are regenerated from schemas/ + overrides files;
-# user-edited overrides and manual-input files are tracked.
-/inferred/*.toml
-!/inferred/*_overrides.toml
-!/inferred/shapes.toml
-!/inferred/pools.toml
-!/inferred/names.toml
-!/inferred/splits.toml
-!/inferred/merges.toml
-!/inferred/recasts.toml
-!/inferred/anchors.toml
-# Frozen corpus measurement, copied from step-io-reference-check's
-# corpus-usage bin. Tracked so prune needs no corpus access.
-!/inferred/corpus_usage.toml
+# inferred/ holds both the hand-authored inputs and the generated pipeline
+# outputs (ir.toml etc.) — all tracked so the blueprint is browsable without
+# running the tool. Only the transient pending-gate files are ignored.
+/inferred/*_pending.toml
