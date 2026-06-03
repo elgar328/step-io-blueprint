@@ -450,5 +450,26 @@ pool = "pmi"
 [arena.composite_curve_segment]
 pool = "geometry"
 
+# GD&T datum / dimensioning — shape_aspect(_relationship) subtypes whose pool
+# would otherwise inherit shape_rep; they belong to pmi. The leaf children
+# (dimensional_size_with_datum_feature, angular/directed_dimensional_location)
+# follow their pinned parent.
+[arena.datum]
+pool = "pmi"
+
+[arena.datum_feature]
+pool = "pmi"
+
+[arena.dimensional_location]
+pool = "pmi"
+
+# Text annotation — geometric_representation_item subtypes that are text/
+# presentation, not core geometry.
+[arena.composite_text]
+pool = "visualization"
+
+[arena.text_literal]
+pool = "visualization"
+
 # form_features
 # property

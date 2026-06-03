@@ -67,6 +67,9 @@ arena = "colour"
 [group.composite_curve_segment]
 arena = "composite_curve_segment"
 
+[group.composite_text]
+arena = "composite_text"
+
 [group.conic]
 arena = "conic"
 
@@ -100,6 +103,12 @@ arena = "date_and_time_assignment"
 [group.date_time_role]
 arena = "date_time_role"
 
+[group.datum]
+arena = "datum"
+
+[group.datum_feature]
+arena = "datum_feature"
+
 [group.derived_shape_aspect]
 arena = "derived_shape_aspect"
 
@@ -117,6 +126,9 @@ arena = "dimensional_characteristic_representation"
 
 [group.dimensional_exponents]
 arena = "dimensional_exponents"
+
+[group.dimensional_location]
+arena = "dimensional_location"
 
 [group.dimensional_size]
 arena = "dimensional_size"
@@ -387,6 +399,9 @@ arena = "tessellated_item"
 
 [group.tessellated_surface_set]
 arena = "tessellated_surface_set"
+
+[group.text_literal]
+arena = "text_literal"
 
 [group.text_style]
 arena = "text_style"

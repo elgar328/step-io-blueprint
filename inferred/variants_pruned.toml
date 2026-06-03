@@ -15,7 +15,7 @@ enum_name = "continuous_shape_aspect"
 
 [entity.angular_location]
 kind = "in_enum"
-enum_name = "shape_aspect_relationship"
+enum_name = "dimensional_location"
 
 [entity.angular_size]
 kind = "in_enum"
@@ -326,8 +326,7 @@ kind = "in_enum"
 enum_name = "shape_aspect"
 
 [entity.composite_text]
-kind = "in_enum"
-enum_name = "geometric_representation_item"
+kind = "single_struct"
 
 [entity.compound_representation_item]
 kind = "in_enum"
@@ -413,12 +412,10 @@ enum_name = "date_and_time_assignment"
 kind = "single_struct"
 
 [entity.datum]
-kind = "in_enum"
-enum_name = "shape_aspect"
+kind = "single_struct"
 
 [entity.datum_feature]
-kind = "in_enum"
-enum_name = "shape_aspect"
+kind = "concrete_supertype"
 
 [entity.datum_reference_compartment]
 kind = "in_enum"
@@ -480,19 +477,18 @@ kind = "single_struct"
 kind = "single_struct"
 
 [entity.dimensional_location]
-kind = "in_enum"
-enum_name = "shape_aspect_relationship"
+kind = "concrete_supertype"
 
 [entity.dimensional_size]
 kind = "concrete_supertype"
 
 [entity.dimensional_size_with_datum_feature]
 kind = "in_enum"
-enum_name = "shape_aspect"
+enum_name = "datum_feature"
 
 [entity.directed_dimensional_location]
 kind = "in_enum"
-enum_name = "shape_aspect_relationship"
+enum_name = "dimensional_location"
 
 [entity.direction]
 kind = "in_enum"
@@ -1341,8 +1337,7 @@ kind = "enum_base"
 enum_name = "tessellated_surface_set"
 
 [entity.text_literal]
-kind = "in_enum"
-enum_name = "geometric_representation_item"
+kind = "single_struct"
 
 [entity.text_style]
 kind = "concrete_supertype"

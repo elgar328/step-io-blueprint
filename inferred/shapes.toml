@@ -94,3 +94,12 @@ shape = "base_parallel"
 
 [entity.annotation_occurrence]             # 144 self / 11 distinct children — children dominant
 shape = "carrier"
+
+# GD&T datum / dimensioning roots kept in pmi by the pool-boundary gate.
+# Parent-dominant, same base_parallel pattern as the rest of the family
+# (datum_feature / dimensional_size / shape_aspect).
+[entity.datum_feature]                      # 81 self / 2 live children, parent dominant
+shape = "base_parallel"
+
+[entity.dimensional_location]               # 48 self / few live children, parent dominant
+shape = "base_parallel"

@@ -31,9 +31,9 @@ instance_count = 22
 
 [entity.angular_location]
 kind = "in_enum"
-enum_name = "shape_aspect_relationship"
-group = "shape_aspect_relationship"
-arena = "shape_aspect_relationship"
+enum_name = "dimensional_location"
+group = "dimensional_location"
+arena = "dimensional_location"
 instance_count = 1
 
 [entity.angular_size]
@@ -718,10 +718,9 @@ co_instantiated_with = [
 ]
 
 [entity.composite_text]
-kind = "in_enum"
-enum_name = "geometric_representation_item"
-group = "geometric_representation_item"
-arena = "geometric_representation_item"
+kind = "single_struct"
+group = "composite_text"
+arena = "composite_text"
 instance_count = 1
 
 [entity.compound_representation_item]
@@ -891,17 +890,16 @@ arena = "date_time_role"
 instance_count = 29612
 
 [entity.datum]
-kind = "in_enum"
-enum_name = "shape_aspect"
-group = "shape_aspect"
-arena = "shape_aspect"
+kind = "single_struct"
+group = "datum"
+arena = "datum"
 instance_count = 114
 
 [entity.datum_feature]
-kind = "in_enum"
-enum_name = "shape_aspect"
-group = "shape_aspect"
-arena = "shape_aspect"
+kind = "concrete_supertype"
+group = "datum_feature"
+arena = "datum_feature"
+shape = "base_parallel"
 instance_count = 102
 complex_part_count = 21
 co_instantiated_with = [
@@ -1019,10 +1017,10 @@ arena = "dimensional_exponents"
 instance_count = 47660
 
 [entity.dimensional_location]
-kind = "in_enum"
-enum_name = "shape_aspect_relationship"
-group = "shape_aspect_relationship"
-arena = "shape_aspect_relationship"
+kind = "concrete_supertype"
+group = "dimensional_location"
+arena = "dimensional_location"
+shape = "base_parallel"
 instance_count = 48
 
 [entity.dimensional_size]
@@ -1034,16 +1032,16 @@ instance_count = 212
 
 [entity.dimensional_size_with_datum_feature]
 kind = "in_enum"
-enum_name = "shape_aspect"
-group = "shape_aspect"
-arena = "shape_aspect"
+enum_name = "datum_feature"
+group = "datum_feature"
+arena = "datum_feature"
 instance_count = 2
 
 [entity.directed_dimensional_location]
 kind = "in_enum"
-enum_name = "shape_aspect_relationship"
-group = "shape_aspect_relationship"
-arena = "shape_aspect_relationship"
+enum_name = "dimensional_location"
+group = "dimensional_location"
+arena = "dimensional_location"
 instance_count = 4
 
 [entity.direction]
@@ -3014,10 +3012,9 @@ arena = "tessellated_surface_set"
 instance_count = 0
 
 [entity.text_literal]
-kind = "in_enum"
-enum_name = "geometric_representation_item"
-group = "geometric_representation_item"
-arena = "geometric_representation_item"
+kind = "single_struct"
+group = "text_literal"
+arena = "text_literal"
 instance_count = 117
 
 [entity.text_style]
