@@ -89,6 +89,9 @@ MBx-IF (CAx-IF):
 Only the mechanical-CAD schemas are used; AP209/210/238/239/240, IFC,
 ISO 15926, and PDM domains are out of scope.
 
+These `.exp` files are third-party ISO 10303 (STEP) schemas, not covered by
+this repo's license — see [`schemas/NOTICE.md`](schemas/NOTICE.md).
+
 ## Layout
 
 ```
@@ -116,3 +119,9 @@ inferred/                hand-authored inputs + generated outputs (all tracked)
 `abstract_entities.toml`, `ir.toml`, …). Both are committed so the blueprint is
 browsable without running the tool; only transient `*_pending.toml` gate files
 are ignored.
+
+## License
+
+Source code is MIT-licensed ([`LICENSE`](LICENSE)). The EXPRESS schemas under
+`schemas/` are third-party ISO 10303 artifacts with their own terms — see
+[`schemas/NOTICE.md`](schemas/NOTICE.md).
