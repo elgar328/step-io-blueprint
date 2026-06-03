@@ -1005,7 +1005,7 @@ mod tests {
     #[test]
     fn parses_all_real_schemas() {
         let schemas = load_all_schemas(Path::new("schemas"));
-        assert_eq!(schemas.len(), 4, "expected 4 schemas, got {}", schemas.len());
+        assert_eq!(schemas.len(), 6, "expected 6 schemas, got {}", schemas.len());
 
         let by_label: HashMap<&str, &Schema> = schemas.iter().map(|s| (s.source_label.as_str(), s)).collect();
         for label in ["ap203", "ap203e2", "ap214e3", "ap242"] {

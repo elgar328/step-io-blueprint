@@ -9,7 +9,8 @@
 //! - `pool`     Stage 6: pools.toml 검증 (수동 입력 vs abstract_entities 의 required arena)
 //! - `naming`   Stage 7: ir.toml 청사진 산출 (abstract_entities + pools + names + schemas 통합)
 //!
-//! 4 schema (ap203 / ap203e2 / ap214e3 / ap242) 항상 union 으로 처리.
+//! 6 schema (ap203 / ap203e2 / ap214e3 / ap242 / ap242e2 / ap242e3) 항상
+//! union 으로 처리.
 //! 출력은 `inferred/` 디렉토리에. 자세한 사양은 README + INFER_TUNING.md
 //! 참조.
 

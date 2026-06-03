@@ -643,7 +643,7 @@ mod tests {
         use crate::express::load_all_schemas;
         use std::path::Path;
         let schemas = load_all_schemas(Path::new("schemas"));
-        assert_eq!(schemas.len(), 4);
+        assert_eq!(schemas.len(), 6);
         let g = build(&schemas);
         assert!(g.entity_parents.len() >= 700, "entities: {}", g.entity_parents.len());
         assert!(g.edges.len() >= 1000, "edges: {}", g.edges.len());

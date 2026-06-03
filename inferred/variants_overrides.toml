@@ -21,7 +21,17 @@ reason = "230,707 corpus instances, ALL as complex-MI parts (#N=(GEOMETRIC_REPRE
 
 [entity.compound_representation_item]
 kind = "concrete_supertype"
-reason = "7 corpus instances. AP242 declares as SUPERTYPE OF (ONEOF (point_and_vector, point_path) ANDOR ONEOF (row_representation_item, table_representation_item)), non-abstract, with own_attr item_element : compound_item_definition. All 4 ONEOF children have corpus 0 → no live InEnum children → Plan 3.26 specialization to SingleStruct. (NOTE: the ANDOR/ONEOF shape should plausibly match variant.rs Rule 1 ComplexSupertype but was classified as EnumBase — root cause TBD; override bypasses the misclassification. Kept because its fate is coupled to that latent Rule 1 bug, independent of the corpus-recovery fix.)"
+reason = "7 corpus instances. AP242 declares as SUPERTYPE OF (ONEOF (point_and_vector, point_path) ANDOR ONEOF (row_representation_item, table_representation_item)), non-abstract, with own_attr item_element : compound_item_definition. All 4 ONEOF children have corpus 0 → no live InEnum children → Plan 3.26 specialization to SingleStruct. (NOTE: the ANDOR/ONEOF shape should plausibly match variant.rs Rule 1 ComplexSupertype but was classified as EnumBase — root cause TBD; override bypasses the misclassification. The prune middle-node flatten then demotes it to InEnum of representation_item, so this entry only fixes the variant-stage shape.)"
+
+# AP242 e2/e3 only. SUPERTYPE OF (product_definition_specified_occurrence
+# ANDOR product_definition_occurrence_reference_with_local_representation) —
+# a bare top-level ANDOR with no ONEOF wrapper, so neither ComplexSupertype
+# nor CompositeOneOf (both require a ONEOF) fits, and Rule 8 raises it
+# unresolved. Same shape class as compound_representation_item; the proper fix
+# is a variant.rs rule for bare-ANDOR supertypes (follow-up). corpus 0, pruned.
+[entity.product_definition_occurrence]
+kind = "concrete_supertype"
+reason = "0 corpus instances (AP242 e2/e3 model-based occurrence entity). SUPERTYPE OF (A ANDOR B), non-abstract, own attrs id/name/description/definition/quantity. Bare ANDOR without ONEOF -> Rule 8 unresolved. Pruned (corpus 0)."
 
 # Plan 3.31 — e1 vs e2+ parent declaration conflict. AP203 e1 declares
 # these as SUBTYPE OF (named_unit) but AP203e2 / AP214e3 / AP242 declare

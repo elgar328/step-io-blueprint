@@ -1663,7 +1663,7 @@ mod tests {
         use std::path::Path;
 
         let schemas = crate::express::load_all_schemas(Path::new("schemas"));
-        assert_eq!(schemas.len(), 4, "expected 4 schemas, got {}", schemas.len());
+        assert_eq!(schemas.len(), 6, "expected 6 schemas, got {}", schemas.len());
 
         let unified = refgraph::build(&schemas);
         let decisions = classify_no_overrides(&unified);
@@ -1870,23 +1870,23 @@ mod tests {
         let decisions = classify_no_overrides(&unified);
 
         // Spot-check sample. Each must be ConcreteSupertype.
+        // NOTE: item_defined_transformation, shape_aspect_relationship, and the
+        // chain case representation_relationship_with_transformation were pinned
+        // here on the 4-schema set but dropped: AP242 e2/e3 add a SUPERTYPE OF
+        // (ONEOF ...) clause to each, so at the variant stage they now classify
+        // as EnumBase. The instantiated ones are flattened to InEnum members of
+        // their stable root by the prune middle-node flatten (no struct lost).
         let expected: &[&str] = &[
             "action",
             "action_method",
             "characterized_object",
             "general_property",
-            "item_defined_transformation",
             "product_definition_formation",
             "product_definition_relationship",
             "property_definition_representation",
             "representation_context",
             "representation_map",
             "representation_relationship",
-            "shape_aspect_relationship",
-            // chain entity — own parent (representation_relationship) is
-            // also a ConcreteSupertype; the rule must run before Rule 6
-            // for this case to land here instead of InEnum.
-            "representation_relationship_with_transformation",
         ];
         for name in expected {
             assert!(

@@ -391,6 +391,13 @@ pool = "plm"
 [arena.identification_assignment]
 pool = "plm"
 
+# AP242 e2/e3 — new enum roots.
+[arena.external_identification_assignment]
+pool = "plm"
+
+[arena.annotation_placeholder_leader_line]
+pool = "pmi"
+
 [arena.person_and_organization_assignment]
 pool = "plm"
 
