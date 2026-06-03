@@ -187,7 +187,14 @@ fn compile_entities(
             .ok_or_else(|| format!("group {group} missing in arenas_pruned.toml"))?
             .arena
             .clone();
-        let shape = shapes.get(entity).copied();
+        // Shape only applies to ConcreteSupertype. A leftover shapes.toml
+        // entry for an entity the prune flatten demoted to InEnum must not
+        // attach a stray `shape` (the entry warns separately as not-a-CS).
+        let shape = if matches!(variant, VariantSpec::ConcreteSupertype) {
+            shapes.get(entity).copied()
+        } else {
+            None
+        };
         let (instance_count, complex_part_count, co_instantiated_with) = usage
             .get(entity)
             .map(|u| {

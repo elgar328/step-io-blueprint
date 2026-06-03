@@ -1,4 +1,4 @@
-# 13 ConcreteSupertype entities — IR shape decision per Plan 3c.
+# ConcreteSupertype entities — IR shape decision per Plan 3c.
 #
 # Shape options:
 #   - shape = "carrier"        : enum E { Itself(EData), ChildA(...), ... }
@@ -6,40 +6,20 @@
 #   - shape = "base_parallel"  : struct E { ... } + enum EKind { ... }
 #                                parent struct primary, kind enum is auxiliary axis.
 #
+# Only TOP supertypes (no enclosing enum root) keep a shape entry. The prune
+# middle-node flatten demotes any *instantiated* supertype that sits inside
+# another enum to a flat InEnum member of its stable root, so those entities
+# (face_surface, styled_item, manifold_solid_brep, datum_feature, ... — 14
+# formerly here) no longer need a shape decision.
+#
 # Counts in trailing comments are corpus instance counts at the time of
-# initial decision (geometry-biased fixtures). Re-evaluate ratios after
-# fixtures expansion. Children count = sum of instance_count over all
-# entities whose VariantSpec is InEnum { enum_name = <this entity> }.
+# initial decision (geometry-biased fixtures). Children count = sum of
+# instance_count over all entities whose VariantSpec is InEnum of this entity.
 
 [entity.characterized_object]              # 90 self / 621 children, ratio 6.9
 shape = "carrier"
 
-[entity.face_bound]                        # 1.1M self / 3.6M children, ratio 3.3
-shape = "carrier"
-
-[entity.face_surface]                      # 495K self / 3.4M children, ratio 6.9
-# step-io 매칭: parent attr (face_geometry, bounds) 가 모든 face variant
-# 에서 빈번히 직접 접근 — Carrier 의 enum match 보다 BaseParallel 의
-# struct field 가 API 친화. ratio 통계 (6.9) 의 default 결정과 사용자
-# 디자인 선호의 불일치 자리 — override 의 본래 목적.
-shape = "base_parallel"
-
-[entity.manifold_solid_brep]               # 105K self / 759 children, ratio 0.0072 — parent dominant
-shape = "base_parallel"
-
-[entity.mapped_item]                       # 900 self / 0 children — children 미등장
-shape = "carrier"
-
 [entity.product_category]                  # 10K self / 195K children, ratio 19.4
-shape = "carrier"
-
-[entity.product_context]                   # 53K self / 13 children, ratio ~0 — parent overwhelms
-shape = "base_parallel"
-
-[entity.product_definition_context]        # 53K self / 11 children, ratio ~0 — parent overwhelms
-shape = "base_parallel"
-
-[entity.presentation_style_assignment]     # 4.2M self / 0 children — children 미등장
 shape = "carrier"
 
 [entity.product_definition_formation]      # 43K self / 152K children, ratio 3.5
@@ -60,14 +40,9 @@ shape = "carrier"
 [entity.shape_aspect_relationship]         # 2K self / 41 children, ratio 0.020 — parent dominant
 shape = "base_parallel"
 
-[entity.styled_item]                       # 4M self / 25 children, ratio ~0 — parent dominant
-shape = "base_parallel"
-
-# Plan 3.23 / 3.24 — supertypes surfaced by the auto-keep rule. Shape
-# chosen by ratio: parent dominant (self >> children) → base_parallel;
-# children dominant or self=0 with live children → carrier.
-
-# self=0 + live children — carrier (children dominant by default)
+# Plan 3.23 / 3.24 — supertypes surfaced by the auto-keep rule. self=0 with
+# live children, so the flatten (standalone > 0) does not touch them; they
+# stay carrier dispatch roots.
 [entity.address]                           # 0 self / live children
 shape = "carrier"
 
@@ -83,83 +58,28 @@ shape = "carrier"
 [entity.text_style]                        # 0 self / 116 children
 shape = "carrier"
 
-# Plan 3.26 — prune.rs 가 self-live 이지만 *살아남는 InEnum child 없는*
-# ConcreteSupertype 을 SingleStruct 로 자동 변환. 따라서 0-child parent
-# dominant 자리는 shape 결정이 필요 없어 shapes.toml entry 도 사라짐.
-# 남는 entries 는 *살아남는 child 가 1개 이상* 인 경우만.
-
 [entity.document]                          # 67 self / 129 children, ratio 1.93 — children dominant
 shape = "carrier"
 
-# pcurve: 69K self. bounded_pcurve (corpus 0) 가 prune_overrides 로 보존되어
-# InEnum child 로 살아남음 → SingleStruct 자동 변환 대상 아님. recasts.
-# parameter_space_unification 으로 IR 에서는 InEnum 으로 재구성됨.
-[entity.pcurve]
-shape = "carrier"
-
-# variants_overrides → ConcreteSupertype 으로 재분류된 entity
-# product_definition: 살아남는 child product_definition_with_associated_documents
-# (43 instances) 가 있어 SingleStruct 자동 변환 대상 아님.
+# Top supertypes recovered to ConcreteSupertype by the prune corpus-recovery
+# (self-instantiated EnumBase with NO enclosing enum root → carrier root).
 [entity.product_definition]                # 216K self / 43 children
 shape = "base_parallel"
 
-# Plan 3.30 — dimensional_size: variants_overrides 로 ConcreteSupertype
-# 분류됨. angular_size (corpus 1) 가 살아남는 InEnum child → SingleStruct
-# 자동 변환 대상 아님. 212 self vs 1 child, 압도적 parent-dominant.
-[entity.dimensional_size]                  # 212 self / 1 live child (angular_size), ratio ~0 — parent dominant
+[entity.dimensional_size]                  # 212 self / 1 live child (angular_size), parent dominant
 shape = "base_parallel"
 
-# Plan 3.31 — derived_unit: Plan 3.30 의 SingleStruct 자동 특수화가
-# area_unit / volume_unit 의 InEnum override 로 발동 안 함. live InEnum
-# 자식 2 개 (area_unit 17, volume_unit 13) 로 ConcreteSupertype 유지.
-# carrier 가 어색한 이유: area_unit / volume_unit 가 EXPRESS 상 자체 attr
-# 없는 WHERE-constraint marker — base_parallel 의 Kind discriminator 가
-# 자연스러움.
-[entity.derived_unit]                      # 5,022 self / 30 live children (17+13), ratio ~0 — parent dominant
+[entity.derived_unit]                      # 5,022 self / 30 live children (area_unit 17 + volume_unit 13), parent dominant
 shape = "base_parallel"
 
-# Plan 3.34 — datum_feature: variants_overrides 로 ConcreteSupertype.
-# dimensional_size_with_datum_feature (corpus 2) 가 살아남는 InEnum child
-# → SingleStruct 자동 변환 대상 아님. 102 self / 2 child, parent-dominant.
-[entity.datum_feature]                     # 102 self / 2 live child, ratio ~0 — parent dominant
+[entity.shape_aspect]                      # 3,320 self / ~313 live children, parent dominant
 shape = "base_parallel"
 
-# Plan 3.34 Phase 2 — shape_aspect: enum_base 오분류 복원.
-# live in_enum 자식 (datum_system / datum_target / tolerance_zone /
-# placed_datum_target_feature) 으로 ConcreteSupertype 유지.
-[entity.shape_aspect]                      # 3,320 self / ~313 live children, ratio ~0 — parent dominant
-shape = "base_parallel"
-
-# Plan 3.38 — property_definition: variants_overrides 로 ConcreteSupertype.
-# 13,696 self / 253,440 live child (product_definition_shape), ratio 18.5 —
-# children dominant. document (carrier, ratio 1.93) / representation_relationship
-# (carrier, ratio 1024) 패턴.
-[entity.property_definition]               # 13,696 self / 253,440 live child (product_definition_shape), ratio 18.5 — children dominant
+[entity.property_definition]               # 13,696 self / 253,440 live child (product_definition_shape), children dominant
 shape = "carrier"
-
-# Corpus-recovery (prune.rs) — six non-abstract supertypes whose STANDALONE
-# instances (instance_count - complex_part_count) were silently lost while
-# classified EnumBase. Now recovered to ConcreteSupertype generically (no
-# per-entity override). Shape by the same ratio rule: children-dominant
-# (ratio = children_standalone / self_standalone > 1) -> carrier; parent
-# dominant -> base_parallel. Counts are standalone (post Plan 3.35).
 
 [entity.representation]                     # 13,065 self / 458,791 children, ratio 35 — children dominant
 shape = "carrier"
 
 [entity.measure_with_unit]                  # 66 self / 217,828 children, ratio 3300 — children dominant
 shape = "carrier"
-
-[entity.annotation_occurrence]              # 144 self / 1,618 children, ratio 11.2 — children dominant
-shape = "carrier"
-
-[entity.composite_shape_aspect]            # 357 self / 155 child (composite_group_shape_aspect), ratio 0.43 — parent dominant
-shape = "base_parallel"
-
-[entity.dimensional_location]              # 48 self / 5 children (angular_location, directed_dimensional_location), ratio 0.10 — parent dominant
-shape = "base_parallel"
-
-# annotation_curve_occurrence: lone child leader_curve appears only as a
-# complex-MI part (standalone 0), so no standalone dispatch — parent dominant.
-[entity.annotation_curve_occurrence]       # 22 self / 0 standalone child (leader_curve = complex-part only), ratio ~0 — parent dominant
-shape = "base_parallel"

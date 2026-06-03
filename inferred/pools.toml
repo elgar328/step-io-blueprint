@@ -16,6 +16,11 @@ pool = "pmi"
 [arena.application_context]
 pool = "plm"
 
+# Enum root re-materialized by the prune middle-node flatten (product_context /
+# product_definition_context flatten into it).
+[arena.application_context_element]
+pool = "assembly_product"
+
 [arena.application_protocol_definition]
 pool = "plm"
 
@@ -442,6 +447,14 @@ pool = "geometry"
 pool = "topology"
 
 [arena.edge]
+pool = "topology"
+
+# Enum roots re-materialized by the prune middle-node flatten (instantiated
+# supertypes flattened into them as InEnum members).
+[arena.topological_representation_item]
+pool = "topology"
+
+[arena.face]
 pool = "topology"
 
 [arena.loop]

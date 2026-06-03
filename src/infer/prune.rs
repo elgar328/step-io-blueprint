@@ -122,7 +122,7 @@ pub fn run(corpus_path: &Path, allow_pending: bool) -> Result<(), String> {
     }
 
     // 1. Read variants.toml — primary classification input.
-    let variants: BTreeMap<String, VariantSpec> =
+    let mut variants: BTreeMap<String, VariantSpec> =
         crate::infer::io::read_confident(FILE_VARIANTS, "entity")
             .map_err(|e| format!("read {FILE_VARIANTS}: {e}"))?;
     if variants.is_empty() {
@@ -194,34 +194,24 @@ pub fn run(corpus_path: &Path, allow_pending: bool) -> Result<(), String> {
             (n.clone(), t.saturating_sub(c))
         })
         .collect();
-    // Phase 0 (detection only): instantiated middle nodes — supertypes that
-    // are directly instantiated (standalone > 0) yet also sit inside another
-    // enum (have an enclosing enum root). These are the entities the flatten
-    // rule will demote from their own enum root to a flat InEnum member of
-    // the stable root. Read the enclosing-root map emitted by `variant`.
+    // Flatten instantiated middle nodes. A supertype that is directly
+    // instantiated (standalone > 0) yet also sits inside another enum (has an
+    // enclosing enum root) does not get its own enum level — it and its
+    // children become flat InEnum members of their stable root. The
+    // enclosing-root map comes from `variant` (prune lacks the parent graph).
     let enum_roots: BTreeMap<String, String> =
         crate::infer::io::read_confident(FILE_ENUM_ROOT, "enum_root").unwrap_or_default();
-    let middle_nodes: Vec<&String> = variants
-        .iter()
-        .filter(|(name, spec)| {
-            matches!(
-                spec,
-                VariantSpec::EnumBase { .. } | VariantSpec::ConcreteSupertype
-            ) && standalone.get(*name).copied().unwrap_or(0) > 0
-                && enum_roots.contains_key(*name)
-        })
-        .map(|(n, _)| n)
-        .collect();
-    if !middle_nodes.is_empty() {
-        let preview: Vec<String> = middle_nodes
+    let flattened = flatten_middle_nodes(&mut variants, &enum_roots, &standalone);
+    if !flattened.is_empty() {
+        let preview: Vec<String> = flattened
             .iter()
             .take(12)
-            .map(|n| format!("{n}->{}", enum_roots.get(*n).map(String::as_str).unwrap_or("?")))
+            .map(|(e, r)| format!("{e}->{r}"))
             .collect();
-        let suffix = if middle_nodes.len() > 12 { ", ..." } else { "" };
+        let suffix = if flattened.len() > 12 { ", ..." } else { "" };
         eprintln!(
-            "infer prune: detected {} instantiated middle node(s) (flatten candidates): {}{}",
-            middle_nodes.len(),
+            "infer prune: flattened {} instantiated middle node(s) to InEnum of stable root: {}{}",
+            flattened.len(),
             preview.join(", "),
             suffix,
         );
@@ -535,6 +525,81 @@ fn count_instances(corpus_path: &Path, entity_names: &[String]) -> ScanTally {
         scan_step_text(text, &recognised, &mut tally);
     });
     tally
+}
+
+/// Flatten instantiated middle nodes. A supertype that is directly
+/// instantiated (standalone > 0) and also nested in another enum (has an
+/// enclosing root) does not get its own enum level: it is demoted to a flat
+/// `InEnum` member of its STABLE root — the nearest ancestor that is not
+/// itself a flattening middle node — and any `InEnum` children that pointed
+/// at a demoting node are re-pointed to the same stable root.
+///
+/// The schema alone cannot distinguish a flatten-worthy middle node (`group`:
+/// directly instantiated) from a struct-less dispatch root (`edge`: never
+/// instantiated) — both are non-abstract supertypes with own attrs and a
+/// supertype parent. Only the corpus standalone count separates them, so this
+/// runs here in prune (which has the corpus) rather than in variant.
+/// Returns the `(entity, stable_root)` pairs that were demoted.
+fn flatten_middle_nodes(
+    variants: &mut BTreeMap<String, VariantSpec>,
+    enum_roots: &BTreeMap<String, String>,
+    standalone: &HashMap<String, usize>,
+) -> Vec<(String, String)> {
+    // Self-enum-root supertypes (EnumBase / ConcreteSupertype) that are
+    // instantiated and have an enclosing root — the nodes that will demote.
+    let demote_set: HashSet<String> = variants
+        .iter()
+        .filter(|(name, spec)| {
+            matches!(
+                spec,
+                VariantSpec::EnumBase { .. } | VariantSpec::ConcreteSupertype
+            ) && standalone.get(*name).copied().unwrap_or(0) > 0
+                && enum_roots.contains_key(*name)
+        })
+        .map(|(n, _)| n.clone())
+        .collect();
+    if demote_set.is_empty() {
+        return Vec::new();
+    }
+    // Climb the enclosing-root chain while nodes keep demoting; return the
+    // first non-demoting (stable) ancestor.
+    let resolve = |start: &str| -> Option<String> {
+        let mut cur = start.to_string();
+        let mut visited: HashSet<String> = HashSet::new();
+        while demote_set.contains(&cur) {
+            if !visited.insert(cur.clone()) {
+                return None; // cycle guard
+            }
+            cur = enum_roots.get(&cur)?.clone();
+        }
+        Some(cur)
+    };
+
+    let mut demoted: Vec<(String, String)> = Vec::new();
+    let mut updates: Vec<(String, String)> = Vec::new();
+    for (name, spec) in variants.iter() {
+        match spec {
+            VariantSpec::EnumBase { .. } | VariantSpec::ConcreteSupertype
+                if demote_set.contains(name) =>
+            {
+                if let Some(root) = resolve(name) {
+                    updates.push((name.clone(), root.clone()));
+                    demoted.push((name.clone(), root));
+                }
+            }
+            VariantSpec::InEnum { enum_name } if demote_set.contains(enum_name) => {
+                if let Some(root) = resolve(enum_name) {
+                    updates.push((name.clone(), root));
+                }
+            }
+            _ => {}
+        }
+    }
+    for (name, root) in updates {
+        variants.insert(name, VariantSpec::InEnum { enum_name: root });
+    }
+    demoted.sort();
+    demoted
 }
 
 /// Apply the P-2 transitive pruning rules to `variants` until a fixpoint
@@ -1612,5 +1677,122 @@ mod tests {
             pruned.get("line"),
             Some(VariantSpec::InEnum { .. })
         ));
+    }
+
+    // --- Middle-node flatten: instantiated supertype nested in another enum
+    // becomes a flat InEnum member of its stable root; its children re-point. ---
+
+    fn roots(pairs: &[(&str, &str)]) -> BTreeMap<String, String> {
+        pairs
+            .iter()
+            .map(|(k, v)| (k.to_string(), v.to_string()))
+            .collect()
+    }
+
+    #[test]
+    fn flatten_demotes_middle_node_and_reparents_children() {
+        // point (abstract root) -> cartesian_point (instantiated middle node)
+        // -> apll_point (child). cartesian_point and apll_point both flatten
+        // to flat InEnum members of point; point itself is untouched.
+        let mut variants = variants_with(&[
+            ("point", VariantSpec::EnumBase { enum_name: "point".into() }),
+            ("cartesian_point", VariantSpec::EnumBase { enum_name: "cartesian_point".into() }),
+            ("apll_point", VariantSpec::InEnum { enum_name: "cartesian_point".into() }),
+        ]);
+        let enum_roots = roots(&[("cartesian_point", "point"), ("apll_point", "cartesian_point")]);
+        let standalone: HashMap<String, usize> =
+            [("cartesian_point".to_string(), 100), ("apll_point".to_string(), 5)]
+                .into_iter()
+                .collect();
+        let demoted = flatten_middle_nodes(&mut variants, &enum_roots, &standalone);
+        assert!(matches!(
+            variants.get("cartesian_point"),
+            Some(VariantSpec::InEnum { enum_name }) if enum_name == "point"
+        ));
+        assert!(matches!(
+            variants.get("apll_point"),
+            Some(VariantSpec::InEnum { enum_name }) if enum_name == "point"
+        ));
+        assert!(matches!(
+            variants.get("point"),
+            Some(VariantSpec::EnumBase { .. })
+        ));
+        assert_eq!(demoted, vec![("cartesian_point".to_string(), "point".to_string())]);
+    }
+
+    #[test]
+    fn flatten_skips_top_supertype_without_ancestor() {
+        // representation is instantiated and a supertype, but has NO enclosing
+        // enum root (not in enum_roots) -> it is a top, must stay its own root.
+        let mut variants = variants_with(&[
+            ("representation", VariantSpec::ConcreteSupertype),
+            ("shape_representation", VariantSpec::InEnum { enum_name: "representation".into() }),
+        ]);
+        let enum_roots = roots(&[("shape_representation", "representation")]);
+        let standalone: HashMap<String, usize> =
+            [("representation".to_string(), 100)].into_iter().collect();
+        let demoted = flatten_middle_nodes(&mut variants, &enum_roots, &standalone);
+        assert!(matches!(
+            variants.get("representation"),
+            Some(VariantSpec::ConcreteSupertype)
+        ));
+        assert!(demoted.is_empty());
+    }
+
+    #[test]
+    fn flatten_cascades_chain_to_stable_root() {
+        // a (abstract) -> m1 -> m2 -> leaf, m1/m2 instantiated middle nodes.
+        // All flatten to `a` (the first non-demoting ancestor).
+        let mut variants = variants_with(&[
+            ("a", VariantSpec::EnumBase { enum_name: "a".into() }),
+            ("m1", VariantSpec::EnumBase { enum_name: "m1".into() }),
+            ("m2", VariantSpec::ConcreteSupertype),
+            ("leaf", VariantSpec::InEnum { enum_name: "m2".into() }),
+        ]);
+        let enum_roots = roots(&[("m1", "a"), ("m2", "m1"), ("leaf", "m2")]);
+        let standalone: HashMap<String, usize> = [
+            ("m1".to_string(), 10),
+            ("m2".to_string(), 5),
+            ("leaf".to_string(), 2),
+        ]
+        .into_iter()
+        .collect();
+        flatten_middle_nodes(&mut variants, &enum_roots, &standalone);
+        for e in ["m1", "m2", "leaf"] {
+            assert!(
+                matches!(variants.get(e), Some(VariantSpec::InEnum { enum_name }) if enum_name == "a"),
+                "{e} should flatten to a, got {:?}",
+                variants.get(e)
+            );
+        }
+        assert!(matches!(variants.get("a"), Some(VariantSpec::EnumBase { .. })));
+    }
+
+    #[test]
+    fn flatten_leaves_uninstantiated_dispatch_root_untouched() {
+        // edge regression: edge is a supertype with an enum-root ancestor but
+        // is NEVER instantiated (standalone 0). It must stay a struct-less
+        // EnumBase dispatch root — only corpus separates it from `group`.
+        let mut variants = variants_with(&[
+            ("edge", VariantSpec::EnumBase { enum_name: "edge".into() }),
+            ("edge_curve", VariantSpec::InEnum { enum_name: "edge".into() }),
+        ]);
+        let enum_roots = roots(&[
+            ("edge", "topological_representation_item"),
+            ("edge_curve", "edge"),
+        ]);
+        // edge standalone 0 (absent); edge_curve instantiated.
+        let standalone: HashMap<String, usize> =
+            [("edge_curve".to_string(), 100)].into_iter().collect();
+        let demoted = flatten_middle_nodes(&mut variants, &enum_roots, &standalone);
+        assert!(matches!(
+            variants.get("edge"),
+            Some(VariantSpec::EnumBase { .. })
+        ));
+        assert!(matches!(
+            variants.get("edge_curve"),
+            Some(VariantSpec::InEnum { enum_name }) if enum_name == "edge"
+        ));
+        assert!(demoted.is_empty());
     }
 }
