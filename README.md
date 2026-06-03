@@ -37,7 +37,7 @@ variant → arena → prune → shape → reshape → pool → naming
 | `arena`   | Group entities that share an enum; map group → arena | `arenas_overrides.toml` | `arenas.toml` |
 | `prune`   | Drop entities absent from the corpus (transitive cascade) using frozen instance counts | `prune_overrides.toml`, `corpus_usage.toml` | `variants_pruned.toml`, `arenas_pruned.toml`, `usage.toml` |
 | `shape`   | Validate the IR shape (carrier vs base+parallel) of each surviving supertype; condense to one view | `shapes.toml` | `entities.toml` |
-| `reshape` | Apply abstraction decisions: split, merge, recast, anchor | `splits/merges/recasts/anchors.toml` | `abstract_entities.toml` |
+| `reshape` | Apply abstraction decisions: split, merge, recast, anchor | `splits.toml`, `merges.toml`, `recasts.toml`, `anchors.toml` | `abstract_entities.toml` |
 | `pool`    | Validate the arena → pool (module) assignment | `pools.toml` | (validation only) |
 | `naming`  | Pick IR-friendly type/id/variant/enum/field names; merge everything | `names.toml` | **`ir.toml`** |
 
