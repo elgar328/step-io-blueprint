@@ -8,11 +8,11 @@ a time. This tool decides *what shape each entity should take* in that IR —
 plain struct, enum variant, dispatch root, merged field, and so on — and emits
 a single reference file, `inferred/ir.toml`, that step-io is written against.
 
-The tool only does **mechanical classification + validation**. Every human
-decision lives in a small set of hand-authored override files under
-`inferred/`; the pipeline is otherwise deterministic and reproducible from the
-schemas. No code generation — `ir.toml` is a reference humans read, not source
-that is emitted.
+The tool itself performs only **mechanical classification and validation**.
+Every human decision lives in a small set of hand-authored files under
+`inferred/`; otherwise the pipeline is deterministic and reproducible from the
+schemas. There is no code generation — `ir.toml` is a reference humans read, not
+source that is emitted.
 
 ## Quick start
 
@@ -23,9 +23,9 @@ cargo test                         # unit tests
 
 ## Pipeline
 
-Seven stages run in order. Each consumes the previous stage's output and, only
-where a human decision is needed, an optional override file. The flow is
-one-directional — a downstream stage never mutates an upstream output.
+Seven stages run in order. Each takes the previous stage's output, plus an
+optional override file wherever a human decision is needed. The flow is strictly
+one-directional: a downstream stage never mutates an upstream output.
 
 ```
 variant → arena → prune → shape → reshape → pool → naming
@@ -49,27 +49,27 @@ implemented against.
 `variant` assigns each entity exactly one of: `SingleStruct`, `InEnum`,
 `EnumBase` (struct-less dispatch root), `ConcreteSupertype` (struct + dispatch),
 `MergedInto`, `NestedField`, `ComplexSupertype`, `CompositeOneOf`. The schema
-alone cannot always distinguish a directly-instantiated supertype from a
-struct-less dispatch root (e.g. `group` vs `edge`); the corpus instance count
-makes that call in `prune`.
+alone cannot always tell a directly-instantiated supertype from a struct-less
+dispatch root (`group` vs `edge`, say) — the corpus instance count settles that
+in `prune`.
 
 ### corpus_usage.toml — no live corpus dependency
 
-`prune` does not scan a STEP corpus. Per-entity instance counts are frozen in
-`inferred/corpus_usage.toml` (`instance_count`, `complex_part_count`,
-`co_instantiated_with`) and committed to this repo, so the whole pipeline runs
-with **no external dependency**.
+`prune` never scans a STEP corpus. Per-entity instance counts
+(`instance_count`, `complex_part_count`, `co_instantiated_with`) are frozen in
+`inferred/corpus_usage.toml` and committed to this repo, so the whole pipeline
+runs with **no external dependency**.
 
-That file is produced by a separate corpus-scanning tool that walks a STEP file
-corpus; it is regenerated only when the corpus changes (rare) and copied back
-in. Because the summary lists every entity name seen in the corpus, adding a
-schema does not require regenerating it.
+That file is produced by a separate corpus-scanning tool that walks a STEP-file
+corpus, and is regenerated and copied in only when the corpus itself changes
+(rare). Since it lists every entity name seen in the corpus, adding a schema
+does not require regenerating it.
 
 ### Pending gate
 
-Each stage refuses to run while an upstream `*_pending.toml` exists (the
-`variant` stage writes one only when it hits a schema shape it cannot classify
-— so far, never). Pass `--allow-pending` to bypass during development.
+Each stage refuses to run while an upstream `*_pending.toml` exists — the
+`variant` stage writes one only when it meets a schema shape it cannot classify,
+which has not happened yet. Pass `--allow-pending` to bypass during development.
 
 ## Schemas
 
@@ -88,7 +88,7 @@ to LF (MBx-IF ships CRLF); content is unchanged.
 | `ap242ed2_dis2_mim_lf_v1.101.exp` | MBx-IF (AP242 ed2, 2019 / N10517) |
 | `ap242ed3_mim_lf_v1.152.exp` | MBx-IF (AP242 ed3, 2022) |
 
-Only the mechanical-CAD schemas are used; AP209/210/238/239/240, IFC,
+Only mechanical-CAD schemas are used; the AP209/210/238/239/240, IFC,
 ISO 15926, and PDM domains are out of scope.
 
 These `.exp` files are third-party ISO 10303 (STEP) schemas, not covered by
@@ -113,7 +113,7 @@ schemas/                 the six .exp schema files
 inferred/                hand-authored inputs + generated outputs
 ```
 
-`inferred/` holds two kinds of file: **hand-authored inputs** (the
+`inferred/` holds two kinds of files: **hand-authored inputs** (the
 `*_overrides.toml`, `shapes.toml`, `pools.toml`, `names.toml`, `splits.toml`,
 `merges.toml`, `recasts.toml`, `anchors.toml`, and the frozen
 `corpus_usage.toml`) and **generated outputs** (`variants.toml`, `arenas.toml`,
