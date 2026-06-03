@@ -1,4 +1,4 @@
-# Manually authored — pool grouping for the 130 pruned arenas.
+# Manually authored — pool grouping for the pruned arenas.
 # Pool names align with the step-io entity groups (geometry / topology /
 # units / shape_rep / assembly_product / visualization / property / pmi /
 # form_features) plus `plm` for product-lifecycle metadata (approval /
@@ -8,10 +8,8 @@
 # Edit this file to redirect any arena to a different pool. The tool only
 # validates that every arena in arenas_pruned.toml has an entry here
 # (missing → Err) and that no entry refers to an unknown arena
-# (extra → warning).
-
-[arena.annotation_occurrence]
-pool = "pmi"
+# (extra → warning). Arenas absorbed by the prune middle-node flatten (their
+# entity became a flat InEnum member of a stable root) drop their entry here.
 
 [arena.application_context]
 pool = "plm"
@@ -54,12 +52,6 @@ pool = "shape_rep"
 [arena.colour]
 pool = "visualization"
 
-[arena.composite_curve_segment]
-pool = "geometry"
-
-[arena.composite_text]
-pool = "visualization"
-
 [arena.context_dependent_shape_representation]
 pool = "shape_rep"
 
@@ -72,17 +64,11 @@ pool = "plm"
 [arena.curve]
 pool = "geometry"
 
-[arena.curve_style]
-pool = "visualization"
-
 [arena.date_and_time]
 pool = "plm"
 
 [arena.date_time_role]
 pool = "plm"
-
-[arena.datum]
-pool = "pmi"
 
 [arena.derived_unit]
 pool = "units"
@@ -98,9 +84,6 @@ pool = "property"
 
 [arena.dimensional_exponents]
 pool = "units"
-
-[arena.dimensional_location]
-pool = "pmi"
 
 [arena.document]
 pool = "plm"
@@ -128,12 +111,6 @@ pool = "pmi"
 
 [arena.external_source]
 pool = "plm"
-
-[arena.face_bound]
-pool = "topology"
-
-[arena.face_surface]
-pool = "topology"
 
 [arena.fill_area_style_colour]
 pool = "visualization"
@@ -180,12 +157,6 @@ pool = "pmi"
 [arena.local_time]
 pool = "plm"
 
-[arena.manifold_solid_brep]
-pool = "topology"
-
-[arena.mapped_item]
-pool = "shape_rep"
-
 [arena.measure_qualification]
 pool = "pmi"
 
@@ -203,9 +174,6 @@ pool = "plm"
 
 [arena.organization]
 pool = "plm"
-
-[arena.oriented_edge]
-pool = "topology"
 
 [arena.pcurve]
 pool = "geometry"
@@ -234,9 +202,6 @@ pool = "visualization"
 [arena.presentation_layer_assignment]
 pool = "visualization"
 
-[arena.presentation_style_assignment]
-pool = "visualization"
-
 [arena.product]
 pool = "assembly_product"
 
@@ -244,12 +209,6 @@ pool = "assembly_product"
 pool = "assembly_product"
 
 [arena.product_category_relationship]
-pool = "assembly_product"
-
-[arena.product_context]
-pool = "assembly_product"
-
-[arena.product_definition_context]
 pool = "assembly_product"
 
 [arena.product_definition_context_association]
@@ -282,9 +241,6 @@ pool = "shape_rep"
 [arena.representation_relationship]
 pool = "shape_rep"
 
-[arena.representation_relationship_with_transformation]
-pool = "shape_rep"
-
 [arena.role_association]
 pool = "plm"
 
@@ -300,9 +256,6 @@ pool = "shape_rep"
 [arena.shape_aspect_relationship]
 pool = "shape_rep"
 
-[arena.styled_item]
-pool = "visualization"
-
 [arena.surface]
 pool = "geometry"
 
@@ -317,9 +270,6 @@ pool = "visualization"
 
 [arena.tessellated_item]
 pool = "topology"
-
-[arena.text_literal]
-pool = "visualization"
 
 [arena.text_style_for_defined_font]
 pool = "visualization"
@@ -388,9 +338,6 @@ pool = "plm"
 [arena.group_assignment]
 pool = "plm"
 
-[arena.identification_assignment]
-pool = "plm"
-
 # AP242 e2/e3 — new enum roots.
 [arena.external_identification_assignment]
 pool = "plm"
@@ -418,9 +365,6 @@ pool = "assembly_product"
 [arena.geometric_representation_context]
 pool = "shape_rep"
 
-[arena.composite_shape_aspect]
-pool = "shape_rep"
-
 [arena.continuous_shape_aspect]
 pool = "shape_rep"
 
@@ -428,12 +372,6 @@ pool = "shape_rep"
 pool = "shape_rep"
 
 [arena.presentation_representation]
-pool = "shape_rep"
-
-[arena.compound_representation_item]
-pool = "shape_rep"
-
-[arena.descriptive_representation_item]
 pool = "shape_rep"
 
 # geometry
@@ -474,14 +412,8 @@ pool = "topology"
 pool = "topology"
 
 # pmi (annotation / GD&T)
-[arena.annotation_curve_occurrence]
-pool = "pmi"
-
 [arena.camera_model]
 pool = "visualization"
-
-[arena.datum_feature]
-pool = "pmi"
 
 [arena.dimensional_size]
 pool = "pmi"
