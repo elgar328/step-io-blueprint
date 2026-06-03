@@ -1,4 +1,5 @@
 /target
+/.claude
 
 # inferred/ holds both the hand-authored inputs and the generated pipeline
 # outputs (ir.toml etc.) — all tracked so the blueprint is browsable without
