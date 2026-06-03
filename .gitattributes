@@ -1,0 +1,4 @@
+# Store all text files with LF line endings, regardless of platform.
+# Keeps the EXPRESS schemas (schemas/*.exp) and generated TOML consistent and
+# avoids CRLF/LF churn in diffs.
+* text=auto eol=lf
