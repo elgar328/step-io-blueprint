@@ -11,3 +11,6 @@
 !/inferred/merges.toml
 !/inferred/recasts.toml
 !/inferred/anchors.toml
+# Frozen corpus measurement, copied from step-io-reference-check's
+# corpus-usage bin. Tracked so prune needs no corpus access.
+!/inferred/corpus_usage.toml
