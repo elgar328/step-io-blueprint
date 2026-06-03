@@ -652,7 +652,7 @@ mod tests {
         assert_eq!(out.len(), 2);
         assert!(out.contains_key("a"));
         assert!(out.contains_key("b"));
-        for (_, v) in &out {
+        for v in out.values() {
             assert!(v.split_from.is_none());
             assert!(v.merge_absorbs.is_empty());
         }
