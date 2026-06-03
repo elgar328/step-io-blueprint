@@ -83,3 +83,14 @@ shape = "carrier"
 
 [entity.measure_with_unit]                  # 66 self / 217,828 children, ratio 3300 — children dominant
 shape = "carrier"
+
+# Domain roots preserved by the flatten pool-boundary gate (own arena). The
+# styled_item parent attrs (styles, item) are accessed in every override
+# variant — base_parallel struct field over carrier enum match. annotation_
+# occurrence has 11 structurally-distinct children (leader / plane / text /
+# symbol …) → carrier, one variant each (144 self / children-dominant).
+[entity.styled_item]                       # 4M self / 25 children — parent dominant
+shape = "base_parallel"
+
+[entity.annotation_occurrence]             # 144 self / 11 distinct children — children dominant
+shape = "carrier"

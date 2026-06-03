@@ -1,6 +1,9 @@
 [group.address]
 arena = "address"
 
+[group.annotation_occurrence]
+arena = "annotation_occurrence"
+
 [group.annotation_placeholder_leader_line]
 arena = "annotation_placeholder_leader_line"
 
@@ -60,6 +63,9 @@ arena = "characterized_object"
 
 [group.colour]
 arena = "colour"
+
+[group.composite_curve_segment]
+arena = "composite_curve_segment"
 
 [group.conic]
 arena = "conic"
@@ -351,6 +357,9 @@ arena = "shape_aspect"
 
 [group.shape_aspect_relationship]
 arena = "shape_aspect_relationship"
+
+[group.styled_item]
+arena = "styled_item"
 
 [group.surface]
 arena = "surface"

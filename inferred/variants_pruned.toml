@@ -27,11 +27,10 @@ enum_name = "geometric_tolerance_with_datum_reference"
 
 [entity.annotation_curve_occurrence]
 kind = "in_enum"
-enum_name = "representation_item"
+enum_name = "annotation_occurrence"
 
 [entity.annotation_occurrence]
-kind = "in_enum"
-enum_name = "representation_item"
+kind = "concrete_supertype"
 
 [entity.annotation_placeholder_leader_line]
 kind = "enum_base"
@@ -39,23 +38,23 @@ enum_name = "annotation_placeholder_leader_line"
 
 [entity.annotation_placeholder_occurrence]
 kind = "in_enum"
-enum_name = "representation_item"
+enum_name = "annotation_occurrence"
 
 [entity.annotation_placeholder_occurrence_with_leader_line]
 kind = "in_enum"
-enum_name = "representation_item"
+enum_name = "annotation_occurrence"
 
 [entity.annotation_plane]
 kind = "in_enum"
-enum_name = "representation_item"
+enum_name = "annotation_occurrence"
 
 [entity.annotation_symbol_occurrence]
 kind = "in_enum"
-enum_name = "representation_item"
+enum_name = "annotation_occurrence"
 
 [entity.annotation_text_occurrence]
 kind = "in_enum"
-enum_name = "representation_item"
+enum_name = "annotation_occurrence"
 
 [entity.annotation_to_model_leader_line]
 kind = "in_enum"
@@ -316,8 +315,7 @@ kind = "in_enum"
 enum_name = "bounded_curve"
 
 [entity.composite_curve_segment]
-kind = "in_enum"
-enum_name = "founded_item"
+kind = "single_struct"
 
 [entity.composite_group_shape_aspect]
 kind = "in_enum"
@@ -361,7 +359,7 @@ enum_name = "representation_relationship"
 
 [entity.context_dependent_over_riding_styled_item]
 kind = "in_enum"
-enum_name = "representation_item"
+enum_name = "styled_item"
 
 [entity.context_dependent_shape_representation]
 kind = "single_struct"
@@ -522,7 +520,7 @@ kind = "single_struct"
 
 [entity.draughting_annotation_occurrence]
 kind = "in_enum"
-enum_name = "representation_item"
+enum_name = "annotation_occurrence"
 
 [entity.draughting_callout]
 kind = "complex_supertype"
@@ -734,7 +732,7 @@ kind = "single_struct"
 
 [entity.leader_curve]
 kind = "in_enum"
-enum_name = "representation_item"
+enum_name = "annotation_occurrence"
 
 [entity.leader_directed_callout]
 kind = "in_enum"
@@ -742,7 +740,7 @@ enum_name = "draughting_callout"
 
 [entity.leader_terminator]
 kind = "in_enum"
-enum_name = "representation_item"
+enum_name = "annotation_occurrence"
 
 [entity.length_measure_with_unit]
 kind = "in_enum"
@@ -891,7 +889,7 @@ enum_name = "edge"
 
 [entity.over_riding_styled_item]
 kind = "in_enum"
-enum_name = "representation_item"
+enum_name = "styled_item"
 
 [entity.parabola]
 kind = "in_enum"
@@ -1223,8 +1221,7 @@ kind = "in_enum"
 enum_name = "geometric_tolerance"
 
 [entity.styled_item]
-kind = "in_enum"
-enum_name = "representation_item"
+kind = "concrete_supertype"
 
 [entity.surface]
 kind = "enum_base"
@@ -1305,11 +1302,11 @@ enum_name = "geometric_tolerance_with_datum_reference"
 
 [entity.terminator_symbol]
 kind = "in_enum"
-enum_name = "representation_item"
+enum_name = "annotation_occurrence"
 
 [entity.tessellated_annotation_occurrence]
 kind = "in_enum"
-enum_name = "representation_item"
+enum_name = "annotation_occurrence"
 
 [entity.tessellated_curve_set]
 kind = "in_enum"

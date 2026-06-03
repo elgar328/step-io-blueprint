@@ -51,9 +51,9 @@ instance_count = 1
 
 [entity.annotation_curve_occurrence]
 kind = "in_enum"
-enum_name = "representation_item"
-group = "representation_item"
-arena = "representation_item"
+enum_name = "annotation_occurrence"
+group = "annotation_occurrence"
+arena = "annotation_occurrence"
 instance_count = 138
 complex_part_count = 116
 co_instantiated_with = [
@@ -66,10 +66,10 @@ co_instantiated_with = [
 ]
 
 [entity.annotation_occurrence]
-kind = "in_enum"
-enum_name = "representation_item"
-group = "representation_item"
-arena = "representation_item"
+kind = "concrete_supertype"
+group = "annotation_occurrence"
+arena = "annotation_occurrence"
+shape = "carrier"
 instance_count = 492
 complex_part_count = 348
 co_instantiated_with = [
@@ -94,30 +94,30 @@ instance_count = 0
 
 [entity.annotation_placeholder_occurrence]
 kind = "in_enum"
-enum_name = "representation_item"
-group = "representation_item"
-arena = "representation_item"
+enum_name = "annotation_occurrence"
+group = "annotation_occurrence"
+arena = "annotation_occurrence"
 instance_count = 239
 
 [entity.annotation_placeholder_occurrence_with_leader_line]
 kind = "in_enum"
-enum_name = "representation_item"
-group = "representation_item"
-arena = "representation_item"
+enum_name = "annotation_occurrence"
+group = "annotation_occurrence"
+arena = "annotation_occurrence"
 instance_count = 116
 
 [entity.annotation_plane]
 kind = "in_enum"
-enum_name = "representation_item"
-group = "representation_item"
-arena = "representation_item"
+enum_name = "annotation_occurrence"
+group = "annotation_occurrence"
+arena = "annotation_occurrence"
 instance_count = 838
 
 [entity.annotation_symbol_occurrence]
 kind = "in_enum"
-enum_name = "representation_item"
-group = "representation_item"
-arena = "representation_item"
+enum_name = "annotation_occurrence"
+group = "annotation_occurrence"
+arena = "annotation_occurrence"
 instance_count = 116
 complex_part_count = 116
 co_instantiated_with = [
@@ -132,9 +132,9 @@ co_instantiated_with = [
 
 [entity.annotation_text_occurrence]
 kind = "in_enum"
-enum_name = "representation_item"
-group = "representation_item"
-arena = "representation_item"
+enum_name = "annotation_occurrence"
+group = "annotation_occurrence"
+arena = "annotation_occurrence"
 instance_count = 116
 complex_part_count = 116
 co_instantiated_with = [
@@ -588,10 +588,9 @@ round-trip 시 emit schema variant 결정은 step-io codegen 책임.
 """
 
 [entity.composite_curve_segment]
-kind = "in_enum"
-enum_name = "founded_item"
-group = "founded_item"
-arena = "founded_item"
+kind = "single_struct"
+group = "composite_curve_segment"
+arena = "composite_curve_segment"
 instance_count = 4028
 
 [entity.composite_group_shape_aspect]
@@ -675,9 +674,9 @@ instance_count = 96
 
 [entity.context_dependent_over_riding_styled_item]
 kind = "in_enum"
-enum_name = "representation_item"
-group = "representation_item"
-arena = "representation_item"
+enum_name = "styled_item"
+group = "styled_item"
+arena = "styled_item"
 instance_count = 8553
 
 [entity.context_dependent_shape_representation]
@@ -995,9 +994,9 @@ instance_count = 196
 
 [entity.draughting_annotation_occurrence]
 kind = "in_enum"
-enum_name = "representation_item"
-group = "representation_item"
-arena = "representation_item"
+enum_name = "annotation_occurrence"
+group = "annotation_occurrence"
+arena = "annotation_occurrence"
 instance_count = 348
 complex_part_count = 348
 co_instantiated_with = [
@@ -1491,9 +1490,9 @@ instance_count = 54
 
 [entity.leader_curve]
 kind = "in_enum"
-enum_name = "representation_item"
-group = "representation_item"
-arena = "representation_item"
+enum_name = "annotation_occurrence"
+group = "annotation_occurrence"
+arena = "annotation_occurrence"
 instance_count = 116
 complex_part_count = 116
 co_instantiated_with = [
@@ -1514,9 +1513,9 @@ instance_count = 116
 
 [entity.leader_terminator]
 kind = "in_enum"
-enum_name = "representation_item"
-group = "representation_item"
-arena = "representation_item"
+enum_name = "annotation_occurrence"
+group = "annotation_occurrence"
+arena = "annotation_occurrence"
 instance_count = 116
 complex_part_count = 116
 co_instantiated_with = [
@@ -1980,9 +1979,9 @@ instance_count = 29362931
 
 [entity.over_riding_styled_item]
 kind = "in_enum"
-enum_name = "representation_item"
-group = "representation_item"
-arena = "representation_item"
+enum_name = "styled_item"
+group = "styled_item"
+arena = "styled_item"
 instance_count = 45576
 
 [entity.parabola]
@@ -2787,10 +2786,10 @@ co_instantiated_with = [
 ]
 
 [entity.styled_item]
-kind = "in_enum"
-enum_name = "representation_item"
-group = "representation_item"
-arena = "representation_item"
+kind = "concrete_supertype"
+group = "styled_item"
+arena = "styled_item"
+shape = "base_parallel"
 instance_count = 4394363
 complex_part_count = 348
 co_instantiated_with = [
@@ -2958,9 +2957,9 @@ instance_count = 2
 
 [entity.terminator_symbol]
 kind = "in_enum"
-enum_name = "representation_item"
-group = "representation_item"
-arena = "representation_item"
+enum_name = "annotation_occurrence"
+group = "annotation_occurrence"
+arena = "annotation_occurrence"
 instance_count = 116
 complex_part_count = 116
 co_instantiated_with = [
@@ -2975,9 +2974,9 @@ co_instantiated_with = [
 
 [entity.tessellated_annotation_occurrence]
 kind = "in_enum"
-enum_name = "representation_item"
-group = "representation_item"
-arena = "representation_item"
+enum_name = "annotation_occurrence"
+group = "annotation_occurrence"
+arena = "annotation_occurrence"
 instance_count = 780
 
 [entity.tessellated_curve_set]

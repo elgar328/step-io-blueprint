@@ -252,12 +252,12 @@ from = "geometric_tolerance_with_datum_reference"
 
 [entity.annotation_curve_occurrence]
 kind = "in_enum"
-arena = "representation_item"
-pool = "shape_rep"
+arena = "annotation_occurrence"
+pool = "pmi"
 type = "AnnotationCurveOccurrence"
-id = "RepresentationItemId"
+id = "AnnotationOccurrenceId"
 variant = "AnnotationCurveOccurrence"
-enum_of = "representation_item"
+enum_of = "annotation_occurrence"
 instance_count = 138
 complex_part_count = 116
 co_instantiated_with = [
@@ -285,13 +285,14 @@ ty = "ref_curve"
 from = "styled_item"
 
 [entity.annotation_occurrence]
-kind = "in_enum"
-arena = "representation_item"
-pool = "shape_rep"
-type = "AnnotationOccurrence"
-id = "RepresentationItemId"
-variant = "AnnotationOccurrence"
-enum_of = "representation_item"
+kind = "concrete_supertype"
+arena = "annotation_occurrence"
+pool = "pmi"
+shape = "carrier"
+type = "AnnotationOccurrenceData"
+id = "AnnotationOccurrenceId"
+variant = "Itself"
+enum = "AnnotationOccurrence"
 instance_count = 492
 complex_part_count = 348
 co_instantiated_with = [
@@ -331,12 +332,12 @@ enum = "AnnotationPlaceholderLeaderLine"
 
 [entity.annotation_placeholder_occurrence]
 kind = "in_enum"
-arena = "representation_item"
-pool = "shape_rep"
+arena = "annotation_occurrence"
+pool = "pmi"
 type = "AnnotationPlaceholderOccurrence"
-id = "RepresentationItemId"
+id = "AnnotationOccurrenceId"
 variant = "AnnotationPlaceholderOccurrence"
-enum_of = "representation_item"
+enum_of = "annotation_occurrence"
 instance_count = 239
 
 [[entity.annotation_placeholder_occurrence.fields]]
@@ -366,12 +367,12 @@ from = "annotation_placeholder_occurrence"
 
 [entity.annotation_placeholder_occurrence_with_leader_line]
 kind = "in_enum"
-arena = "representation_item"
-pool = "shape_rep"
+arena = "annotation_occurrence"
+pool = "pmi"
 type = "AnnotationPlaceholderOccurrenceWithLeaderLine"
-id = "RepresentationItemId"
+id = "AnnotationOccurrenceId"
 variant = "AnnotationPlaceholderOccurrenceWithLeaderLine"
-enum_of = "representation_item"
+enum_of = "annotation_occurrence"
 instance_count = 116
 
 [[entity.annotation_placeholder_occurrence_with_leader_line.fields]]
@@ -406,12 +407,12 @@ from = "annotation_placeholder_occurrence_with_leader_line"
 
 [entity.annotation_plane]
 kind = "in_enum"
-arena = "representation_item"
-pool = "shape_rep"
+arena = "annotation_occurrence"
+pool = "pmi"
 type = "AnnotationPlane"
-id = "RepresentationItemId"
+id = "AnnotationOccurrenceId"
 variant = "AnnotationPlane"
-enum_of = "representation_item"
+enum_of = "annotation_occurrence"
 instance_count = 838
 
 [[entity.annotation_plane.fields]]
@@ -436,12 +437,12 @@ from = "annotation_plane"
 
 [entity.annotation_symbol_occurrence]
 kind = "in_enum"
-arena = "representation_item"
-pool = "shape_rep"
+arena = "annotation_occurrence"
+pool = "pmi"
 type = "AnnotationSymbolOccurrence"
-id = "RepresentationItemId"
+id = "AnnotationOccurrenceId"
 variant = "AnnotationSymbolOccurrence"
-enum_of = "representation_item"
+enum_of = "annotation_occurrence"
 instance_count = 116
 complex_part_count = 116
 co_instantiated_with = [
@@ -471,12 +472,12 @@ from = "styled_item"
 
 [entity.annotation_text_occurrence]
 kind = "in_enum"
-arena = "representation_item"
-pool = "shape_rep"
+arena = "annotation_occurrence"
+pool = "pmi"
 type = "AnnotationTextOccurrence"
-id = "RepresentationItemId"
+id = "AnnotationOccurrenceId"
 variant = "AnnotationTextOccurrence"
-enum_of = "representation_item"
+enum_of = "annotation_occurrence"
 instance_count = 116
 complex_part_count = 116
 co_instantiated_with = [
@@ -1851,13 +1852,11 @@ ty = "logical"
 from = "composite_curve"
 
 [entity.composite_curve_segment]
-kind = "in_enum"
-arena = "founded_item"
-pool = "visualization"
+kind = "single_struct"
+arena = "composite_curve_segment"
+pool = "geometry"
 type = "CompositeCurveSegment"
-id = "FoundedItemId"
-variant = "CompositeCurveSegment"
-enum_of = "founded_item"
+id = "CompositeCurveSegmentId"
 instance_count = 4028
 
 [[entity.composite_curve_segment.fields]]
@@ -2120,12 +2119,12 @@ from = "representation_relationship"
 
 [entity.context_dependent_over_riding_styled_item]
 kind = "in_enum"
-arena = "representation_item"
-pool = "shape_rep"
+arena = "styled_item"
+pool = "visualization"
 type = "ContextDependentOverRidingStyledItem"
-id = "RepresentationItemId"
+id = "StyledItemId"
 variant = "ContextDependentOverRidingStyledItem"
-enum_of = "representation_item"
+enum_of = "styled_item"
 instance_count = 8553
 
 [[entity.context_dependent_over_riding_styled_item.fields]]
@@ -3237,12 +3236,12 @@ from = "document_type"
 
 [entity.draughting_annotation_occurrence]
 kind = "in_enum"
-arena = "representation_item"
-pool = "shape_rep"
+arena = "annotation_occurrence"
+pool = "pmi"
 type = "DraughtingAnnotationOccurrence"
-id = "RepresentationItemId"
+id = "AnnotationOccurrenceId"
 variant = "DraughtingAnnotationOccurrence"
-enum_of = "representation_item"
+enum_of = "annotation_occurrence"
 instance_count = 348
 complex_part_count = 348
 co_instantiated_with = [
@@ -4519,12 +4518,12 @@ from = "item_identified_representation_usage"
 
 [entity.leader_curve]
 kind = "in_enum"
-arena = "representation_item"
-pool = "shape_rep"
+arena = "annotation_occurrence"
+pool = "pmi"
 type = "LeaderCurve"
-id = "RepresentationItemId"
+id = "AnnotationOccurrenceId"
 variant = "LeaderCurve"
-enum_of = "representation_item"
+enum_of = "annotation_occurrence"
 instance_count = 116
 complex_part_count = 116
 co_instantiated_with = [
@@ -4573,12 +4572,12 @@ from = "draughting_callout"
 
 [entity.leader_terminator]
 kind = "in_enum"
-arena = "representation_item"
-pool = "shape_rep"
+arena = "annotation_occurrence"
+pool = "pmi"
 type = "LeaderTerminator"
-id = "RepresentationItemId"
+id = "AnnotationOccurrenceId"
 variant = "LeaderTerminator"
-enum_of = "representation_item"
+enum_of = "annotation_occurrence"
 instance_count = 116
 complex_part_count = 116
 co_instantiated_with = [
@@ -5589,12 +5588,12 @@ from = "oriented_edge"
 
 [entity.over_riding_styled_item]
 kind = "in_enum"
-arena = "representation_item"
-pool = "shape_rep"
+arena = "styled_item"
+pool = "visualization"
 type = "OverRidingStyledItem"
-id = "RepresentationItemId"
+id = "StyledItemId"
 variant = "OverRidingStyledItem"
-enum_of = "representation_item"
+enum_of = "styled_item"
 instance_count = 45576
 
 [[entity.over_riding_styled_item.fields]]
@@ -7889,13 +7888,14 @@ ty = "ref_shape_aspect"
 from = "geometric_tolerance"
 
 [entity.styled_item]
-kind = "in_enum"
-arena = "representation_item"
-pool = "shape_rep"
+kind = "concrete_supertype"
+arena = "styled_item"
+pool = "visualization"
+shape = "base_parallel"
 type = "StyledItem"
-id = "RepresentationItemId"
-variant = "StyledItem"
-enum_of = "representation_item"
+id = "StyledItemId"
+variant = "Plain"
+kind_enum = "StyledItemKind"
 instance_count = 4394363
 complex_part_count = 348
 co_instantiated_with = [
@@ -8316,12 +8316,12 @@ from = "geometric_tolerance_with_datum_reference"
 
 [entity.terminator_symbol]
 kind = "in_enum"
-arena = "representation_item"
-pool = "shape_rep"
+arena = "annotation_occurrence"
+pool = "pmi"
 type = "TerminatorSymbol"
-id = "RepresentationItemId"
+id = "AnnotationOccurrenceId"
 variant = "TerminatorSymbol"
-enum_of = "representation_item"
+enum_of = "annotation_occurrence"
 instance_count = 116
 complex_part_count = 116
 co_instantiated_with = [
@@ -8356,12 +8356,12 @@ from = "terminator_symbol"
 
 [entity.tessellated_annotation_occurrence]
 kind = "in_enum"
-arena = "representation_item"
-pool = "shape_rep"
+arena = "annotation_occurrence"
+pool = "pmi"
 type = "TessellatedAnnotationOccurrence"
-id = "RepresentationItemId"
+id = "AnnotationOccurrenceId"
 variant = "TessellatedAnnotationOccurrence"
-enum_of = "representation_item"
+enum_of = "annotation_occurrence"
 instance_count = 780
 
 [[entity.tessellated_annotation_occurrence.fields]]

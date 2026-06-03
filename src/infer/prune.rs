@@ -35,6 +35,7 @@ const FILE_VARIANTS_PRUNED: &str = "variants_pruned.toml";
 const FILE_ARENAS_PRUNED: &str = "arenas_pruned.toml";
 const FILE_ARENAS_OVERRIDES: &str = "arenas_overrides.toml";
 const FILE_PRUNE_OVERRIDES: &str = "prune_overrides.toml";
+const FILE_POOLS: &str = "pools.toml";
 
 #[derive(Debug, Default, Deserialize)]
 struct PruneOverridesFile {
@@ -56,6 +57,34 @@ fn load_prune_overrides() -> Result<PruneOverridesFile, String> {
     }
     let body = fs::read_to_string(&path).map_err(|e| format!("read {path:?}: {e}"))?;
     toml::from_str(&body).map_err(|e| format!("parse {path:?}: {e}"))
+}
+
+#[derive(Debug, Deserialize)]
+struct PoolEntry {
+    pool: String,
+}
+
+#[derive(Debug, Default, Deserialize)]
+struct PoolsFile {
+    #[serde(default)]
+    arena: BTreeMap<String, PoolEntry>,
+}
+
+/// Load `pools.toml` as an `arena -> pool` map. The flatten stage consults
+/// it for the pool-boundary gate (do not absorb a middle node into a parent
+/// of a different pool). A static manual input, like `prune_overrides.toml`.
+fn load_pools() -> Result<BTreeMap<String, String>, String> {
+    let path = Path::new("inferred").join(FILE_POOLS);
+    if !path.exists() {
+        return Ok(BTreeMap::new());
+    }
+    let body = fs::read_to_string(&path).map_err(|e| format!("read {path:?}: {e}"))?;
+    let file: PoolsFile = toml::from_str(&body).map_err(|e| format!("parse {path:?}: {e}"))?;
+    Ok(file
+        .arena
+        .into_iter()
+        .map(|(arena, entry)| (arena, entry.pool))
+        .collect())
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
@@ -204,7 +233,10 @@ pub fn run(allow_pending: bool) -> Result<(), String> {
     // enclosing-root map comes from `variant` (prune lacks the parent graph).
     let enum_roots: BTreeMap<String, String> =
         crate::infer::io::read_confident(FILE_ENUM_ROOT, "enum_root").unwrap_or_default();
-    let flattened = flatten_middle_nodes(&mut variants, &enum_roots, &standalone);
+    // pools.toml (arena -> pool) drives the flatten's pool-boundary gate: a
+    // middle node is not absorbed into a parent of a different pool.
+    let pools = load_pools()?;
+    let flattened = flatten_middle_nodes(&mut variants, &enum_roots, &standalone, &pools);
     if !flattened.is_empty() {
         let preview: Vec<String> = flattened
             .iter()
@@ -291,10 +323,11 @@ fn flatten_middle_nodes(
     variants: &mut BTreeMap<String, VariantSpec>,
     enum_roots: &BTreeMap<String, String>,
     standalone: &HashMap<String, usize>,
+    pools: &BTreeMap<String, String>,
 ) -> Vec<(String, String)> {
     // Self-enum-root supertypes (EnumBase / ConcreteSupertype) that are
     // instantiated and have an enclosing root — the nodes that will demote.
-    let demote_set: HashSet<String> = variants
+    let mut demote_set: HashSet<String> = variants
         .iter()
         .filter(|(name, spec)| {
             matches!(
@@ -307,6 +340,51 @@ fn flatten_middle_nodes(
         .collect();
     if demote_set.is_empty() {
         return Vec::new();
+    }
+
+    // Pool-boundary gate: do not absorb a middle node into a parent of a
+    // different pool. A node M that carries a pools.toml entry is pinned
+    // (kept as its own arena) iff `pool(M) != pool(nearestEntriedAncestor(M))`,
+    // where the nearest entried ancestor is the first enclosing-root ancestor
+    // that itself has a pools.toml entry. This is a static structural fact, so
+    // the decision is order-independent — no fixpoint needed. pools.toml is the
+    // single control point: give a domain root a pool that differs from the
+    // generic root it would flatten into, and it is preserved automatically.
+    let nearest_entried_ancestor = |start: &str| -> Option<String> {
+        let mut cur = enum_roots.get(start)?.clone();
+        let mut visited: HashSet<String> = HashSet::new();
+        loop {
+            if pools.contains_key(&cur) {
+                return Some(cur);
+            }
+            if !visited.insert(cur.clone()) {
+                return None; // cycle guard
+            }
+            cur = enum_roots.get(&cur)?.clone();
+        }
+    };
+    let pinned: Vec<String> = demote_set
+        .iter()
+        .filter(|m| {
+            let key = m.as_str();
+            let Some(m_pool) = pools.get(key) else {
+                return false; // only entried nodes are pin candidates
+            };
+            nearest_entried_ancestor(key).is_some_and(|anc| pools.get(&anc) != Some(m_pool))
+        })
+        .cloned()
+        .collect();
+    for p in &pinned {
+        demote_set.remove(p);
+    }
+    if !pinned.is_empty() {
+        let mut preview = pinned.clone();
+        preview.sort();
+        eprintln!(
+            "infer prune: pool-boundary gate kept {} middle node(s) as own arena: {}",
+            pinned.len(),
+            preview.join(", "),
+        );
     }
     // Climb the enclosing-root chain while nodes keep demoting; return the
     // first non-demoting (stable) ancestor.
@@ -1346,7 +1424,7 @@ mod tests {
             [("cartesian_point".to_string(), 100), ("apll_point".to_string(), 5)]
                 .into_iter()
                 .collect();
-        let demoted = flatten_middle_nodes(&mut variants, &enum_roots, &standalone);
+        let demoted = flatten_middle_nodes(&mut variants, &enum_roots, &standalone, &BTreeMap::new());
         assert!(matches!(
             variants.get("cartesian_point"),
             Some(VariantSpec::InEnum { enum_name }) if enum_name == "point"
@@ -1373,7 +1451,7 @@ mod tests {
         let enum_roots = roots(&[("shape_representation", "representation")]);
         let standalone: HashMap<String, usize> =
             [("representation".to_string(), 100)].into_iter().collect();
-        let demoted = flatten_middle_nodes(&mut variants, &enum_roots, &standalone);
+        let demoted = flatten_middle_nodes(&mut variants, &enum_roots, &standalone, &BTreeMap::new());
         assert!(matches!(
             variants.get("representation"),
             Some(VariantSpec::ConcreteSupertype)
@@ -1399,7 +1477,7 @@ mod tests {
         ]
         .into_iter()
         .collect();
-        flatten_middle_nodes(&mut variants, &enum_roots, &standalone);
+        flatten_middle_nodes(&mut variants, &enum_roots, &standalone, &BTreeMap::new());
         for e in ["m1", "m2", "leaf"] {
             assert!(
                 matches!(variants.get(e), Some(VariantSpec::InEnum { enum_name }) if enum_name == "a"),
@@ -1426,7 +1504,7 @@ mod tests {
         // edge standalone 0 (absent); edge_curve instantiated.
         let standalone: HashMap<String, usize> =
             [("edge_curve".to_string(), 100)].into_iter().collect();
-        let demoted = flatten_middle_nodes(&mut variants, &enum_roots, &standalone);
+        let demoted = flatten_middle_nodes(&mut variants, &enum_roots, &standalone, &BTreeMap::new());
         assert!(matches!(
             variants.get("edge"),
             Some(VariantSpec::EnumBase { .. })
@@ -1436,5 +1514,84 @@ mod tests {
             Some(VariantSpec::InEnum { enum_name }) if enum_name == "edge"
         ));
         assert!(demoted.is_empty());
+    }
+
+    fn pools(pairs: &[(&str, &str)]) -> BTreeMap<String, String> {
+        pairs
+            .iter()
+            .map(|(k, v)| (k.to_string(), v.to_string()))
+            .collect()
+    }
+
+    #[test]
+    fn flatten_pool_gate_pins_cross_pool_middle_node() {
+        // styled_item (visualization) is an instantiated middle node under the
+        // generic root representation_item (shape_rep). The pool-boundary gate
+        // pins it (keeps its own arena); its styling child re-points to it, not
+        // to representation_item.
+        let mut variants = variants_with(&[
+            ("representation_item", VariantSpec::EnumBase { enum_name: "representation_item".into() }),
+            ("styled_item", VariantSpec::ConcreteSupertype),
+            ("over_riding_styled_item", VariantSpec::InEnum { enum_name: "styled_item".into() }),
+        ]);
+        let enum_roots = roots(&[
+            ("styled_item", "representation_item"),
+            ("over_riding_styled_item", "styled_item"),
+        ]);
+        let standalone: HashMap<String, usize> =
+            [("styled_item".to_string(), 100), ("over_riding_styled_item".to_string(), 5)]
+                .into_iter()
+                .collect();
+        let pools = pools(&[
+            ("representation_item", "shape_rep"),
+            ("styled_item", "visualization"),
+        ]);
+        flatten_middle_nodes(&mut variants, &enum_roots, &standalone, &pools);
+        // Pinned: kept ConcreteSupertype (own arena), NOT demoted.
+        assert!(matches!(
+            variants.get("styled_item"),
+            Some(VariantSpec::ConcreteSupertype)
+        ));
+        // Child re-points to the pinned styled_item, staying in visualization.
+        assert!(matches!(
+            variants.get("over_riding_styled_item"),
+            Some(VariantSpec::InEnum { enum_name }) if enum_name == "styled_item"
+        ));
+    }
+
+    #[test]
+    fn flatten_pool_gate_does_not_over_pin_same_pool_descendant() {
+        // a (shape_rep) -> b (pmi) -> c (pmi), all entried & instantiated.
+        // b crosses a pool boundary -> pin. c is the SAME pool as its nearest
+        // entried ancestor b -> must NOT pin; it flattens into b. (Regression
+        // guard: a naive "differs from far stable root" rule would over-pin c.)
+        let mut variants = variants_with(&[
+            ("a", VariantSpec::EnumBase { enum_name: "a".into() }),
+            ("b", VariantSpec::ConcreteSupertype),
+            ("c", VariantSpec::ConcreteSupertype),
+            ("leaf", VariantSpec::InEnum { enum_name: "c".into() }),
+        ]);
+        let enum_roots = roots(&[("b", "a"), ("c", "b"), ("leaf", "c")]);
+        let standalone: HashMap<String, usize> = [
+            ("b".to_string(), 10),
+            ("c".to_string(), 5),
+            ("leaf".to_string(), 2),
+        ]
+        .into_iter()
+        .collect();
+        let pools = pools(&[("a", "shape_rep"), ("b", "pmi"), ("c", "pmi")]);
+        flatten_middle_nodes(&mut variants, &enum_roots, &standalone, &pools);
+        // b pins (pmi != shape_rep of nearest entried ancestor a).
+        assert!(matches!(variants.get("b"), Some(VariantSpec::ConcreteSupertype)));
+        // c does NOT pin (pmi == pmi of nearest entried ancestor b) -> flattens into b.
+        assert!(matches!(
+            variants.get("c"),
+            Some(VariantSpec::InEnum { enum_name }) if enum_name == "b"
+        ));
+        // leaf follows c into b.
+        assert!(matches!(
+            variants.get("leaf"),
+            Some(VariantSpec::InEnum { enum_name }) if enum_name == "b"
+        ));
     }
 }

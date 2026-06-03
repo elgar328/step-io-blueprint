@@ -434,5 +434,21 @@ pool = "visualization"
 [arena.text_style]
 pool = "visualization"
 
+# Domain roots preserved by the flatten pool-boundary gate (prune.rs). These
+# instantiated supertypes are EXPRESS subtypes of a generic, cross-domain enum
+# root (representation_item / founded_item) whose pool differs from theirs.
+# Giving them a pool here that differs from the parent's makes the flatten keep
+# them as their own arena instead of absorbing them — so the InEnum members
+# stay in their true domain pool (annotation = pmi, styling = visualization,
+# the curve segment = geometry) rather than inheriting the generic root's.
+[arena.styled_item]
+pool = "visualization"
+
+[arena.annotation_occurrence]
+pool = "pmi"
+
+[arena.composite_curve_segment]
+pool = "geometry"
+
 # form_features
 # property
