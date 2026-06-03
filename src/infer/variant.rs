@@ -225,6 +225,12 @@ impl From<VariantOverride> for VariantSpec {
 const FILE_CONFIDENT: &str = "variants.toml";
 const FILE_PENDING: &str = "variants_pending.toml";
 const FILE_OVERRIDES: &str = "variants_overrides.toml";
+/// `entity → nearest enum-bodied supertype ancestor` (enclosing_enum_root).
+/// Emitted for the prune stage, which has the corpus but not the parent
+/// graph, so it can flatten instantiated middle nodes into their stable
+/// enum root. Section/key are plain strings (`root = "..."` per entity).
+const FILE_ENUM_ROOT: &str = "variants_enum_root.toml";
+const ENUM_ROOT_SECTION: &str = "enum_root";
 const SECTION: &str = "entity";
 
 pub fn run(schemas: &[Schema]) -> Result<(), String> {
@@ -243,6 +249,20 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
 
     crate::infer::io::write_confident(FILE_CONFIDENT, SECTION, &decisions)
         .map_err(|e| format!("write {FILE_CONFIDENT}: {e}"))?;
+
+    // Persist each entity's enclosing enum root so the corpus-aware prune
+    // stage can flatten instantiated middle nodes (it lacks the parent graph).
+    let descendants = build_descendant_index(&unified);
+    let polymorphic_targets = collect_polymorphic_targets(&unified);
+    let enum_roots: BTreeMap<String, String> = decisions
+        .keys()
+        .filter_map(|e| {
+            enclosing_enum_root(e, &unified, &descendants, &polymorphic_targets, &decisions)
+                .map(|root| (e.clone(), root))
+        })
+        .collect();
+    crate::infer::io::write_confident(FILE_ENUM_ROOT, ENUM_ROOT_SECTION, &enum_roots)
+        .map_err(|e| format!("write {FILE_ENUM_ROOT}: {e}"))?;
 
     let pending: PendingFile<VariantSpec> = PendingFile {
         stats: PendingStats {

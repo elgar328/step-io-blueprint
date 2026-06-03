@@ -30,6 +30,7 @@ use crate::infer::variant::VariantSpec;
 const VARIANTS_PENDING: &str = "variants_pending.toml";
 const ARENAS_PENDING: &str = "arenas_pending.toml";
 const FILE_VARIANTS: &str = "variants.toml";
+const FILE_ENUM_ROOT: &str = "variants_enum_root.toml";
 const FILE_USAGE: &str = "usage.toml";
 const FILE_VARIANTS_PRUNED: &str = "variants_pruned.toml";
 const FILE_ARENAS_PRUNED: &str = "arenas_pruned.toml";
@@ -193,6 +194,39 @@ pub fn run(corpus_path: &Path, allow_pending: bool) -> Result<(), String> {
             (n.clone(), t.saturating_sub(c))
         })
         .collect();
+    // Phase 0 (detection only): instantiated middle nodes — supertypes that
+    // are directly instantiated (standalone > 0) yet also sit inside another
+    // enum (have an enclosing enum root). These are the entities the flatten
+    // rule will demote from their own enum root to a flat InEnum member of
+    // the stable root. Read the enclosing-root map emitted by `variant`.
+    let enum_roots: BTreeMap<String, String> =
+        crate::infer::io::read_confident(FILE_ENUM_ROOT, "enum_root").unwrap_or_default();
+    let middle_nodes: Vec<&String> = variants
+        .iter()
+        .filter(|(name, spec)| {
+            matches!(
+                spec,
+                VariantSpec::EnumBase { .. } | VariantSpec::ConcreteSupertype
+            ) && standalone.get(*name).copied().unwrap_or(0) > 0
+                && enum_roots.contains_key(*name)
+        })
+        .map(|(n, _)| n)
+        .collect();
+    if !middle_nodes.is_empty() {
+        let preview: Vec<String> = middle_nodes
+            .iter()
+            .take(12)
+            .map(|n| format!("{n}->{}", enum_roots.get(*n).map(String::as_str).unwrap_or("?")))
+            .collect();
+        let suffix = if middle_nodes.len() > 12 { ", ..." } else { "" };
+        eprintln!(
+            "infer prune: detected {} instantiated middle node(s) (flatten candidates): {}{}",
+            middle_nodes.len(),
+            preview.join(", "),
+            suffix,
+        );
+    }
+
     let pruned_variants =
         prune_transitive_with_keep(&variants, &tally.total, &standalone, &keep_set);
     eprintln!(
