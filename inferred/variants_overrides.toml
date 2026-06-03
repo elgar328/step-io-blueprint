@@ -14,14 +14,15 @@
 # complex-MI parts but still carry their own field data (geometric_
 # representation_context below) are a separate class the corpus-recovery rule
 # does not cover, and keep their override.
+#
+# The prune middle-node flatten (instantiated supertype nested in another enum
+# -> flat InEnum) further subsumes the instantiated-middle-node overrides:
+# compound_representation_item's override was removed since flatten demotes it
+# to InEnum of representation_item regardless of its variant-stage shape.
 
 [entity.geometric_representation_context]
 kind = "concrete_supertype"
 reason = "230,707 corpus instances, ALL as complex-MI parts (#N=(GEOMETRIC_REPRESENTATION_CONTEXT(dim) GLOBAL_UNIT_ASSIGNED_CONTEXT(...) ...)); standalone count is 0. The complex part carries its own data (coordinate_space_dimension), so it needs a struct — but prune.rs corpus-recovery keys on STANDALONE count and so leaves it EnumBase. Override forces ConcreteSupertype; prune-stage specialization then collapses to SingleStruct (all InEnum children corpus 0). Unlike curve/surface (also complex-part-only) this entity's part is non-empty, so the override is required until corpus-recovery is extended to complex-part-with-data entities."
-
-[entity.compound_representation_item]
-kind = "concrete_supertype"
-reason = "7 corpus instances. AP242 declares as SUPERTYPE OF (ONEOF (point_and_vector, point_path) ANDOR ONEOF (row_representation_item, table_representation_item)), non-abstract, with own_attr item_element : compound_item_definition. All 4 ONEOF children have corpus 0 → no live InEnum children → Plan 3.26 specialization to SingleStruct. (NOTE: the ANDOR/ONEOF shape should plausibly match variant.rs Rule 1 ComplexSupertype but was classified as EnumBase — root cause TBD; override bypasses the misclassification. The prune middle-node flatten then demotes it to InEnum of representation_item, so this entry only fixes the variant-stage shape.)"
 
 # AP242 e2/e3 only. SUPERTYPE OF (product_definition_specified_occurrence
 # ANDOR product_definition_occurrence_reference_with_local_representation) —

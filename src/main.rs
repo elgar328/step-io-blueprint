@@ -3,7 +3,7 @@
 //! Pipeline stages (run in order; each is a positional sub-command):
 //! - `variant`  Stage 1: entity 의 IR shape (variant) 분류
 //! - `arena`    Stage 2: group → arena 매핑
-//! - `prune --corpus <path>`  Stage 3: STEP corpus 가지치기
+//! - `prune`   Stage 3: corpus_usage.toml (frozen) 로 가지치기
 //! - `shape`    Stage 4: ConcreteSupertype 의 IR shape 검증 + entities.toml 응축
 //! - `reshape`  Stage 5: split / merge 추상화 적용 (abstract_entities.toml)
 //! - `pool`     Stage 6: pools.toml 검증 (수동 입력 vs abstract_entities 의 required arena)
@@ -11,8 +11,7 @@
 //!
 //! 6 schema (ap203 / ap203e2 / ap214e3 / ap242 / ap242e2 / ap242e3) 항상
 //! union 으로 처리.
-//! 출력은 `inferred/` 디렉토리에. 자세한 사양은 README + INFER_TUNING.md
-//! 참조.
+//! 출력은 `inferred/` 디렉토리에. 자세한 사양은 README 참조.
 
 use std::env;
 use std::path::Path;

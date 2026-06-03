@@ -74,7 +74,7 @@ cp corpus_usage.toml <blueprint>/inferred/corpus_usage.toml
 
 ### Stage 책임 요약
 
-- **`variant`** — 4 schema 의 모든 entity (1,780) 를 8 가지 IR shape
+- **`variant`** — 6 schema 의 모든 entity (2,195) 를 8 가지 IR shape
   (SingleStruct / InEnum / EnumBase / MergedInto / NestedField /
   ComplexSupertype / CompositeOneOf / ConcreteSupertype) 로 자동 분류.
   결정 신호는 SUPERTYPE / SUBTYPE 구조 + ATTR.
@@ -139,8 +139,8 @@ Resolve in variants_overrides.toml or pass --allow-pending.
 
 ## Schema 출처
 
-`schemas/` 의 4 파일은 [STEPCode](https://github.com/stepcode/stepcode)
-의 `data/` 에서 복사:
+`schemas/` 의 6 파일 — 4 개는 [STEPCode](https://github.com/stepcode/stepcode)
+의 `data/` 에서, AP242 e2/e3 2 개는 MBx-IF (CAx-IF) 에서:
 
 | schema | 출처 |
 |---|---|
@@ -148,9 +148,11 @@ Resolve in variants_overrides.toml or pass --allow-pending.
 | ap203e2_mim_lf.exp | `stepcode/data/ap203e2/ap203e2_mim_lf.exp` |
 | ap214e3.exp | `stepcode/data/ap214e3/AP214E3_2010.exp` |
 | ap242_mim_lf.exp | `stepcode/data/ap242/242_n8324_mim_lf.exp` |
+| ap242ed2_dis2_mim_lf_v1.101.exp | MBx-IF (AP242 ed2, 2019/N10517) |
+| ap242ed3_mim_lf_v1.152.exp | MBx-IF (AP242 ed3, 2022) |
 
-step-io 의 mechanical CAD 도메인에 해당하는 4 schema 만 사용.
-AP209 / AP210 / AP238 / AP239 / AP240 / IFC / ISO15926 / pdm 등 다른
+step-io 의 mechanical CAD 도메인에 해당하는 6 schema 만 사용 (AP242 ed2/ed3
+포함). AP209 / AP210 / AP238 / AP239 / AP240 / IFC / ISO15926 / pdm 등 다른
 도메인 schema 는 제외.
 
 Schema 갱신 시 (STEPCode 새 release):
