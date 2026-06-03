@@ -47,8 +47,9 @@ ConcreteSupertype 자동 분류 후 분포 (§8 처리됨):
 | arenas_pruned | 130 groups | variants_pruned 기준 재계산. 원본 462 → 130 |
 
 원본 variants.toml / arenas.toml / pools.toml 은 *불변*. 가지치기는 *별
-view*. corpus 변동 시 prune 만 재실행. 실행 시간 ~85 초 (1,780 alternation
-regex + 53k 파일 ~2.6GB 처리, single-thread).
+view*. prune 은 corpus 를 직접 스캔하지 않고 frozen `inferred/corpus_usage.toml`
+을 읽으므로 즉시 실행된다. 코퍼스 스캔(요약 재생성)은 step-io-reference-check 의
+`corpus-usage` bin 이 코퍼스 변동 시에만 수행(~수십 초).
 
 *가지치기 산출이 매우 좁음* (240 entities) — 현재 corpus 의 geometry
 편향 반영. PMI / property / metadata 도메인 entity 가 corpus 미등장.
