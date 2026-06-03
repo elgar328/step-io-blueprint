@@ -319,8 +319,8 @@ fn enum_of_for(spec: &VariantSpec) -> Option<String> {
     }
 }
 
-fn id_arena_for<'a>(
-    summary: &'a EntitySummary,
+fn id_arena_for(
+    summary: &EntitySummary,
     arena_id_lookup: &HashMap<String, String>,
 ) -> Option<String> {
     arena_id_lookup.get(&summary.arena).cloned()
@@ -416,11 +416,10 @@ fn ty_string(ty: &AttrType, types: &HashMap<String, AttrType>) -> String {
         },
         AttrType::Entity(name) => {
             // If the name resolves to a TYPE alias, unfold it.
-            if let Some(resolved) = resolve_alias(name, types) {
-                if !matches!(resolved, AttrType::Entity(n) if n == name) {
+            if let Some(resolved) = resolve_alias(name, types)
+                && !matches!(resolved, AttrType::Entity(n) if n == name) {
                     return ty_string(resolved, types);
                 }
-            }
             format!("ref_{name}")
         }
         AttrType::List(inner) => format!("list_{}", ty_string(inner, types)),
@@ -665,8 +664,8 @@ fn compile_ir(
         };
 
         let mut fields: Vec<IrField> = Vec::new();
-        if cats.has_fields {
-            if let Some(attrs) = attr_types.get(entity) {
+        if cats.has_fields
+            && let Some(attrs) = attr_types.get(entity) {
                 for rec in attrs {
                     // Field rename keyed by `entity.attr`. A same-name
                     // collision shares the key, so a rename applies to
@@ -683,7 +682,6 @@ fn compile_ir(
                     });
                 }
             }
-        }
 
         let shape = summary.shape.map(|s| match s {
             ConcreteSupertypeShape::Carrier => "carrier".to_string(),

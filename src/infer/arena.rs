@@ -160,12 +160,11 @@ pub(crate) fn compute_entity_to_group(
                 VariantSpec::MergedInto { target, .. } => Some(target),
                 _ => None,
             };
-            if let Some(p) = parent {
-                if let Some(g) = out.get(p).cloned() {
+            if let Some(p) = parent
+                && let Some(g) = out.get(p).cloned() {
                     out.insert(entity.clone(), g);
                     changed = true;
                 }
-            }
         }
         if !changed {
             break;

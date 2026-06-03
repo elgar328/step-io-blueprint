@@ -287,6 +287,7 @@ fn emit_edges_for_type(
 /// resolve through TYPE aliases transitively. Produces edges only for
 /// terminal targets: real entities (or primitives if a TYPE alias chain
 /// bottoms out at a primitive).
+#[allow(clippy::too_many_arguments)]
 fn resolve_named_to_edges(
     from: &str,
     attr: &str,
@@ -333,6 +334,7 @@ fn resolve_named_to_edges(
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 fn resolve_aliased_to_edges(
     from: &str,
     attr: &str,
@@ -638,7 +640,7 @@ mod tests {
 
     #[test]
     fn real_schemas_build_without_panic() {
-        // Smoke: union of all 4 schemas should produce a non-trivial
+        // Smoke: union of all 6 schemas should produce a non-trivial
         // graph with no panics.
         use crate::express::load_all_schemas;
         use std::path::Path;

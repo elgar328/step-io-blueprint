@@ -393,7 +393,7 @@ fn pass1_supertype_kinds(
             continue;
         }
 
-        let has_oneof = expr.map_or(false, has_oneof_recursive);
+        let has_oneof = expr.is_some_and(has_oneof_recursive);
         let is_abstract = unified.abstract_entities.contains(entity);
 
         let eff_children = effective_direct_children(entity, descendants, &decisions);
@@ -428,11 +428,11 @@ fn pass1_supertype_kinds(
         let own_attrs_empty = unified
             .entity_attrs
             .get(entity)
-            .map_or(true, |s| s.is_empty());
+            .is_none_or(|s| s.is_empty());
         let has_enum_shaped_parent = unified
             .entity_parents
             .get(entity)
-            .map_or(false, |parents| {
+            .is_some_and(|parents| {
                 parents
                     .iter()
                     .any(|p| descendants.get(p).map_or(0, |d| d.len()) >= 2)
@@ -491,11 +491,10 @@ fn classify_complex_supertype(expr: &SupertypeExpr) -> Option<VariantSpec> {
     };
     // OneOf children must all be plain Entity refs at this rule. Any deeper
     // nesting falls through to Rule 8 / pass2.
-    if let SupertypeExpr::OneOf { children: items } = &children[oneof_idx] {
-        if items.len() != oneof_children.len() {
+    if let SupertypeExpr::OneOf { children: items } = &children[oneof_idx]
+        && items.len() != oneof_children.len() {
             return None;
         }
-    }
     Some(VariantSpec::ComplexSupertype {
         mixin_pattern: mixin_pattern.to_string(),
         oneof_children,
@@ -681,11 +680,11 @@ fn pass2_remaining_kinds(
         // entities (own parent is itself a ConcreteSupertype) match here
         // instead of being mis-classified as InEnum of the parent enum
         // by Rule 6's polymorphic-target fallback.
-        let supertype_absent = unified.supertype_exprs.get(entity).is_none();
+        let supertype_absent = !unified.supertype_exprs.contains_key(entity);
         let has_own_attrs = unified
             .entity_attrs
             .get(entity)
-            .map_or(false, |s| !s.is_empty());
+            .is_some_and(|s| !s.is_empty());
         let direct_children: usize = descendants
             .get(entity)
             .map_or(0, |v| v.len());
@@ -701,16 +700,14 @@ fn pass2_remaining_kinds(
         let eff_parent = effective_parent(entity, unified, decisions);
 
         // Rule 5: NestedField — only when effective parent is a SingleStruct.
-        if let Some(parent) = &eff_parent {
-            if matches!(decisions.get(parent), Some(VariantSpec::SingleStruct)) {
-                if let Some(nested) =
+        if let Some(parent) = &eff_parent
+            && matches!(decisions.get(parent), Some(VariantSpec::SingleStruct))
+                && let Some(nested) =
                     try_nested_field(entity, parent, unified, descendants, polymorphic_targets)
                 {
                     decisions.insert(entity.clone(), nested);
                     continue;
                 }
-            }
-        }
 
         // Rule 6: InEnum — first EnumBase/ComplexSupertype on the
         // effective parent chain, falling back to polymorphic-target
@@ -731,8 +728,8 @@ fn pass2_remaining_kinds(
         // anonymous composition that the rule set does not understand —
         // raise to the user via unresolved instead of falling through to
         // SingleStruct (which would silently misclassify).
-        if let Some(expr) = unified.supertype_exprs.get(entity) {
-            if !matches!(expr, SupertypeExpr::Entity { .. }) {
+        if let Some(expr) = unified.supertype_exprs.get(entity)
+            && !matches!(expr, SupertypeExpr::Entity { .. }) {
                 unresolved.insert(
                     entity.clone(),
                     Unresolved {
@@ -744,7 +741,6 @@ fn pass2_remaining_kinds(
                 );
                 continue;
             }
-        }
 
         // Rule 7: fallback (no SUPERTYPE OF body, or just a single bare
         // entity ref the higher rules already classified the parent of).
@@ -937,7 +933,7 @@ fn enclosing_enum_root(
         if concrete.len() < 2 {
             continue;
         }
-        if !concrete.iter().any(|d| d == entity) && unified.entity_attrs.get(entity).is_some() {
+        if !concrete.iter().any(|d| d == entity) && unified.entity_attrs.contains_key(entity) {
             continue;
         }
         return Some(candidate);
@@ -1023,16 +1019,14 @@ fn topological_order(unified: &UnifiedSchema) -> Vec<String> {
         out.push(cur.clone());
         // Find children of `cur`.
         for (child, parents) in &unified.entity_parents {
-            if parents.contains(&cur) {
-                if let Some(n) = indeg.get_mut(child) {
-                    if *n > 0 {
+            if parents.contains(&cur)
+                && let Some(n) = indeg.get_mut(child)
+                    && *n > 0 {
                         *n -= 1;
                         if *n == 0 {
                             queue.push(child.clone());
                         }
                     }
-                }
-            }
         }
     }
 

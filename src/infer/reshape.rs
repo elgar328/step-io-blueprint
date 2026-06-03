@@ -252,7 +252,7 @@ fn kind_str(spec: &VariantSpec) -> &'static str {
 }
 
 fn validate_splits(splits: &SplitsFile, entities: &BTreeMap<String, EntitySummary>) {
-    for (k, _) in &splits.split {
+    for k in splits.split.keys() {
         match entities.get(k) {
             None => eprintln!(
                 "warning: {FILE_SPLITS} [split.{k}] — entity not in {FILE_ENTITIES}"
@@ -443,11 +443,10 @@ fn apply_splits_merges(
         // the absorbs (first that exists). If none exist, skip.
         let mut base: Option<EntitySummary> = None;
         for absorb in &entry.absorbs {
-            if let Some(s) = out.remove(absorb) {
-                if base.is_none() {
+            if let Some(s) = out.remove(absorb)
+                && base.is_none() {
                     base = Some(s);
                 }
-            }
         }
         let Some(mut merged) = base else {
             continue;
