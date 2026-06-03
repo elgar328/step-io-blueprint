@@ -81,12 +81,12 @@ to LF (MBx-IF ships CRLF); content is unchanged.
 
 | schema | source |
 |---|---|
-| `ap203.exp` | STEPCode (AP203 ed1; not offered by MBx-IF) |
-| `ap203e2_mim_lf.exp` | MBx-IF (AP203 ed2, 2011) |
-| `ap214e3.exp` | MBx-IF (AP214 ed3, 2010) |
-| `ap242_mim_lf.exp` | MBx-IF (AP242 ed1, 2014) |
-| `ap242ed2_dis2_mim_lf_v1.101.exp` | MBx-IF (AP242 ed2, 2019 / N10517) |
-| `ap242ed3_mim_lf_v1.152.exp` | MBx-IF (AP242 ed3, 2022) |
+| `ap203.exp` | STEPCode — AP203 ed1 |
+| `ap203e2_mim_lf.exp` | MBx-IF — AP203 ed2 |
+| `ap214e3.exp` | MBx-IF — AP214 ed3 |
+| `ap242_mim_lf.exp` | MBx-IF — AP242 ed1 |
+| `ap242ed2_dis2_mim_lf_v1.101.exp` | MBx-IF — AP242 ed2 |
+| `ap242ed3_mim_lf_v1.152.exp` | MBx-IF — AP242 ed3 |
 
 Only mechanical-CAD schemas are used; the AP209/210/238/239/240, IFC,
 ISO 15926, and PDM domains are out of scope.
