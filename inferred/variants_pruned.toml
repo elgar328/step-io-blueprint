@@ -32,6 +32,9 @@ enum_name = "annotation_occurrence"
 [entity.annotation_occurrence]
 kind = "concrete_supertype"
 
+[entity.annotation_occurrence_associativity]
+kind = "single_struct"
+
 [entity.annotation_placeholder_leader_line]
 kind = "enum_base"
 enum_name = "annotation_placeholder_leader_line"
@@ -999,6 +1002,9 @@ kind = "single_struct"
 [entity.presentation_representation]
 kind = "enum_base"
 enum_name = "presentation_representation"
+
+[entity.presentation_set]
+kind = "single_struct"
 
 [entity.presentation_size]
 kind = "single_struct"

@@ -86,6 +86,12 @@ co_instantiated_with = [
     "terminator_symbol",
 ]
 
+[entity.annotation_occurrence_associativity]
+kind = "single_struct"
+group = "annotation_occurrence_associativity"
+arena = "annotation_occurrence_associativity"
+instance_count = 116
+
 [entity.annotation_placeholder_leader_line]
 kind = "enum_base"
 enum_name = "annotation_placeholder_leader_line"
@@ -2173,6 +2179,12 @@ enum_name = "presentation_representation"
 group = "presentation_representation"
 arena = "presentation_representation"
 instance_count = 0
+
+[entity.presentation_set]
+kind = "single_struct"
+group = "presentation_set"
+arena = "presentation_set"
+instance_count = 18
 
 [entity.presentation_size]
 kind = "single_struct"

@@ -323,6 +323,34 @@ name = "item"
 ty = "ref_representation_item"
 from = "styled_item"
 
+[entity.annotation_occurrence_associativity]
+kind = "single_struct"
+arena = "annotation_occurrence_associativity"
+pool = "pmi"
+type = "AnnotationOccurrenceAssociativity"
+id = "AnnotationOccurrenceAssociativityId"
+instance_count = 116
+
+[[entity.annotation_occurrence_associativity.fields]]
+name = "name"
+ty = "string"
+from = "annotation_occurrence_relationship"
+
+[[entity.annotation_occurrence_associativity.fields]]
+name = "description"
+ty = "string"
+from = "annotation_occurrence_relationship"
+
+[[entity.annotation_occurrence_associativity.fields]]
+name = "relating_annotation_occurrence"
+ty = "ref_annotation_occurrence"
+from = "annotation_occurrence_relationship"
+
+[[entity.annotation_occurrence_associativity.fields]]
+name = "related_annotation_occurrence"
+ty = "ref_annotation_occurrence"
+from = "annotation_occurrence_relationship"
+
 [entity.annotation_placeholder_leader_line]
 kind = "enum_base"
 arena = "annotation_placeholder_leader_line"
@@ -6370,6 +6398,14 @@ arena = "presentation_representation"
 pool = "shape_rep"
 id = "PresentationRepresentationId"
 enum = "PresentationRepresentation"
+
+[entity.presentation_set]
+kind = "single_struct"
+arena = "presentation_set"
+pool = "visualization"
+type = "PresentationSet"
+id = "PresentationSetId"
+instance_count = 18
 
 [entity.presentation_size]
 kind = "single_struct"

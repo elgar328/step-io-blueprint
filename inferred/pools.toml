@@ -294,6 +294,9 @@ pool = "visualization"
 [arena.presentation_size]
 pool = "visualization"
 
+[arena.presentation_set]
+pool = "visualization"
+
 [arena.presented_item_representation]
 pool = "visualization"
 
@@ -444,6 +447,9 @@ pool = "visualization"
 pool = "visualization"
 
 [arena.annotation_occurrence]
+pool = "pmi"
+
+[arena.annotation_occurrence_associativity]
 pool = "pmi"
 
 [arena.composite_curve_segment]

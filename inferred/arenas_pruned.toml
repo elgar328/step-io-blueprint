@@ -4,6 +4,9 @@ arena = "address"
 [group.annotation_occurrence]
 arena = "annotation_occurrence"
 
+[group.annotation_occurrence_associativity]
+arena = "annotation_occurrence_associativity"
+
 [group.annotation_placeholder_leader_line]
 arena = "annotation_placeholder_leader_line"
 
@@ -297,6 +300,9 @@ arena = "presentation_layer_assignment"
 
 [group.presentation_representation]
 arena = "presentation_representation"
+
+[group.presentation_set]
+arena = "presentation_set"
 
 [group.presentation_size]
 arena = "presentation_size"

@@ -600,6 +600,47 @@ fn prune_transitive_with_keep(
         );
     }
 
+    // Self-instantiated MergedInto recovery — the MergedInto branch of the same
+    // flaw handled for EnumBase above. variant.rs's structural rules (3a/4b)
+    // collapse a supertype with a single effective child into that child,
+    // treating it as a pass-through wrapper. When the supertype is itself
+    // directly instantiated (standalone > 0) it is a real concrete type, so
+    // collapsing loses its standalone instances once the (typically 0-corpus)
+    // merge target is pruned. Recover it like a live EnumBase.
+    let self_live_merged: Vec<String> = pruned
+        .iter()
+        .filter(|(name, spec)| {
+            matches!(spec, VariantSpec::MergedInto { .. })
+                && standalone.get(*name).copied().unwrap_or(0) > 0
+        })
+        .map(|(n, _)| n.clone())
+        .collect();
+    for name in &self_live_merged {
+        let has_surviving_child = pruned.iter().any(|(child, child_spec)| {
+            matches!(
+                child_spec,
+                VariantSpec::InEnum { enum_name } if enum_name == name
+            ) && (counts.get(child).copied().unwrap_or(0) > 0
+                || keep_overrides.contains(child))
+        });
+        let new_spec = if has_surviving_child {
+            VariantSpec::ConcreteSupertype
+        } else {
+            VariantSpec::SingleStruct
+        };
+        pruned.insert(name.clone(), new_spec);
+    }
+    if !self_live_merged.is_empty() {
+        let preview: Vec<&str> = self_live_merged.iter().take(8).map(|s| s.as_str()).collect();
+        let suffix = if self_live_merged.len() > 8 { ", ..." } else { "" };
+        eprintln!(
+            "infer prune: recovered {} self-instantiated MergedInto(s) (-> ConcreteSupertype/SingleStruct): {}{}",
+            self_live_merged.len(),
+            preview.join(", "),
+            suffix,
+        );
+    }
+
     let effective_keep: BTreeSet<String> = keep_overrides
         .iter()
         .chain(auto_keep.iter())
@@ -812,6 +853,35 @@ mod tests {
         let pruned = prune_transitive(&variants, &counts);
         assert!(pruned.contains_key("used"));
         assert!(!pruned.contains_key("dead"));
+    }
+
+    #[test]
+    fn prune_recovers_self_instantiated_merged_into() {
+        // A supertype merged into its single 0-corpus child (variant.rs Rule
+        // 3a/4b wrapper-collapse) must NOT be dropped when it is itself
+        // directly instantiated (standalone > 0) — it is a real concrete type.
+        // Recover it to SingleStruct; the 0-corpus merge target is pruned.
+        let variants = variants_with(&[
+            (
+                "aoa",
+                VariantSpec::MergedInto {
+                    target: "dctpca".into(),
+                    chain: vec![],
+                },
+            ),
+            ("dctpca", VariantSpec::SingleStruct),
+        ]);
+        let counts: HashMap<String, usize> = [("aoa".to_string(), 116)].into_iter().collect();
+        let pruned = prune_transitive(&variants, &counts);
+        assert_eq!(
+            pruned.get("aoa"),
+            Some(&VariantSpec::SingleStruct),
+            "self-instantiated MergedInto recovered to SingleStruct, not cascade-dropped"
+        );
+        assert!(
+            !pruned.contains_key("dctpca"),
+            "the 0-corpus merge target is still pruned"
+        );
     }
 
     #[test]
