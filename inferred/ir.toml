@@ -553,13 +553,23 @@ from = "annotation_placeholder_leader_line"
 
 [entity.apll_point]
 kind = "in_enum"
-arena = "point"
-pool = "geometry"
+arena = "apll_point"
+pool = "pmi"
 type = "ApllPoint"
-id = "PointId"
+id = "ApllPointId"
 variant = "ApllPoint"
-enum_of = "point"
+enum_of = "apll_point_element"
 instance_count = 468
+reasons = """
+apll_point / apll_point_with_surface 는 cartesian_point 서브타입이나 EXPRESS
+WHERE 로 GEOMETRIC_SET.elements 사용 금지 = PMI leader-line (geometric_elements)
+전용. point enum 의 InEnum 멤버로 두면 hot cartesian_point (코퍼스 1.2억 instance)
+에 enum tag +33% 메모리 padding (split.cartesian_point 가 경고한 그 비용) + PMI
+타입이 geometry 핫패스 enum 을 오염. 전용 ApllPoint enum / apll_point arena 로
+분리: hot Arena<Point3> 보존 + PMI 격리 (WHERE 제약과 정합). point enum 은
+cartesian_point 단독으로 단순화. round-trip 시 schema entity emit 은 step-io
+codegen 책임.
+"""
 
 [[entity.apll_point.fields]]
 name = "name"
@@ -576,15 +586,42 @@ name = "symbol_applied"
 ty = "enum"
 from = "apll_point"
 
+[entity.apll_point_element]
+kind = "enum_base"
+arena = "apll_point"
+pool = "pmi"
+id = "ApllPointId"
+enum = "ApllPointElement"
+reasons = """
+apll_point / apll_point_with_surface 는 schema 상 cartesian_point 서브타입
+이지만 EXPRESS WHERE 로 GEOMETRIC_SET.elements 금지 = PMI leader-line
+(annotation_placeholder_leader_line.geometric_elements) 전용. des_apll_point_select
+가 둘을 묶는 select — IR 측면에서 *ApllPointElement* enum 으로 묶는 것이 의미
+명확. point enum 으로 흡수하지 않는 이유: hot cartesian_point (코퍼스 1.2억)
+에 enum tag +33% padding (split.cartesian_point 와 동일 우려) + PMI 타입이
+geometry 핫패스 enum 오염. 전용 apll_point arena 로 분리해 hot Arena<Point3>
+보존 + PMI 격리.
+"""
+
 [entity.apll_point_with_surface]
 kind = "in_enum"
-arena = "point"
-pool = "geometry"
+arena = "apll_point"
+pool = "pmi"
 type = "ApllPointWithSurface"
-id = "PointId"
+id = "ApllPointId"
 variant = "ApllPointWithSurface"
-enum_of = "point"
+enum_of = "apll_point_element"
 instance_count = 5
+reasons = """
+apll_point / apll_point_with_surface 는 cartesian_point 서브타입이나 EXPRESS
+WHERE 로 GEOMETRIC_SET.elements 사용 금지 = PMI leader-line (geometric_elements)
+전용. point enum 의 InEnum 멤버로 두면 hot cartesian_point (코퍼스 1.2억 instance)
+에 enum tag +33% 메모리 padding (split.cartesian_point 가 경고한 그 비용) + PMI
+타입이 geometry 핫패스 enum 을 오염. 전용 ApllPoint enum / apll_point arena 로
+분리: hot Arena<Point3> 보존 + PMI 격리 (WHERE 제약과 정합). point enum 은
+cartesian_point 단독으로 단순화. round-trip 시 schema entity emit 은 step-io
+codegen 책임.
+"""
 
 [[entity.apll_point_with_surface.fields]]
 name = "name"

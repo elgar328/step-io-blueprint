@@ -347,6 +347,9 @@ pool = "plm"
 [arena.annotation_placeholder_leader_line]
 pool = "pmi"
 
+[arena.apll_point]
+pool = "pmi"
+
 [arena.person_and_organization_assignment]
 pool = "plm"
 

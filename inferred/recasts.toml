@@ -62,3 +62,22 @@ enum_of 자리에 ParameterSpaceCurve 등장*. round-trip 시 enum variant 별
 schema entity emit 은 step-io codegen 책임. 2D parameter-space 와 3D 공간
 curve 의 수치/연산 양식 분리가 정당화.
 """
+
+[recast.apll_point_standalone]
+kind = "in_enum"
+enum_of = "apll_point_element"
+arena = "apll_point"
+entities = [
+  "apll_point",
+  "apll_point_with_surface",
+]
+reasons = """
+apll_point / apll_point_with_surface 는 cartesian_point 서브타입이나 EXPRESS
+WHERE 로 GEOMETRIC_SET.elements 사용 금지 = PMI leader-line (geometric_elements)
+전용. point enum 의 InEnum 멤버로 두면 hot cartesian_point (코퍼스 1.2억 instance)
+에 enum tag +33% 메모리 padding (split.cartesian_point 가 경고한 그 비용) + PMI
+타입이 geometry 핫패스 enum 을 오염. 전용 ApllPoint enum / apll_point arena 로
+분리: hot Arena<Point3> 보존 + PMI 격리 (WHERE 제약과 정합). point enum 은
+cartesian_point 단독으로 단순화. round-trip 시 schema entity emit 은 step-io
+codegen 책임.
+"""
