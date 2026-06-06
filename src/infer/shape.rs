@@ -140,6 +140,13 @@ pub fn run(allow_pending: bool) -> Result<(), String> {
     match validate(&required, &provided) {
         Validation::Ok { carrier, base_parallel, extras } => {
             for e in &extras {
+                // A ComplexSupertype carrier entry (standalone supertype
+                // instantiation alongside complex-MI parts, e.g. bare
+                // NAMED_UNIT) is intentional — its shape is attached in
+                // compile_entities, so it is not a stray/ignored entry.
+                if matches!(pruned.get(e), Some(VariantSpec::ComplexSupertype { .. })) {
+                    continue;
+                }
                 eprintln!(
                     "warning: {FILE_CS_SHAPES} [entity.{e}] is not a ConcreteSupertype \
                      in {FILE_VARIANTS_PRUNED} — ignored"
@@ -187,10 +194,15 @@ fn compile_entities(
             .ok_or_else(|| format!("group {group} missing in arenas_pruned.toml"))?
             .arena
             .clone();
-        // Shape only applies to ConcreteSupertype. A leftover shapes.toml
-        // entry for an entity the prune flatten demoted to InEnum must not
-        // attach a stray `shape` (the entry warns separately as not-a-CS).
-        let shape = if matches!(variant, VariantSpec::ConcreteSupertype) {
+        // Shape applies to ConcreteSupertype, and to a ComplexSupertype that
+        // also has standalone instances (a direct supertype instantiation
+        // carrier alongside its complex-MI parts — e.g. bare NAMED_UNIT(#dims)).
+        // A leftover shapes.toml entry for an entity the prune flatten demoted
+        // to InEnum must not attach a stray `shape` (it warns as not-a-CS).
+        let shape = if matches!(
+            variant,
+            VariantSpec::ConcreteSupertype | VariantSpec::ComplexSupertype { .. }
+        ) {
             shapes.get(entity).copied()
         } else {
             None

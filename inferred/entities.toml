@@ -1841,6 +1841,7 @@ oneof_children = [
 ]
 group = "named_unit"
 arena = "named_unit"
+shape = "carrier"
 instance_count = 432440
 complex_part_count = 432437
 co_instantiated_with = [

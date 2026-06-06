@@ -270,6 +270,22 @@ fn categories_for(summary: &EntitySummary) -> Categories {
                 has_fields: true,
             },
         },
+        // A ComplexSupertype with a `carrier` shape also carries a standalone
+        // supertype instantiation (e.g. bare NAMED_UNIT(#dims)) — it gains an
+        // `Itself` variant alongside its complex-MI enum members. Mirrors the
+        // ConcreteSupertype carrier categories with the enum retained.
+        ComplexSupertype { .. }
+            if matches!(summary.shape, Some(ConcreteSupertypeShape::Carrier)) =>
+        {
+            Categories {
+                has_type: true,
+                has_id: true,
+                has_variant: true,
+                has_enum: true,
+                has_kind_enum: false,
+                has_fields: true,
+            }
+        }
         ComplexSupertype { .. } | CompositeOneOf { .. } => Categories {
             has_type: true,
             has_id: true,
@@ -582,7 +598,10 @@ fn compile_ir(
 
         let auto_pascal = snake_to_pascal(entity);
         let auto_type = match (&summary.variant, summary.shape) {
-            (VariantSpec::ConcreteSupertype, Some(ConcreteSupertypeShape::Carrier)) => {
+            (
+                VariantSpec::ConcreteSupertype | VariantSpec::ComplexSupertype { .. },
+                Some(ConcreteSupertypeShape::Carrier),
+            ) => {
                 format!("{auto_pascal}Data")
             }
             _ => auto_pascal.clone(),
@@ -612,9 +631,10 @@ fn compile_ir(
             // For Carrier the variant default is "Itself"; for BaseParallel
             // it's "Plain"; for InEnum it's the entity's PascalCase name.
             let default = match (&summary.variant, summary.shape) {
-                (VariantSpec::ConcreteSupertype, Some(ConcreteSupertypeShape::Carrier)) => {
-                    "Itself".to_string()
-                }
+                (
+                    VariantSpec::ConcreteSupertype | VariantSpec::ComplexSupertype { .. },
+                    Some(ConcreteSupertypeShape::Carrier),
+                ) => "Itself".to_string(),
                 (VariantSpec::ConcreteSupertype, Some(ConcreteSupertypeShape::BaseParallel)) => {
                     "Plain".to_string()
                 }
