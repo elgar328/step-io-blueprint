@@ -23,10 +23,12 @@
 //! `ENUM(a, b)`. TYPE aliases are kept **unresolved** (L1 is faithful;
 //! resolving `length_measure → real` is L2's job) and emitted to `[type.*]`.
 //!
-//! Known simplifications (v1): `redeclared_attrs` (SELF\super.attr type
-//! narrowing) and `supertype_expr` (SUPERTYPE OF children) are not emitted —
-//! not needed for the first cluster's attribute layout; revisit when the
-//! codegen generator (Phase 5) needs them.
+//! `redeclared_attrs` (SELF\super.attr type narrowing) are emitted for the
+//! cases that carry an L1 codegen signal — **primitive** retypes and **SELECT**
+//! narrowings (the latter can flip the kind between a synth select and an
+//! all-entity bare id); pure entity→entity narrowings are skipped (no signal).
+//! See [`redeclaration_has_signal`]. `supertype_expr` (SUPERTYPE OF children)
+//! is still not emitted (not needed for attribute layout).
 
 use std::collections::BTreeMap;
 use std::fs;
@@ -73,6 +75,26 @@ fn ty_repr(ty: &AttrType) -> String {
         AttrType::Optional(inner) => format!("OPTIONAL {}", ty_repr(inner)),
         AttrType::Select(members) => format!("SELECT({})", members.join(", ")),
         AttrType::Enumeration(members) => format!("ENUM({})", members.join(", ")),
+    }
+}
+
+/// Whether a `SELF\super.attr : ty` redeclaration carries an L1 codegen
+/// signal worth emitting into `redeclared_attrs`. Emitted: a **primitive**
+/// retype (scalar, e.g. `int_literal.the_value : integer`) and a **SELECT**
+/// narrowing — the latter can flip the L1 kind between a synth select (mixed
+/// members) and an all-entity bare id (`u64`), so it must override the
+/// inherited type. A bare alias name (`AttrType::Entity`) is resolved against
+/// the schema TYPE table to catch alias-form selects (`: foo_select;` parses
+/// as `Entity("foo_select")`). Pure entity→entity narrowings carry no signal
+/// (both collapse to a bare id) and are skipped to keep early.toml minimal.
+fn redeclaration_has_signal(ty: &AttrType, ranked: &[&Schema]) -> bool {
+    match ty {
+        AttrType::Primitive(_) | AttrType::Select(_) => true,
+        AttrType::Entity(name) => ranked
+            .iter()
+            .find_map(|s| s.types.get(name))
+            .is_some_and(|td| matches!(td.aliased, AttrType::Select(_))),
+        _ => false,
     }
 }
 
@@ -148,14 +170,15 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
             .unwrap_or_default();
         let parents: Vec<String> = decl.map(|e| e.parents.clone()).unwrap_or_default();
 
-        // Scalar-primitive `SELF\super.attr : type` narrowings only — codegen
-        // overrides the inherited attr's type in place. Ref/SELECT/aggregate
-        // narrowings are skipped (no L1 codegen signal).
+        // `SELF\super.attr : type` narrowings carrying an L1 codegen signal:
+        // primitive (scalar retype) + SELECT (kind can flip synth↔all-entity).
+        // Codegen overrides the inherited attr's type in place. Pure
+        // entity→entity narrowings are skipped (both collapse to a bare id).
         let redeclared_attrs: Vec<EarlyAttr> = decl
             .map(|e| {
                 e.redeclared_attrs
                     .iter()
-                    .filter(|a| matches!(a.ty, AttrType::Primitive(_)))
+                    .filter(|a| redeclaration_has_signal(&a.ty, &ranked))
                     .map(|a| EarlyAttr {
                         name: a.name.clone(),
                         ty: ty_repr(&a.ty),
