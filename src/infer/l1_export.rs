@@ -97,6 +97,13 @@ struct EarlyEntity {
     /// Declared attributes in Part21 positional order (excludes inherited;
     /// inheritance is resolved from `parents` at codegen time).
     own_attrs: Vec<EarlyAttr>,
+    /// `SELF\super.attr : type` narrowings, restricted to **scalar primitive**
+    /// retypes (e.g. `int_literal` narrows the inherited `the_value` from
+    /// `number` to `integer`). Codegen applies these as in-place type overrides
+    /// on the flattened attr list. Ref/SELECT/aggregate narrowings are omitted —
+    /// L1 collapses entity refs to bare ids, so they carry no codegen signal.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    redeclared_attrs: Vec<EarlyAttr>,
 }
 
 #[derive(Serialize)]
@@ -141,6 +148,22 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
             .unwrap_or_default();
         let parents: Vec<String> = decl.map(|e| e.parents.clone()).unwrap_or_default();
 
+        // Scalar-primitive `SELF\super.attr : type` narrowings only — codegen
+        // overrides the inherited attr's type in place. Ref/SELECT/aggregate
+        // narrowings are skipped (no L1 codegen signal).
+        let redeclared_attrs: Vec<EarlyAttr> = decl
+            .map(|e| {
+                e.redeclared_attrs
+                    .iter()
+                    .filter(|a| matches!(a.ty, AttrType::Primitive(_)))
+                    .map(|a| EarlyAttr {
+                        name: a.name.clone(),
+                        ty: ty_repr(&a.ty),
+                    })
+                    .collect()
+            })
+            .unwrap_or_default();
+
         let attr_conflicts: Vec<String> = unified
             .attr_conflicts
             .iter()
@@ -155,6 +178,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                 is_abstract: unified.abstract_entities.contains(name),
                 attr_conflicts,
                 own_attrs,
+                redeclared_attrs,
             },
         );
     }
