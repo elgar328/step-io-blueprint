@@ -12,6 +12,7 @@ pub mod l1_export;
 pub mod naming;
 pub mod overrides;
 pub mod pool;
+pub mod profile_export;
 pub mod prune;
 pub mod refgraph;
 pub mod reshape;

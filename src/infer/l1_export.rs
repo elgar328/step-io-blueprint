@@ -64,7 +64,9 @@ fn schema_rank(label: &str) -> u8 {
 }
 
 /// Lossless, toml-safe string repr of an attribute type. See module doc.
-fn ty_repr(ty: &AttrType) -> String {
+/// Shared with [`profile_export`](crate::infer::profile_export) so per-target
+/// profiles emit attribute types identically to the union early.toml.
+pub(crate) fn ty_repr(ty: &AttrType) -> String {
     match ty {
         AttrType::Primitive(p) => p.to_lowercase(),
         AttrType::Entity(name) => name.clone(),
@@ -87,7 +89,9 @@ fn ty_repr(ty: &AttrType) -> String {
 /// the schema TYPE table to catch alias-form selects (`: foo_select;` parses
 /// as `Entity("foo_select")`). Pure entity→entity narrowings carry no signal
 /// (both collapse to a bare id) and are skipped to keep early.toml minimal.
-fn redeclaration_has_signal(ty: &AttrType, ranked: &[&Schema]) -> bool {
+/// Shared with [`profile_export`](crate::infer::profile_export) (single-schema
+/// `ranked` slice) so profiles keep the same redeclaration filter as the union.
+pub(crate) fn redeclaration_has_signal(ty: &AttrType, ranked: &[&Schema]) -> bool {
     match ty {
         AttrType::Primitive(_) | AttrType::Select(_) => true,
         AttrType::Entity(name) => ranked
