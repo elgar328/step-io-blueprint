@@ -67,7 +67,7 @@ const TARGETS: &[Target] = &[
         apd_year: 2009,
     },
     Target {
-        out_name: "ap242ed2",
+        out_name: "ap242e2",
         label_match: "ap242ed2",
         file_schema: &["AP242_MANAGED_MODEL_BASED_3D_ENGINEERING_MIM_LF { 1 0 10303 442 3 1 4 }"],
         apd_status: "international standard",
