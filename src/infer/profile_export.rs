@@ -52,6 +52,9 @@ struct Target {
     apd_status: &'static str,
     apd_name: &'static str,
     apd_year: i64,
+    /// `APPLICATION_CONTEXT.application` description string (the AC the APD
+    /// references; distinct from `apd_name`). Corpus-verified per target.
+    apd_desc: &'static str,
 }
 
 /// The three curated output targets (latest IS edition per AP). FILE_SCHEMA /
@@ -65,6 +68,7 @@ const TARGETS: &[Target] = &[
         apd_status: "international standard",
         apd_name: "automotive_design",
         apd_year: 2009,
+        apd_desc: "Core Data for Automotive Mechanical Design Process",
     },
     Target {
         out_name: "ap242e2",
@@ -73,6 +77,7 @@ const TARGETS: &[Target] = &[
         apd_status: "international standard",
         apd_name: "ap242_managed_model_based_3d_engineering_mim_lf",
         apd_year: 2011,
+        apd_desc: "managed model based 3d engineering",
     },
     Target {
         out_name: "ap203e2",
@@ -84,6 +89,7 @@ const TARGETS: &[Target] = &[
         apd_status: "international standard",
         apd_name: "config_control_design",
         apd_year: 2010,
+        apd_desc: "configuration controlled 3D designs of mechanical parts and assemblies",
     },
 ];
 
@@ -112,6 +118,8 @@ struct ProfileApd {
     status: String,
     name: String,
     year: i64,
+    /// APPLICATION_CONTEXT.application description.
+    description: String,
 }
 
 #[derive(Serialize)]
@@ -195,6 +203,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                     status: t.apd_status.to_string(),
                     name: t.apd_name.to_string(),
                     year: t.apd_year,
+                    description: t.apd_desc.to_string(),
                 },
             },
             entity,
