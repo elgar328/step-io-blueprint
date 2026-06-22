@@ -8,7 +8,7 @@
 //! target — each the **latest IS edition** of its AP family:
 //!
 //! - `ap214e3`  ← AP214 ed3 (ISO 10303-214:2010 IS)
-//! - `ap242ed2` ← AP242 ed2 (ISO 10303-242:2020 IS)
+//! - `ap242e2`  ← AP242 ed2 (ISO 10303-242:2020 IS)
 //! - `ap203e2`  ← AP203 ed2 (ISO 10303-403 IS)
 //!
 //! Unlike `l1_export`, this does NOT union or newest-AP-pick: each profile is
@@ -158,8 +158,11 @@ fn nearest_legal_supertype(
     all: &BTreeMap<&str, &EntitySchema>,
     target: &HashMap<String, EntitySchema>,
 ) -> Option<String> {
+    // Bound the walk by a generous inheritance-depth cap (cycle guard against a
+    // malformed parent chain; real STEP hierarchies are far shallower).
+    const MAX_INHERITANCE_DEPTH: usize = 64;
     let mut cur = e;
-    for _ in 0..64 {
+    for _ in 0..MAX_INHERITANCE_DEPTH {
         if cur.parents.len() != 1 || !cur.own_attrs.is_empty() || !cur.redeclared_attrs.is_empty() {
             return None;
         }
