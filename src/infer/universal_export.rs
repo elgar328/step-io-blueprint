@@ -18,11 +18,42 @@ use std::fs;
 
 use serde::Serialize;
 
-use crate::express::Schema;
+use std::collections::BTreeSet;
+
+use crate::express::{Schema, SupertypeExpr};
 use crate::infer::export_common::{redeclaration_has_signal, schema_rank, ty_repr};
 use crate::infer::refgraph;
 
 const OUT: &str = "inferred/universal.toml";
+
+/// serde `skip_serializing_if` for a `false` bool (keep the file small).
+fn is_false(b: &bool) -> bool {
+    !*b
+}
+
+/// Collect entity names that appear inside an `AndOr`/`And` node (recursively).
+/// These are the multiple-inheritance-combinable leaves — a top-level `OneOf`
+/// (mutually exclusive subtypes, no ANDOR) is NOT combinable, so entities are
+/// only collected once `in_andor` is set by entering an AndOr/And.
+fn collect_combinable(expr: &SupertypeExpr, in_andor: bool, out: &mut BTreeSet<String>) {
+    match expr {
+        SupertypeExpr::Entity { name } => {
+            if in_andor {
+                out.insert(name.clone());
+            }
+        }
+        SupertypeExpr::OneOf { children } => {
+            for c in children {
+                collect_combinable(c, in_andor, out);
+            }
+        }
+        SupertypeExpr::AndOr { children } | SupertypeExpr::And { children } => {
+            for c in children {
+                collect_combinable(c, true, out);
+            }
+        }
+    }
+}
 
 #[derive(Serialize)]
 struct UnivAttr {
@@ -38,6 +69,11 @@ struct UnivEntity {
     #[serde(skip_serializing_if = "Vec::is_empty")]
     parents: Vec<String>,
     is_abstract: bool,
+    /// True if this entity can appear as a part of a Part21 complex (multiple-
+    /// inheritance) record: it is an ANDOR/AND-combinable leaf or a transitive
+    /// supertype of one. codegen gives it a part-bag variant (dual-appearance).
+    #[serde(skip_serializing_if = "is_false")]
+    is_complex_part: bool,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     attr_conflicts: Vec<String>,
     /// Raw DERIVE targets: `"super.attr"` (SELF\super.attr) or `"attr"` (own).
@@ -66,6 +102,31 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
     // Schemas newest-first: first to declare an entity/type wins.
     let mut ranked: Vec<&Schema> = schemas.iter().collect();
     ranked.sort_by_key(|s| std::cmp::Reverse(schema_rank(&s.source_label)));
+
+    // complex-part set = entities inside any AndOr/And node (combinable leaves)
+    // plus their transitive supertypes (which also appear in the complex record).
+    let mut combinable: BTreeSet<String> = BTreeSet::new();
+    for name in unified.entity_parents.keys() {
+        if let Some(expr) = ranked
+            .iter()
+            .find_map(|s| s.entities.get(name))
+            .and_then(|e| e.supertype_expr.as_ref())
+        {
+            collect_combinable(expr, false, &mut combinable);
+        }
+    }
+    let mut is_complex_part: BTreeSet<String> = BTreeSet::new();
+    let mut stack: Vec<String> = combinable.into_iter().collect();
+    while let Some(n) = stack.pop() {
+        if !is_complex_part.insert(n.clone()) {
+            continue;
+        }
+        if let Some(decl) = ranked.iter().find_map(|s| s.entities.get(&n)) {
+            for p in &decl.parents {
+                stack.push(p.clone());
+            }
+        }
+    }
 
     let mut entity: BTreeMap<String, UnivEntity> = BTreeMap::new();
     for name in unified.entity_parents.keys() {
@@ -119,6 +180,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
             UnivEntity {
                 parents,
                 is_abstract: unified.abstract_entities.contains(name),
+                is_complex_part: is_complex_part.contains(name),
                 attr_conflicts,
                 derives,
                 own_attrs,
