@@ -62,6 +62,16 @@ pub struct AttrSpec {
     pub ty: AttrType,
 }
 
+/// One `DERIVE` target: an attribute the entity computes (rendered `*` on the
+/// Part 21 wire). `super_qual` is the supertype of a `SELF\super.attr` form
+/// (the attribute is inherited and re-declared derived); `None` for a plain
+/// own-attr derive. The `:= expression` right-hand side is not retained.
+#[derive(Debug, Clone, PartialEq, Serialize)]
+pub struct DerivedTarget {
+    pub super_qual: Option<String>,
+    pub name: String,
+}
+
 #[derive(Debug, Clone, Serialize)]
 pub struct TypeDef {
     /// Lowercase TYPE alias name.
@@ -92,6 +102,9 @@ pub struct EntitySchema {
     /// `None` means either no SUPERTYPE clause or a parser error (the entity
     /// is then treated as a leaf with `is_abstract` set separately).
     pub supertype_expr: Option<SupertypeExpr>,
+    /// `DERIVE` targets (attrs computed → `*` on the wire). Parsed LHS only;
+    /// consumed by `universal_export` to mark derived/derivable slots.
+    pub derived_attrs: Vec<DerivedTarget>,
 }
 
 /// Faithful tree of a SUPERTYPE OF expression. Every shape allowed by
@@ -297,6 +310,7 @@ fn process_entity_block(
         || block.contains("ABSTRACT\nSUPERTYPE");
     let supertype_expr = extract_supertype_expr(block, &name, warnings);
     let (own_attrs, redeclared_attrs) = extract_attrs(block, &name, warnings);
+    let derived_attrs = extract_derived(block);
 
     entities.insert(
         name.clone(),
@@ -307,6 +321,7 @@ fn process_entity_block(
             redeclared_attrs,
             is_abstract,
             supertype_expr,
+            derived_attrs,
         },
     );
 }
@@ -528,6 +543,64 @@ fn find_attribute_section(block: &str) -> Option<&str> {
     let re = regex::Regex::new(r"(?m)^\s*(DERIVE|INVERSE|WHERE|UNIQUE|END_ENTITY)\b").unwrap();
     let end = re.find(body).map(|m| m.start()).unwrap_or(body.len());
     Some(&body[..end])
+}
+
+/// The `DERIVE` section body (between the `DERIVE` keyword and the next section
+/// terminator), or `None` when the entity has no DERIVE clause. Parallel to
+/// [`find_attribute_section`] but for the derived block instead of skipping it.
+fn find_derive_section(block: &str) -> Option<&str> {
+    let header_end = find_top_level_semicolon(block)?;
+    let body = &block[header_end + 1..];
+    let start = regex::Regex::new(r"(?m)^\s*DERIVE\b").unwrap().find(body)?;
+    let after = &body[start.end()..];
+    let end = regex::Regex::new(r"(?m)^\s*(INVERSE|WHERE|UNIQUE|END_ENTITY)\b")
+        .unwrap()
+        .find(after)
+        .map(|m| m.start())
+        .unwrap_or(after.len());
+    Some(&after[..end])
+}
+
+/// Parse the LHS of one DERIVE statement (`SELF\super.attr` or `attr`, before
+/// the first `:`). The `:= expression` RHS is ignored.
+fn parse_derive_lhs(lhs: &str) -> Option<DerivedTarget> {
+    let lower = lhs.trim().to_lowercase();
+    if let Some(rest) = lower.strip_prefix("self\\") {
+        // `super.attr` — attr after the last `.`, supertype before it.
+        let (sup, attr) = rest.rsplit_once('.')?;
+        let (sup, attr) = (sup.trim(), attr.trim());
+        (is_valid_identifier(sup) && is_valid_identifier(attr)).then(|| DerivedTarget {
+            super_qual: Some(sup.to_string()),
+            name: attr.to_string(),
+        })
+    } else {
+        let attr = lower.trim();
+        is_valid_identifier(attr).then(|| DerivedTarget {
+            super_qual: None,
+            name: attr.to_string(),
+        })
+    }
+}
+
+/// Walk the DERIVE section and collect each statement's target (LHS only).
+fn extract_derived(block: &str) -> Vec<DerivedTarget> {
+    let Some(body) = find_derive_section(block) else {
+        return Vec::new();
+    };
+    let mut out = Vec::new();
+    for segment in split_top_level_semicolons(body) {
+        let segment = segment.trim();
+        if segment.is_empty() {
+            continue;
+        }
+        let Some(colon) = find_top_level_colon(segment) else {
+            continue;
+        };
+        if let Some(t) = parse_derive_lhs(segment[..colon].trim()) {
+            out.push(t);
+        }
+    }
+    out
 }
 
 /// Returns byte index of the first top-level (paren-depth 0) `;`.

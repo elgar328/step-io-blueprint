@@ -54,6 +54,7 @@ fn main() -> ExitCode {
         Some("pool") => run_pool(allow_pending),
         Some("naming") => run_naming(),
         Some("l1_export") => run_l1_export(),
+        Some("universal_export") => run_universal_export(),
         Some("profile_export") => run_profile_export(),
         None => {
             print_usage();
@@ -167,6 +168,20 @@ fn run_l1_export() -> ExitCode {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {
             eprintln!("infer l1_export failed:\n{e}");
+            ExitCode::from(2)
+        }
+    }
+}
+
+fn run_universal_export() -> ExitCode {
+    let schemas = match load_schemas() {
+        Ok(s) => s,
+        Err(c) => return c,
+    };
+    match infer::universal_export::run(&schemas) {
+        Ok(()) => ExitCode::SUCCESS,
+        Err(e) => {
+            eprintln!("infer universal_export failed:\n{e}");
             ExitCode::from(2)
         }
     }

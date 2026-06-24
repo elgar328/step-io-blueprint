@@ -31,7 +31,7 @@ use std::fs;
 use serde::Serialize;
 
 use crate::express::{EntitySchema, Schema};
-use crate::infer::l1_export::{redeclaration_has_signal, ty_repr};
+use crate::infer::export_common::{redeclaration_has_signal, ty_repr};
 
 const OUT_DIR: &str = "profiles";
 

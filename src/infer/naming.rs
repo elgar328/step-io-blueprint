@@ -851,6 +851,7 @@ mod tests {
             redeclared_attrs: specs(redeclared),
             is_abstract: false,
             supertype_expr: None,
+            derived_attrs: Vec::new(),
         }
     }
 
