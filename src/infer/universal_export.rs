@@ -115,6 +115,29 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
             collect_combinable(expr, false, &mut combinable);
         }
     }
+    // Implicit combinability: a bare supertype (declares NO `SUPERTYPE OF`
+    // clause) does not ONEOF-restrict its subtypes, so they may co-occur in a
+    // Part21 complex record (e.g. representation_context's geometric/parametric/
+    // global subtypes form the context complex). Mark such subtypes combinable.
+    let mut children: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    for name in unified.entity_parents.keys() {
+        if let Some(decl) = ranked.iter().find_map(|s| s.entities.get(name)) {
+            for p in &decl.parents {
+                children.entry(p.clone()).or_default().push(name.clone());
+            }
+        }
+    }
+    for name in unified.entity_parents.keys() {
+        let bare = ranked
+            .iter()
+            .find_map(|s| s.entities.get(name))
+            .is_some_and(|e| e.supertype_expr.is_none());
+        if bare {
+            if let Some(kids) = children.get(name) {
+                combinable.extend(kids.iter().cloned());
+            }
+        }
+    }
     let mut is_complex_part: BTreeSet<String> = BTreeSet::new();
     let mut stack: Vec<String> = combinable.into_iter().collect();
     while let Some(n) = stack.pop() {
