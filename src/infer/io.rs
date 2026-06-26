@@ -10,8 +10,8 @@ use std::fs;
 use std::io;
 use std::path::{Path, PathBuf};
 
-use serde::{Deserialize, Serialize};
 use serde::de::DeserializeOwned;
+use serde::{Deserialize, Serialize};
 
 use super::{Decision, Unresolved};
 
@@ -89,8 +89,8 @@ pub fn write_pending<T: Serialize>(
         return Ok(());
     }
     ensure_dir()?;
-    let body = toml::to_string_pretty(file)
-        .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))?;
+    let body =
+        toml::to_string_pretty(file).map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))?;
     fs::write(path, body)
 }
 

@@ -64,8 +64,7 @@ pub fn run(allow_pending: bool) -> Result<(), String> {
         return Err(missing_file_message(&required));
     }
     let body = fs::read_to_string(&path).map_err(|e| format!("read {path:?}: {e}"))?;
-    let file: PoolsFile =
-        toml::from_str(&body).map_err(|e| format!("parse {path:?}: {e}"))?;
+    let file: PoolsFile = toml::from_str(&body).map_err(|e| format!("parse {path:?}: {e}"))?;
 
     match validate(&required, &file.arena) {
         Validation::Ok {
@@ -96,10 +95,7 @@ enum Validation {
     Missing(Vec<String>),
 }
 
-fn validate(
-    required: &BTreeSet<String>,
-    provided: &BTreeMap<String, PoolEntry>,
-) -> Validation {
+fn validate(required: &BTreeSet<String>, provided: &BTreeMap<String, PoolEntry>) -> Validation {
     let provided_keys: BTreeSet<&String> = provided.keys().collect();
     let required_refs: BTreeSet<&String> = required.iter().collect();
 
@@ -207,10 +203,7 @@ mod tests {
     #[test]
     fn validate_extra_entry_passes_with_warning_payload() {
         let required = required_set(&["cartesian_point"]);
-        let provided = provided_map(&[
-            ("cartesian_point", "geometry"),
-            ("ghost_arena", "junk"),
-        ]);
+        let provided = provided_map(&[("cartesian_point", "geometry"), ("ghost_arena", "junk")]);
         match validate(&required, &provided) {
             Validation::Ok {
                 distinct_pools,

@@ -136,8 +136,7 @@ pub(crate) fn compute_entity_to_group(
                     .or_insert_with(|| enum_name.clone());
             }
             VariantSpec::ComplexSupertype { .. } | VariantSpec::CompositeOneOf { .. } => {
-                out.entry(entity.clone())
-                    .or_insert_with(|| entity.clone());
+                out.entry(entity.clone()).or_insert_with(|| entity.clone());
             }
             _ => {}
         }
@@ -161,10 +160,11 @@ pub(crate) fn compute_entity_to_group(
                 _ => None,
             };
             if let Some(p) = parent
-                && let Some(g) = out.get(p).cloned() {
-                    out.insert(entity.clone(), g);
-                    changed = true;
-                }
+                && let Some(g) = out.get(p).cloned()
+            {
+                out.insert(entity.clone(), g);
+                changed = true;
+            }
         }
         if !changed {
             break;
@@ -185,18 +185,18 @@ fn compute_groups(variants: &BTreeMap<String, VariantSpec>) -> Groups {
     for (entity, spec) in variants {
         match spec {
             VariantSpec::SingleStruct => {
-                groups
-                    .entry(entity.clone())
-                    .or_insert_with(|| GroupInfo {
-                        members: vec![entity.clone()],
-                        is_enum: false,
-                    });
+                groups.entry(entity.clone()).or_insert_with(|| GroupInfo {
+                    members: vec![entity.clone()],
+                    is_enum: false,
+                });
             }
             VariantSpec::InEnum { enum_name } => {
-                let entry = groups.entry(enum_name.clone()).or_insert_with(|| GroupInfo {
-                    members: Vec::new(),
-                    is_enum: true,
-                });
+                let entry = groups
+                    .entry(enum_name.clone())
+                    .or_insert_with(|| GroupInfo {
+                        members: Vec::new(),
+                        is_enum: true,
+                    });
                 entry.members.push(entity.clone());
             }
             VariantSpec::EnumBase { enum_name } => {
@@ -213,12 +213,10 @@ fn compute_groups(variants: &BTreeMap<String, VariantSpec>) -> Groups {
                 // Complex / composite supertype carries its own struct +
                 // nested enum + mixin (or composite alternatives) in IR;
                 // treated as its own non-enum group here.
-                groups
-                    .entry(entity.clone())
-                    .or_insert_with(|| GroupInfo {
-                        members: vec![entity.clone()],
-                        is_enum: false,
-                    });
+                groups.entry(entity.clone()).or_insert_with(|| GroupInfo {
+                    members: vec![entity.clone()],
+                    is_enum: false,
+                });
             }
             VariantSpec::ConcreteSupertype => {
                 // Implicit supertype: the entity is both a concrete struct
@@ -272,7 +270,11 @@ mod tests {
         assert!(groups["surface"].is_enum);
         assert_eq!(
             groups["surface"].members,
-            vec!["cylinder".to_string(), "plane".to_string(), "sphere".to_string()]
+            vec![
+                "cylinder".to_string(),
+                "plane".to_string(),
+                "sphere".to_string()
+            ]
         );
     }
 
@@ -293,5 +295,4 @@ mod tests {
         assert!(groups.contains_key("b_spline"));
         assert!(!groups.contains_key("rational_b_spline"));
     }
-
 }

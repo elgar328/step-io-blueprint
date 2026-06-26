@@ -21,10 +21,10 @@ use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 use serde::{Deserialize, Serialize};
 
 use crate::express::{AttrType, Schema, SupertypeExpr};
+use crate::infer::Unresolved;
 use crate::infer::io::{PendingFile, PendingStats};
 use crate::infer::overrides::{self, OverrideFile};
 use crate::infer::refgraph::{self, RefTarget, UnifiedSchema};
-use crate::infer::Unresolved;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 #[serde(tag = "kind", rename_all = "snake_case")]
@@ -34,9 +34,7 @@ pub enum VariantSpec {
 
     /// Member of a polymorphic enum (`InEnum.enum_name` is the enclosing
     /// enum root).
-    InEnum {
-        enum_name: String,
-    },
+    InEnum { enum_name: String },
 
     /// Sole-extending child folded into the parent struct as an optional
     /// nested field (`Option<NestedStruct>` in IR).
@@ -49,9 +47,7 @@ pub enum VariantSpec {
     /// Polymorphic supertype declared with ABSTRACT or `SUPERTYPE OF
     /// (ONEOF ...)` and with at least two effective children. Owns the
     /// enum definition; no IR struct.
-    EnumBase {
-        enum_name: String,
-    },
+    EnumBase { enum_name: String },
 
     /// Wrapper supertype with a single effective descendant. Folded into
     /// `target`; the optional `chain` records intermediate entity names
@@ -343,8 +339,7 @@ pub fn classify_all(
     let topo = topological_order(unified);
     let reverse_topo: Vec<String> = topo.iter().rev().cloned().collect();
 
-    let mut decisions =
-        pass1_supertype_kinds(unified, &descendants, &reverse_topo, overrides_file);
+    let mut decisions = pass1_supertype_kinds(unified, &descendants, &reverse_topo, overrides_file);
     let mut unresolved = BTreeMap::new();
     pass2_remaining_kinds(
         unified,
@@ -413,10 +408,7 @@ fn pass1_supertype_kinds(
         if (is_abstract || has_oneof) && eff_children.len() == 1 {
             let target = eff_children.iter().next().cloned().unwrap();
             let chain = build_chain(entity, &target, descendants, &decisions);
-            decisions.insert(
-                entity.clone(),
-                VariantSpec::MergedInto { target, chain },
-            );
+            decisions.insert(entity.clone(), VariantSpec::MergedInto { target, chain });
             continue;
         }
 
@@ -429,21 +421,15 @@ fn pass1_supertype_kinds(
             .entity_attrs
             .get(entity)
             .is_none_or(|s| s.is_empty());
-        let has_enum_shaped_parent = unified
-            .entity_parents
-            .get(entity)
-            .is_some_and(|parents| {
-                parents
-                    .iter()
-                    .any(|p| descendants.get(p).map_or(0, |d| d.len()) >= 2)
-            });
+        let has_enum_shaped_parent = unified.entity_parents.get(entity).is_some_and(|parents| {
+            parents
+                .iter()
+                .any(|p| descendants.get(p).map_or(0, |d| d.len()) >= 2)
+        });
         if own_attrs_empty && eff_children.len() == 1 && !has_enum_shaped_parent {
             let target = eff_children.iter().next().cloned().unwrap();
             let chain = build_chain(entity, &target, descendants, &decisions);
-            decisions.insert(
-                entity.clone(),
-                VariantSpec::MergedInto { target, chain },
-            );
+            decisions.insert(entity.clone(), VariantSpec::MergedInto { target, chain });
             continue;
         }
 
@@ -470,7 +456,10 @@ fn classify_complex_supertype(expr: &SupertypeExpr) -> Option<VariantSpec> {
     }
     // Both children must be Entity or OneOf — anything else is out of band.
     for c in children {
-        if !matches!(c, SupertypeExpr::Entity { .. } | SupertypeExpr::OneOf { .. }) {
+        if !matches!(
+            c,
+            SupertypeExpr::Entity { .. } | SupertypeExpr::OneOf { .. }
+        ) {
             return None;
         }
     }
@@ -492,9 +481,10 @@ fn classify_complex_supertype(expr: &SupertypeExpr) -> Option<VariantSpec> {
     // OneOf children must all be plain Entity refs at this rule. Any deeper
     // nesting falls through to Rule 8 / pass2.
     if let SupertypeExpr::OneOf { children: items } = &children[oneof_idx]
-        && items.len() != oneof_children.len() {
-            return None;
-        }
+        && items.len() != oneof_children.len()
+    {
+        return None;
+    }
     Some(VariantSpec::ComplexSupertype {
         mixin_pattern: mixin_pattern.to_string(),
         oneof_children,
@@ -599,10 +589,7 @@ fn effective_direct_children(
 
 /// Walk a `MergedInto` chain to its terminal IR-bearing entity. Falls
 /// back to the input on cycle / missing decision (treats as terminal).
-fn resolve_merge_target(
-    start: &str,
-    decisions: &BTreeMap<String, VariantSpec>,
-) -> String {
+fn resolve_merge_target(start: &str, decisions: &BTreeMap<String, VariantSpec>) -> String {
     let mut current = start.to_string();
     let mut visited: HashSet<String> = HashSet::new();
     while visited.insert(current.clone()) {
@@ -685,9 +672,7 @@ fn pass2_remaining_kinds(
             .entity_attrs
             .get(entity)
             .is_some_and(|s| !s.is_empty());
-        let direct_children: usize = descendants
-            .get(entity)
-            .map_or(0, |v| v.len());
+        let direct_children: usize = descendants.get(entity).map_or(0, |v| v.len());
         if supertype_absent
             && has_own_attrs
             && direct_children >= 1
@@ -702,12 +687,12 @@ fn pass2_remaining_kinds(
         // Rule 5: NestedField — only when effective parent is a SingleStruct.
         if let Some(parent) = &eff_parent
             && matches!(decisions.get(parent), Some(VariantSpec::SingleStruct))
-                && let Some(nested) =
-                    try_nested_field(entity, parent, unified, descendants, polymorphic_targets)
-                {
-                    decisions.insert(entity.clone(), nested);
-                    continue;
-                }
+            && let Some(nested) =
+                try_nested_field(entity, parent, unified, descendants, polymorphic_targets)
+        {
+            decisions.insert(entity.clone(), nested);
+            continue;
+        }
 
         // Rule 6: InEnum — first EnumBase/ComplexSupertype on the
         // effective parent chain, falling back to polymorphic-target
@@ -716,10 +701,7 @@ fn pass2_remaining_kinds(
         if let Some(root) =
             enclosing_enum_root(entity, unified, descendants, polymorphic_targets, decisions)
         {
-            decisions.insert(
-                entity.clone(),
-                VariantSpec::InEnum { enum_name: root },
-            );
+            decisions.insert(entity.clone(), VariantSpec::InEnum { enum_name: root });
             continue;
         }
 
@@ -729,8 +711,9 @@ fn pass2_remaining_kinds(
         // raise to the user via unresolved instead of falling through to
         // SingleStruct (which would silently misclassify).
         if let Some(expr) = unified.supertype_exprs.get(entity)
-            && !matches!(expr, SupertypeExpr::Entity { .. }) {
-                unresolved.insert(
+            && !matches!(expr, SupertypeExpr::Entity { .. })
+        {
+            unresolved.insert(
                     entity.clone(),
                     Unresolved {
                         reasons: vec![format!(
@@ -739,8 +722,8 @@ fn pass2_remaining_kinds(
                         override_example: format_override_example(expr),
                     },
                 );
-                continue;
-            }
+            continue;
+        }
 
         // Rule 7: fallback (no SUPERTYPE OF body, or just a single bare
         // entity ref the higher rules already classified the parent of).
@@ -801,7 +784,11 @@ fn try_nested_field(
         return None;
     }
 
-    let own_attrs = unified.entity_attrs.get(entity).cloned().unwrap_or_default();
+    let own_attrs = unified
+        .entity_attrs
+        .get(entity)
+        .cloned()
+        .unwrap_or_default();
     let parent_attrs = unified
         .entity_attrs
         .get(parent)
@@ -943,10 +930,7 @@ fn enclosing_enum_root(
 
 // --- shared helpers --------------------------------------------------------
 
-fn concrete_descendants(
-    root: &str,
-    descendants: &HashMap<String, Vec<String>>,
-) -> Vec<String> {
+fn concrete_descendants(root: &str, descendants: &HashMap<String, Vec<String>>) -> Vec<String> {
     let mut out = Vec::new();
     let mut stack = vec![root.to_string()];
     let mut visited = HashSet::new();
@@ -1021,12 +1005,13 @@ fn topological_order(unified: &UnifiedSchema) -> Vec<String> {
         for (child, parents) in &unified.entity_parents {
             if parents.contains(&cur)
                 && let Some(n) = indeg.get_mut(child)
-                    && *n > 0 {
-                        *n -= 1;
-                        if *n == 0 {
-                            queue.push(child.clone());
-                        }
-                    }
+                && *n > 0
+            {
+                *n -= 1;
+                if *n == 0 {
+                    queue.push(child.clone());
+                }
+            }
         }
     }
 
@@ -1176,8 +1161,16 @@ mod tests {
                     false,
                     Some(oneof_of(&["circle", "square"])),
                 ),
-                ent("circle", &["shape"], vec![("r", AttrType::Primitive("REAL".into()))]),
-                ent("square", &["shape"], vec![("s", AttrType::Primitive("REAL".into()))]),
+                ent(
+                    "circle",
+                    &["shape"],
+                    vec![("r", AttrType::Primitive("REAL".into()))],
+                ),
+                ent(
+                    "square",
+                    &["shape"],
+                    vec![("s", AttrType::Primitive("REAL".into()))],
+                ),
             ],
             vec![],
         );
@@ -1199,8 +1192,16 @@ mod tests {
             "test",
             vec![
                 ent_decl("base", &[], vec![], true, None),
-                ent("a", &["base"], vec![("x", AttrType::Primitive("REAL".into()))]),
-                ent("b", &["base"], vec![("y", AttrType::Primitive("REAL".into()))]),
+                ent(
+                    "a",
+                    &["base"],
+                    vec![("x", AttrType::Primitive("REAL".into()))],
+                ),
+                ent(
+                    "b",
+                    &["base"],
+                    vec![("y", AttrType::Primitive("REAL".into()))],
+                ),
             ],
             vec![],
         );
@@ -1226,9 +1227,21 @@ mod tests {
                         children: vec![oneof_of(&["high", "low"]), entity_ref("actuated")],
                     }),
                 ),
-                ent("high", &["kpair"], vec![("a", AttrType::Primitive("REAL".into()))]),
-                ent("low", &["kpair"], vec![("b", AttrType::Primitive("REAL".into()))]),
-                ent("actuated", &["kpair"], vec![("c", AttrType::Primitive("REAL".into()))]),
+                ent(
+                    "high",
+                    &["kpair"],
+                    vec![("a", AttrType::Primitive("REAL".into()))],
+                ),
+                ent(
+                    "low",
+                    &["kpair"],
+                    vec![("b", AttrType::Primitive("REAL".into()))],
+                ),
+                ent(
+                    "actuated",
+                    &["kpair"],
+                    vec![("c", AttrType::Primitive("REAL".into()))],
+                ),
             ],
             vec![],
         );
@@ -1264,7 +1277,11 @@ mod tests {
                     // child below — supertype_expr stays None.
                     None,
                 ),
-                ent("only", &["wrapper"], vec![("v", AttrType::Primitive("REAL".into()))]),
+                ent(
+                    "only",
+                    &["wrapper"],
+                    vec![("v", AttrType::Primitive("REAL".into()))],
+                ),
             ],
             vec![],
         );
@@ -1306,7 +1323,10 @@ mod tests {
             }
             other => panic!("expected MergedInto for b, got {other:?}"),
         }
-        assert!(matches!(decisions.get("c").unwrap(), VariantSpec::SingleStruct));
+        assert!(matches!(
+            decisions.get("c").unwrap(),
+            VariantSpec::SingleStruct
+        ));
     }
 
     #[test]
@@ -1332,9 +1352,21 @@ mod tests {
                     }),
                 ),
                 ent("a", &["parent"], vec![]),
-                ent("b", &["parent"], vec![("v", AttrType::Primitive("REAL".into()))]),
-                ent("c", &["parent"], vec![("w", AttrType::Primitive("REAL".into()))]),
-                ent("a_sub", &["a"], vec![("x", AttrType::Primitive("REAL".into()))]),
+                ent(
+                    "b",
+                    &["parent"],
+                    vec![("v", AttrType::Primitive("REAL".into()))],
+                ),
+                ent(
+                    "c",
+                    &["parent"],
+                    vec![("w", AttrType::Primitive("REAL".into()))],
+                ),
+                ent(
+                    "a_sub",
+                    &["a"],
+                    vec![("x", AttrType::Primitive("REAL".into()))],
+                ),
             ],
             vec![],
         );
@@ -1390,7 +1422,10 @@ mod tests {
                     vec![],
                     true,
                     Some(SupertypeExpr::And {
-                        children: vec![oneof_of(&["trapezoidal", "tee"]), oneof_of(&["straight", "curved"])],
+                        children: vec![
+                            oneof_of(&["trapezoidal", "tee"]),
+                            oneof_of(&["straight", "curved"]),
+                        ],
                     }),
                 ),
                 ent("trapezoidal", &["slot"], vec![]),
@@ -1510,10 +1545,7 @@ mod tests {
                 assert_eq!(composite_alternatives.len(), 1);
                 match &composite_alternatives[0] {
                     CompositeMember::AndOr { children } => {
-                        assert_eq!(
-                            children,
-                            &vec!["loop".to_string(), "path".to_string()]
-                        );
+                        assert_eq!(children, &vec!["loop".to_string(), "path".to_string()]);
                     }
                     other => panic!("expected AndOr composite, got {other:?}"),
                 }
@@ -1628,9 +1660,21 @@ mod tests {
                         children: vec![entity_ref("a"), entity_ref("b"), entity_ref("c")],
                     }),
                 ),
-                ent("a", &["weird"], vec![("x", AttrType::Primitive("REAL".into()))]),
-                ent("b", &["weird"], vec![("y", AttrType::Primitive("REAL".into()))]),
-                ent("c", &["weird"], vec![("z", AttrType::Primitive("REAL".into()))]),
+                ent(
+                    "a",
+                    &["weird"],
+                    vec![("x", AttrType::Primitive("REAL".into()))],
+                ),
+                ent(
+                    "b",
+                    &["weird"],
+                    vec![("y", AttrType::Primitive("REAL".into()))],
+                ),
+                ent(
+                    "c",
+                    &["weird"],
+                    vec![("z", AttrType::Primitive("REAL".into()))],
+                ),
             ],
             vec![],
         );
@@ -1659,7 +1703,12 @@ mod tests {
         use std::path::Path;
 
         let schemas = crate::express::load_all_schemas(Path::new("schemas"));
-        assert_eq!(schemas.len(), 6, "expected 6 schemas, got {}", schemas.len());
+        assert_eq!(
+            schemas.len(),
+            6,
+            "expected 6 schemas, got {}",
+            schemas.len()
+        );
 
         let unified = refgraph::build(&schemas);
         let decisions = classify_no_overrides(&unified);
@@ -1789,7 +1838,9 @@ mod tests {
                     other => panic!("expected AndOr composite, got {other:?}"),
                 }
             }
-            other => panic!("topological_representation_item: expected CompositeOneOf, got {other:?}"),
+            other => {
+                panic!("topological_representation_item: expected CompositeOneOf, got {other:?}")
+            }
         }
 
         // B7: zone_structural_makeup → CompositeOneOf with two And pairs.
@@ -1819,7 +1870,11 @@ mod tests {
                 // children pointing to it via SUBTYPE OF. A separate
                 // entity references `act` polymorphically through an
                 // ATTR — that triggers polymorphic_targets membership.
-                ent("act", &[], vec![("name", AttrType::Primitive("STRING".into()))]),
+                ent(
+                    "act",
+                    &[],
+                    vec![("name", AttrType::Primitive("STRING".into()))],
+                ),
                 ent(
                     "executed_act",
                     &["act"],
@@ -1841,7 +1896,10 @@ mod tests {
         let unified = refgraph::build(&[s]);
         let decisions = classify_no_overrides(&unified);
         assert!(
-            matches!(decisions.get("act").unwrap(), VariantSpec::ConcreteSupertype),
+            matches!(
+                decisions.get("act").unwrap(),
+                VariantSpec::ConcreteSupertype
+            ),
             "act should be ConcreteSupertype, got {:?}",
             decisions.get("act").unwrap()
         );
@@ -1886,10 +1944,7 @@ mod tests {
         ];
         for name in expected {
             assert!(
-                matches!(
-                    decisions.get(*name),
-                    Some(VariantSpec::ConcreteSupertype)
-                ),
+                matches!(decisions.get(*name), Some(VariantSpec::ConcreteSupertype)),
                 "{name}: expected ConcreteSupertype, got {:?}",
                 decisions.get(*name)
             );
@@ -1933,7 +1988,11 @@ mod tests {
             vec![
                 // Without override the entity would auto-classify as
                 // SingleStruct (no parents, no children, no flags).
-                ent("forced", &[], vec![("v", AttrType::Primitive("REAL".into()))]),
+                ent(
+                    "forced",
+                    &[],
+                    vec![("v", AttrType::Primitive("REAL".into()))],
+                ),
             ],
             vec![],
         );
@@ -1978,7 +2037,10 @@ mod tests {
         let (decisions, unresolved) = classify_all(&unified, &overrides);
         assert_eq!(unresolved.len(), 0);
         assert!(
-            matches!(decisions.get("forced").unwrap(), VariantSpec::ConcreteSupertype),
+            matches!(
+                decisions.get("forced").unwrap(),
+                VariantSpec::ConcreteSupertype
+            ),
             "override should produce ConcreteSupertype; got {:?}",
             decisions.get("forced").unwrap()
         );
@@ -1989,7 +2051,11 @@ mod tests {
         let s = schema(
             "test",
             vec![
-                ent("base", &[], vec![("x", AttrType::Primitive("INTEGER".into()))]),
+                ent(
+                    "base",
+                    &[],
+                    vec![("x", AttrType::Primitive("INTEGER".into()))],
+                ),
                 ent(
                     "ext",
                     &["base"],
@@ -2022,7 +2088,11 @@ mod tests {
         let s = schema(
             "test",
             vec![
-                ent("base", &[], vec![("x", AttrType::Primitive("INTEGER".into()))]),
+                ent(
+                    "base",
+                    &[],
+                    vec![("x", AttrType::Primitive("INTEGER".into()))],
+                ),
                 ent(
                     "ext",
                     &["base"],
@@ -2056,7 +2126,11 @@ mod tests {
         let s = schema(
             "test",
             vec![
-                ent("base", &[], vec![("x", AttrType::Primitive("INTEGER".into()))]),
+                ent(
+                    "base",
+                    &[],
+                    vec![("x", AttrType::Primitive("INTEGER".into()))],
+                ),
                 ent(
                     "ext",
                     &["base"],
@@ -2089,7 +2163,11 @@ mod tests {
         let s = schema(
             "test",
             vec![
-                ent("base", &[], vec![("x", AttrType::Primitive("INTEGER".into()))]),
+                ent(
+                    "base",
+                    &[],
+                    vec![("x", AttrType::Primitive("INTEGER".into()))],
+                ),
                 ent(
                     "ext",
                     &["base"],
@@ -2139,7 +2217,11 @@ mod tests {
         let s = schema(
             "test",
             vec![
-                ent("base", &[], vec![("x", AttrType::Primitive("INTEGER".into()))]),
+                ent(
+                    "base",
+                    &[],
+                    vec![("x", AttrType::Primitive("INTEGER".into()))],
+                ),
                 ent(
                     "sub_a",
                     &["base"],

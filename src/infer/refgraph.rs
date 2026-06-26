@@ -173,13 +173,9 @@ pub fn build(schemas: &[Schema]) -> UnifiedSchema {
             .insert(attr_name.clone(), canonical.clone());
 
         emit_edges_for_type(
-            ent_name,
-            attr_name,
-            canonical,
-            false, // optional
+            ent_name, attr_name, canonical, false, // optional
             false, // via_select
-            &types,
-            &mut edges,
+            &types, &mut edges,
         );
     }
 
@@ -209,27 +205,15 @@ fn emit_edges_for_type(
     edges: &mut Vec<RefEdge>,
 ) {
     match ty {
-        AttrType::Optional(inner) => emit_edges_for_type(
-            from,
-            attr,
-            inner,
-            true,
-            via_select,
-            types,
-            edges,
-        ),
+        AttrType::Optional(inner) => {
+            emit_edges_for_type(from, attr, inner, true, via_select, types, edges)
+        }
         AttrType::List(inner)
         | AttrType::Set(inner)
         | AttrType::Bag(inner)
-        | AttrType::Array(inner) => emit_edges_for_type(
-            from,
-            attr,
-            inner,
-            optional,
-            via_select,
-            types,
-            edges,
-        ),
+        | AttrType::Array(inner) => {
+            emit_edges_for_type(from, attr, inner, optional, via_select, types, edges)
+        }
         AttrType::Select(members) => {
             // Unfold each member as a separate edge. `via_select = true`
             // marks the polymorphic context.
@@ -346,9 +330,9 @@ fn resolve_aliased_to_edges(
     visited: &mut HashSet<String>,
 ) {
     match aliased {
-        AttrType::Optional(inner) => resolve_aliased_to_edges(
-            from, attr, inner, true, via_select, types, edges, visited,
-        ),
+        AttrType::Optional(inner) => {
+            resolve_aliased_to_edges(from, attr, inner, true, via_select, types, edges, visited)
+        }
         AttrType::List(inner)
         | AttrType::Set(inner)
         | AttrType::Bag(inner)
@@ -490,25 +474,20 @@ mod tests {
         let ty = AttrType::Optional(Box::new(AttrType::List(Box::new(AttrType::Entity(
             "cartesian_point".into(),
         )))));
-        let s = schema(
-            "test",
-            vec![ent("foo", &[], vec![("pts", ty)])],
-            vec![],
-        );
+        let s = schema("test", vec![ent("foo", &[], vec![("pts", ty)])], vec![]);
         let g = build(&[s]);
         assert_eq!(g.edges.len(), 1);
         assert!(g.edges[0].optional);
-        assert_eq!(g.edges[0].target, RefTarget::Entity("cartesian_point".into()));
+        assert_eq!(
+            g.edges[0].target,
+            RefTarget::Entity("cartesian_point".into())
+        );
     }
 
     #[test]
     fn select_unfolds_into_multiple_edges() {
         let ty = AttrType::Select(vec!["a".into(), "b".into(), "c".into()]);
-        let s = schema(
-            "test",
-            vec![ent("foo", &[], vec![("kind", ty)])],
-            vec![],
-        );
+        let s = schema("test", vec![ent("foo", &[], vec![("kind", ty)])], vec![]);
         let g = build(&[s]);
         assert_eq!(g.edges.len(), 3);
         for e in &g.edges {
@@ -565,11 +544,7 @@ mod tests {
         // TYPE m1 = REAL; TYPE m2 = m1; ENTITY foo; v : m2;
         let s = schema(
             "test",
-            vec![ent(
-                "foo",
-                &[],
-                vec![("v", AttrType::Entity("m2".into()))],
-            )],
+            vec![ent("foo", &[], vec![("v", AttrType::Entity("m2".into()))])],
             vec![
                 ty_alias("m1", AttrType::Primitive("REAL".into())),
                 ty_alias("m2", AttrType::Entity("m1".into())),
@@ -648,7 +623,11 @@ mod tests {
         let schemas = load_all_schemas(Path::new("schemas"));
         assert_eq!(schemas.len(), 6);
         let g = build(&schemas);
-        assert!(g.entity_parents.len() >= 700, "entities: {}", g.entity_parents.len());
+        assert!(
+            g.entity_parents.len() >= 700,
+            "entities: {}",
+            g.entity_parents.len()
+        );
         assert!(g.edges.len() >= 1000, "edges: {}", g.edges.len());
     }
 }

@@ -208,10 +208,7 @@ fn validate_anchors(
     Ok(())
 }
 
-fn apply_anchors(
-    anchors: &AnchorsFile,
-    out: &mut BTreeMap<String, EntitySummary>,
-) -> Vec<String> {
+fn apply_anchors(anchors: &AnchorsFile, out: &mut BTreeMap<String, EntitySummary>) -> Vec<String> {
     let mut inserted = Vec::new();
     for (name, entry) in &anchors.anchor {
         out.insert(
@@ -254,9 +251,7 @@ fn kind_str(spec: &VariantSpec) -> &'static str {
 fn validate_splits(splits: &SplitsFile, entities: &BTreeMap<String, EntitySummary>) {
     for k in splits.split.keys() {
         match entities.get(k) {
-            None => eprintln!(
-                "warning: {FILE_SPLITS} [split.{k}] — entity not in {FILE_ENTITIES}"
-            ),
+            None => eprintln!("warning: {FILE_SPLITS} [split.{k}] — entity not in {FILE_ENTITIES}"),
             Some(s) => match &s.variant {
                 VariantSpec::NestedField { .. } | VariantSpec::MergedInto { .. } => {
                     eprintln!(
@@ -274,9 +269,9 @@ fn validate_merges(merges: &MergesFile, entities: &BTreeMap<String, EntitySummar
     for (k, m) in &merges.merge {
         for absorb in &m.absorbs {
             match entities.get(absorb) {
-                None => eprintln!(
-                    "warning: {FILE_MERGES} [merge.{k}] absorbs unknown entity {absorb}"
-                ),
+                None => {
+                    eprintln!("warning: {FILE_MERGES} [merge.{k}] absorbs unknown entity {absorb}")
+                }
                 Some(s) => match &s.variant {
                     VariantSpec::NestedField { .. } | VariantSpec::MergedInto { .. } => {
                         eprintln!(
@@ -444,9 +439,10 @@ fn apply_splits_merges(
         let mut base: Option<EntitySummary> = None;
         for absorb in &entry.absorbs {
             if let Some(s) = out.remove(absorb)
-                && base.is_none() {
-                    base = Some(s);
-                }
+                && base.is_none()
+            {
+                base = Some(s);
+            }
         }
         let Some(mut merged) = base else {
             continue;
@@ -603,9 +599,7 @@ fn collapse_single_child_enum_bases(
     Ok(removed)
 }
 
-fn write_abstract_entities(
-    entities: &BTreeMap<String, EntitySummary>,
-) -> Result<(), String> {
+fn write_abstract_entities(entities: &BTreeMap<String, EntitySummary>) -> Result<(), String> {
     let mut outer: BTreeMap<&str, &BTreeMap<String, EntitySummary>> = BTreeMap::new();
     outer.insert("entity", entities);
     let body = toml::to_string_pretty(&outer)
@@ -708,7 +702,11 @@ mod tests {
     #[test]
     fn merge_three_entities_into_one() {
         let mut entities = BTreeMap::new();
-        for name in ["b_spline_curve", "rational_b_spline_curve", "quasi_uniform_curve"] {
+        for name in [
+            "b_spline_curve",
+            "rational_b_spline_curve",
+            "quasi_uniform_curve",
+        ] {
             entities.insert(name.into(), summary(VariantSpec::SingleStruct, name));
         }
         let splits = SplitsFile::default();
@@ -793,7 +791,10 @@ mod tests {
         let splits = SplitsFile::default();
         let merges = MergesFile::default();
         let out = apply_splits_merges(&entities, &splits, &merges).unwrap();
-        assert_eq!(out["face_bound"].shape, Some(ConcreteSupertypeShape::Carrier));
+        assert_eq!(
+            out["face_bound"].shape,
+            Some(ConcreteSupertypeShape::Carrier)
+        );
     }
 
     fn split_variant(
@@ -817,10 +818,7 @@ mod tests {
                 "direction".to_string(),
                 SplitEntry {
                     context_signal: "is_2d".into(),
-                    variants: vec![
-                        split_variant("direction", "direction", None, None),
-                        second,
-                    ],
+                    variants: vec![split_variant("direction", "direction", None, None), second],
                     reasons: reasons.map(str::to_string),
                 },
             )]),
@@ -849,7 +847,10 @@ mod tests {
             None,
         );
         let out = apply_splits_merges(&entities, &splits, &MergesFile::default()).unwrap();
-        assert!(matches!(out["direction_2d"].variant, VariantSpec::SingleStruct));
+        assert!(matches!(
+            out["direction_2d"].variant,
+            VariantSpec::SingleStruct
+        ));
         // First variant inherits source's InEnum (no override on it).
         assert!(matches!(
             out["direction"].variant,
@@ -958,10 +959,7 @@ mod tests {
                 MergeEntry {
                     target_name: "nurbs_curve".into(),
                     arena: "nurbs_curve".into(),
-                    absorbs: vec![
-                        "b_spline_curve".into(),
-                        "rational_b_spline_curve".into(),
-                    ],
+                    absorbs: vec!["b_spline_curve".into(), "rational_b_spline_curve".into()],
                     fields_strategy: FieldsStrategy::Union,
                     reasons: Some("Mathematical equivalence — unify under one type".into()),
                     kind: None,
@@ -1057,12 +1055,8 @@ mod tests {
     #[test]
     fn merge_target_single_struct_with_enum_of_errors() {
         let entities = merge_seed(&["a", "b"]);
-        let merges = merge_with_override(
-            "ab",
-            vec!["a", "b"],
-            Some("single_struct"),
-            Some("curve"),
-        );
+        let merges =
+            merge_with_override("ab", vec!["a", "b"], Some("single_struct"), Some("curve"));
         let err = apply_splits_merges(&entities, &SplitsFile::default(), &merges).unwrap_err();
         assert!(err.contains("merges.toml"));
         assert!(err.contains("merge.m"));
@@ -1114,7 +1108,10 @@ mod tests {
     fn recast_to_in_enum_updates_variant_group_arena_reasons() {
         let mut out = BTreeMap::new();
         out.insert("line".into(), summary(VariantSpec::SingleStruct, "line"));
-        out.insert("circle".into(), summary(VariantSpec::SingleStruct, "circle"));
+        out.insert(
+            "circle".into(),
+            summary(VariantSpec::SingleStruct, "circle"),
+        );
         let recasts = recast_with(
             "curve_unification",
             "in_enum",
@@ -1187,14 +1184,7 @@ mod tests {
     fn recast_invalid_kind_errors_with_file_label() {
         let mut out = BTreeMap::new();
         out.insert("line".into(), summary(VariantSpec::SingleStruct, "line"));
-        let recasts = recast_with(
-            "bad",
-            "weird_kind",
-            None,
-            "curve",
-            vec!["line"],
-            None,
-        );
+        let recasts = recast_with("bad", "weird_kind", None, "curve", vec!["line"], None);
         let err = apply_recasts(&mut out, &recasts).unwrap_err();
         assert!(err.contains("recasts.toml"));
         assert!(err.contains("recast.bad"));
@@ -1373,10 +1363,7 @@ mod tests {
         let removed = collapse_single_child_enum_bases(&mut out).unwrap();
         assert!(removed.is_empty());
         assert!(out.contains_key("conic"));
-        assert!(matches!(
-            out["circle"].variant,
-            VariantSpec::InEnum { .. }
-        ));
+        assert!(matches!(out["circle"].variant, VariantSpec::InEnum { .. }));
     }
 
     #[test]

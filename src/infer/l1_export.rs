@@ -152,9 +152,11 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
     let mut type_aliases: BTreeMap<String, EarlyTypeDef> = BTreeMap::new();
     for s in &ranked {
         for (tn, td) in &s.types {
-            type_aliases.entry(tn.clone()).or_insert_with(|| EarlyTypeDef {
-                aliased: ty_repr(&td.aliased),
-            });
+            type_aliases
+                .entry(tn.clone())
+                .or_insert_with(|| EarlyTypeDef {
+                    aliased: ty_repr(&td.aliased),
+                });
         }
     }
 

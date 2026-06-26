@@ -97,9 +97,7 @@ fn tokenize(body: &str) -> Result<Vec<Token>, String> {
             c if c.is_ascii_alphabetic() || c == b'_' => {
                 // Longest-match identifier: [a-zA-Z_][a-zA-Z0-9_]*
                 let start = i;
-                while i < bytes.len()
-                    && (bytes[i].is_ascii_alphanumeric() || bytes[i] == b'_')
-                {
+                while i < bytes.len() && (bytes[i].is_ascii_alphanumeric() || bytes[i] == b'_') {
                     i += 1;
                 }
                 let word = &body[start..i];
@@ -307,7 +305,10 @@ mod tests {
     fn b6_entity_andor_oneof() {
         assert_eq!(
             parse("track ANDOR ONEOF (a, b, c)").unwrap(),
-            andor(vec![ent("track"), oneof(vec![ent("a"), ent("b"), ent("c")])])
+            andor(vec![
+                ent("track"),
+                oneof(vec![ent("a"), ent("b"), ent("c")])
+            ])
         );
     }
 
@@ -362,7 +363,8 @@ mod tests {
 
     #[test]
     fn multi_line_whitespace_tolerated() {
-        let body = "ONEOF (\n    intersection_curve,\n    seam_curve\n  ) ANDOR\n  bounded_surface_curve";
+        let body =
+            "ONEOF (\n    intersection_curve,\n    seam_curve\n  ) ANDOR\n  bounded_surface_curve";
         assert_eq!(
             parse(body).unwrap(),
             andor(vec![
@@ -398,7 +400,10 @@ mod tests {
         // Real schemas (AP214e3 binary_function_call) ship this form.
         // Parser collapses to the bare entity to keep behavior close to
         // grouping parens.
-        assert_eq!(parse("ONEOF (atan_function)").unwrap(), ent("atan_function"));
+        assert_eq!(
+            parse("ONEOF (atan_function)").unwrap(),
+            ent("atan_function")
+        );
     }
 
     #[test]

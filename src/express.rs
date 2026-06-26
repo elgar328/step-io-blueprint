@@ -410,7 +410,9 @@ fn process_type_block(
     let aliased = match parse_type_repr(repr) {
         Ok(t) => t,
         Err(e) => {
-            warnings.push(format!("TYPE {name}: parse repr failed ({e}) — repr was {repr:?}"));
+            warnings.push(format!(
+                "TYPE {name}: parse repr failed ({e}) — repr was {repr:?}"
+            ));
             return;
         }
     };
@@ -508,7 +510,9 @@ fn extract_attrs(
         let ty = match parse_type_repr(type_part) {
             Ok(t) => t,
             Err(e) => {
-                let label = redeclared_name.clone().unwrap_or_else(|| format!("{names:?}"));
+                let label = redeclared_name
+                    .clone()
+                    .unwrap_or_else(|| format!("{names:?}"));
                 warnings.push(format!(
                     "{entity_name}: ATTR type parse failed for {label} ({e}) — type was {type_part:?}"
                 ));
@@ -716,9 +720,8 @@ pub fn parse_type_repr(input: &str) -> Result<AttrType, String> {
     ] {
         if let Some(rest) = match_keyword_prefix(trimmed, kw) {
             let after_bound = strip_bracket_bound(rest).trim_start();
-            let after_of = match_keyword_prefix(after_bound, "OF").ok_or_else(|| {
-                format!("{kw} not followed by OF: {after_bound:?}")
-            })?;
+            let after_of = match_keyword_prefix(after_bound, "OF")
+                .ok_or_else(|| format!("{kw} not followed by OF: {after_bound:?}"))?;
             // Skip optional UNIQUE / OPTIONAL modifier inside aggregation.
             let after_mod = match_keyword_prefix(after_of.trim_start(), "UNIQUE")
                 .or_else(|| match_keyword_prefix(after_of.trim_start(), "OPTIONAL"))
@@ -742,14 +745,14 @@ pub fn parse_type_repr(input: &str) -> Result<AttrType, String> {
         // Skip optional `BASED_ON parent WITH` chain.
         let mut cur = rest.trim_start();
         if let Some(after) = match_keyword_prefix(cur, "BASED_ON") {
-            let with_pos = after.to_uppercase().find("WITH").ok_or_else(|| {
-                format!("ENUMERATION BASED_ON without WITH: {after:?}")
-            })?;
+            let with_pos = after
+                .to_uppercase()
+                .find("WITH")
+                .ok_or_else(|| format!("ENUMERATION BASED_ON without WITH: {after:?}"))?;
             cur = after[with_pos + "WITH".len()..].trim_start();
         }
-        let after_of = match_keyword_prefix(cur, "OF").ok_or_else(|| {
-            format!("ENUMERATION not followed by OF: {cur:?}")
-        })?;
+        let after_of = match_keyword_prefix(cur, "OF")
+            .ok_or_else(|| format!("ENUMERATION not followed by OF: {cur:?}"))?;
         let inside = extract_paren_content(after_of)?;
         return Ok(AttrType::Enumeration(split_top_level_commas_lower(inside)));
     }
@@ -903,7 +906,10 @@ mod tests {
         let block = "ENTITY shape_aspect\n  SUPERTYPE OF (\n      ONEOF (\n          contacting_feature,\n          datum,\n          datum_feature,\n          datum_target));\n  name : label;\n  description : text;\n  of_shape : product_definition_shape;\n  product_definitional : LOGICAL;\nEND_ENTITY;";
         let attrs = parse_attrs_for(block);
         let names: Vec<_> = attrs.iter().map(|a| a.name.as_str()).collect();
-        assert_eq!(names, vec!["name", "description", "of_shape", "product_definitional"]);
+        assert_eq!(
+            names,
+            vec!["name", "description", "of_shape", "product_definitional"]
+        );
         match &attrs[3].ty {
             AttrType::Primitive(p) => assert_eq!(p, "LOGICAL"),
             other => panic!("expected LOGICAL, got {other:?}"),
@@ -924,7 +930,9 @@ mod tests {
         let mut entities = HashMap::new();
         let mut warnings = Vec::new();
         process_entity_block(block, &mut entities, &mut warnings);
-        let e = entities.get("geometric_representation_item").expect("parsed");
+        let e = entities
+            .get("geometric_representation_item")
+            .expect("parsed");
         assert!(e.is_abstract);
         assert_eq!(e.parents, vec!["representation_item"]);
     }
@@ -949,7 +957,8 @@ mod tests {
     #[test]
     fn parses_select_select_and_optional() {
         // OPTIONAL wrapping a SELECT alias, plus an inline SELECT-typed attr.
-        let block = "ENTITY foo;\n  a : OPTIONAL my_select;\n  b : SELECT (alpha, beta);\nEND_ENTITY;";
+        let block =
+            "ENTITY foo;\n  a : OPTIONAL my_select;\n  b : SELECT (alpha, beta);\nEND_ENTITY;";
         let attrs = parse_attrs_for(block);
         assert_eq!(attrs.len(), 2);
         match &attrs[0].ty {
@@ -960,18 +969,16 @@ mod tests {
             other => panic!("expected OPTIONAL, got {other:?}"),
         }
         match &attrs[1].ty {
-            AttrType::Select(names) => assert_eq!(names, &vec!["alpha".to_string(), "beta".to_string()]),
+            AttrType::Select(names) => {
+                assert_eq!(names, &vec!["alpha".to_string(), "beta".to_string()])
+            }
             other => panic!("expected SELECT, got {other:?}"),
         }
     }
 
     #[test]
     fn parses_set_bag_array() {
-        for (kw, ctor_check) in [
-            ("SET", "SET"),
-            ("BAG", "BAG"),
-            ("ARRAY", "ARRAY"),
-        ] {
+        for (kw, ctor_check) in [("SET", "SET"), ("BAG", "BAG"), ("ARRAY", "ARRAY")] {
             let block = format!("ENTITY foo;\n  x : {kw} [1 : 5] OF point;\nEND_ENTITY;");
             let attrs = parse_attrs_for(&block);
             assert_eq!(attrs.len(), 1);
@@ -989,11 +996,17 @@ mod tests {
     fn parses_primitives_with_size() {
         let block = "ENTITY foo;\n  s : STRING(20);\n  s2 : STRING;\n  i : INTEGER;\n  r : REAL;\n  l : LOGICAL;\nEND_ENTITY;";
         let attrs = parse_attrs_for(block);
-        let prims: Vec<&str> = attrs.iter().filter_map(|a| match &a.ty {
-            AttrType::Primitive(p) => Some(p.as_str()),
-            _ => None,
-        }).collect();
-        assert_eq!(prims, vec!["STRING", "STRING", "INTEGER", "REAL", "LOGICAL"]);
+        let prims: Vec<&str> = attrs
+            .iter()
+            .filter_map(|a| match &a.ty {
+                AttrType::Primitive(p) => Some(p.as_str()),
+                _ => None,
+            })
+            .collect();
+        assert_eq!(
+            prims,
+            vec!["STRING", "STRING", "INTEGER", "REAL", "LOGICAL"]
+        );
     }
 
     #[test]
@@ -1058,7 +1071,8 @@ mod tests {
 
     #[test]
     fn parses_type_list_alias() {
-        let block = "TYPE common_datum_list = LIST [2 : ?] OF datum_reference_element;\n  END_TYPE;\n";
+        let block =
+            "TYPE common_datum_list = LIST [2 : ?] OF datum_reference_element;\n  END_TYPE;\n";
         let mut types = HashMap::new();
         let mut warnings = Vec::new();
         process_type_block(block, &mut types, &mut warnings);
@@ -1078,11 +1092,21 @@ mod tests {
     #[test]
     fn parses_all_real_schemas() {
         let schemas = load_all_schemas(Path::new("schemas"));
-        assert_eq!(schemas.len(), 6, "expected 6 schemas, got {}", schemas.len());
+        assert_eq!(
+            schemas.len(),
+            6,
+            "expected 6 schemas, got {}",
+            schemas.len()
+        );
 
-        let by_label: HashMap<&str, &Schema> = schemas.iter().map(|s| (s.source_label.as_str(), s)).collect();
+        let by_label: HashMap<&str, &Schema> = schemas
+            .iter()
+            .map(|s| (s.source_label.as_str(), s))
+            .collect();
         for label in ["ap203", "ap203e2", "ap214e3", "ap242"] {
-            let s = by_label.get(label).unwrap_or_else(|| panic!("missing schema {label}"));
+            let s = by_label
+                .get(label)
+                .unwrap_or_else(|| panic!("missing schema {label}"));
             assert!(
                 s.entities.len() >= 100,
                 "{label}: too few entities ({}). likely a parser regression",
@@ -1136,12 +1160,13 @@ mod tests {
             ("ap242", "solid_with_slot"),
         ];
         for (schema_label, entity_name) in b7_entities {
-            let s = by_label.get(schema_label).unwrap_or_else(|| {
-                panic!("missing schema {schema_label}")
-            });
-            let ent = s.entities.get(*entity_name).unwrap_or_else(|| {
-                panic!("missing entity {schema_label}/{entity_name}")
-            });
+            let s = by_label
+                .get(schema_label)
+                .unwrap_or_else(|| panic!("missing schema {schema_label}"));
+            let ent = s
+                .entities
+                .get(*entity_name)
+                .unwrap_or_else(|| panic!("missing entity {schema_label}/{entity_name}"));
             assert!(
                 ent.supertype_expr.is_some(),
                 "{schema_label}/{entity_name}: supertype_expr unexpectedly None — silent fallback?"

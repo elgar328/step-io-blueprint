@@ -152,10 +152,10 @@ pub fn run() -> Result<(), String> {
     }
 
     let pools_path = Path::new("inferred").join(FILE_POOLS);
-    let pools_body = fs::read_to_string(&pools_path)
-        .map_err(|e| format!("read {pools_path:?}: {e}"))?;
-    let pools_file: PoolsFile = toml::from_str(&pools_body)
-        .map_err(|e| format!("parse {pools_path:?}: {e}"))?;
+    let pools_body =
+        fs::read_to_string(&pools_path).map_err(|e| format!("read {pools_path:?}: {e}"))?;
+    let pools_file: PoolsFile =
+        toml::from_str(&pools_body).map_err(|e| format!("parse {pools_path:?}: {e}"))?;
 
     let names = load_names()?;
 
@@ -186,10 +186,7 @@ fn load_names() -> Result<NamesFile, String> {
 /// Word-level acronyms. A snake_case word matching one of these keys
 /// is emitted as the mapped form instead of the default capitalize-
 /// first-letter rule.
-const KNOWN_ACRONYMS: &[(&str, &str)] = &[
-    ("pcurve", "PCurve"),
-    ("rgb", "RGB"),
-];
+const KNOWN_ACRONYMS: &[(&str, &str)] = &[("pcurve", "PCurve"), ("rgb", "RGB")];
 
 fn snake_to_pascal(s: &str) -> String {
     s.split('_')
@@ -342,10 +339,7 @@ fn id_arena_for(
     arena_id_lookup.get(&summary.arena).cloned()
 }
 
-fn validate_stale(
-    names: &NamesFile,
-    entities: &BTreeMap<String, EntitySummary>,
-) -> Vec<String> {
+fn validate_stale(names: &NamesFile, entities: &BTreeMap<String, EntitySummary>) -> Vec<String> {
     let mut out = Vec::new();
     let check_entity_category =
         |entity: &str, category: &str, has: fn(&Categories) -> bool, warnings: &mut Vec<String>| {
@@ -433,9 +427,10 @@ fn ty_string(ty: &AttrType, types: &HashMap<String, AttrType>) -> String {
         AttrType::Entity(name) => {
             // If the name resolves to a TYPE alias, unfold it.
             if let Some(resolved) = resolve_alias(name, types)
-                && !matches!(resolved, AttrType::Entity(n) if n == name) {
-                    return ty_string(resolved, types);
-                }
+                && !matches!(resolved, AttrType::Entity(n) if n == name)
+            {
+                return ty_string(resolved, types);
+            }
             format!("ref_{name}")
         }
         AttrType::List(inner) => format!("list_{}", ty_string(inner, types)),
@@ -620,9 +615,12 @@ fn compile_ir(
         };
 
         let id = if cats.has_id {
-            Some(arena_id_lookup.get(&summary.arena).cloned().unwrap_or_else(
-                || format!("{}Id", snake_to_pascal(&summary.arena)),
-            ))
+            Some(
+                arena_id_lookup
+                    .get(&summary.arena)
+                    .cloned()
+                    .unwrap_or_else(|| format!("{}Id", snake_to_pascal(&summary.arena))),
+            )
         } else {
             None
         };
@@ -672,11 +670,9 @@ fn compile_ir(
         let enum_of = enum_of_for(&summary.variant);
 
         let (into, as_field, target, chain) = match &summary.variant {
-            VariantSpec::NestedField {
-                into,
-                as_field,
-                ..
-            } => (Some(into.clone()), Some(as_field.clone()), None, Vec::new()),
+            VariantSpec::NestedField { into, as_field, .. } => {
+                (Some(into.clone()), Some(as_field.clone()), None, Vec::new())
+            }
             VariantSpec::MergedInto { target, chain } => {
                 (None, None, Some(target.clone()), chain.clone())
             }
@@ -685,23 +681,27 @@ fn compile_ir(
 
         let mut fields: Vec<IrField> = Vec::new();
         if cats.has_fields
-            && let Some(attrs) = attr_types.get(entity) {
-                for rec in attrs {
-                    // Field rename keyed by `entity.attr`. A same-name
-                    // collision shares the key, so a rename applies to
-                    // both colliding slots — acceptable; tighten to
-                    // `entity.from.attr` only if precise rename is ever
-                    // needed.
-                    let key = format!("{entity}.{}", rec.name);
-                    let renamed =
-                        names.field.get(&key).cloned().unwrap_or_else(|| rec.name.clone());
-                    fields.push(IrField {
-                        name: renamed,
-                        ty: rec.ty.clone(),
-                        from: rec.from.clone(),
-                    });
-                }
+            && let Some(attrs) = attr_types.get(entity)
+        {
+            for rec in attrs {
+                // Field rename keyed by `entity.attr`. A same-name
+                // collision shares the key, so a rename applies to
+                // both colliding slots — acceptable; tighten to
+                // `entity.from.attr` only if precise rename is ever
+                // needed.
+                let key = format!("{entity}.{}", rec.name);
+                let renamed = names
+                    .field
+                    .get(&key)
+                    .cloned()
+                    .unwrap_or_else(|| rec.name.clone());
+                fields.push(IrField {
+                    name: renamed,
+                    ty: rec.ty.clone(),
+                    from: rec.from.clone(),
+                });
             }
+        }
 
         let shape = summary.shape.map(|s| match s {
             ConcreteSupertypeShape::Carrier => "carrier".to_string(),
@@ -743,8 +743,7 @@ fn compile_ir(
 fn write_ir_toml(ir: &BTreeMap<String, IrEntity>) -> Result<(), String> {
     let mut outer: BTreeMap<&str, &BTreeMap<String, IrEntity>> = BTreeMap::new();
     outer.insert("entity", ir);
-    let body = toml::to_string_pretty(&outer)
-        .map_err(|e| format!("serialize {FILE_IR}: {e}"))?;
+    let body = toml::to_string_pretty(&outer).map_err(|e| format!("serialize {FILE_IR}: {e}"))?;
     let header = "# Generated by `infer naming`. Do not edit manually.\n\
                   # Single source of truth for step-io codegen.\n\
                   # Inputs: abstract_entities.toml + pools.toml + names.toml + schemas/*.exp\n\n";
@@ -786,8 +785,14 @@ mod tests {
     #[test]
     fn ty_string_primitives_and_refs() {
         let types = HashMap::new();
-        assert_eq!(ty_string(&AttrType::Primitive("REAL".into()), &types), "real");
-        assert_eq!(ty_string(&AttrType::Primitive("BOOLEAN".into()), &types), "bool");
+        assert_eq!(
+            ty_string(&AttrType::Primitive("REAL".into()), &types),
+            "real"
+        );
+        assert_eq!(
+            ty_string(&AttrType::Primitive("BOOLEAN".into()), &types),
+            "bool"
+        );
         assert_eq!(
             ty_string(&AttrType::Entity("cartesian_point".into()), &types),
             "ref_cartesian_point"
@@ -826,7 +831,10 @@ mod tests {
 
     /// ty of the first field named `name` in an ordered FieldRec list.
     fn fty<'a>(fields: &'a [FieldRec], name: &str) -> Option<&'a str> {
-        fields.iter().find(|f| f.name == name).map(|f| f.ty.as_str())
+        fields
+            .iter()
+            .find(|f| f.name == name)
+            .map(|f| f.ty.as_str())
     }
 
     /// Ordered list of field names — for asserting STEP P21 order.
@@ -867,7 +875,11 @@ mod tests {
     #[test]
     fn build_attr_types_single_inheritance() {
         let schemas = vec![schema_of(vec![
-            ent("parent", &[], &[("name", AttrType::Primitive("STRING".into()))]),
+            ent(
+                "parent",
+                &[],
+                &[("name", AttrType::Primitive("STRING".into()))],
+            ),
             ent(
                 "child",
                 &["parent"],
@@ -1015,7 +1027,11 @@ mod tests {
         assert_eq!(child[1].from, "b");
     }
 
-    fn make_summary(variant: VariantSpec, arena: &str, shape: Option<ConcreteSupertypeShape>) -> EntitySummary {
+    fn make_summary(
+        variant: VariantSpec,
+        arena: &str,
+        shape: Option<ConcreteSupertypeShape>,
+    ) -> EntitySummary {
         EntitySummary {
             variant,
             group: arena.to_string(),
