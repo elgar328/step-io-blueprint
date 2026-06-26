@@ -138,6 +138,19 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
             }
         }
     }
+    // Corpus-augmented: entities observed as complex-record parts in the corpus
+    // (complex_part_count > 0) are genuine combinable leaves, even when the
+    // EXPRESS declaration only ONEOF-restricts them (no enclosing AndOr). This
+    // recovers real MI combinations the declaration-only rule misses — e.g. the
+    // `repositioned_tessellated_geometric_set` complex combines two ONEOF
+    // siblings of tessellated_item. The entity_parents guard drops corpus-only
+    // measure types (length_measure etc.) that are not schema entities.
+    let summary = crate::infer::prune::load_corpus_summary()?;
+    for (name, rec) in &summary {
+        if rec.complex_part_count > 0 && unified.entity_parents.contains_key(name) {
+            combinable.insert(name.clone());
+        }
+    }
     let mut is_complex_part: BTreeSet<String> = BTreeSet::new();
     let mut stack: Vec<String> = combinable.into_iter().collect();
     while let Some(n) = stack.pop() {
@@ -234,7 +247,11 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                   # derived/derivable `*` slots from these. Names/own_attrs prefer newest AP.\n\n";
     fs::create_dir_all("inferred").map_err(|e| e.to_string())?;
     fs::write(OUT, format!("{header}{body}")).map_err(|e| e.to_string())?;
-    let with_derives = doc.entity.values().filter(|e| !e.derives.is_empty()).count();
+    let with_derives = doc
+        .entity
+        .values()
+        .filter(|e| !e.derives.is_empty())
+        .count();
     eprintln!(
         "wrote {OUT}: {} entities ({with_derives} with derives), {} type aliases",
         doc.entity.len(),
