@@ -20,7 +20,7 @@ use serde::Serialize;
 
 use std::collections::BTreeSet;
 
-use crate::express::{Schema, SupertypeExpr};
+use crate::express::{AttrType, Schema, SupertypeExpr};
 use crate::infer::export_common::{redeclaration_has_signal, schema_rank, ty_repr};
 use crate::infer::refgraph;
 
@@ -225,15 +225,47 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
         );
     }
 
-    let mut type_aliases: BTreeMap<String, UnivTypeDef> = BTreeMap::new();
+    // universal = read superset over ALL schemas. SELECT membership is UNIONed
+    // across editions (a member legal in any edition must be readable); non-SELECT
+    // aliases keep newest-wins. (Older editions can carry members a newer edition
+    // dropped — e.g. approved_item has product_definition in ap203 but not ap242.)
+    // Iterate newest-first so the union order is newest members then older-only
+    // members appended; per-name accumulation makes the result order-independent
+    // of the per-schema HashMap iteration.
+    let mut select_members: BTreeMap<String, Vec<String>> = BTreeMap::new();
+    let mut other_aliased: BTreeMap<String, String> = BTreeMap::new();
     for s in &ranked {
         for (tn, td) in &s.types {
-            type_aliases
-                .entry(tn.clone())
-                .or_insert_with(|| UnivTypeDef {
-                    aliased: ty_repr(&td.aliased),
-                });
+            match &td.aliased {
+                AttrType::Select(members) => {
+                    let acc = select_members.entry(tn.clone()).or_default();
+                    for m in members {
+                        if !acc.contains(m) {
+                            acc.push(m.clone());
+                        }
+                    }
+                }
+                _ => {
+                    other_aliased
+                        .entry(tn.clone())
+                        .or_insert_with(|| ty_repr(&td.aliased));
+                }
+            }
         }
+    }
+    let mut type_aliases: BTreeMap<String, UnivTypeDef> = BTreeMap::new();
+    for (tn, members) in select_members {
+        type_aliases.insert(
+            tn,
+            UnivTypeDef {
+                aliased: format!("SELECT({})", members.join(", ")),
+            },
+        );
+    }
+    // A name that is SELECT in some schema and a plain alias in another keeps the
+    // SELECT union (inserted above); only names that are never SELECT land here.
+    for (tn, aliased) in other_aliased {
+        type_aliases.entry(tn).or_insert(UnivTypeDef { aliased });
     }
 
     let doc = UniversalToml {
