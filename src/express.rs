@@ -24,8 +24,8 @@ mod supertype_parser;
 
 /// Type of an ATTR or TYPE alias. Bound information (`[1:3]`) and inner
 /// `UNIQUE`/`OPTIONAL` modifiers on aggregations are intentionally dropped
-/// — infer pipeline cares only about the polymorphic / reference
-/// structure, not capacity hints.
+/// — the exporters care only about the reference / polymorphic structure,
+/// not capacity hints.
 #[derive(Debug, Clone, Serialize)]
 pub enum AttrType {
     /// `cartesian_point` — entity name OR TYPE alias name (resolved at
@@ -42,8 +42,7 @@ pub enum AttrType {
     /// `OPTIONAL X` — preserved because the optionality affects
     /// nullability of cross-references.
     Optional(Box<AttrType>),
-    /// `SELECT (a, b, c)` — polymorphic over the listed names. Strong
-    /// signal for variant-stage polymorphic context detection.
+    /// `SELECT (a, b, c)` — polymorphic over the listed names.
     Select(Vec<String>),
     /// `ENUMERATION OF (a, b, c)` — named string values, NOT a polymorphic
     /// signal (the values aren't entities).
@@ -86,15 +85,15 @@ pub struct EntitySchema {
     /// `cartesian_point`, `shape_aspect`, etc. (lowercase as per EXPRESS).
     pub name: String,
     /// Direct parents from `SUBTYPE OF (a, b)`, in declaration order.
-    /// Multiple inheritance is supported — attribute collection walks
-    /// every parent's chain (see `naming::collect_ancestor_attrs`).
+    /// Multiple inheritance is supported — consumers flatten inheritance by
+    /// walking every parent's chain.
     pub parents: Vec<String>,
     /// Attributes declared in this entity (excludes inherited).
     pub own_attrs: Vec<AttrSpec>,
     /// `SELF\supertype.attr : type` redeclarations — type narrowing of an
     /// inherited attribute, not a new attribute. Kept separate from
-    /// `own_attrs` so variant.rs / refgraph.rs (which read `own_attrs`)
-    /// are unaffected; only `build_attr_types` consumes this.
+    /// `own_attrs` so consumers reading `own_attrs` are unaffected; the
+    /// exporters fold in the narrowing signal via `redeclaration_has_signal`.
     pub redeclared_attrs: Vec<AttrSpec>,
     /// `ABSTRACT SUPERTYPE` flag.
     pub is_abstract: bool,

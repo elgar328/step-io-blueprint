@@ -1,7 +1,6 @@
 /target
 /.claude
 
-# inferred/ holds both the hand-authored inputs and the generated pipeline
-# outputs (ir.toml etc.) — all tracked so the blueprint is browsable without
-# running the tool. Only the transient pending-gate files are ignored.
-/inferred/*_pending.toml
+# inferred/ holds the frozen corpus input (corpus_usage.toml) and the generated
+# universal.toml — both tracked so the blueprint is browsable without running the
+# tool. profiles/ (generated output profiles) is tracked for the same reason.

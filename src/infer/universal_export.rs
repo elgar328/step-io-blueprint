@@ -4,9 +4,8 @@
 //! per-entity **DERIVE facts** so codegen can mark derived/derivable (`*`) slots
 //! without a hand-written mapping.
 //!
-//! Separation: depends only on the shared substrate (`express`, `refgraph`,
-//! `export_common`) — NOT on the 7-stage `ir.toml` pipeline — so that pipeline
-//! can be removed later without affecting this exporter.
+//! Depends only on the shared substrate (`express`, `refgraph`,
+//! `export_common`).
 //!
 //! DERIVE facts are emitted raw (the entity's own `DERIVE` statement targets);
 //! the hard-vs-derivable interpretation (which needs complex-part knowledge)
@@ -175,10 +174,8 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
             .iter()
             .find_map(|s| s.entities.get(name))
             .is_some_and(|e| e.supertype_expr.is_none());
-        if bare {
-            if let Some(kids) = children.get(name) {
-                combinable.extend(kids.iter().cloned());
-            }
+        if bare && let Some(kids) = children.get(name) {
+            combinable.extend(kids.iter().cloned());
         }
     }
     // Corpus-augmented: entities observed as complex-record parts in the corpus

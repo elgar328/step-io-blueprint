@@ -15,10 +15,9 @@
 //! `a AND b ANDOR c AND d` parses as `AndOr([And([a,b]), And([c,d])])`.
 //!
 //! Outputs a faithful `SupertypeExpr` tree. Anonymous composition nodes
-//! (AndOr / And / OneOf inside another node) are preserved; downstream
-//! variant classification can recognise specific patterns or raise an
-//! `Unresolved` decision for unknown ones. There is no silent fallback —
-//! any unparseable input returns `Err`.
+//! (AndOr / And / OneOf inside another node) are preserved so consumers can
+//! recognise specific patterns. There is no silent fallback — any unparseable
+//! input returns `Err`.
 //!
 //! ## Module boundary
 //!
