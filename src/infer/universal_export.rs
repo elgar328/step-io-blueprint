@@ -13,18 +13,61 @@
 //! happens in codegen. Each entry is `"super.attr"` for a `SELF\super.attr`
 //! redeclaration or `"attr"` for a plain own-attr derive.
 
-use std::collections::BTreeMap;
+use std::collections::{BTreeMap, BTreeSet};
 use std::fs;
+use std::path::Path;
 
-use serde::Serialize;
-
-use std::collections::BTreeSet;
+use serde::{Deserialize, Serialize};
 
 use crate::express::{AttrType, Schema, SupertypeExpr};
 use crate::infer::export_common::{redeclaration_has_signal, schema_rank, ty_repr};
 use crate::infer::refgraph;
 
 const OUT: &str = "inferred/universal.toml";
+const FILE_CORPUS_USAGE: &str = "corpus_usage.toml";
+
+/// Per-entity corpus usage record, deserialized from the frozen
+/// `inferred/corpus_usage.toml` (produced externally by step-io-reference-check's
+/// `corpus-usage` bin and copied in). Only `complex_part_count` is read here —
+/// to recover real MI combinations the declaration-only rule misses.
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+pub struct UsageRecord {
+    /// Total occurrences across the corpus (`standalone + complex_part`).
+    pub instance_count: usize,
+    /// Occurrences as a part of a complex MI instance (`#N=( ... NAME(...) ... )`).
+    #[serde(default, skip_serializing_if = "is_zero")]
+    pub complex_part_count: usize,
+    /// Other entity names seen in the same complex-MI block, sorted.
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    pub co_instantiated_with: Vec<String>,
+}
+
+fn is_zero(n: &usize) -> bool {
+    *n == 0
+}
+
+/// Read the frozen corpus summary (`inferred/corpus_usage.toml`).
+fn load_corpus_summary() -> Result<BTreeMap<String, UsageRecord>, String> {
+    let path = Path::new("inferred").join(FILE_CORPUS_USAGE);
+    if !path.exists() {
+        return Err(format!(
+            "{} not found — generate it with `cargo run --release --bin corpus-usage` \
+             in step-io-reference-check and copy it into inferred/.",
+            path.display()
+        ));
+    }
+    let body = fs::read_to_string(&path).map_err(|e| format!("read {path:?}: {e}"))?;
+    let mut outer: BTreeMap<String, BTreeMap<String, UsageRecord>> =
+        toml::from_str(&body).map_err(|e| format!("parse {path:?}: {e}"))?;
+    let summary = outer.remove("entity").unwrap_or_default();
+    if summary.is_empty() {
+        return Err(format!(
+            "{} has no [entity.*] records — regenerate it.",
+            path.display()
+        ));
+    }
+    Ok(summary)
+}
 
 /// serde `skip_serializing_if` for a `false` bool (keep the file small).
 fn is_false(b: &bool) -> bool {
@@ -145,7 +188,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
     // `repositioned_tessellated_geometric_set` complex combines two ONEOF
     // siblings of tessellated_item. The entity_parents guard drops corpus-only
     // measure types (length_measure etc.) that are not schema entities.
-    let summary = crate::infer::prune::load_corpus_summary()?;
+    let summary = load_corpus_summary()?;
     for (name, rec) in &summary {
         if rec.complex_part_count > 0 && unified.entity_parents.contains_key(name) {
             combinable.insert(name.clone());
