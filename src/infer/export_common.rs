@@ -1,7 +1,6 @@
-//! Shared helpers for the faithful exporters (`l1_export`, `profile_export`,
-//! `universal_export`). Kept here — not in any one exporter — so the schema-
-//! faithful `universal_export` does not depend on `l1_export` and the early/ir
-//! exporters can be removed later without breaking it.
+//! Shared helpers for the faithful exporters (`universal_export`,
+//! `profile_export`). Kept here — not in any one exporter — so both share the
+//! schema-faithful classification/signal logic.
 
 use crate::express::{AttrType, Schema};
 

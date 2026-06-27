@@ -1,23 +1,20 @@
 //! Profile export stage — emit `profiles/<target>.toml`, the per-target
 //! **output SchemaProfile** for schema-conditioned writing in step-io.
 //!
-//! While [`l1_export`](crate::infer::l1_export) emits ONE union `early.toml`
-//! (all schemas merged, newest-AP wins) for *reading* every input, the writer
-//! needs to know, *per output target*, which entities are legal and what each
-//! entity's attributes are. This stage emits one profile per curated output
-//! target — each the **latest IS edition** of its AP family:
+//! The writer needs to know, *per output target*, which entities are legal and
+//! what each entity's attributes are. This stage emits one profile per curated
+//! output target — each the **latest IS edition** of its AP family:
 //!
 //! - `ap214e3`  ← AP214 ed3 (ISO 10303-214:2010 IS)
 //! - `ap242e2`  ← AP242 ed2 (ISO 10303-242:2020 IS)
 //! - `ap203e2`  ← AP203 ed2 (ISO 10303-403 IS)
 //!
-//! Unlike `l1_export`, this does NOT union or newest-AP-pick: each profile is
-//! built from that target's **single** [`Schema`] (`schema.entities` verbatim),
-//! so an entity's presence = legal in the target, absence = illegal (step-io's
-//! projection drops it). Attribute repr (`ty_repr`) and the redeclaration
-//! signal filter are reused from `l1_export` so profiles match early.toml's
-//! shape; step-io flattens inheritance from `parents` (it never appears
-//! pre-flattened, mirroring early.toml).
+//! Each profile is built from that target's **single** [`Schema`]
+//! (`schema.entities` verbatim, no union or newest-AP-pick), so an entity's
+//! presence = legal in the target, absence = illegal (step-io's projection drops
+//! it). Attribute repr (`ty_repr`) and the redeclaration signal filter come from
+//! `export_common`; step-io flattens inheritance from `parents` (attrs are never
+//! pre-flattened here).
 //!
 //! `[meta]` (FILE_SCHEMA descriptor + APPLICATION_PROTOCOL_DEFINITION) is not
 //! derivable from the `.exp` (those are Part21 header constructs), so it is
@@ -99,8 +96,8 @@ struct ProfileAttr {
     ty: String,
 }
 
-/// One legal entity in a target's output profile. Same shape as early.toml's
-/// entity (own attrs + parents; inheritance flattened by step-io) minus
+/// One legal entity in a target's output profile (own attrs + parents;
+/// inheritance flattened by step-io) minus
 /// `attr_conflicts`. Field order matters for toml (scalars before the
 /// array-of-tables `own_attrs`).
 #[derive(Serialize)]
@@ -274,7 +271,8 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
              # Source schema: {src} (latest IS edition of the AP).\n\
              # DO NOT hand-edit. Legal entity set + ordered attrs for schema-conditioned output.\n\
              # Presence = legal in this target; absence = illegal (step-io project drops).\n\
-             # own_attrs + parents only (step-io flattens inheritance); ty repr = see early.toml.\n\n",
+             # own_attrs + parents only (step-io flattens inheritance).\n\
+             # ty repr: primitives lowercase; bare token = entity/TYPE-alias ref; LIST/SET/BAG/ARRAY OF, OPTIONAL, SELECT(...), ENUM(...).\n\n",
             out = t.out_name,
             src = schema.source_label,
         );

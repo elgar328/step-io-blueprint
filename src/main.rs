@@ -53,7 +53,6 @@ fn main() -> ExitCode {
         Some("reshape") => run_reshape(),
         Some("pool") => run_pool(allow_pending),
         Some("naming") => run_naming(),
-        Some("l1_export") => run_l1_export(),
         Some("universal_export") => run_universal_export(),
         Some("profile_export") => run_profile_export(),
         None => {
@@ -159,20 +158,6 @@ fn run_reshape() -> ExitCode {
     }
 }
 
-fn run_l1_export() -> ExitCode {
-    let schemas = match load_schemas() {
-        Ok(s) => s,
-        Err(c) => return c,
-    };
-    match infer::l1_export::run(&schemas) {
-        Ok(()) => ExitCode::SUCCESS,
-        Err(e) => {
-            eprintln!("infer l1_export failed:\n{e}");
-            ExitCode::from(2)
-        }
-    }
-}
-
 fn run_universal_export() -> ExitCode {
     let schemas = match load_schemas() {
         Ok(s) => s,
@@ -224,8 +209,8 @@ fn print_usage() {
          cargo run --release -- reshape\n  \
          cargo run --release -- pool\n  \
          cargo run --release -- naming\n\n\
-         standalone (2-layer IR, independent of the pipeline above):\n  \
-         cargo run --release -- l1_export        # → inferred/early.toml (EarlyModel L1)\n  \
+         faithful exporters (independent of the pipeline above):\n  \
+         cargo run --release -- universal_export # → inferred/universal.toml (codegen input)\n  \
          cargo run --release -- profile_export   # → profiles/<target>.toml (output SchemaProfiles)"
     );
 }
