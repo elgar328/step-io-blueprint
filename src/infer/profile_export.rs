@@ -33,10 +33,9 @@ use crate::infer::export_common::{redeclaration_has_signal, ty_repr};
 const OUT_DIR: &str = "profiles";
 
 /// A curated output target. `label_match` is matched against
-/// [`Schema::source_label`] with `starts_with` (AP242 ed2's label is the full
-/// `ap242ed2_dis2_mim_lf_v1.101`, so an exact match would miss it). FILE_SCHEMA
-/// / APD values are corpus-verified IS, latest-edition descriptors (the `.exp`
-/// carries no Part21 header data).
+/// [`Schema::source_label`] with `starts_with` (labels are the clean schema file
+/// stems, e.g. `ap242e2`). FILE_SCHEMA / APD values are corpus-verified IS,
+/// latest-edition descriptors (the `.exp` carries no Part21 header data).
 struct Target {
     /// Output file name (`profiles/<out_name>.toml`).
     out_name: &'static str,
@@ -69,7 +68,7 @@ const TARGETS: &[Target] = &[
     },
     Target {
         out_name: "ap242e2",
-        label_match: "ap242ed2",
+        label_match: "ap242e2",
         file_schema: &["AP242_MANAGED_MODEL_BASED_3D_ENGINEERING_MIM_LF { 1 0 10303 442 3 1 4 }"],
         apd_status: "international standard",
         apd_name: "ap242_managed_model_based_3d_engineering_mim_lf",

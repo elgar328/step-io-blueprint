@@ -38,26 +38,29 @@ and copied in only when the corpus itself changes (rare).
 
 ## Schemas
 
-Six schemas are read as a union — five from
-[MBx-IF](https://www.mbx-if.org/home/mbx/resources/express-schemas/), and only
-the original AP203 (ed1), which MBx-IF does not offer, from
-[STEPCode](https://github.com/stepcode/stepcode). Line endings are normalized
-to LF (MBx-IF ships CRLF); content is unchanged.
+Six EXPRESS schemas are read as a union: AP203 (Ed 1–2), AP214 (Ed 3), and
+AP242 (Ed 1–3). The authoritative free source is the ISO **SMRL** (STEP Module &
+Resource Library); legacy non-modular schemas the SMRL does not carry come from
+[MBx-IF](https://www.mbx-if.org/home/mbx/resources/express-schemas/) /
+[STEPCode](https://github.com/stepcode/stepcode). Line endings are normalized to
+LF; schema content is unchanged.
 
-| schema | source |
-|---|---|
-| `ap203.exp` | STEPCode — AP203 ed1 |
-| `ap203e2_mim_lf.exp` | MBx-IF — AP203 ed2 |
-| `ap214e3.exp` | MBx-IF — AP214 ed3 |
-| `ap242_mim_lf.exp` | MBx-IF — AP242 ed1 |
-| `ap242ed2_dis2_mim_lf_v1.101.exp` | MBx-IF — AP242 ed2 |
-| `ap242ed3_mim_lf_v1.152.exp` | MBx-IF — AP242 ed3 |
+| file | edition | source |
+|---|---|---|
+| `ap203e1.exp` | AP203 Ed 1 | STEPCode |
+| `ap203e2.exp` | AP203 Ed 2 | SMRL v12 |
+| `ap214e3.exp` | AP214 Ed 3 | MBx-IF |
+| `ap242e1.exp` | AP242 Ed 1 | MBx-IF |
+| `ap242e2.exp` | AP242 Ed 2 | SMRL v8 |
+| `ap242e3.exp` | AP242 Ed 3 (TS) | SMRL v9 |
 
-Only mechanical-CAD schemas are used; the AP209/210/238/239/240, IFC,
-ISO 15926, and PDM domains are out of scope.
+Cached SMRL release zips (v4–v12) live in `schemas/smrl/`. Only mechanical-CAD
+schemas are used; AP209/210/238/239/240, IFC, ISO 15926, and PDM domains are out
+of scope.
 
-These `.exp` files are third-party ISO 10303 (STEP) schemas, not covered by
-this repo's license — see [`schemas/NOTICE.md`](schemas/NOTICE.md).
+These `.exp` files are third-party ISO 10303 (STEP) schemas, not covered by this
+repo's license. Full provenance, entity counts, model (MIM/AIM), and
+publication-tier (IS/TS) notes are in [`schemas/NOTICE.md`](schemas/NOTICE.md).
 
 ## Layout
 
@@ -70,7 +73,7 @@ src/
     ├── export_common.rs     shared exporter helpers (ty repr, schema rank, redeclaration signal)
     ├── universal_export.rs  → inferred/universal.toml (codegen input)
     └── profile_export.rs    → profiles/<target>.toml (output profiles)
-schemas/                     the six .exp schema files
+schemas/                     the six .exp schema files (+ smrl/ cached SMRL release zips, NOTICE.md)
 inferred/                    frozen corpus_usage.toml (input) + universal.toml (output)
 profiles/                    per-target output profiles
 ```

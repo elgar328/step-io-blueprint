@@ -1102,7 +1102,7 @@ mod tests {
             .iter()
             .map(|s| (s.source_label.as_str(), s))
             .collect();
-        for label in ["ap203", "ap203e2", "ap214e3", "ap242"] {
+        for label in ["ap203e1", "ap203e2", "ap214e3", "ap242e1"] {
             let s = by_label
                 .get(label)
                 .unwrap_or_else(|| panic!("missing schema {label}"));
@@ -1120,7 +1120,7 @@ mod tests {
         }
 
         // AP242 is the most comprehensive — sanity bound.
-        let ap242 = by_label.get("ap242").unwrap();
+        let ap242 = by_label.get("ap242e1").unwrap();
         assert!(
             ap242.entities.len() >= 700,
             "ap242: entity count {} below expected lower bound 700",
@@ -1133,7 +1133,7 @@ mod tests {
         );
 
         // AP203 is small; mainly here to catch the schema-loader skipping it.
-        let ap203 = by_label.get("ap203").unwrap();
+        let ap203 = by_label.get("ap203e1").unwrap();
         assert!(
             ap203.entities.len() >= 100,
             "ap203: entity count {} suspiciously low",
@@ -1144,7 +1144,7 @@ mod tests {
         // must have a Some supertype_expr — the parser cannot have
         // silently dropped any of them.
         let b7_entities: &[(&str, &str)] = &[
-            ("ap203", "surface_curve"),
+            ("ap203e1", "surface_curve"),
             ("ap203e2", "b_spline_curve"),
             ("ap203e2", "b_spline_surface"),
             ("ap203e2", "draughting_callout"),
@@ -1156,7 +1156,7 @@ mod tests {
             ("ap203e2", "topological_representation_item"),
             ("ap203e2", "zone_structural_makeup"),
             ("ap214e3", "surface_curve"),
-            ("ap242", "solid_with_slot"),
+            ("ap242e1", "solid_with_slot"),
         ];
         for (schema_label, entity_name) in b7_entities {
             let s = by_label

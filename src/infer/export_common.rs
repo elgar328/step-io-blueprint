@@ -9,20 +9,14 @@ use crate::express::{AttrType, Schema};
 /// schema carries the most entities and newest attribute shapes — what the
 /// faithful union wants (draft-vs-IS only matters for per-AP output profiles).
 pub(crate) fn schema_rank(label: &str) -> u8 {
-    if label.starts_with("ap242ed3") {
-        6
-    } else if label.starts_with("ap242ed2") {
-        5
-    } else if label.starts_with("ap242") {
-        4
-    } else if label.starts_with("ap214") {
-        3
-    } else if label.starts_with("ap203e2") {
-        2
-    } else if label.starts_with("ap203") {
-        1
-    } else {
-        0
+    match label {
+        "ap242e3" => 6,
+        "ap242e2" => 5,
+        "ap242e1" => 4,
+        "ap214e3" => 3,
+        "ap203e2" => 2,
+        "ap203e1" => 1,
+        _ => 0,
     }
 }
 
