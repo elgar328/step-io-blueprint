@@ -4,14 +4,19 @@
 
 use crate::express::{AttrType, Schema};
 
-/// Newest → oldest preference for picking an entity's canonical (ordered)
-/// own-attribute declaration and TYPE aliases. Higher = preferred. The newest
-/// schema carries the most entities and newest attribute shapes — what the
-/// faithful union wants (draft-vs-IS only matters for per-AP output profiles).
+/// Preference for picking an entity's canonical (ordered) own-attribute
+/// declaration and TYPE aliases in the faithful union. Higher = preferred.
+///
+/// AP242 ed2 (the latest IS, and step-io's single output target) is the **base**
+/// (highest): shared entities take their ed2 shape, so AP242 ed2 output stays
+/// exact. Lower ranks only gap-fill entities the base lacks — ed3 contributes its
+/// ed3-only entities (e.g. PMI leader-lines) for reading, then the legacy APs.
+/// ed1 is fully covered by ed2 (it never wins anything) but kept in its natural
+/// place rather than excluded. When ed3 becomes an IS, promote it to base.
 pub(crate) fn schema_rank(label: &str) -> u8 {
     match label {
-        "ap242e3" => 6,
-        "ap242e2" => 5,
+        "ap242e2" => 6,
+        "ap242e3" => 5,
         "ap242e1" => 4,
         "ap214e3" => 3,
         "ap203e2" => 2,
