@@ -53,41 +53,18 @@ struct Target {
     apd_desc: &'static str,
 }
 
-/// The three curated output targets (latest IS edition per AP). FILE_SCHEMA /
-/// APD values verified against the corpus (fusion360 = AP214e3, NIST = AP242e2 /
-/// AP203e2).
-const TARGETS: &[Target] = &[
-    Target {
-        out_name: "ap214e3",
-        label_match: "ap214e3",
-        file_schema: &["AUTOMOTIVE_DESIGN { 1 0 10303 214 3 1 1 }"],
-        apd_status: "international standard",
-        apd_name: "automotive_design",
-        apd_year: 2009,
-        apd_desc: "Core Data for Automotive Mechanical Design Process",
-    },
-    Target {
-        out_name: "ap242e2",
-        label_match: "ap242e2",
-        file_schema: &["AP242_MANAGED_MODEL_BASED_3D_ENGINEERING_MIM_LF { 1 0 10303 442 3 1 4 }"],
-        apd_status: "international standard",
-        apd_name: "ap242_managed_model_based_3d_engineering_mim_lf",
-        apd_year: 2011,
-        apd_desc: "managed model based 3d engineering",
-    },
-    Target {
-        out_name: "ap203e2",
-        label_match: "ap203e2",
-        file_schema: &[
-            "AP203_CONFIGURATION_CONTROLLED_3D_DESIGN_OF_MECHANICAL_PARTS_AND_ASSEMBLIES_MIM_LF \
-             { 1 0 10303 403 2 1 2 }",
-        ],
-        apd_status: "international standard",
-        apd_name: "config_control_design",
-        apd_year: 2010,
-        apd_desc: "configuration controlled 3D designs of mechanical parts and assemblies",
-    },
-];
+/// The single curated output target: AP242 ed2, the only public output schema
+/// (step-io reads AP203/AP214/AP242 but always writes AP242 ed2). FILE_SCHEMA /
+/// APD values verified against the corpus (NIST = AP242e2).
+const TARGETS: &[Target] = &[Target {
+    out_name: "ap242e2",
+    label_match: "ap242e2",
+    file_schema: &["AP242_MANAGED_MODEL_BASED_3D_ENGINEERING_MIM_LF { 1 0 10303 442 3 1 4 }"],
+    apd_status: "international standard",
+    apd_name: "ap242_managed_model_based_3d_engineering_mim_lf",
+    apd_year: 2011,
+    apd_desc: "managed model based 3d engineering",
+}];
 
 #[derive(Serialize)]
 struct ProfileAttr {
