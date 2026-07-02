@@ -27,7 +27,7 @@ use std::fs;
 
 use serde::Serialize;
 
-use crate::express::{EntitySchema, Schema};
+use crate::express::{EntitySchema, Schema, SupertypeExpr};
 use crate::infer::export_common::{redeclaration_has_signal, ty_repr};
 
 const OUT_DIR: &str = "profiles";
@@ -106,6 +106,18 @@ struct ProfileTypeDef {
     aliased: String,
 }
 
+/// One ONEOF exclusivity group from a `SUPERTYPE OF` clause: a complex
+/// instance may draw parts from at most **one** branch. Each branch is the
+/// flat entity-name set of that ONEOF child's subtree — an `Entity` child is
+/// one name; a composite child (`loop ANDOR path`, `a AND b`) contributes all
+/// its subtree names as a single branch.
+#[derive(Serialize)]
+struct ProfileOneof {
+    /// Entity whose `SUPERTYPE OF` clause declares the group.
+    supertype: String,
+    branches: Vec<Vec<String>>,
+}
+
 #[derive(Serialize)]
 struct ProfileToml {
     meta: ProfileMeta,
@@ -116,9 +128,62 @@ struct ProfileToml {
     /// product structure intact. Empty if the target has no such subtypes.
     #[serde(skip_serializing_if = "BTreeMap::is_empty")]
     downgrade: BTreeMap<String, String>,
+    /// ONEOF exclusivity groups from this target's `SUPERTYPE OF` clauses —
+    /// the schema-side input for validating complex (multi-part) instances.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    oneof: Vec<ProfileOneof>,
     entity: BTreeMap<String, ProfileEntity>,
     #[serde(rename = "type", skip_serializing_if = "BTreeMap::is_empty")]
     type_aliases: BTreeMap<String, ProfileTypeDef>,
+}
+
+/// Collect every entity name in `expr`'s subtree, pre-order, deduplicated.
+fn subtree_entity_names(expr: &SupertypeExpr, out: &mut Vec<String>) {
+    match expr {
+        SupertypeExpr::Entity { name } => {
+            if !out.contains(name) {
+                out.push(name.clone());
+            }
+        }
+        SupertypeExpr::OneOf { children }
+        | SupertypeExpr::AndOr { children }
+        | SupertypeExpr::And { children } => {
+            for c in children {
+                subtree_entity_names(c, out);
+            }
+        }
+    }
+}
+
+/// Collect every ONEOF group in `expr`, pre-order — one [`ProfileOneof`] per
+/// ONEOF node (an entity's clause may carry several, e.g. `named_unit`'s
+/// kind × basis pair). Branches are flattened to name sets; nested ONEOFs
+/// (none in the current schemas) would still surface as their own group.
+fn collect_oneof_groups(owner: &str, expr: &SupertypeExpr, out: &mut Vec<ProfileOneof>) {
+    if let SupertypeExpr::OneOf { children } = expr {
+        let branches = children
+            .iter()
+            .map(|c| {
+                let mut names = Vec::new();
+                subtree_entity_names(c, &mut names);
+                names
+            })
+            .collect();
+        out.push(ProfileOneof {
+            supertype: owner.to_string(),
+            branches,
+        });
+    }
+    match expr {
+        SupertypeExpr::Entity { .. } => {}
+        SupertypeExpr::OneOf { children }
+        | SupertypeExpr::AndOr { children }
+        | SupertypeExpr::And { children } => {
+            for c in children {
+                collect_oneof_groups(owner, c, out);
+            }
+        }
+    }
 }
 
 /// Walk `e`'s parent chain to the nearest ancestor present in `target`,
@@ -202,6 +267,17 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
             );
         }
 
+        // ONEOF exclusivity groups, in sorted-owner order (deterministic;
+        // groups within one clause keep the clause's pre-order).
+        let mut oneof: Vec<ProfileOneof> = Vec::new();
+        let mut ents: Vec<(&String, &EntitySchema)> = schema.entities.iter().collect();
+        ents.sort_by_key(|(n, _)| n.as_str());
+        for (name, e) in ents {
+            if let Some(expr) = &e.supertype_expr {
+                collect_oneof_groups(name, expr, &mut oneof);
+            }
+        }
+
         let mut type_aliases: BTreeMap<String, ProfileTypeDef> = BTreeMap::new();
         for (tn, td) in &schema.types {
             type_aliases.insert(
@@ -237,6 +313,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                 },
             },
             downgrade,
+            oneof,
             entity,
             type_aliases,
         };
@@ -248,17 +325,19 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
              # DO NOT hand-edit. Legal entity set + ordered attrs for schema-conditioned output.\n\
              # Presence = legal in this target; absence = illegal (step-io project drops).\n\
              # own_attrs + parents only (step-io flattens inheritance).\n\
-             # ty repr: primitives lowercase; bare token = entity/TYPE-alias ref; LIST/SET/BAG/ARRAY OF, OPTIONAL, SELECT(...), ENUM(...).\n\n",
+             # ty repr: primitives lowercase; bare token = entity/TYPE-alias ref; LIST/SET/BAG/ARRAY OF, OPTIONAL, SELECT(...), ENUM(...).\n\
+             # [[oneof]] = ONEOF exclusivity groups from SUPERTYPE OF clauses; branch = flat name set of one ONEOF child subtree.\n\n",
             out = t.out_name,
             src = schema.source_label,
         );
         let path = format!("{OUT_DIR}/{}.toml", t.out_name);
         fs::write(&path, format!("{header}{body}")).map_err(|e| e.to_string())?;
         eprintln!(
-            "wrote {path}: {} entities, {} type aliases, {} downgrades (source {})",
+            "wrote {path}: {} entities, {} type aliases, {} downgrades, {} oneof groups (source {})",
             doc.entity.len(),
             doc.type_aliases.len(),
             doc.downgrade.len(),
+            doc.oneof.len(),
             schema.source_label,
         );
     }

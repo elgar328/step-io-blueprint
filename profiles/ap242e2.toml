@@ -4,6 +4,7 @@
 # Presence = legal in this target; absence = illegal (step-io project drops).
 # own_attrs + parents only (step-io flattens inheritance).
 # ty repr: primitives lowercase; bare token = entity/TYPE-alias ref; LIST/SET/BAG/ARRAY OF, OPTIONAL, SELECT(...), ENUM(...).
+# [[oneof]] = ONEOF exclusivity groups from SUPERTYPE OF clauses; branch = flat name set of one ONEOF child subtree.
 
 [meta]
 file_schema = ["AP242_MANAGED_MODEL_BASED_3D_ENGINEERING_MIM_LF { 1 0 10303 442 3 1 4 }"]
@@ -27,6 +28,2044 @@ ply_laminate_definition = "product_definition"
 rib = "feature_definition"
 shape_aspect_transition = "shape_aspect_relationship"
 thickness_laminate_definition = "product_definition"
+
+[[oneof]]
+supertype = "a3m_equivalence_criterion_for_assembly"
+branches = [
+    ["a3m_equivalence_criterion_of_assembly_data_structure"],
+    ["a3m_equivalence_criterion_of_detailed_assembly_data_content"],
+    ["a3m_equivalence_criterion_of_component_property_difference"],
+    ["a3m_equivalence_criterion_of_representative_assembly_property_value"],
+]
+
+[[oneof]]
+supertype = "a3m_equivalence_criterion_for_shape"
+branches = [
+    ["a3m_equivalence_criterion_of_detailed_shape_data_content"],
+    ["a3m_equivalence_criterion_of_representative_shape_property_value"],
+    ["a3m_equivalence_criterion_of_shape_data_structure"],
+]
+
+[[oneof]]
+supertype = "a3m_equivalence_criterion_of_assembly_data_structure"
+branches = [
+    ["different_component_identification_via_multi_level_reference"],
+    ["mismatch_of_component"],
+    ["missing_assembly_constraint"],
+    ["missing_component"],
+]
+
+[[oneof]]
+supertype = "a3m_equivalence_criterion_of_detailed_assembly_data_content"
+branches = [
+    ["different_angle_of_assembly_constraint"],
+    ["different_assembly_constraint_type"],
+    ["different_component_type"],
+    ["different_length_of_assembly_constraint"],
+    ["different_placement_of_component"],
+]
+
+[[oneof]]
+supertype = "a3m_equivalence_criterion_of_detailed_shape_data_content"
+branches = [
+    ["different_surface_normal"],
+    ["mismatch_of_arcwise_connected_curves"],
+    ["mismatch_of_arcwise_connected_surfaces"],
+    ["mismatch_of_arcwise_connected_surfaces_boundary"],
+    ["mismatch_of_points"],
+    ["mismatch_of_point_cloud_and_related_geometry"],
+    ["mismatch_of_underlying_edge_geometry"],
+    ["mismatch_of_underlying_face_geometry"],
+]
+
+[[oneof]]
+supertype = "a3m_equivalence_criterion_of_representative_assembly_property_value"
+branches = [
+    ["different_assembly_centroid"],
+    ["different_assembly_centroid_using_notional_solid"],
+    ["different_assembly_volume"],
+    ["different_number_of_components"],
+]
+
+[[oneof]]
+supertype = "a3m_equivalence_criterion_of_representative_shape_property_value"
+branches = [
+    ["different_bounding_box"],
+    ["different_centroid"],
+    ["different_curve_length"],
+    ["different_number_of_closed_shell"],
+    ["different_number_of_geometric_elements"],
+    ["different_number_of_geometric_elements_wireframe_model"],
+    ["different_number_of_topological_elements"],
+    ["different_number_of_topological_elements_wireframe_model"],
+    ["different_surface_area"],
+    ["different_volume"],
+]
+
+[[oneof]]
+supertype = "a3m_equivalence_criterion_of_shape_data_structure"
+branches = [
+    ["mismatch_of_edges"],
+    ["mismatch_of_faces"],
+    ["missing_edge"],
+    ["missing_face"],
+]
+
+[[oneof]]
+supertype = "action_assignment"
+branches = [
+    ["applied_usage_right"],
+    ["applied_action_assignment"],
+]
+
+[[oneof]]
+supertype = "additive_manufacturing_setup_relationship"
+branches = [
+    ["additive_manufacturing_build_plate_relationship"],
+    ["additive_manufacturing_support_structure_geometry_relationship"],
+    ["additive_manufacturing_setup_workpiece_relationship"],
+]
+
+[[oneof]]
+supertype = "annotation_curve_occurrence"
+branches = [
+    ["leader_curve"],
+    ["projection_curve"],
+]
+
+[[oneof]]
+supertype = "annotation_occurrence"
+branches = [
+    ["annotation_point_occurrence"],
+    ["annotation_curve_occurrence"],
+    ["annotation_fill_area_occurrence"],
+    ["annotation_text_occurrence"],
+    ["annotation_symbol_occurrence"],
+]
+
+[[oneof]]
+supertype = "annotation_occurrence"
+branches = [
+    ["annotation_curve_occurrence"],
+    ["annotation_fill_area_occurrence"],
+    ["annotation_plane"],
+    ["annotation_symbol_occurrence"],
+    ["annotation_text_occurrence"],
+]
+
+[[oneof]]
+supertype = "application_context_element"
+branches = [
+    ["product_concept_context"],
+    ["product_context"],
+    ["product_definition_context"],
+]
+
+[[oneof]]
+supertype = "array_placement_group"
+branches = [
+    ["linear_array_placement_group_component"],
+    ["rectangular_array_placement_group_component"],
+]
+
+[[oneof]]
+supertype = "assembly_component_usage"
+branches = [
+    ["multi_level_reference_designator"],
+    ["next_assembly_usage_occurrence"],
+    ["promissory_usage_occurrence"],
+    ["specified_higher_usage_occurrence"],
+]
+
+[[oneof]]
+supertype = "assembly_geometric_constraint"
+branches = [
+    ["binary_assembly_constraint"],
+    ["fixed_constituent_assembly_constraint"],
+]
+
+[[oneof]]
+supertype = "b_spline_curve"
+branches = [
+    ["uniform_curve"],
+    ["b_spline_curve_with_knots"],
+    ["quasi_uniform_curve"],
+    ["bezier_curve"],
+]
+
+[[oneof]]
+supertype = "b_spline_surface"
+branches = [
+    ["b_spline_surface_with_knots"],
+    ["uniform_surface"],
+    ["quasi_uniform_surface"],
+    ["bezier_surface"],
+]
+
+[[oneof]]
+supertype = "b_spline_volume"
+branches = [
+    ["b_spline_volume_with_knots"],
+    ["uniform_volume"],
+    ["quasi_uniform_volume"],
+    ["bezier_volume"],
+]
+
+[[oneof]]
+supertype = "binary_assembly_constraint"
+branches = [
+    ["parallel_assembly_constraint"],
+    ["surface_distance_assembly_constraint_with_dimension"],
+    ["angle_assembly_constraint_with_dimension"],
+    ["perpendicular_assembly_constraint"],
+    ["incidence_assembly_constraint"],
+    ["coaxial_assembly_constraint"],
+    ["tangent_assembly_constraint"],
+]
+
+[[oneof]]
+supertype = "binary_boolean_expression"
+branches = [
+    ["xor_expression"],
+    ["equals_expression"],
+]
+
+[[oneof]]
+supertype = "binary_numeric_expression"
+branches = [
+    ["minus_expression"],
+    ["div_expression"],
+    ["mod_expression"],
+    ["slash_expression"],
+    ["power_expression"],
+    ["binary_function_call"],
+]
+
+[[oneof]]
+supertype = "boolean_expression"
+branches = [
+    ["simple_boolean_expression"],
+    ["unary_boolean_expression"],
+    ["binary_boolean_expression"],
+    ["multiple_arity_boolean_expression"],
+    ["comparison_expression"],
+    ["interval_expression"],
+    ["boolean_defined_function"],
+]
+
+[[oneof]]
+supertype = "bounded_curve"
+branches = [
+    ["polyline"],
+    ["b_spline_curve"],
+    ["trimmed_curve"],
+    ["bounded_pcurve"],
+    ["bounded_surface_curve"],
+    ["composite_curve"],
+    ["locally_refined_spline_curve"],
+]
+
+[[oneof]]
+supertype = "bounded_surface"
+branches = [
+    ["b_spline_surface"],
+    ["rectangular_trimmed_surface"],
+    ["curve_bounded_surface"],
+    ["rectangular_composite_surface"],
+    ["locally_refined_spline_surface"],
+]
+
+[[oneof]]
+supertype = "camera_image"
+branches = [
+    ["camera_image_2d_with_scale"],
+    ["camera_image_3d_with_scale"],
+]
+
+[[oneof]]
+supertype = "camera_model"
+branches = [
+    ["camera_model_d2"],
+    ["camera_model_d3"],
+]
+
+[[oneof]]
+supertype = "cartesian_point"
+branches = [
+    ["cylindrical_point"],
+    ["polar_point"],
+    ["spherical_point"],
+]
+
+[[oneof]]
+supertype = "cartesian_transformation_operator"
+branches = [
+    ["cartesian_transformation_operator_2d"],
+    ["cartesian_transformation_operator_3d"],
+]
+
+[[oneof]]
+supertype = "change_element"
+branches = [
+    ["modify_element"],
+    ["delete_element"],
+    ["add_element"],
+]
+
+[[oneof]]
+supertype = "comparison_expression"
+branches = [
+    ["comparison_equal"],
+    ["comparison_greater"],
+    ["comparison_greater_equal"],
+    ["comparison_less"],
+    ["comparison_less_equal"],
+    ["comparison_not_equal"],
+    ["like_expression"],
+]
+
+[[oneof]]
+supertype = "composite_shape_aspect"
+branches = [
+    ["continuous_shape_aspect"],
+    ["common_datum"],
+    ["composite_group_shape_aspect"],
+]
+
+[[oneof]]
+supertype = "compound_representation_item"
+branches = [
+    ["point_and_vector"],
+    ["point_array"],
+]
+
+[[oneof]]
+supertype = "compound_representation_item"
+branches = [
+    ["row_representation_item"],
+    ["table_representation_item"],
+]
+
+[[oneof]]
+supertype = "conic"
+branches = [
+    ["circle"],
+    ["ellipse"],
+    ["hyperbola"],
+    ["parabola"],
+]
+
+[[oneof]]
+supertype = "connected_face_set"
+branches = [
+    ["closed_shell"],
+    ["open_shell"],
+]
+
+[[oneof]]
+supertype = "continuous_shape_aspect"
+branches = [
+    ["between_shape_aspect"],
+    ["all_around_shape_aspect"],
+]
+
+[[oneof]]
+supertype = "cross_sectional_group_shape_element"
+branches = [
+    ["cross_sectional_group_shape_element_with_tubular_cover"],
+    ["cross_sectional_group_shape_element_with_lacing"],
+    ["twisted_cross_sectional_group_shape_element"],
+]
+
+[[oneof]]
+supertype = "cross_sectional_part_shape_element"
+branches = [
+    ["cross_sectional_alternative_shape_element"],
+    ["cross_sectional_group_shape_element"],
+]
+
+[[oneof]]
+supertype = "currency"
+branches = [
+    ["externally_defined_currency"],
+    ["iso4217_currency"],
+]
+
+[[oneof]]
+supertype = "curve"
+branches = [
+    ["line"],
+    ["conic"],
+    ["clothoid"],
+    ["circular_involute"],
+    ["pcurve"],
+    ["surface_curve"],
+    ["offset_curve_2d"],
+    ["offset_curve_3d"],
+    ["curve_replica"],
+]
+
+[[oneof]]
+supertype = "data_equivalence_inspection_criterion_report_item"
+branches = [
+    ["criterion_report_item_with_number_of_instances"],
+    ["criterion_report_item_with_value"],
+]
+
+[[oneof]]
+supertype = "data_equivalence_inspection_criterion_report_item"
+branches = [
+    ["a3m_equivalence_criterion_report_item_with_measured_value"],
+    ["criterion_report_item_with_number_of_instances"],
+    ["criterion_report_item_with_value"],
+]
+
+[[oneof]]
+supertype = "data_equivalence_inspection_report"
+branches = [
+    ["data_equivalence_inspection_criterion_report"],
+    ["data_equivalence_inspection_instance_report"],
+]
+
+[[oneof]]
+supertype = "data_quality_inspection_report"
+branches = [
+    ["data_quality_inspection_criterion_report"],
+    ["data_quality_inspection_instance_report"],
+]
+
+[[oneof]]
+supertype = "data_quality_report_request"
+branches = [
+    ["summary_report_request"],
+    ["detailed_report_request"],
+]
+
+[[oneof]]
+supertype = "date"
+branches = [
+    ["calendar_date"],
+    ["ordinal_date"],
+    ["week_of_year_and_day_date"],
+    ["year_month"],
+]
+
+[[oneof]]
+supertype = "datum_feature"
+branches = [
+    ["dimensional_location_with_datum_feature"],
+    ["dimensional_size_with_datum_feature"],
+]
+
+[[oneof]]
+supertype = "defined_function"
+branches = [
+    ["numeric_defined_function"],
+    ["string_defined_function"],
+    ["boolean_defined_function"],
+]
+
+[[oneof]]
+supertype = "derived_shape_aspect"
+branches = [
+    ["apex"],
+    ["centre_of_symmetry"],
+    ["geometric_alignment"],
+    ["geometric_contact"],
+    ["geometric_intersection"],
+    ["parallel_offset"],
+    ["perpendicular_to"],
+    ["extension"],
+    ["tangent"],
+]
+
+[[oneof]]
+supertype = "derived_unit"
+branches = [
+    ["absorbed_dose_unit"],
+    ["acceleration_unit"],
+    ["radioactivity_unit"],
+    ["area_unit"],
+    ["capacitance_unit"],
+    ["dose_equivalent_unit"],
+    ["electric_charge_unit"],
+    ["conductance_unit"],
+    ["electric_potential_unit"],
+    ["energy_unit"],
+    ["magnetic_flux_density_unit"],
+    ["force_unit"],
+    ["frequency_unit"],
+    ["illuminance_unit"],
+    ["inductance_unit"],
+    ["magnetic_flux_unit"],
+    ["power_unit"],
+    ["pressure_unit"],
+    ["resistance_unit"],
+    ["velocity_unit"],
+    ["volume_unit"],
+]
+
+[[oneof]]
+supertype = "descriptive_representation_item"
+branches = [
+    ["tagged_text_item"],
+    ["uniform_resource_identifier"],
+]
+
+[[oneof]]
+supertype = "dimensional_location"
+branches = [
+    ["angular_location"],
+    ["dimensional_location_with_path"],
+]
+
+[[oneof]]
+supertype = "dimensional_size"
+branches = [
+    ["angular_size"],
+    ["dimensional_size_with_path"],
+]
+
+[[oneof]]
+supertype = "discontinuous_geometry"
+branches = [
+    ["g1_discontinuous_curve"],
+    ["g2_discontinuous_curve"],
+    ["g1_discontinuous_surface"],
+    ["g2_discontinuous_surface"],
+]
+
+[[oneof]]
+supertype = "edge"
+branches = [
+    ["edge_curve"],
+    ["edge_with_length"],
+    ["oriented_edge"],
+    ["subedge"],
+]
+
+[[oneof]]
+supertype = "edge_blended_solid"
+branches = [
+    ["solid_with_constant_radius_edge_blend"],
+    ["solid_with_chamfered_edges"],
+]
+
+[[oneof]]
+supertype = "effectivity"
+branches = [
+    ["serial_numbered_effectivity"],
+    ["dated_effectivity"],
+    ["lot_effectivity"],
+    ["time_interval_based_effectivity"],
+]
+
+[[oneof]]
+supertype = "elementary_surface"
+branches = [
+    ["plane"],
+    ["cylindrical_surface"],
+    ["conical_surface"],
+    ["spherical_surface"],
+    ["toroidal_surface"],
+]
+
+[[oneof]]
+supertype = "erroneous_data"
+branches = [
+    ["erroneous_topology"],
+    ["erroneous_geometry"],
+    ["erroneous_topology_and_geometry_relationship"],
+    ["erroneous_manifold_solid_brep"],
+]
+
+[[oneof]]
+supertype = "erroneous_geometry"
+branches = [
+    ["inconsistent_curve_transition_code"],
+    ["erroneous_b_spline_curve_definition"],
+    ["inconsistent_surface_transition_code"],
+    ["erroneous_b_spline_surface_definition"],
+]
+
+[[oneof]]
+supertype = "erroneous_manifold_solid_brep"
+branches = [
+    ["wrongly_oriented_void"],
+    ["wrongly_placed_void"],
+    ["intersecting_shells_in_solid"],
+    ["solid_with_wrong_number_of_voids"],
+]
+
+[[oneof]]
+supertype = "erroneous_topology"
+branches = [
+    ["open_edge_loop"],
+    ["open_closed_shell"],
+    ["inconsistent_adjacent_face_normals"],
+    ["disconnected_face_set"],
+]
+
+[[oneof]]
+supertype = "erroneous_topology_and_geometry_relationship"
+branches = [
+    ["inconsistent_edge_and_curve_directions"],
+    ["inconsistent_face_and_surface_normals"],
+    ["inconsistent_face_and_closed_shell_normals"],
+    ["intersecting_loops_in_face"],
+    ["wrongly_placed_loop"],
+]
+
+[[oneof]]
+supertype = "explicit_constraint"
+branches = [
+    ["defined_constraint"],
+    ["free_form_constraint"],
+]
+
+[[oneof]]
+supertype = "explicit_geometric_constraint"
+branches = [
+    ["fixed_element_geometric_constraint"],
+    ["parallel_geometric_constraint"],
+    ["point_distance_geometric_constraint"],
+    ["skew_line_distance_geometric_constraint"],
+    ["curve_distance_geometric_constraint"],
+    ["surface_distance_geometric_constraint"],
+    ["radius_geometric_constraint"],
+    ["curve_length_geometric_constraint"],
+    ["parallel_offset_geometric_constraint"],
+    ["angle_geometric_constraint"],
+    ["perpendicular_geometric_constraint"],
+    ["incidence_geometric_constraint"],
+    ["coaxial_geometric_constraint"],
+    ["tangent_geometric_constraint"],
+    ["symmetry_geometric_constraint"],
+    ["swept_point_curve_geometric_constraint"],
+    ["swept_curve_surface_geometric_constraint"],
+    ["curve_smoothness_geometric_constraint"],
+    ["surface_smoothness_geometric_constraint"],
+]
+
+[[oneof]]
+supertype = "explicit_table_function"
+branches = [
+    ["listed_real_data"],
+    ["listed_integer_data"],
+    ["listed_logical_data"],
+    ["listed_string_data"],
+    ["listed_complex_number_data"],
+    ["listed_data"],
+    ["externally_listed_data"],
+    ["linearized_table_function"],
+    ["basic_sparse_matrix"],
+]
+
+[[oneof]]
+supertype = "expression"
+branches = [
+    ["numeric_expression"],
+    ["boolean_expression"],
+    ["string_expression"],
+]
+
+[[oneof]]
+supertype = "extruded_face_solid_with_trim_conditions"
+branches = [
+    ["extruded_face_solid_with_draft_angle"],
+    ["extruded_face_solid_with_multiple_draft_angles"],
+]
+
+[[oneof]]
+supertype = "face"
+branches = [
+    ["face_surface"],
+    ["subface"],
+    ["oriented_face"],
+]
+
+[[oneof]]
+supertype = "faceted_primitive"
+branches = [
+    ["tetrahedron"],
+    ["convex_hexahedron"],
+]
+
+[[oneof]]
+supertype = "feature_component_relationship"
+branches = [
+    ["pattern_omit_membership"],
+    ["pattern_offset_membership"],
+]
+
+[[oneof]]
+supertype = "feature_definition"
+branches = [
+    ["boss"],
+    ["compound_feature"],
+    ["externally_defined_feature_definition"],
+    ["flat_face"],
+    ["gear"],
+    ["marking"],
+    ["outer_round"],
+    ["outside_profile"],
+    ["pocket"],
+    ["protrusion"],
+    ["removal_volume"],
+    ["replicate_feature"],
+    ["revolved_profile"],
+    ["rib_top"],
+    ["round_hole"],
+    ["rounded_end"],
+    ["spherical_cap"],
+    ["step"],
+    ["slot"],
+    ["thread"],
+    ["turned_knurl"],
+]
+
+[[oneof]]
+supertype = "founded_item"
+branches = [
+    ["b_spline_curve_knot_locator"],
+    ["b_spline_curve_segment"],
+    ["b_spline_surface_knot_locator"],
+    ["b_spline_surface_patch"],
+    ["b_spline_surface_strip"],
+    ["boundary_curve_of_b_spline_or_rectangular_composite_surface"],
+    ["box_domain"],
+    ["character_glyph_style_outline"],
+    ["character_glyph_style_stroke"],
+    ["composite_curve_segment"],
+    ["composite_curve_transition_locator"],
+    ["curve_style"],
+    ["curve_style_font"],
+    ["curve_style_font_and_scaling"],
+    ["curve_style_font_pattern"],
+    ["externally_defined_style"],
+    ["fill_area_style"],
+    ["interpolated_configuration_segment"],
+    ["kinematic_path_segment"],
+    ["plane_angle_and_length_pair"],
+    ["plane_angle_and_ratio_pair"],
+    ["point_style"],
+    ["presentation_style_assignment"],
+    ["rectangular_composite_surface_transition_locator"],
+    ["surface_patch"],
+    ["surface_side_style"],
+    ["surface_style_boundary"],
+    ["surface_style_control_grid"],
+    ["surface_style_fill_area"],
+    ["surface_style_parameter_line"],
+    ["surface_style_segmentation_curve"],
+    ["surface_style_silhouette"],
+    ["surface_style_usage"],
+    ["symbol_style"],
+    ["text_style"],
+    ["view_volume"],
+]
+
+[[oneof]]
+supertype = "founded_item"
+branches = [
+    ["character_glyph_style_outline"],
+    ["character_glyph_style_stroke"],
+    ["curve_style"],
+    ["curve_style_font"],
+    ["curve_style_font_and_scaling"],
+    ["curve_style_font_pattern"],
+    ["externally_defined_style"],
+    ["fill_area_style"],
+    ["point_style"],
+    ["presentation_style_assignment"],
+    ["surface_side_style"],
+    ["surface_style_boundary"],
+    ["surface_style_control_grid"],
+    ["surface_style_fill_area"],
+    ["surface_style_parameter_line"],
+    ["surface_style_segmentation_curve"],
+    ["surface_style_silhouette"],
+    ["surface_style_usage"],
+    ["symbol_style"],
+    ["text_style"],
+]
+
+[[oneof]]
+supertype = "free_form_constraint"
+branches = [
+    ["free_form_assignment"],
+    ["free_form_relation"],
+]
+
+[[oneof]]
+supertype = "general_datum_reference"
+branches = [
+    ["datum_reference_compartment"],
+    ["datum_reference_element"],
+]
+
+[[oneof]]
+supertype = "generic_expression"
+branches = [
+    ["simple_generic_expression"],
+    ["unary_generic_expression"],
+    ["binary_generic_expression"],
+    ["multiple_arity_generic_expression"],
+]
+
+[[oneof]]
+supertype = "generic_product_definition_reference"
+branches = [
+    ["product_definition_reference"],
+    ["product_definition_reference_with_local_representation"],
+]
+
+[[oneof]]
+supertype = "geometric_gap_in_topology"
+branches = [
+    ["gap_between_adjacent_edges_in_loop"],
+    ["gap_between_vertex_and_base_surface"],
+    ["gap_between_vertex_and_edge"],
+    ["gap_between_edge_and_base_surface"],
+    ["gap_between_pcurves_related_to_an_edge"],
+    ["gap_between_faces_related_to_an_edge"],
+]
+
+[[oneof]]
+supertype = "geometric_representation_context"
+branches = [
+    ["geometric_representation_context_with_parameter"],
+    ["path_parameter_representation_context"],
+]
+
+[[oneof]]
+supertype = "geometric_representation_item"
+branches = [
+    ["point"],
+    ["direction"],
+    ["vector"],
+    ["placement"],
+    ["cartesian_transformation_operator"],
+    ["curve"],
+    ["surface"],
+    ["edge_curve"],
+    ["face_surface"],
+    ["poly_loop"],
+    ["vertex_point"],
+    ["solid_model"],
+    ["boolean_result"],
+    ["sphere"],
+    ["right_circular_cone"],
+    ["right_circular_cylinder"],
+    ["torus"],
+    ["block"],
+    ["primitive_2d"],
+    ["right_angular_wedge"],
+    ["ellipsoid"],
+    ["faceted_primitive"],
+    ["rectangular_pyramid"],
+    ["cyclide_segment_solid"],
+    ["volume"],
+    ["half_space_solid"],
+    ["shell_based_surface_model"],
+    ["face_based_surface_model"],
+    ["shell_based_wireframe_model"],
+    ["edge_based_wireframe_model"],
+    ["geometric_set"],
+    ["tessellated_item"],
+    ["volume_with_faces"],
+    ["scanned_data_item"],
+]
+
+[[oneof]]
+supertype = "geometric_representation_item"
+branches = [
+    ["annotation_fill_area"],
+    ["curve"],
+    ["point"],
+    ["text_literal"],
+]
+
+[[oneof]]
+supertype = "geometric_representation_item"
+branches = [
+    ["camera_model"],
+    ["curve"],
+    ["direction"],
+]
+
+[[oneof]]
+supertype = "geometric_representation_item"
+branches = [
+    ["curve"],
+    ["externally_defined_hatch_style"],
+    ["externally_defined_tile_style"],
+    ["fill_area_style_hatching"],
+    ["fill_area_style_tile_symbol_with_style"],
+    ["fill_area_style_tiles"],
+    ["one_direction_repeat_factor"],
+    ["point"],
+    ["vector"],
+]
+
+[[oneof]]
+supertype = "geometric_representation_item"
+branches = [
+    ["curve"],
+    ["planar_extent"],
+]
+
+[[oneof]]
+supertype = "geometric_representation_item"
+branches = [
+    ["kinematic_path"],
+    ["placement"],
+]
+
+[[oneof]]
+supertype = "geometric_representation_item"
+branches = [
+    ["rotation_about_direction"],
+    ["su_parameters"],
+]
+
+[[oneof]]
+supertype = "geometric_tolerance"
+branches = [
+    ["geometric_tolerance_with_modifiers"],
+    ["modified_geometric_tolerance"],
+]
+
+[[oneof]]
+supertype = "geometric_tolerance"
+branches = [
+    ["cylindricity_tolerance"],
+    ["flatness_tolerance"],
+    ["line_profile_tolerance"],
+    ["position_tolerance"],
+    ["roundness_tolerance"],
+    ["straightness_tolerance"],
+    ["surface_profile_tolerance"],
+]
+
+[[oneof]]
+supertype = "geometric_tolerance_with_datum_reference"
+branches = [
+    ["angularity_tolerance"],
+    ["circular_runout_tolerance"],
+    ["coaxiality_tolerance"],
+    ["concentricity_tolerance"],
+    ["parallelism_tolerance"],
+    ["perpendicularity_tolerance"],
+    ["symmetry_tolerance"],
+    ["total_runout_tolerance"],
+]
+
+[[oneof]]
+supertype = "geometry_with_local_irregularity"
+branches = [
+    ["extreme_patch_width_variation"],
+    ["zero_surface_normal"],
+    ["abrupt_change_of_surface_normal"],
+]
+
+[[oneof]]
+supertype = "geometry_with_local_near_degeneracy"
+branches = [
+    ["curve_with_small_curvature_radius"],
+    ["short_length_curve_segment"],
+    ["surface_with_small_curvature_radius"],
+    ["small_area_surface_patch"],
+    ["narrow_surface_patch"],
+    ["indistinct_surface_knots"],
+    ["indistinct_curve_knots"],
+    ["nearly_degenerate_surface_boundary"],
+    ["nearly_degenerate_surface_patch"],
+]
+
+[[oneof]]
+supertype = "group"
+branches = [
+    ["change_group"],
+    ["change_element"],
+]
+
+[[oneof]]
+supertype = "group_assignment"
+branches = [
+    ["current_change_element_assignment"],
+    ["previous_change_element_assignment"],
+    ["change_group_assignment"],
+]
+
+[[oneof]]
+supertype = "high_order_kinematic_pair"
+branches = [
+    ["linear_flexible_and_planar_curve_pair"],
+    ["point_on_surface_pair"],
+    ["point_on_planar_curve_pair"],
+    ["planar_curve_pair"],
+    ["surface_pair"],
+]
+
+[[oneof]]
+supertype = "implicit_planar_curve"
+branches = [
+    ["implicit_intersection_curve"],
+    ["implicit_projected_curve"],
+    ["implicit_model_intersection_curve"],
+    ["implicit_silhouette_curve"],
+]
+
+[[oneof]]
+supertype = "implicit_point_on_plane"
+branches = [
+    ["implicit_planar_intersection_point"],
+    ["implicit_planar_projection_point"],
+]
+
+[[oneof]]
+supertype = "inapt_data"
+branches = [
+    ["inapt_topology"],
+    ["inapt_geometry"],
+    ["inapt_topology_and_geometry_relationship"],
+    ["inapt_manifold_solid_brep"],
+]
+
+[[oneof]]
+supertype = "inapt_geometry"
+branches = [
+    ["nearly_degenerate_geometry"],
+    ["discontinuous_geometry"],
+    ["self_intersecting_geometry"],
+    ["geometry_with_local_near_degeneracy"],
+    ["overlapping_geometry"],
+    ["multiply_defined_geometry"],
+    ["geometry_with_local_irregularity"],
+    ["overcomplex_geometry"],
+]
+
+[[oneof]]
+supertype = "inapt_manifold_solid_brep"
+branches = [
+    ["partly_overlapping_solids"],
+    ["small_volume_solid"],
+    ["multiply_defined_solids"],
+    ["entirely_narrow_solid"],
+    ["solid_with_excessive_number_of_voids"],
+]
+
+[[oneof]]
+supertype = "inapt_topology"
+branches = [
+    ["free_edge"],
+    ["non_manifold_at_edge"],
+    ["non_manifold_at_vertex"],
+    ["over_used_vertex"],
+]
+
+[[oneof]]
+supertype = "inapt_topology_and_geometry_relationship"
+branches = [
+    ["topology_related_to_nearly_degenerate_geometry"],
+    ["geometric_gap_in_topology"],
+    ["non_smooth_geometry_transition_across_edge"],
+    ["topology_related_to_self_intersecting_geometry"],
+    ["steep_geometry_transition_across_edge"],
+    ["topology_related_to_overlapping_geometry"],
+    ["topology_related_to_multiply_defined_geometry"],
+    ["overcomplex_topology_and_geometry_relationship"],
+]
+
+[[oneof]]
+supertype = "kinematic_link_representation"
+branches = [
+    ["linear_flexible_link_representation"],
+    ["rigid_link_representation"],
+]
+
+[[oneof]]
+supertype = "kinematic_pair"
+branches = [
+    ["high_order_kinematic_pair"],
+    ["low_order_kinematic_pair_with_motion_coupling"],
+    ["low_order_kinematic_pair"],
+]
+
+[[oneof]]
+supertype = "kinematic_path"
+branches = [
+    ["kinematic_path_defined_by_nodes"],
+    ["kinematic_path_defined_by_curves"],
+]
+
+[[oneof]]
+supertype = "kinematic_path_segment"
+branches = [
+    ["path_node"],
+    ["curve_based_path_with_orientation"],
+]
+
+[[oneof]]
+supertype = "kinematic_property_definition_representation"
+branches = [
+    ["kinematic_property_topology_representation"],
+    ["kinematic_property_mechanism_representation"],
+]
+
+[[oneof]]
+supertype = "laminate_table"
+branches = [
+    ["part_laminate_table"],
+    ["zone_structural_makeup"],
+]
+
+[[oneof]]
+supertype = "light_source"
+branches = [
+    ["light_source_ambient"],
+    ["light_source_directional"],
+    ["light_source_positional"],
+    ["light_source_spot"],
+]
+
+[[oneof]]
+supertype = "linearized_table_function"
+branches = [
+    ["standard_table_function"],
+    ["regular_table_function"],
+    ["triangular_matrix"],
+    ["symmetric_matrix"],
+    ["banded_matrix"],
+]
+
+[[oneof]]
+supertype = "link_motion_representation_along_path"
+branches = [
+    ["prescribed_path"],
+    ["resulting_path"],
+]
+
+[[oneof]]
+supertype = "literal_number"
+branches = [
+    ["int_literal"],
+    ["real_literal"],
+]
+
+[[oneof]]
+supertype = "loop"
+branches = [
+    ["vertex_loop"],
+    ["edge_loop"],
+    ["poly_loop"],
+]
+
+[[oneof]]
+supertype = "low_order_kinematic_pair"
+branches = [
+    ["revolute_pair"],
+    ["cylindrical_pair"],
+    ["spherical_pair"],
+    ["spherical_pair_with_pin"],
+    ["planar_pair"],
+    ["unconstrained_pair"],
+    ["fully_constrained_pair"],
+    ["prismatic_pair"],
+    ["universal_pair"],
+    ["low_order_kinematic_pair_with_range"],
+]
+
+[[oneof]]
+supertype = "low_order_kinematic_pair_with_motion_coupling"
+branches = [
+    ["gear_pair"],
+    ["linear_flexible_and_pinion_pair"],
+    ["rack_and_pinion_pair"],
+    ["screw_pair"],
+]
+
+[[oneof]]
+supertype = "maths_function"
+branches = [
+    ["finite_function"],
+    ["constant_function"],
+    ["selector_function"],
+    ["elementary_function"],
+    ["restriction_function"],
+    ["repackaging_function"],
+    ["reindexed_array_function"],
+    ["series_composed_function"],
+    ["parallel_composed_function"],
+    ["explicit_table_function"],
+    ["homogeneous_linear_function"],
+    ["general_linear_function"],
+    ["b_spline_basis"],
+    ["b_spline_function"],
+    ["rationalize_function"],
+    ["partial_derivative_function"],
+    ["definite_integral_function"],
+    ["abstracted_expression_function"],
+    ["expression_denoted_function"],
+    ["imported_point_function"],
+    ["imported_curve_function"],
+    ["imported_surface_function"],
+    ["imported_volume_function"],
+    ["application_defined_function"],
+]
+
+[[oneof]]
+supertype = "maths_space"
+branches = [
+    ["elementary_space"],
+    ["finite_integer_interval"],
+    ["integer_interval_from_min"],
+    ["integer_interval_to_max"],
+    ["finite_real_interval"],
+    ["real_interval_from_min"],
+    ["real_interval_to_max"],
+    ["cartesian_complex_number_region"],
+    ["polar_complex_number_region"],
+    ["finite_space"],
+    ["uniform_product_space"],
+    ["listed_product_space"],
+    ["extended_tuple_space"],
+    ["function_space"],
+]
+
+[[oneof]]
+supertype = "measure_with_unit"
+branches = [
+    ["length_measure_with_unit"],
+    ["mass_measure_with_unit"],
+    ["time_measure_with_unit"],
+    ["electric_current_measure_with_unit"],
+    ["thermodynamic_temperature_measure_with_unit"],
+    ["celsius_temperature_measure_with_unit"],
+    ["amount_of_substance_measure_with_unit"],
+    ["luminous_intensity_measure_with_unit"],
+    ["plane_angle_measure_with_unit"],
+    ["solid_angle_measure_with_unit"],
+    ["area_measure_with_unit"],
+    ["volume_measure_with_unit"],
+    ["ratio_measure_with_unit"],
+    ["acceleration_measure_with_unit"],
+    ["capacitance_measure_with_unit"],
+    ["electric_charge_measure_with_unit"],
+    ["conductance_measure_with_unit"],
+    ["electric_potential_measure_with_unit"],
+    ["energy_measure_with_unit"],
+    ["magnetic_flux_density_measure_with_unit"],
+    ["force_measure_with_unit"],
+    ["frequency_measure_with_unit"],
+    ["illuminance_measure_with_unit"],
+    ["inductance_measure_with_unit"],
+    ["luminous_flux_measure_with_unit"],
+    ["magnetic_flux_measure_with_unit"],
+    ["power_measure_with_unit"],
+    ["pressure_measure_with_unit"],
+    ["resistance_measure_with_unit"],
+    ["velocity_measure_with_unit"],
+    ["absorbed_dose_measure_with_unit"],
+    ["radioactivity_measure_with_unit"],
+    ["dose_equivalent_measure_with_unit"],
+]
+
+[[oneof]]
+supertype = "modified_solid"
+branches = [
+    ["edge_blended_solid"],
+    ["sculptured_solid"],
+    ["shelled_solid"],
+    ["modified_solid_with_placed_configuration"],
+]
+
+[[oneof]]
+supertype = "modified_solid_with_placed_configuration"
+branches = [
+    ["solid_with_depression"],
+    ["solid_with_protrusion"],
+    ["solid_with_shape_element_pattern"],
+]
+
+[[oneof]]
+supertype = "multiple_arity_boolean_expression"
+branches = [
+    ["and_expression"],
+    ["or_expression"],
+]
+
+[[oneof]]
+supertype = "multiple_arity_function_call"
+branches = [
+    ["maximum_function"],
+    ["minimum_function"],
+]
+
+[[oneof]]
+supertype = "multiple_arity_numeric_expression"
+branches = [
+    ["plus_expression"],
+    ["mult_expression"],
+    ["multiple_arity_function_call"],
+]
+
+[[oneof]]
+supertype = "multiply_defined_geometry"
+branches = [
+    ["multiply_defined_curves"],
+    ["multiply_defined_surfaces"],
+    ["multiply_defined_cartesian_points"],
+    ["multiply_defined_directions"],
+    ["multiply_defined_placements"],
+]
+
+[[oneof]]
+supertype = "named_unit"
+branches = [
+    ["si_unit"],
+    ["conversion_based_unit"],
+    ["context_dependent_unit"],
+]
+
+[[oneof]]
+supertype = "named_unit"
+branches = [
+    ["length_unit"],
+    ["mass_unit"],
+    ["time_unit"],
+    ["electric_current_unit"],
+    ["thermodynamic_temperature_unit"],
+    ["amount_of_substance_unit"],
+    ["luminous_flux_unit"],
+    ["luminous_intensity_unit"],
+    ["plane_angle_unit"],
+    ["solid_angle_unit"],
+    ["ratio_unit"],
+]
+
+[[oneof]]
+supertype = "nearly_degenerate_geometry"
+branches = [
+    ["small_area_surface"],
+    ["short_length_curve"],
+    ["entirely_narrow_surface"],
+]
+
+[[oneof]]
+supertype = "non_smooth_geometry_transition_across_edge"
+branches = [
+    ["g1_discontinuity_between_adjacent_faces"],
+    ["g2_discontinuity_between_adjacent_faces"],
+]
+
+[[oneof]]
+supertype = "numeric_defined_function"
+branches = [
+    ["integer_defined_function"],
+    ["real_defined_function"],
+]
+
+[[oneof]]
+supertype = "numeric_expression"
+branches = [
+    ["simple_numeric_expression"],
+    ["unary_numeric_expression"],
+    ["binary_numeric_expression"],
+    ["multiple_arity_numeric_expression"],
+    ["length_function"],
+    ["value_function"],
+    ["numeric_defined_function"],
+]
+
+[[oneof]]
+supertype = "numeric_variable"
+branches = [
+    ["int_numeric_variable"],
+    ["real_numeric_variable"],
+]
+
+[[oneof]]
+supertype = "overcomplex_geometry"
+branches = [
+    ["excessively_high_degree_curve"],
+    ["excessively_high_degree_surface"],
+    ["surface_with_excessive_patches_in_one_direction"],
+    ["curve_with_excessive_segments"],
+    ["high_degree_linear_curve"],
+    ["high_degree_planar_surface"],
+    ["high_degree_conic"],
+    ["high_degree_axi_symmetric_surface"],
+]
+
+[[oneof]]
+supertype = "overcomplex_topology_and_geometry_relationship"
+branches = [
+    ["unused_patches"],
+    ["edge_with_excessive_segments"],
+    ["face_surface_with_excessive_patches_in_one_direction"],
+]
+
+[[oneof]]
+supertype = "overlapping_geometry"
+branches = [
+    ["partly_overlapping_curves"],
+    ["partly_overlapping_surfaces"],
+]
+
+[[oneof]]
+supertype = "pair_value"
+branches = [
+    ["sliding_surface_pair_value"],
+    ["rolling_surface_pair_value"],
+    ["revolute_pair_value"],
+    ["prismatic_pair_value"],
+    ["screw_pair_value"],
+    ["cylindrical_pair_value"],
+    ["spherical_pair_value"],
+    ["sliding_curve_pair_value"],
+    ["rolling_curve_pair_value"],
+    ["gear_pair_value"],
+    ["rack_and_pinion_pair_value"],
+    ["universal_pair_value"],
+    ["planar_pair_value"],
+    ["unconstrained_pair_value"],
+    ["point_on_surface_pair_value"],
+    ["point_on_planar_curve_pair_value"],
+    ["low_order_kinematic_pair_value"],
+]
+
+[[oneof]]
+supertype = "part_laminate_table"
+branches = [
+    ["composite_assembly_table"],
+    ["ply_laminate_table"],
+]
+
+[[oneof]]
+supertype = "path"
+branches = [
+    ["open_path"],
+    ["edge_loop"],
+    ["oriented_path"],
+]
+
+[[oneof]]
+supertype = "path_node"
+branches = [
+    ["point_to_point_path"],
+    ["circular_path"],
+    ["linear_path"],
+    ["curve_based_path"],
+]
+
+[[oneof]]
+supertype = "physical_component_feature"
+branches = [
+    ["physical_component_terminal"],
+    ["physical_component_interface_terminal"],
+]
+
+[[oneof]]
+supertype = "picture_representation_item"
+branches = [
+    ["externally_defined_picture_representation_item"],
+    ["predefined_picture_representation_item"],
+]
+
+[[oneof]]
+supertype = "placement"
+branches = [
+    ["axis1_placement"],
+    ["axis2_placement_2d"],
+    ["axis2_placement_3d"],
+]
+
+[[oneof]]
+supertype = "planar_curve_pair"
+branches = [
+    ["sliding_curve_pair"],
+    ["rolling_curve_pair"],
+]
+
+[[oneof]]
+supertype = "point"
+branches = [
+    ["cartesian_point"],
+    ["point_on_curve"],
+    ["point_on_surface"],
+    ["point_in_volume"],
+    ["point_replica"],
+    ["degenerate_pcurve"],
+]
+
+[[oneof]]
+supertype = "presentation_representation"
+branches = [
+    ["presentation_area"],
+    ["presentation_view"],
+]
+
+[[oneof]]
+supertype = "primitive_2d"
+branches = [
+    ["circular_area"],
+    ["elliptic_area"],
+    ["rectangular_area"],
+    ["polygonal_area"],
+    ["half_space_2d"],
+]
+
+[[oneof]]
+supertype = "product_definition"
+branches = [
+    ["composite_assembly_sequence_definition"],
+    ["laminate_table"],
+    ["ply_laminate_sequence_definition"],
+]
+
+[[oneof]]
+supertype = "product_definition_usage"
+branches = [
+    ["make_from_usage_option"],
+    ["assembly_component_usage"],
+]
+
+[[oneof]]
+supertype = "property_definition"
+branches = [
+    ["product_definition_kinematics"],
+    ["product_definition_relationship_kinematics"],
+    ["product_definition_shape"],
+]
+
+[[oneof]]
+supertype = "replicate_feature"
+branches = [
+    ["circular_pattern"],
+    ["rectangular_pattern"],
+    ["feature_pattern"],
+]
+
+[[oneof]]
+supertype = "representation"
+branches = [
+    ["reinforcement_orientation_basis"],
+    ["ply_angle_representation"],
+]
+
+[[oneof]]
+supertype = "representation"
+branches = [
+    ["interpolated_configuration_representation"],
+    ["link_motion_representation_along_path"],
+]
+
+[[oneof]]
+supertype = "representation"
+branches = [
+    ["kinematic_link_representation"],
+    ["kinematic_topology_structure"],
+    ["kinematic_topology_directed_structure"],
+    ["kinematic_topology_network_structure"],
+    ["mechanism_representation"],
+    ["shape_representation"],
+]
+
+[[oneof]]
+supertype = "representation"
+branches = [
+    ["kinematic_topology_structure"],
+    ["kinematic_topology_directed_structure"],
+    ["kinematic_topology_network_structure"],
+]
+
+[[oneof]]
+supertype = "representation_item"
+branches = [
+    ["binary_representation_item"],
+    ["compound_representation_item"],
+    ["mapped_item"],
+    ["value_representation_item"],
+]
+
+[[oneof]]
+supertype = "representation_item"
+branches = [
+    ["boolean_representation_item"],
+    ["date_representation_item"],
+    ["date_time_representation_item"],
+    ["integer_representation_item"],
+    ["logical_representation_item"],
+    ["rational_representation_item"],
+    ["real_representation_item"],
+]
+
+[[oneof]]
+supertype = "representation_item"
+branches = [
+    ["mapped_item"],
+    ["styled_item"],
+]
+
+[[oneof]]
+supertype = "scanned_data_item"
+branches = [
+    ["point_cloud_dataset"],
+    ["point_cloud_superdataset"],
+    ["triangulated_point_cloud_dataset"],
+    ["scan_3d_model"],
+]
+
+[[oneof]]
+supertype = "self_intersecting_geometry"
+branches = [
+    ["self_intersecting_curve"],
+    ["self_intersecting_surface"],
+]
+
+[[oneof]]
+supertype = "shape_aspect"
+branches = [
+    ["shape_aspect_occurrence"],
+    ["component_path_shape_aspect"],
+]
+
+[[oneof]]
+supertype = "shape_aspect"
+branches = [
+    ["harness_node"],
+    ["harness_segment"],
+]
+
+[[oneof]]
+supertype = "shape_aspect"
+branches = [
+    ["contacting_feature"],
+    ["datum"],
+    ["datum_feature"],
+    ["datum_target"],
+    ["datum_system"],
+    ["general_datum_reference"],
+]
+
+[[oneof]]
+supertype = "shape_aspect"
+branches = [
+    ["assembly_shape_constraint"],
+    ["assembly_shape_joint"],
+    ["connectivity_definition"],
+    ["contact_feature"],
+    ["transport_feature"],
+]
+
+[[oneof]]
+supertype = "shape_aspect_relationship"
+branches = [
+    ["assembly_shape_joint_item_relationship"],
+    ["assembly_shape_constraint_item_relationship"],
+    ["connectivity_definition_item_relationship"],
+    ["shape_feature_fit_relationship"],
+]
+
+[[oneof]]
+supertype = "shape_data_quality_criterion"
+branches = [
+    ["erroneous_data"],
+    ["inapt_data"],
+]
+
+[[oneof]]
+supertype = "shape_data_quality_value_limit"
+branches = [
+    ["shape_data_quality_upper_value_limit"],
+    ["shape_data_quality_lower_value_limit"],
+]
+
+[[oneof]]
+supertype = "shelled_solid"
+branches = [
+    ["double_offset_shelled_solid"],
+    ["complex_shelled_solid"],
+]
+
+[[oneof]]
+supertype = "simple_boolean_expression"
+branches = [
+    ["boolean_literal"],
+    ["boolean_variable"],
+]
+
+[[oneof]]
+supertype = "simple_generic_expression"
+branches = [
+    ["generic_literal"],
+    ["generic_variable"],
+]
+
+[[oneof]]
+supertype = "simple_numeric_expression"
+branches = [
+    ["literal_number"],
+    ["numeric_variable"],
+]
+
+[[oneof]]
+supertype = "simple_string_expression"
+branches = [
+    ["string_literal"],
+    ["string_variable"],
+]
+
+[[oneof]]
+supertype = "solid_model"
+branches = [
+    ["csg_solid"],
+    ["manifold_solid_brep"],
+    ["swept_face_solid"],
+    ["swept_area_solid"],
+    ["swept_disk_solid"],
+    ["solid_replica"],
+]
+
+[[oneof]]
+supertype = "solid_with_chamfered_edges"
+branches = [
+    ["solid_with_single_offset_chamfer"],
+    ["solid_with_double_offset_chamfer"],
+    ["solid_with_angle_based_chamfer"],
+]
+
+[[oneof]]
+supertype = "solid_with_depression"
+branches = [
+    ["solid_with_hole"],
+    ["solid_with_pocket"],
+    ["solid_with_slot"],
+    ["solid_with_groove"],
+]
+
+[[oneof]]
+supertype = "solid_with_pocket"
+branches = [
+    ["solid_with_rectangular_pocket"],
+    ["solid_with_circular_pocket"],
+    ["solid_with_general_pocket"],
+]
+
+[[oneof]]
+supertype = "solid_with_protrusion"
+branches = [
+    ["solid_with_circular_protrusion"],
+    ["solid_with_rectangular_protrusion"],
+    ["solid_with_general_protrusion"],
+]
+
+[[oneof]]
+supertype = "solid_with_shape_element_pattern"
+branches = [
+    ["solid_with_circular_pattern"],
+    ["solid_with_rectangular_pattern"],
+]
+
+[[oneof]]
+supertype = "solid_with_slot"
+branches = [
+    ["solid_with_trapezoidal_section_slot"],
+    ["solid_with_tee_section_slot"],
+]
+
+[[oneof]]
+supertype = "solid_with_slot"
+branches = [
+    ["solid_with_straight_slot"],
+    ["solid_with_curved_slot"],
+]
+
+[[oneof]]
+supertype = "solid_with_stepped_round_hole"
+branches = [
+    ["solid_with_flat_bottom_round_hole"],
+    ["solid_with_conical_bottom_round_hole"],
+    ["solid_with_spherical_bottom_round_hole"],
+]
+
+[[oneof]]
+supertype = "steep_geometry_transition_across_edge"
+branches = [
+    ["steep_angle_between_adjacent_edges"],
+    ["steep_angle_between_adjacent_faces"],
+]
+
+[[oneof]]
+supertype = "string_expression"
+branches = [
+    ["simple_string_expression"],
+    ["index_expression"],
+    ["substring_expression"],
+    ["concat_expression"],
+    ["format_function"],
+    ["string_defined_function"],
+]
+
+[[oneof]]
+supertype = "surface"
+branches = [
+    ["elementary_surface"],
+    ["swept_surface"],
+    ["bounded_surface"],
+    ["offset_surface"],
+    ["surface_replica"],
+]
+
+[[oneof]]
+supertype = "surface_curve"
+branches = [
+    ["intersection_curve"],
+    ["seam_curve"],
+]
+
+[[oneof]]
+supertype = "surface_pair"
+branches = [
+    ["sliding_surface_pair"],
+    ["rolling_surface_pair"],
+]
+
+[[oneof]]
+supertype = "swept_area_solid"
+branches = [
+    ["revolved_area_solid"],
+    ["extruded_area_solid"],
+    ["surface_curve_swept_area_solid"],
+]
+
+[[oneof]]
+supertype = "swept_face_solid"
+branches = [
+    ["extruded_face_solid"],
+    ["revolved_face_solid"],
+]
+
+[[oneof]]
+supertype = "swept_surface"
+branches = [
+    ["surface_of_linear_extrusion"],
+    ["surface_of_revolution"],
+    ["surface_curve_swept_surface"],
+    ["fixed_reference_swept_surface"],
+]
+
+[[oneof]]
+supertype = "tessellated_edge"
+branches = [
+    ["tessellated_connecting_edge"],
+    ["cubic_bezier_tessellated_edge"],
+]
+
+[[oneof]]
+supertype = "tessellated_face"
+branches = [
+    ["triangulated_face"],
+    ["complex_triangulated_face"],
+    ["cubic_bezier_triangulated_face"],
+]
+
+[[oneof]]
+supertype = "tessellated_item"
+branches = [
+    ["coordinates_list"],
+    ["tessellated_solid"],
+    ["tessellated_shell"],
+    ["tessellated_wire"],
+    ["tessellated_geometric_set"],
+    ["tessellated_curve_set"],
+    ["tessellated_point_set"],
+    ["tessellated_surface_set"],
+    ["tessellated_structured_item"],
+]
+
+[[oneof]]
+supertype = "tessellated_structured_item"
+branches = [
+    ["tessellated_face"],
+    ["tessellated_edge"],
+    ["tessellated_vertex"],
+]
+
+[[oneof]]
+supertype = "tessellated_surface_set"
+branches = [
+    ["triangulated_surface_set"],
+    ["complex_triangulated_surface_set"],
+]
+
+[[oneof]]
+supertype = "tolerance_zone_definition"
+branches = [
+    ["projected_zone_definition"],
+    ["non_uniform_zone_definition"],
+    ["runout_zone_definition"],
+]
+
+[[oneof]]
+supertype = "tolerance_zone_with_datum"
+branches = [
+    ["directed_tolerance_zone"],
+    ["oriented_tolerance_zone"],
+]
+
+[[oneof]]
+supertype = "topological_representation_item"
+branches = [
+    ["vertex"],
+    ["edge"],
+    ["face_bound"],
+    ["face"],
+    ["vertex_shell"],
+    ["wire_shell"],
+    ["connected_edge_set"],
+    ["connected_face_set"],
+    ["connected_volume_set"],
+    ["volume_with_faces"],
+    [
+    "loop",
+    "path",
+],
+]
+
+[[oneof]]
+supertype = "topology_related_to_multiply_defined_geometry"
+branches = [
+    ["multiply_defined_faces"],
+    ["multiply_defined_vertices"],
+    ["multiply_defined_edges"],
+]
+
+[[oneof]]
+supertype = "topology_related_to_nearly_degenerate_geometry"
+branches = [
+    ["short_length_edge"],
+    ["small_area_face"],
+    ["entirely_narrow_face"],
+]
+
+[[oneof]]
+supertype = "topology_related_to_overlapping_geometry"
+branches = [
+    ["partly_overlapping_faces"],
+    ["partly_overlapping_edges"],
+]
+
+[[oneof]]
+supertype = "topology_related_to_self_intersecting_geometry"
+branches = [
+    ["self_intersecting_loop"],
+    ["self_intersecting_shell"],
+    ["intersecting_connected_face_sets"],
+]
+
+[[oneof]]
+supertype = "transformation_with_derived_angle"
+branches = [
+    ["draped_defined_transformation"],
+    ["laid_defined_transformation"],
+]
+
+[[oneof]]
+supertype = "transition_feature"
+branches = [
+    ["chamfer"],
+    ["edge_round"],
+    ["fillet"],
+]
+
+[[oneof]]
+supertype = "unary_boolean_expression"
+branches = [
+    ["not_expression"],
+    ["odd_function"],
+]
+
+[[oneof]]
+supertype = "unary_function_call"
+branches = [
+    ["abs_function"],
+    ["minus_function"],
+    ["sin_function"],
+    ["cos_function"],
+    ["tan_function"],
+    ["asin_function"],
+    ["acos_function"],
+    ["exp_function"],
+    ["log_function"],
+    ["log2_function"],
+    ["log10_function"],
+    ["square_root_function"],
+]
+
+[[oneof]]
+supertype = "uncertainty_qualifier"
+branches = [
+    ["standard_uncertainty"],
+    ["qualitative_uncertainty"],
+]
+
+[[oneof]]
+supertype = "variable"
+branches = [
+    ["numeric_variable"],
+    ["boolean_variable"],
+    ["string_variable"],
+]
+
+[[oneof]]
+supertype = "variational_parameter"
+branches = [
+    ["bound_variational_parameter"],
+    ["unbound_variational_parameter"],
+]
+
+[[oneof]]
+supertype = "volume"
+branches = [
+    ["block_volume"],
+    ["wedge_volume"],
+    ["spherical_volume"],
+    ["cylindrical_volume"],
+    ["eccentric_conical_volume"],
+    ["toroidal_volume"],
+    ["pyramid_volume"],
+    ["b_spline_volume"],
+    ["ellipsoid_volume"],
+    ["tetrahedron_volume"],
+    ["hexahedron_volume"],
+    ["locally_refined_spline_volume"],
+]
+
+[[oneof]]
+supertype = "volume_with_faces"
+branches = [
+    ["volume_with_shell"],
+    ["volume_with_parametric_boundary"],
+]
+
+[[oneof]]
+supertype = "zone_structural_makeup"
+branches = [
+    [
+    "smeared_material_definition",
+    "thickness_laminate_table",
+],
+    [
+    "smeared_material_definition",
+    "percentage_laminate_table",
+],
+    ["thickness_laminate_table"],
+    ["percentage_laminate_table"],
+    ["smeared_material_definition"],
+]
 
 [entity.a3m_equivalence_accuracy_association]
 is_abstract = false
