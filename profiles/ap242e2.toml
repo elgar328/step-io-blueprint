@@ -2121,11 +2121,11 @@ ty = "a3m_equivalence_assessment_specification_select"
 
 [[entity.a3m_equivalence_criterion.own_attrs]]
 name = "comparing_element_types"
-ty = "LIST OF a3m_element_type_name"
+ty = "LIST [1:?] OF a3m_element_type_name"
 
 [[entity.a3m_equivalence_criterion.own_attrs]]
 name = "compared_element_types"
-ty = "LIST OF a3m_element_type_name"
+ty = "LIST [1:?] OF a3m_element_type_name"
 
 [[entity.a3m_equivalence_criterion.own_attrs]]
 name = "measured_data_type"
@@ -2202,11 +2202,11 @@ is_abstract = false
 
 [[entity.a3m_equivalence_criterion_with_specified_elements.own_attrs]]
 name = "comparing_specified_elements"
-ty = "SET OF inspected_equivalence_element_select"
+ty = "SET [1:?] OF inspected_equivalence_element_select"
 
 [[entity.a3m_equivalence_criterion_with_specified_elements.own_attrs]]
 name = "compared_specified_elements"
-ty = "SET OF inspected_equivalence_element_select"
+ty = "SET [1:?] OF inspected_equivalence_element_select"
 
 [entity.a3m_equivalence_inspection_instance_report_item]
 parents = ["data_equivalence_inspection_instance_report_item"]
@@ -2222,7 +2222,7 @@ is_abstract = true
 
 [[entity.a3m_equivalence_inspection_requirement_with_values.own_attrs]]
 name = "applied_values"
-ty = "SET OF measure_representation_item"
+ty = "SET [1:?] OF measure_representation_item"
 
 [entity.a3m_equivalence_inspection_result_representation]
 parents = ["data_equivalence_inspection_result_representation"]
@@ -2399,7 +2399,7 @@ ty = "text"
 
 [[entity.action_directive.own_attrs]]
 name = "requests"
-ty = "SET OF versioned_action_request"
+ty = "SET [1:?] OF versioned_action_request"
 
 [entity.action_directive_relationship]
 is_abstract = false
@@ -2584,7 +2584,7 @@ ty = "OPTIONAL text"
 
 [[entity.action_resource.own_attrs]]
 name = "usage"
-ty = "SET OF supported_item"
+ty = "SET [1:?] OF supported_item"
 
 [[entity.action_resource.own_attrs]]
 name = "kind"
@@ -2626,7 +2626,7 @@ ty = "resource_requirement_type"
 
 [[entity.action_resource_requirement.own_attrs]]
 name = "operations"
-ty = "SET OF characterized_action_definition"
+ty = "SET [1:?] OF characterized_action_definition"
 
 [entity.action_resource_type]
 is_abstract = false
@@ -2782,7 +2782,7 @@ ty = "identifier"
 
 [[entity.aggregate_id_attribute.own_attrs]]
 name = "identified_item"
-ty = "SET OF id_attribute_select"
+ty = "SET [1:?] OF id_attribute_select"
 
 [entity.all_around_shape_aspect]
 parents = ["continuous_shape_aspect"]
@@ -2841,7 +2841,7 @@ is_abstract = false
 
 [[entity.analysis_item.own_attrs]]
 name = "items"
-ty = "SET OF analysed_item"
+ty = "SET [1:1] OF analysed_item"
 
 [entity.analysis_model]
 parents = ["representation"]
@@ -2928,7 +2928,7 @@ is_abstract = false
 
 [[entity.annotation_fill_area.own_attrs]]
 name = "boundaries"
-ty = "SET OF curve"
+ty = "SET [1:?] OF curve"
 
 [entity.annotation_fill_area_occurrence]
 parents = ["annotation_occurrence"]
@@ -2991,7 +2991,7 @@ is_abstract = false
 
 [[entity.annotation_plane.own_attrs]]
 name = "elements"
-ty = "OPTIONAL SET OF annotation_plane_element"
+ty = "OPTIONAL SET [1:?] OF annotation_plane_element"
 
 [[entity.annotation_plane.redeclared_attrs]]
 name = "item"
@@ -3120,7 +3120,7 @@ is_abstract = false
 
 [[entity.applied_action_assignment.own_attrs]]
 name = "items"
-ty = "SET OF action_items"
+ty = "SET [1:?] OF action_items"
 
 [entity.applied_action_method_assignment]
 parents = ["action_method_assignment"]
@@ -3128,7 +3128,7 @@ is_abstract = false
 
 [[entity.applied_action_method_assignment.own_attrs]]
 name = "items"
-ty = "SET OF action_method_items"
+ty = "SET [1:?] OF action_method_items"
 
 [entity.applied_action_request_assignment]
 parents = ["action_request_assignment"]
@@ -3136,7 +3136,7 @@ is_abstract = false
 
 [[entity.applied_action_request_assignment.own_attrs]]
 name = "items"
-ty = "SET OF action_request_item"
+ty = "SET [1:?] OF action_request_item"
 
 [entity.applied_approval_assignment]
 parents = ["approval_assignment"]
@@ -3144,7 +3144,7 @@ is_abstract = false
 
 [[entity.applied_approval_assignment.own_attrs]]
 name = "items"
-ty = "SET OF approval_item"
+ty = "SET [1:?] OF approval_item"
 
 [entity.applied_area]
 parents = ["shape_aspect"]
@@ -3157,7 +3157,7 @@ is_abstract = false
 
 [[entity.applied_attribute_classification_assignment.own_attrs]]
 name = "items"
-ty = "SET OF attribute_classification_item"
+ty = "SET [1:?] OF attribute_classification_item"
 
 [entity.applied_certification_assignment]
 parents = ["certification_assignment"]
@@ -3165,7 +3165,7 @@ is_abstract = false
 
 [[entity.applied_certification_assignment.own_attrs]]
 name = "items"
-ty = "SET OF certification_item"
+ty = "SET [1:?] OF certification_item"
 
 [entity.applied_classification_assignment]
 parents = ["classification_assignment"]
@@ -3173,7 +3173,7 @@ is_abstract = false
 
 [[entity.applied_classification_assignment.own_attrs]]
 name = "items"
-ty = "SET OF classification_item"
+ty = "SET [1:?] OF classification_item"
 
 [entity.applied_classification_assignment_relationship]
 parents = ["classification_assignment_relationship"]
@@ -3186,7 +3186,7 @@ is_abstract = false
 
 [[entity.applied_contract_assignment.own_attrs]]
 name = "items"
-ty = "SET OF contract_item"
+ty = "SET [1:?] OF contract_item"
 
 [entity.applied_date_and_time_assignment]
 parents = ["date_and_time_assignment"]
@@ -3194,7 +3194,7 @@ is_abstract = false
 
 [[entity.applied_date_and_time_assignment.own_attrs]]
 name = "items"
-ty = "SET OF date_and_time_item"
+ty = "SET [1:?] OF date_and_time_item"
 
 [entity.applied_date_assignment]
 parents = ["date_assignment"]
@@ -3202,7 +3202,7 @@ is_abstract = false
 
 [[entity.applied_date_assignment.own_attrs]]
 name = "items"
-ty = "SET OF date_item"
+ty = "SET [1:?] OF date_item"
 
 [entity.applied_description_text_assignment]
 parents = ["description_text_assignment"]
@@ -3210,7 +3210,7 @@ is_abstract = false
 
 [[entity.applied_description_text_assignment.own_attrs]]
 name = "items"
-ty = "SET OF description_item"
+ty = "SET [1:?] OF description_item"
 
 [entity.applied_description_text_assignment_relationship]
 parents = ["description_text_assignment_relationship"]
@@ -3223,7 +3223,7 @@ is_abstract = false
 
 [[entity.applied_directed_action_assignment.own_attrs]]
 name = "items"
-ty = "SET OF action_request_item"
+ty = "SET [1:?] OF action_request_item"
 
 [entity.applied_document_reference]
 parents = ["document_reference"]
@@ -3231,7 +3231,7 @@ is_abstract = false
 
 [[entity.applied_document_reference.own_attrs]]
 name = "items"
-ty = "SET OF document_reference_item"
+ty = "SET [1:?] OF document_reference_item"
 
 [entity.applied_document_usage_constraint_assignment]
 parents = ["document_usage_constraint_assignment"]
@@ -3239,7 +3239,7 @@ is_abstract = false
 
 [[entity.applied_document_usage_constraint_assignment.own_attrs]]
 name = "items"
-ty = "SET OF document_reference_item"
+ty = "SET [1:?] OF document_reference_item"
 
 [entity.applied_effectivity_assignment]
 parents = ["effectivity_assignment"]
@@ -3247,7 +3247,7 @@ is_abstract = false
 
 [[entity.applied_effectivity_assignment.own_attrs]]
 name = "items"
-ty = "SET OF effectivity_item"
+ty = "SET [1:?] OF effectivity_item"
 
 [entity.applied_event_occurrence_assignment]
 parents = ["event_occurrence_assignment"]
@@ -3255,7 +3255,7 @@ is_abstract = false
 
 [[entity.applied_event_occurrence_assignment.own_attrs]]
 name = "items"
-ty = "SET OF event_occurrence_item"
+ty = "SET [1:?] OF event_occurrence_item"
 
 [entity.applied_external_identification_assignment]
 parents = ["external_identification_assignment"]
@@ -3263,7 +3263,7 @@ is_abstract = false
 
 [[entity.applied_external_identification_assignment.own_attrs]]
 name = "items"
-ty = "SET OF external_identification_item"
+ty = "SET [1:?] OF external_identification_item"
 
 [entity.applied_external_identification_assignment_relationship]
 parents = ["external_identification_assignment_relationship"]
@@ -3276,7 +3276,7 @@ is_abstract = false
 
 [[entity.applied_group_assignment.own_attrs]]
 name = "items"
-ty = "SET OF groupable_item"
+ty = "SET [1:?] OF groupable_item"
 
 [entity.applied_identification_assignment]
 parents = ["identification_assignment"]
@@ -3284,7 +3284,7 @@ is_abstract = false
 
 [[entity.applied_identification_assignment.own_attrs]]
 name = "items"
-ty = "SET OF identification_item"
+ty = "SET [1:?] OF identification_item"
 
 [entity.applied_ineffectivity_assignment]
 parents = ["effectivity_assignment"]
@@ -3292,7 +3292,7 @@ is_abstract = false
 
 [[entity.applied_ineffectivity_assignment.own_attrs]]
 name = "items"
-ty = "SET OF effectivity_item"
+ty = "SET [1:?] OF effectivity_item"
 
 [entity.applied_location_assignment]
 parents = ["location_assignment"]
@@ -3300,7 +3300,7 @@ is_abstract = false
 
 [[entity.applied_location_assignment.own_attrs]]
 name = "items"
-ty = "SET OF location_item"
+ty = "SET [1:?] OF location_item"
 
 [entity.applied_location_representation_assignment]
 parents = ["location_representation_assignment"]
@@ -3308,7 +3308,7 @@ is_abstract = false
 
 [[entity.applied_location_representation_assignment.own_attrs]]
 name = "items"
-ty = "SET OF location_representation_item"
+ty = "SET [1:?] OF location_representation_item"
 
 [entity.applied_name_assignment]
 parents = ["name_assignment"]
@@ -3324,7 +3324,7 @@ is_abstract = false
 
 [[entity.applied_organization_assignment.own_attrs]]
 name = "items"
-ty = "SET OF organization_item"
+ty = "SET [1:?] OF organization_item"
 
 [entity.applied_organization_type_assignment]
 parents = ["organization_type_assignment"]
@@ -3332,7 +3332,7 @@ is_abstract = false
 
 [[entity.applied_organization_type_assignment.own_attrs]]
 name = "items"
-ty = "SET OF organization_type_item"
+ty = "SET [1:?] OF organization_type_item"
 
 [entity.applied_organizational_project_assignment]
 parents = ["organizational_project_assignment"]
@@ -3340,7 +3340,7 @@ is_abstract = false
 
 [[entity.applied_organizational_project_assignment.own_attrs]]
 name = "items"
-ty = "SET OF project_item"
+ty = "SET [1:?] OF project_item"
 
 [entity.applied_person_and_organization_assignment]
 parents = ["person_and_organization_assignment"]
@@ -3348,7 +3348,7 @@ is_abstract = false
 
 [[entity.applied_person_and_organization_assignment.own_attrs]]
 name = "items"
-ty = "SET OF person_and_organization_item"
+ty = "SET [1:?] OF person_and_organization_item"
 
 [entity.applied_presented_item]
 parents = ["presented_item"]
@@ -3356,7 +3356,7 @@ is_abstract = false
 
 [[entity.applied_presented_item.own_attrs]]
 name = "items"
-ty = "SET OF presented_item_select"
+ty = "SET [1:?] OF presented_item_select"
 
 [entity.applied_security_classification_assignment]
 parents = ["security_classification_assignment"]
@@ -3364,7 +3364,7 @@ is_abstract = false
 
 [[entity.applied_security_classification_assignment.own_attrs]]
 name = "items"
-ty = "SET OF security_classification_item"
+ty = "SET [1:?] OF security_classification_item"
 
 [entity.applied_state_observed_assignment]
 parents = ["state_observed_assignment"]
@@ -3372,7 +3372,7 @@ is_abstract = false
 
 [[entity.applied_state_observed_assignment.own_attrs]]
 name = "items"
-ty = "SET OF state_observed_of_item"
+ty = "SET [1:?] OF state_observed_of_item"
 
 [entity.applied_state_type_assignment]
 parents = ["state_type_assignment"]
@@ -3380,7 +3380,7 @@ is_abstract = false
 
 [[entity.applied_state_type_assignment.own_attrs]]
 name = "items"
-ty = "SET OF state_type_of_item"
+ty = "SET [1:?] OF state_type_of_item"
 
 [entity.applied_time_interval_assignment]
 parents = ["time_interval_assignment"]
@@ -3396,7 +3396,7 @@ is_abstract = false
 
 [[entity.applied_usage_right.own_attrs]]
 name = "items"
-ty = "SET OF ir_usage_item"
+ty = "SET [1:?] OF ir_usage_item"
 
 [entity.approval]
 is_abstract = false
@@ -3638,7 +3638,7 @@ is_abstract = false
 
 [[entity.assigned_analysis.own_attrs]]
 name = "items"
-ty = "SET OF product_definition_formation"
+ty = "SET [1:1] OF product_definition_formation"
 
 [entity.assigned_requirement]
 parents = ["group_assignment"]
@@ -3646,7 +3646,7 @@ is_abstract = false
 
 [[entity.assigned_requirement.own_attrs]]
 name = "items"
-ty = "SET OF product_definition"
+ty = "SET [1:1] OF product_definition"
 
 [entity.assignment_object_relationship]
 is_abstract = false
@@ -3754,7 +3754,7 @@ is_abstract = false
 
 [[entity.attribute_language_assignment.own_attrs]]
 name = "items"
-ty = "SET OF attribute_language_item"
+ty = "SET [1:?] OF attribute_language_item"
 
 [entity.attribute_value_assignment]
 is_abstract = true
@@ -3831,7 +3831,7 @@ ty = "nonnegative_integer"
 
 [[entity.b_spline_basis.own_attrs]]
 name = "repeated_knots"
-ty = "LIST OF real"
+ty = "LIST [2:?] OF real"
 
 [entity.b_spline_curve]
 parents = ["bounded_curve"]
@@ -3843,7 +3843,7 @@ ty = "integer"
 
 [[entity.b_spline_curve.own_attrs]]
 name = "control_points_list"
-ty = "LIST OF cartesian_point"
+ty = "LIST [2:?] OF cartesian_point"
 
 [[entity.b_spline_curve.own_attrs]]
 name = "curve_form"
@@ -3887,11 +3887,11 @@ is_abstract = false
 
 [[entity.b_spline_curve_with_knots.own_attrs]]
 name = "knot_multiplicities"
-ty = "LIST OF integer"
+ty = "LIST [2:?] OF integer"
 
 [[entity.b_spline_curve_with_knots.own_attrs]]
 name = "knots"
-ty = "LIST OF parameter_value"
+ty = "LIST [2:?] OF parameter_value"
 
 [[entity.b_spline_curve_with_knots.own_attrs]]
 name = "knot_spec"
@@ -3906,7 +3906,7 @@ is_abstract = false
 
 [[entity.b_spline_function.own_attrs]]
 name = "basis"
-ty = "LIST OF b_spline_basis"
+ty = "LIST [1:?] OF b_spline_basis"
 
 [entity.b_spline_surface]
 parents = ["bounded_surface"]
@@ -3922,7 +3922,7 @@ ty = "integer"
 
 [[entity.b_spline_surface.own_attrs]]
 name = "control_points_list"
-ty = "LIST OF LIST OF cartesian_point"
+ty = "LIST [2:?] OF LIST [2:?] OF cartesian_point"
 
 [[entity.b_spline_surface.own_attrs]]
 name = "surface_form"
@@ -3994,19 +3994,19 @@ is_abstract = false
 
 [[entity.b_spline_surface_with_knots.own_attrs]]
 name = "u_multiplicities"
-ty = "LIST OF integer"
+ty = "LIST [2:?] OF integer"
 
 [[entity.b_spline_surface_with_knots.own_attrs]]
 name = "v_multiplicities"
-ty = "LIST OF integer"
+ty = "LIST [2:?] OF integer"
 
 [[entity.b_spline_surface_with_knots.own_attrs]]
 name = "u_knots"
-ty = "LIST OF parameter_value"
+ty = "LIST [2:?] OF parameter_value"
 
 [[entity.b_spline_surface_with_knots.own_attrs]]
 name = "v_knots"
-ty = "LIST OF parameter_value"
+ty = "LIST [2:?] OF parameter_value"
 
 [[entity.b_spline_surface_with_knots.own_attrs]]
 name = "knot_spec"
@@ -4030,7 +4030,7 @@ ty = "integer"
 
 [[entity.b_spline_volume.own_attrs]]
 name = "control_points_list"
-ty = "LIST OF LIST OF LIST OF cartesian_point"
+ty = "LIST [2:?] OF LIST [2:?] OF LIST [2:?] OF cartesian_point"
 
 [entity.b_spline_volume_with_knots]
 parents = ["b_spline_volume"]
@@ -4038,27 +4038,27 @@ is_abstract = false
 
 [[entity.b_spline_volume_with_knots.own_attrs]]
 name = "u_multiplicities"
-ty = "LIST OF integer"
+ty = "LIST [2:?] OF integer"
 
 [[entity.b_spline_volume_with_knots.own_attrs]]
 name = "v_multiplicities"
-ty = "LIST OF integer"
+ty = "LIST [2:?] OF integer"
 
 [[entity.b_spline_volume_with_knots.own_attrs]]
 name = "w_multiplicities"
-ty = "LIST OF integer"
+ty = "LIST [2:?] OF integer"
 
 [[entity.b_spline_volume_with_knots.own_attrs]]
 name = "u_knots"
-ty = "LIST OF parameter_value"
+ty = "LIST [2:?] OF parameter_value"
 
 [[entity.b_spline_volume_with_knots.own_attrs]]
 name = "v_knots"
-ty = "LIST OF parameter_value"
+ty = "LIST [2:?] OF parameter_value"
 
 [[entity.b_spline_volume_with_knots.own_attrs]]
 name = "w_knots"
-ty = "LIST OF parameter_value"
+ty = "LIST [2:?] OF parameter_value"
 
 [entity.back_chaining_rule]
 parents = ["rule_definition"]
@@ -4184,7 +4184,7 @@ is_abstract = true
 
 [[entity.binary_generic_expression.own_attrs]]
 name = "operands"
-ty = "LIST OF generic_expression"
+ty = "LIST [2:2] OF generic_expression"
 
 [entity.binary_literal]
 parents = ["generic_literal"]
@@ -4426,7 +4426,7 @@ is_abstract = false
 
 [[entity.breakdown_element_group_assignment.own_attrs]]
 name = "items"
-ty = "SET OF product_definition_or_breakdown_element_usage"
+ty = "SET [1:1] OF product_definition_or_breakdown_element_usage"
 
 [entity.breakdown_element_realization]
 parents = [
@@ -4452,7 +4452,7 @@ is_abstract = false
 
 [[entity.brep_with_voids.own_attrs]]
 name = "voids"
-ty = "SET OF oriented_closed_shell"
+ty = "SET [1:?] OF oriented_closed_shell"
 
 [entity.bytes_representation_item]
 parents = ["binary_representation_item"]
@@ -4521,7 +4521,7 @@ is_abstract = false
 
 [[entity.camera_model_d3_multi_clipping.own_attrs]]
 name = "shape_clipping"
-ty = "SET OF camera_model_d3_multi_clipping_intersection_select"
+ty = "SET [1:?] OF camera_model_d3_multi_clipping_intersection_select"
 
 [entity.camera_model_d3_multi_clipping_intersection]
 parents = ["geometric_representation_item"]
@@ -4529,7 +4529,7 @@ is_abstract = false
 
 [[entity.camera_model_d3_multi_clipping_intersection.own_attrs]]
 name = "shape_clipping"
-ty = "SET OF camera_model_d3_multi_clipping_intersection_select"
+ty = "SET [2:?] OF camera_model_d3_multi_clipping_intersection_select"
 
 [entity.camera_model_d3_multi_clipping_union]
 parents = ["geometric_representation_item"]
@@ -4537,7 +4537,7 @@ is_abstract = false
 
 [[entity.camera_model_d3_multi_clipping_union.own_attrs]]
 name = "shape_clipping"
-ty = "SET OF camera_model_d3_multi_clipping_union_select"
+ty = "SET [2:?] OF camera_model_d3_multi_clipping_union_select"
 
 [entity.camera_model_d3_with_hlhsr]
 parents = ["camera_model_d3"]
@@ -4553,7 +4553,7 @@ is_abstract = false
 
 [[entity.camera_model_with_light_sources.own_attrs]]
 name = "sources"
-ty = "SET OF light_source"
+ty = "SET [1:?] OF light_source"
 
 [entity.camera_usage]
 parents = ["representation_map"]
@@ -4596,7 +4596,7 @@ is_abstract = false
 
 [[entity.cartesian_point.own_attrs]]
 name = "coordinates"
-ty = "LIST OF length_measure"
+ty = "LIST [1:3] OF length_measure"
 
 [entity.cartesian_transformation_operator]
 parents = [
@@ -4640,7 +4640,7 @@ is_abstract = false
 
 [[entity.cc_design_approval.own_attrs]]
 name = "items"
-ty = "SET OF approved_item"
+ty = "SET [1:?] OF approved_item"
 
 [entity.cc_design_certification]
 parents = ["certification_assignment"]
@@ -4648,7 +4648,7 @@ is_abstract = false
 
 [[entity.cc_design_certification.own_attrs]]
 name = "items"
-ty = "SET OF certified_item"
+ty = "SET [1:?] OF certified_item"
 
 [entity.cc_design_contract]
 parents = ["contract_assignment"]
@@ -4656,7 +4656,7 @@ is_abstract = false
 
 [[entity.cc_design_contract.own_attrs]]
 name = "items"
-ty = "SET OF contracted_item"
+ty = "SET [1:?] OF contracted_item"
 
 [entity.cc_design_date_and_time_assignment]
 parents = ["date_and_time_assignment"]
@@ -4664,7 +4664,7 @@ is_abstract = false
 
 [[entity.cc_design_date_and_time_assignment.own_attrs]]
 name = "items"
-ty = "SET OF date_time_item"
+ty = "SET [1:?] OF date_time_item"
 
 [entity.cc_design_person_and_organization_assignment]
 parents = ["person_and_organization_assignment"]
@@ -4672,7 +4672,7 @@ is_abstract = false
 
 [[entity.cc_design_person_and_organization_assignment.own_attrs]]
 name = "items"
-ty = "SET OF cc_person_organization_item"
+ty = "SET [1:?] OF cc_person_organization_item"
 
 [entity.cc_design_security_classification]
 parents = ["security_classification_assignment"]
@@ -4680,7 +4680,7 @@ is_abstract = false
 
 [[entity.cc_design_security_classification.own_attrs]]
 name = "items"
-ty = "SET OF cc_classified_item"
+ty = "SET [1:?] OF cc_classified_item"
 
 [entity.cc_design_specification_reference]
 parents = ["document_reference"]
@@ -4688,7 +4688,7 @@ is_abstract = false
 
 [[entity.cc_design_specification_reference.own_attrs]]
 name = "items"
-ty = "SET OF cc_specified_item"
+ty = "SET [1:?] OF cc_specified_item"
 
 [entity.cdgc_with_dimension]
 parents = ["curve_distance_geometric_constraint"]
@@ -4751,11 +4751,11 @@ is_abstract = false
 
 [[entity.chain_based_item_identified_representation_usage.own_attrs]]
 name = "nodes"
-ty = "LIST OF representation"
+ty = "LIST [2:?] OF representation"
 
 [[entity.chain_based_item_identified_representation_usage.own_attrs]]
 name = "undirected_link"
-ty = "LIST OF chained_representation_link"
+ty = "LIST [1:?] OF chained_representation_link"
 
 [entity.chamfer]
 parents = ["transition_feature"]
@@ -4773,7 +4773,7 @@ is_abstract = false
 
 [[entity.change.own_attrs]]
 name = "items"
-ty = "SET OF work_item"
+ty = "SET [1:?] OF work_item"
 
 [entity.change_composition_relationship]
 parents = ["group_relationship"]
@@ -4812,7 +4812,7 @@ is_abstract = false
 
 [[entity.change_request.own_attrs]]
 name = "items"
-ty = "SET OF change_request_item"
+ty = "SET [1:?] OF change_request_item"
 
 [entity.character_glyph_font_usage]
 is_abstract = false
@@ -4859,7 +4859,7 @@ is_abstract = false
 
 [[entity.character_glyph_symbol_outline.own_attrs]]
 name = "outlines"
-ty = "SET OF annotation_fill_area"
+ty = "SET [1:?] OF annotation_fill_area"
 
 [entity.character_glyph_symbol_stroke]
 parents = ["character_glyph_symbol"]
@@ -4867,7 +4867,7 @@ is_abstract = false
 
 [[entity.character_glyph_symbol_stroke.own_attrs]]
 name = "strokes"
-ty = "SET OF curve"
+ty = "SET [1:?] OF curve"
 
 [entity.characteristic_data_column_header]
 parents = ["general_property"]
@@ -4900,11 +4900,11 @@ is_abstract = false
 
 [[entity.characterized_chain_based_item_within_representation.own_attrs]]
 name = "nodes"
-ty = "LIST OF representation"
+ty = "LIST [2:?] OF representation"
 
 [[entity.characterized_chain_based_item_within_representation.own_attrs]]
 name = "undirected_link"
-ty = "LIST OF chained_representation_link"
+ty = "LIST [1:?] OF chained_representation_link"
 
 [entity.characterized_class]
 parents = [
@@ -5069,7 +5069,7 @@ is_abstract = false
 
 [[entity.class_usage_effectivity_context_assignment.own_attrs]]
 name = "items"
-ty = "SET OF class_usage_effectivity_context_item"
+ty = "SET [1:?] OF class_usage_effectivity_context_item"
 
 [entity.classification_assignment]
 is_abstract = true
@@ -5333,11 +5333,11 @@ is_abstract = false
 
 [[entity.complex_shelled_solid.own_attrs]]
 name = "thickened_face_list"
-ty = "LIST OF SET OF face_surface"
+ty = "LIST [1:?] OF SET [1:?] OF face_surface"
 
 [[entity.complex_shelled_solid.own_attrs]]
 name = "thickness_list"
-ty = "LIST OF length_measure"
+ty = "LIST [1:?] OF length_measure"
 
 [entity.complex_triangulated_face]
 parents = ["tessellated_face"]
@@ -5349,11 +5349,11 @@ ty = "LIST OF integer"
 
 [[entity.complex_triangulated_face.own_attrs]]
 name = "triangle_strips"
-ty = "LIST OF LIST OF integer"
+ty = "LIST OF LIST [3:?] OF integer"
 
 [[entity.complex_triangulated_face.own_attrs]]
 name = "triangle_fans"
-ty = "LIST OF LIST OF integer"
+ty = "LIST OF LIST [3:?] OF integer"
 
 [entity.complex_triangulated_surface_set]
 parents = ["tessellated_surface_set"]
@@ -5365,11 +5365,11 @@ ty = "LIST OF integer"
 
 [[entity.complex_triangulated_surface_set.own_attrs]]
 name = "triangle_strips"
-ty = "LIST OF LIST OF integer"
+ty = "LIST OF LIST [3:?] OF integer"
 
 [[entity.complex_triangulated_surface_set.own_attrs]]
 name = "triangle_fans"
-ty = "LIST OF LIST OF integer"
+ty = "LIST OF LIST [3:?] OF integer"
 
 [entity.component_definition]
 parents = [
@@ -5435,7 +5435,7 @@ is_abstract = false
 
 [[entity.composite_curve.own_attrs]]
 name = "segments"
-ty = "LIST OF composite_curve_segment"
+ty = "LIST [1:?] OF composite_curve_segment"
 
 [[entity.composite_curve.own_attrs]]
 name = "self_intersect"
@@ -5505,7 +5505,7 @@ is_abstract = false
 
 [[entity.composite_text.own_attrs]]
 name = "collected_text"
-ty = "SET OF text_or_character"
+ty = "SET [2:?] OF text_or_character"
 
 [entity.composite_text_with_associated_curves]
 parents = ["composite_text"]
@@ -5513,7 +5513,7 @@ is_abstract = false
 
 [[entity.composite_text_with_associated_curves.own_attrs]]
 name = "associated_curves"
-ty = "SET OF curve"
+ty = "SET [1:?] OF curve"
 
 [entity.composite_text_with_blanking_box]
 parents = ["composite_text"]
@@ -5650,7 +5650,7 @@ is_abstract = false
 
 [[entity.configurable_item.own_attrs]]
 name = "item_concept_feature"
-ty = "SET OF product_concept_feature_association"
+ty = "SET [1:?] OF product_concept_feature_association"
 
 [entity.configuration_design]
 is_abstract = false
@@ -5729,7 +5729,7 @@ is_abstract = false
 
 [[entity.configured_effectivity_assignment.own_attrs]]
 name = "items"
-ty = "SET OF configured_effectivity_item"
+ty = "SET [1:?] OF configured_effectivity_item"
 
 [entity.configured_effectivity_context_assignment]
 parents = ["effectivity_context_assignment"]
@@ -5737,7 +5737,7 @@ is_abstract = false
 
 [[entity.configured_effectivity_context_assignment.own_attrs]]
 name = "items"
-ty = "SET OF configured_effectivity_context_item"
+ty = "SET [1:?] OF configured_effectivity_context_item"
 
 [entity.conic]
 parents = ["curve"]
@@ -5781,7 +5781,7 @@ is_abstract = false
 
 [[entity.connected_edge_set.own_attrs]]
 name = "ces_edges"
-ty = "SET OF edge"
+ty = "SET [1:?] OF edge"
 
 [entity.connected_edge_with_length_set_representation]
 parents = ["representation"]
@@ -5794,7 +5794,7 @@ is_abstract = false
 
 [[entity.connected_face_set.own_attrs]]
 name = "cfs_faces"
-ty = "SET OF face"
+ty = "SET [1:?] OF face"
 
 [entity.connected_face_sub_set]
 parents = ["connected_face_set"]
@@ -5810,7 +5810,7 @@ is_abstract = false
 
 [[entity.connected_volume_set.own_attrs]]
 name = "cvs_volumes"
-ty = "SET OF volume_with_faces"
+ty = "SET [1:?] OF volume_with_faces"
 
 [entity.connected_volume_sub_set]
 parents = ["connected_volume_set"]
@@ -5921,7 +5921,7 @@ is_abstract = false
 
 [[entity.containing_message.own_attrs]]
 name = "items"
-ty = "SET OF structured_message"
+ty = "SET [1:1] OF structured_message"
 
 [entity.context_dependent_invisibility]
 parents = ["invisibility"]
@@ -5948,7 +5948,7 @@ is_abstract = false
 
 [[entity.context_dependent_over_riding_styled_item.own_attrs]]
 name = "style_context"
-ty = "LIST OF style_context_select"
+ty = "LIST [1:?] OF style_context_select"
 
 [entity.context_dependent_shape_representation]
 is_abstract = false
@@ -6068,7 +6068,7 @@ ty = "integer"
 
 [[entity.coordinates_list.own_attrs]]
 name = "position_coords"
-ty = "LIST OF LIST OF real"
+ty = "LIST [1:?] OF LIST [3:3] OF real"
 
 [entity.cos_function]
 parents = ["unary_function_call"]
@@ -6081,7 +6081,7 @@ is_abstract = false
 
 [[entity.counterbore_hole_definition.own_attrs]]
 name = "counterbore"
-ty = "LIST OF explicit_round_hole"
+ty = "LIST [1:?] OF explicit_round_hole"
 
 [[entity.counterbore_hole_definition.own_attrs]]
 name = "drilled_hole_depth"
@@ -6114,7 +6114,7 @@ is_abstract = false
 
 [[entity.counterbore_hole_occurrence_in_assembly.own_attrs]]
 name = "modified_components"
-ty = "LIST OF multi_level_reference_designator"
+ty = "LIST [1:?] OF multi_level_reference_designator"
 
 [entity.counterdrill_hole_definition]
 parents = ["explicit_composite_hole"]
@@ -6163,7 +6163,7 @@ is_abstract = false
 
 [[entity.counterdrill_hole_occurrence_in_assembly.own_attrs]]
 name = "modified_components"
-ty = "LIST OF multi_level_reference_designator"
+ty = "LIST [1:?] OF multi_level_reference_designator"
 
 [entity.countersink_hole_definition]
 parents = ["explicit_composite_hole"]
@@ -6216,7 +6216,7 @@ is_abstract = false
 
 [[entity.countersink_hole_occurrence_in_assembly.own_attrs]]
 name = "modified_components"
-ty = "LIST OF multi_level_reference_designator"
+ty = "LIST [1:?] OF multi_level_reference_designator"
 
 [entity.criterion_report_item_with_number_of_instances]
 parents = ["data_equivalence_inspection_criterion_report_item"]
@@ -6319,7 +6319,7 @@ is_abstract = false
 
 [[entity.cubic_bezier_triangulated_face.own_attrs]]
 name = "ctriangles"
-ty = "LIST OF LIST OF integer"
+ty = "LIST [1:?] OF LIST [10:10] OF integer"
 
 [entity.cubic_tessellated_connecting_edge]
 parents = ["cubic_bezier_tessellated_edge"]
@@ -6353,7 +6353,7 @@ is_abstract = false
 
 [[entity.current_change_element_assignment.own_attrs]]
 name = "items"
-ty = "SET OF change_management_object"
+ty = "SET [1:?] OF change_management_object"
 
 [[entity.current_change_element_assignment.redeclared_attrs]]
 name = "assigned_group"
@@ -6407,7 +6407,7 @@ ty = "surface"
 
 [[entity.curve_bounded_surface.own_attrs]]
 name = "boundaries"
-ty = "SET OF boundary_curve"
+ty = "SET [1:?] OF boundary_curve"
 
 [[entity.curve_bounded_surface.own_attrs]]
 name = "implicit_outer"
@@ -6424,7 +6424,7 @@ is_abstract = false
 
 [[entity.curve_distance_geometric_constraint.own_attrs]]
 name = "near_points"
-ty = "SET OF near_point_relationship"
+ty = "SET [0:4] OF near_point_relationship"
 
 [entity.curve_length_geometric_constraint]
 parents = ["explicit_geometric_constraint"]
@@ -6449,7 +6449,7 @@ is_abstract = false
 
 [[entity.curve_segment_set.own_attrs]]
 name = "segments"
-ty = "SET OF composite_curve_segment"
+ty = "SET [1:?] OF composite_curve_segment"
 
 [entity.curve_smoothness_geometric_constraint]
 parents = ["explicit_geometric_constraint"]
@@ -6489,7 +6489,7 @@ ty = "label"
 
 [[entity.curve_style_font.own_attrs]]
 name = "pattern_list"
-ty = "LIST OF curve_style_font_pattern"
+ty = "LIST [1:?] OF curve_style_font_pattern"
 
 [entity.curve_style_font_and_scaling]
 parents = ["founded_item"]
@@ -6683,7 +6683,7 @@ ty = "text"
 
 [[entity.data_environment.own_attrs]]
 name = "elements"
-ty = "SET OF characterized_property_representation"
+ty = "SET [1:?] OF characterized_property_representation"
 
 [entity.data_equivalence_assessment_specification]
 is_abstract = false
@@ -6777,11 +6777,11 @@ is_abstract = false
 
 [[entity.data_equivalence_inspected_element_pair.own_attrs]]
 name = "comparing_elements"
-ty = "SET OF inspected_equivalence_element_select"
+ty = "SET [1:?] OF inspected_equivalence_element_select"
 
 [[entity.data_equivalence_inspected_element_pair.own_attrs]]
 name = "compared_elements"
-ty = "SET OF inspected_equivalence_element_select"
+ty = "SET [1:?] OF inspected_equivalence_element_select"
 
 [entity.data_equivalence_inspection_criterion_report]
 parents = ["data_equivalence_inspection_report"]
@@ -6789,7 +6789,7 @@ is_abstract = false
 
 [[entity.data_equivalence_inspection_criterion_report.own_attrs]]
 name = "statistical_values"
-ty = "SET OF data_equivalence_inspection_criterion_report_item"
+ty = "SET [1:?] OF data_equivalence_inspection_criterion_report_item"
 
 [entity.data_equivalence_inspection_criterion_report_item]
 parents = ["representation_item"]
@@ -6802,7 +6802,7 @@ is_abstract = false
 
 [[entity.data_equivalence_inspection_instance_report.own_attrs]]
 name = "inspected_instances"
-ty = "LIST OF data_equivalence_inspection_instance_report_item"
+ty = "LIST [1:?] OF data_equivalence_inspection_instance_report_item"
 
 [entity.data_equivalence_inspection_instance_report_item]
 parents = ["representation_item"]
@@ -6955,7 +6955,7 @@ is_abstract = false
 
 [[entity.data_quality_inspection_criterion_report.own_attrs]]
 name = "statistical_values"
-ty = "SET OF data_quality_inspection_criterion_report_item"
+ty = "SET [1:2] OF data_quality_inspection_criterion_report_item"
 
 [entity.data_quality_inspection_criterion_report_item]
 parents = ["representation_item"]
@@ -6975,7 +6975,7 @@ is_abstract = false
 
 [[entity.data_quality_inspection_instance_report.own_attrs]]
 name = "inspected_instances"
-ty = "LIST OF data_quality_inspection_instance_report_item"
+ty = "LIST [1:?] OF data_quality_inspection_instance_report_item"
 
 [entity.data_quality_inspection_instance_report_item]
 parents = ["representation_item"]
@@ -6983,7 +6983,7 @@ is_abstract = false
 
 [[entity.data_quality_inspection_instance_report_item.own_attrs]]
 name = "inspected_elements"
-ty = "SET OF inspected_element_select"
+ty = "SET [1:?] OF inspected_element_select"
 
 [entity.data_quality_inspection_report]
 parents = ["representation_item"]
@@ -7176,7 +7176,7 @@ is_abstract = false
 
 [[entity.datum_system.own_attrs]]
 name = "constituents"
-ty = "LIST OF datum_reference_compartment"
+ty = "LIST [1:3] OF datum_reference_compartment"
 
 [entity.datum_target]
 parents = ["shape_aspect"]
@@ -7340,7 +7340,7 @@ is_abstract = false
 
 [[entity.derived_unit.own_attrs]]
 name = "elements"
-ty = "SET OF derived_unit_element"
+ty = "SET [1:?] OF derived_unit_element"
 
 [entity.derived_unit_element]
 is_abstract = false
@@ -7788,7 +7788,7 @@ is_abstract = false
 
 [[entity.direction.own_attrs]]
 name = "direction_ratios"
-ty = "LIST OF real"
+ty = "LIST [2:3] OF real"
 
 [entity.direction_shape_representation]
 parents = ["shape_representation"]
@@ -7853,7 +7853,7 @@ is_abstract = false
 
 [[entity.document_identifier_assignment.own_attrs]]
 name = "items"
-ty = "SET OF document_identifier_assigned_item"
+ty = "SET [1:?] OF document_identifier_assigned_item"
 
 [entity.document_product_association]
 is_abstract = false
@@ -8003,7 +8003,7 @@ is_abstract = false
 
 [[entity.draughting_callout.own_attrs]]
 name = "contents"
-ty = "SET OF draughting_callout_element"
+ty = "SET [1:?] OF draughting_callout_element"
 
 [entity.draughting_callout_relationship]
 is_abstract = false
@@ -8084,7 +8084,7 @@ is_abstract = false
 
 [[entity.draughting_specification_reference.own_attrs]]
 name = "specified_items"
-ty = "SET OF specified_item"
+ty = "SET [1:?] OF specified_item"
 
 [entity.draughting_subfigure_representation]
 parents = ["symbol_representation"]
@@ -8106,7 +8106,7 @@ is_abstract = false
 
 [[entity.draughting_title.own_attrs]]
 name = "items"
-ty = "SET OF draughting_titled_item"
+ty = "SET [1:?] OF draughting_titled_item"
 
 [[entity.draughting_title.own_attrs]]
 name = "language"
@@ -8278,7 +8278,7 @@ is_abstract = false
 
 [[entity.edge_based_wireframe_model.own_attrs]]
 name = "ebwm_boundary"
-ty = "SET OF connected_edge_set"
+ty = "SET [1:?] OF connected_edge_set"
 
 [entity.edge_based_wireframe_shape_representation]
 parents = ["shape_representation"]
@@ -8291,7 +8291,7 @@ is_abstract = true
 
 [[entity.edge_blended_solid.own_attrs]]
 name = "blended_edges"
-ty = "LIST OF edge_curve"
+ty = "LIST [1:?] OF edge_curve"
 
 [entity.edge_curve]
 parents = [
@@ -8606,7 +8606,7 @@ is_abstract = false
 
 [[entity.equivalence_instance_report_item_with_notable_instances.own_attrs]]
 name = "notable_instances"
-ty = "LIST OF equivalence_notable_instance"
+ty = "LIST [1:?] OF equivalence_notable_instance"
 
 [entity.equivalence_notable_instance]
 is_abstract = false
@@ -8746,7 +8746,7 @@ is_abstract = false
 
 [[entity.evidence.own_attrs]]
 name = "items"
-ty = "SET OF evidence_item"
+ty = "SET [1:?] OF evidence_item"
 
 [entity.excessive_use_of_groups]
 parents = ["externally_conditioned_data_quality_criterion"]
@@ -8809,7 +8809,7 @@ ty = "OPTIONAL text"
 
 [[entity.explicit_constraint.own_attrs]]
 name = "constrained_elements"
-ty = "SET OF representation_item"
+ty = "SET [1:?] OF representation_item"
 
 [[entity.explicit_constraint.own_attrs]]
 name = "reference_elements"
@@ -8877,7 +8877,7 @@ ty = "zero_or_one"
 
 [[entity.explicit_table_function.own_attrs]]
 name = "shape"
-ty = "LIST OF positive_integer"
+ty = "LIST [1:?] OF positive_integer"
 
 [entity.expression]
 parents = ["generic_expression"]
@@ -9156,7 +9156,7 @@ is_abstract = false
 
 [[entity.externally_defined_item_with_multiple_references.own_attrs]]
 name = "references"
-ty = "LIST OF source_item"
+ty = "LIST [1:?] OF source_item"
 
 [entity.externally_defined_marker]
 parents = [
@@ -9245,7 +9245,7 @@ is_abstract = false
 
 [[entity.extreme_instance.own_attrs]]
 name = "locations_of_extreme_value"
-ty = "SET OF location_of_extreme_value_select"
+ty = "SET [1:?] OF location_of_extreme_value_select"
 
 [[entity.extreme_instance.own_attrs]]
 name = "measured_value"
@@ -9294,11 +9294,11 @@ is_abstract = false
 
 [[entity.extruded_face_solid_with_multiple_draft_angles.own_attrs]]
 name = "drafted_edges"
-ty = "LIST OF SET OF edge_curve"
+ty = "LIST [2:?] OF SET [1:?] OF edge_curve"
 
 [[entity.extruded_face_solid_with_multiple_draft_angles.own_attrs]]
 name = "draft_angles"
-ty = "LIST OF plane_angle_measure"
+ty = "LIST [2:?] OF plane_angle_measure"
 
 [entity.extruded_face_solid_with_trim_conditions]
 parents = ["extruded_face_solid"]
@@ -9334,7 +9334,7 @@ is_abstract = false
 
 [[entity.face.own_attrs]]
 name = "bounds"
-ty = "SET OF face_bound"
+ty = "SET [1:?] OF face_bound"
 
 [entity.face_based_surface_model]
 parents = ["geometric_representation_item"]
@@ -9342,7 +9342,7 @@ is_abstract = false
 
 [[entity.face_based_surface_model.own_attrs]]
 name = "fbsm_faces"
-ty = "SET OF connected_face_set"
+ty = "SET [1:?] OF connected_face_set"
 
 [entity.face_bound]
 parents = ["topological_representation_item"]
@@ -9407,7 +9407,7 @@ is_abstract = false
 
 [[entity.faceted_primitive.own_attrs]]
 name = "points"
-ty = "LIST OF cartesian_point"
+ty = "LIST [4:?] OF cartesian_point"
 
 [entity.fact_type]
 parents = ["property_definition"]
@@ -9459,7 +9459,7 @@ ty = "label"
 
 [[entity.fill_area_style.own_attrs]]
 name = "fill_styles"
-ty = "SET OF fill_style_select"
+ty = "SET [1:?] OF fill_style_select"
 
 [entity.fill_area_style_colour]
 is_abstract = false
@@ -9534,7 +9534,7 @@ ty = "two_direction_repeat_factor"
 
 [[entity.fill_area_style_tiles.own_attrs]]
 name = "tiles"
-ty = "SET OF fill_area_style_tile_shape_select"
+ty = "SET [1:?] OF fill_area_style_tile_shape_select"
 
 [[entity.fill_area_style_tiles.own_attrs]]
 name = "tiling_scale"
@@ -9562,7 +9562,7 @@ is_abstract = false
 
 [[entity.finite_function.own_attrs]]
 name = "pairs"
-ty = "SET OF LIST OF maths_value"
+ty = "SET [1:?] OF LIST [2:2] OF maths_value"
 
 [entity.finite_integer_interval]
 parents = [
@@ -9635,7 +9635,7 @@ is_abstract = false
 
 [[entity.fixed_instance_attribute_set.own_attrs]]
 name = "fixed_attributes"
-ty = "SET OF instance_attribute_reference"
+ty = "SET [1:?] OF instance_attribute_reference"
 
 [entity.fixed_reference_swept_surface]
 parents = ["swept_surface"]
@@ -9752,7 +9752,7 @@ is_abstract = false
 
 [[entity.frozen_assignment.own_attrs]]
 name = "items"
-ty = "SET OF change_management_object"
+ty = "SET [1:?] OF change_management_object"
 
 [entity.fully_constrained_pair]
 parents = ["low_order_kinematic_pair"]
@@ -9774,7 +9774,7 @@ ty = "maths_function_select"
 
 [[entity.function_application.own_attrs]]
 name = "arguments"
-ty = "LIST OF maths_expression"
+ty = "LIST [1:?] OF maths_expression"
 
 [entity.function_space]
 parents = [
@@ -9960,7 +9960,7 @@ ty = "datum_or_common_datum"
 
 [[entity.general_datum_reference.own_attrs]]
 name = "modifiers"
-ty = "OPTIONAL SET OF datum_reference_modifier"
+ty = "OPTIONAL SET [1:?] OF datum_reference_modifier"
 
 [entity.general_feature]
 parents = ["shape_feature_definition"]
@@ -10178,7 +10178,7 @@ is_abstract = false
 
 [[entity.geometric_set.own_attrs]]
 name = "elements"
-ty = "SET OF geometric_set_select"
+ty = "SET [1:?] OF geometric_set_select"
 
 [entity.geometric_tolerance]
 is_abstract = true
@@ -10235,7 +10235,7 @@ is_abstract = false
 
 [[entity.geometric_tolerance_with_datum_reference.own_attrs]]
 name = "datum_system"
-ty = "SET OF datum_system_or_reference"
+ty = "SET [1:?] OF datum_system_or_reference"
 
 [entity.geometric_tolerance_with_defined_area_unit]
 parents = ["geometric_tolerance_with_defined_unit"]
@@ -10271,7 +10271,7 @@ is_abstract = false
 
 [[entity.geometric_tolerance_with_modifiers.own_attrs]]
 name = "modifiers"
-ty = "SET OF geometric_tolerance_modifier"
+ty = "SET [1:?] OF geometric_tolerance_modifier"
 
 [entity.geometrical_tolerance_callout]
 parents = ["draughting_callout"]
@@ -10314,7 +10314,7 @@ is_abstract = false
 
 [[entity.global_uncertainty_assigned_context.own_attrs]]
 name = "uncertainty"
-ty = "SET OF uncertainty_measure_with_unit"
+ty = "SET [1:?] OF uncertainty_measure_with_unit"
 
 [entity.global_unit_assigned_context]
 parents = ["representation_context"]
@@ -10322,7 +10322,7 @@ is_abstract = false
 
 [[entity.global_unit_assigned_context.own_attrs]]
 name = "units"
-ty = "SET OF unit"
+ty = "SET [1:?] OF unit"
 
 [entity.gps_filter]
 is_abstract = false
@@ -10333,7 +10333,7 @@ ty = "gps_filtration_type"
 
 [[entity.gps_filter.own_attrs]]
 name = "filter_data"
-ty = "LIST OF measure_with_unit"
+ty = "LIST [1:?] OF measure_with_unit"
 
 [entity.gps_filtration_specification]
 is_abstract = false
@@ -10344,7 +10344,7 @@ ty = "gps_filtration_specification_target"
 
 [[entity.gps_filtration_specification.own_attrs]]
 name = "filter_data"
-ty = "LIST OF gps_filter"
+ty = "LIST [1:?] OF gps_filter"
 
 [entity.ground_fact]
 parents = ["atomic_formula"]
@@ -10433,7 +10433,7 @@ is_abstract = false
 
 [[entity.hexahedron_volume.own_attrs]]
 name = "points"
-ty = "LIST OF cartesian_point"
+ty = "LIST [8:8] OF cartesian_point"
 
 [entity.hidden_element_over_riding_styled_item]
 parents = ["context_dependent_over_riding_styled_item"]
@@ -10578,7 +10578,7 @@ is_abstract = false
 
 [[entity.idrm_classification_assignment.own_attrs]]
 name = "items"
-ty = "SET OF idrm_marked_item"
+ty = "SET [1:?] OF idrm_marked_item"
 
 [entity.illuminance_measure_with_unit]
 parents = ["measure_with_unit"]
@@ -10889,7 +10889,7 @@ is_abstract = false
 
 [[entity.indirectly_selected_elements.own_attrs]]
 name = "indirectly_picked_items"
-ty = "SET OF representation_item"
+ty = "SET [1:?] OF representation_item"
 
 [entity.indirectly_selected_shape_elements]
 parents = [
@@ -10947,7 +10947,7 @@ is_abstract = false
 
 [[entity.instance_report_item_with_extreme_instances.own_attrs]]
 name = "extreme_instances"
-ty = "LIST OF extreme_instance"
+ty = "LIST [1:?] OF extreme_instance"
 
 [entity.instance_usage_context_assignment]
 parents = ["product_definition_context"]
@@ -10955,7 +10955,7 @@ is_abstract = false
 
 [[entity.instance_usage_context_assignment.own_attrs]]
 name = "items"
-ty = "SET OF instance_usage_context_select"
+ty = "SET [1:?] OF instance_usage_context_select"
 
 [entity.instanced_feature]
 parents = [
@@ -11025,7 +11025,7 @@ is_abstract = false
 
 [[entity.integer_tuple_literal.own_attrs]]
 name = "lit_value"
-ty = "LIST OF integer"
+ty = "LIST [1:?] OF integer"
 
 [entity.interface_component]
 parents = ["physical_component"]
@@ -11134,7 +11134,7 @@ is_abstract = false
 
 [[entity.interpolated_configuration_sequence.own_attrs]]
 name = "segments"
-ty = "LIST OF interpolated_configuration_segment"
+ty = "LIST [2:?] OF interpolated_configuration_segment"
 
 [entity.intersecting_connected_face_sets]
 parents = ["topology_related_to_self_intersecting_geometry"]
@@ -11178,7 +11178,7 @@ is_abstract = false
 
 [[entity.invisibility.own_attrs]]
 name = "invisible_items"
-ty = "SET OF invisible_item"
+ty = "SET [1:?] OF invisible_item"
 
 [entity.iso4217_currency]
 parents = ["currency"]
@@ -11331,7 +11331,7 @@ is_abstract = true
 
 [[entity.kinematic_path.own_attrs]]
 name = "segments"
-ty = "LIST OF kinematic_path_segment"
+ty = "LIST [1:?] OF kinematic_path_segment"
 
 [[entity.kinematic_path.own_attrs]]
 name = "t_start"
@@ -11692,7 +11692,7 @@ is_abstract = false
 
 [[entity.listed_complex_number_data.own_attrs]]
 name = "values"
-ty = "LIST OF real"
+ty = "LIST [2:?] OF real"
 
 [entity.listed_data]
 parents = [
@@ -11703,7 +11703,7 @@ is_abstract = false
 
 [[entity.listed_data.own_attrs]]
 name = "values"
-ty = "LIST OF maths_value"
+ty = "LIST [1:?] OF maths_value"
 
 [[entity.listed_data.own_attrs]]
 name = "value_range"
@@ -11718,7 +11718,7 @@ is_abstract = false
 
 [[entity.listed_integer_data.own_attrs]]
 name = "values"
-ty = "LIST OF integer"
+ty = "LIST [1:?] OF integer"
 
 [entity.listed_logical_data]
 parents = [
@@ -11729,7 +11729,7 @@ is_abstract = false
 
 [[entity.listed_logical_data.own_attrs]]
 name = "values"
-ty = "LIST OF logical"
+ty = "LIST [1:?] OF logical"
 
 [entity.listed_product_space]
 parents = [
@@ -11751,7 +11751,7 @@ is_abstract = false
 
 [[entity.listed_real_data.own_attrs]]
 name = "values"
-ty = "LIST OF real"
+ty = "LIST [1:?] OF real"
 
 [entity.listed_string_data]
 parents = [
@@ -11762,7 +11762,7 @@ is_abstract = false
 
 [[entity.listed_string_data.own_attrs]]
 name = "values"
-ty = "LIST OF string"
+ty = "LIST [1:?] OF string"
 
 [entity.literal_conjunction]
 parents = ["simple_clause"]
@@ -11795,11 +11795,11 @@ ty = "integer"
 
 [[entity.local_b_spline.own_attrs]]
 name = "knots"
-ty = "LIST OF integer"
+ty = "LIST [2:?] OF integer"
 
 [[entity.local_b_spline.own_attrs]]
 name = "multiplicities"
-ty = "LIST OF integer"
+ty = "LIST [2:?] OF integer"
 
 [entity.local_time]
 is_abstract = false
@@ -11826,7 +11826,7 @@ is_abstract = false
 
 [[entity.locally_refined_spline_curve.own_attrs]]
 name = "b_splines"
-ty = "LIST OF local_b_spline"
+ty = "LIST [2:?] OF local_b_spline"
 
 [[entity.locally_refined_spline_curve.own_attrs]]
 name = "knot_values"
@@ -11834,11 +11834,11 @@ ty = "spline_knot_values"
 
 [[entity.locally_refined_spline_curve.own_attrs]]
 name = "control_points_list"
-ty = "LIST OF cartesian_point"
+ty = "LIST [2:?] OF cartesian_point"
 
 [[entity.locally_refined_spline_curve.own_attrs]]
 name = "scaling_factors"
-ty = "LIST OF real"
+ty = "LIST [2:?] OF real"
 
 [[entity.locally_refined_spline_curve.own_attrs]]
 name = "closed_curve"
@@ -11854,7 +11854,7 @@ ty = "logical"
 
 [[entity.locally_refined_spline_curve.own_attrs]]
 name = "domain"
-ty = "LIST OF real"
+ty = "LIST [2:2] OF real"
 
 [entity.locally_refined_spline_surface]
 parents = ["bounded_surface"]
@@ -11862,11 +11862,11 @@ is_abstract = false
 
 [[entity.locally_refined_spline_surface.own_attrs]]
 name = "u_b_splines"
-ty = "LIST OF local_b_spline"
+ty = "LIST [4:?] OF local_b_spline"
 
 [[entity.locally_refined_spline_surface.own_attrs]]
 name = "v_b_splines"
-ty = "LIST OF local_b_spline"
+ty = "LIST [4:?] OF local_b_spline"
 
 [[entity.locally_refined_spline_surface.own_attrs]]
 name = "u_knots"
@@ -11878,11 +11878,11 @@ ty = "spline_knot_values"
 
 [[entity.locally_refined_spline_surface.own_attrs]]
 name = "control_points_list"
-ty = "LIST OF cartesian_point"
+ty = "LIST [4:?] OF cartesian_point"
 
 [[entity.locally_refined_spline_surface.own_attrs]]
 name = "scaling_factors"
-ty = "LIST OF real"
+ty = "LIST [4:?] OF real"
 
 [[entity.locally_refined_spline_surface.own_attrs]]
 name = "linearly_independent"
@@ -11906,7 +11906,7 @@ ty = "logical"
 
 [[entity.locally_refined_spline_surface.own_attrs]]
 name = "domain"
-ty = "LIST OF LIST OF real"
+ty = "LIST [2:2] OF LIST [2:2] OF real"
 
 [entity.locally_refined_spline_volume]
 parents = ["volume"]
@@ -11914,15 +11914,15 @@ is_abstract = false
 
 [[entity.locally_refined_spline_volume.own_attrs]]
 name = "u_b_splines"
-ty = "LIST OF local_b_spline"
+ty = "LIST [8:?] OF local_b_spline"
 
 [[entity.locally_refined_spline_volume.own_attrs]]
 name = "v_b_splines"
-ty = "LIST OF local_b_spline"
+ty = "LIST [8:?] OF local_b_spline"
 
 [[entity.locally_refined_spline_volume.own_attrs]]
 name = "w_b_splines"
-ty = "LIST OF local_b_spline"
+ty = "LIST [8:?] OF local_b_spline"
 
 [[entity.locally_refined_spline_volume.own_attrs]]
 name = "u_knots"
@@ -11938,11 +11938,11 @@ ty = "spline_knot_values"
 
 [[entity.locally_refined_spline_volume.own_attrs]]
 name = "control_points_list"
-ty = "LIST OF cartesian_point"
+ty = "LIST [8:?] OF cartesian_point"
 
 [[entity.locally_refined_spline_volume.own_attrs]]
 name = "scaling_factors"
-ty = "LIST OF real"
+ty = "LIST [8:?] OF real"
 
 [[entity.locally_refined_spline_volume.own_attrs]]
 name = "linearly_independent"
@@ -11954,7 +11954,7 @@ ty = "locally_refined_spline_type_enum"
 
 [[entity.locally_refined_spline_volume.own_attrs]]
 name = "domain"
-ty = "LIST OF LIST OF real"
+ty = "LIST [3:3] OF LIST [2:2] OF real"
 
 [entity.location]
 is_abstract = false
@@ -12385,7 +12385,7 @@ ty = "label"
 
 [[entity.material_designation.own_attrs]]
 name = "definitions"
-ty = "SET OF characterized_definition"
+ty = "SET [1:?] OF characterized_definition"
 
 [entity.material_designation_characterization]
 is_abstract = false
@@ -12525,7 +12525,7 @@ is_abstract = false
 
 [[entity.mating_material_items.own_attrs]]
 name = "items"
-ty = "SET OF product_definition"
+ty = "SET [1:?] OF product_definition"
 
 [entity.maximum_function]
 parents = ["multiple_arity_function_call"]
@@ -12549,7 +12549,7 @@ ty = "measure_with_unit"
 
 [[entity.measure_qualification.own_attrs]]
 name = "qualifiers"
-ty = "SET OF value_qualifier"
+ty = "SET [1:?] OF value_qualifier"
 
 [entity.measure_representation_item]
 parents = [
@@ -12640,7 +12640,7 @@ is_abstract = false
 
 [[entity.message_contents_assignment.own_attrs]]
 name = "items"
-ty = "SET OF representation"
+ty = "SET [1:?] OF representation"
 
 [entity.message_contents_group]
 parents = ["group"]
@@ -12818,7 +12818,7 @@ is_abstract = false
 
 [[entity.multi_language_attribute_assignment.own_attrs]]
 name = "items"
-ty = "SET OF multi_language_attribute_item"
+ty = "SET [1:?] OF multi_language_attribute_item"
 
 [entity.multi_level_reference_designator]
 parents = ["assembly_component_usage"]
@@ -12826,7 +12826,7 @@ is_abstract = false
 
 [[entity.multi_level_reference_designator.own_attrs]]
 name = "location"
-ty = "LIST OF next_assembly_usage_occurrence"
+ty = "LIST [1:?] OF next_assembly_usage_occurrence"
 
 [entity.multiple_arity_boolean_expression]
 parents = [
@@ -12847,7 +12847,7 @@ is_abstract = true
 
 [[entity.multiple_arity_generic_expression.own_attrs]]
 name = "operands"
-ty = "LIST OF generic_expression"
+ty = "LIST [2:?] OF generic_expression"
 
 [entity.multiple_arity_numeric_expression]
 parents = [
@@ -13291,7 +13291,7 @@ is_abstract = false
 
 [[entity.organizational_address.own_attrs]]
 name = "organizations"
-ty = "SET OF organization"
+ty = "SET [1:?] OF organization"
 
 [[entity.organizational_address.own_attrs]]
 name = "description"
@@ -13310,7 +13310,7 @@ ty = "OPTIONAL text"
 
 [[entity.organizational_project.own_attrs]]
 name = "responsible_organizations"
-ty = "SET OF organization"
+ty = "SET [1:?] OF organization"
 
 [entity.organizational_project_assignment]
 is_abstract = true
@@ -13539,7 +13539,7 @@ ty = "maths_space_or_function"
 
 [[entity.parallel_composed_function.own_attrs]]
 name = "prep_functions"
-ty = "LIST OF maths_function"
+ty = "LIST [1:?] OF maths_function"
 
 [[entity.parallel_composed_function.own_attrs]]
 name = "final_function"
@@ -13592,7 +13592,7 @@ is_abstract = false
 
 [[entity.partial_derivative_expression.own_attrs]]
 name = "d_variables"
-ty = "LIST OF maths_variable"
+ty = "LIST [1:?] OF maths_variable"
 
 [[entity.partial_derivative_expression.own_attrs]]
 name = "extension"
@@ -13607,7 +13607,7 @@ is_abstract = false
 
 [[entity.partial_derivative_function.own_attrs]]
 name = "d_variables"
-ty = "LIST OF input_selector"
+ty = "LIST [1:?] OF input_selector"
 
 [[entity.partial_derivative_function.own_attrs]]
 name = "extension"
@@ -13667,7 +13667,7 @@ is_abstract = false
 
 [[entity.path.own_attrs]]
 name = "edge_list"
-ty = "LIST OF oriented_edge"
+ty = "LIST [1:?] OF oriented_edge"
 
 [entity.path_area_with_parameters]
 parents = [
@@ -13783,15 +13783,15 @@ ty = "OPTIONAL label"
 
 [[entity.person.own_attrs]]
 name = "middle_names"
-ty = "OPTIONAL LIST OF label"
+ty = "OPTIONAL LIST [1:?] OF label"
 
 [[entity.person.own_attrs]]
 name = "prefix_titles"
-ty = "OPTIONAL LIST OF label"
+ty = "OPTIONAL LIST [1:?] OF label"
 
 [[entity.person.own_attrs]]
 name = "suffix_titles"
-ty = "OPTIONAL LIST OF label"
+ty = "OPTIONAL LIST [1:?] OF label"
 
 [entity.person_and_organization]
 is_abstract = false
@@ -13836,7 +13836,7 @@ is_abstract = false
 
 [[entity.personal_address.own_attrs]]
 name = "people"
-ty = "SET OF person"
+ty = "SET [1:?] OF person"
 
 [[entity.personal_address.own_attrs]]
 name = "description"
@@ -14149,7 +14149,7 @@ is_abstract = false
 
 [[entity.point_cloud_dataset.own_attrs]]
 name = "point_coordinates"
-ty = "LIST OF LIST OF real"
+ty = "LIST [1:?] OF LIST [3:3] OF real"
 
 [entity.point_cloud_dataset_with_colours]
 parents = ["point_cloud_dataset"]
@@ -14157,7 +14157,7 @@ is_abstract = false
 
 [[entity.point_cloud_dataset_with_colours.own_attrs]]
 name = "colour_indices"
-ty = "LIST OF LIST OF integer"
+ty = "LIST [1:?] OF LIST [3:3] OF integer"
 
 [entity.point_cloud_dataset_with_intensities]
 parents = ["point_cloud_dataset"]
@@ -14165,7 +14165,7 @@ is_abstract = false
 
 [[entity.point_cloud_dataset_with_intensities.own_attrs]]
 name = "intensities"
-ty = "LIST OF real"
+ty = "LIST [1:?] OF real"
 
 [entity.point_cloud_dataset_with_normals]
 parents = ["point_cloud_dataset"]
@@ -14173,7 +14173,7 @@ is_abstract = false
 
 [[entity.point_cloud_dataset_with_normals.own_attrs]]
 name = "normals"
-ty = "LIST OF LIST OF real"
+ty = "LIST [1:?] OF LIST [3:3] OF real"
 
 [entity.point_cloud_superdataset]
 parents = ["scanned_data_item"]
@@ -14185,7 +14185,7 @@ ty = "integer"
 
 [[entity.point_cloud_superdataset.own_attrs]]
 name = "sublists"
-ty = "LIST OF point_cloud_dataset"
+ty = "LIST [2:?] OF point_cloud_dataset"
 
 [entity.point_distance_geometric_constraint]
 parents = ["explicit_geometric_constraint"]
@@ -14459,7 +14459,7 @@ is_abstract = false
 
 [[entity.poly_loop.own_attrs]]
 name = "polygon"
-ty = "LIST OF cartesian_point"
+ty = "LIST [3:?] OF cartesian_point"
 
 [entity.polygonal_area]
 parents = ["primitive_2d"]
@@ -14467,7 +14467,7 @@ is_abstract = false
 
 [[entity.polygonal_area.own_attrs]]
 name = "bounds"
-ty = "LIST OF cartesian_point"
+ty = "LIST [3:?] OF cartesian_point"
 
 [entity.polyline]
 parents = ["bounded_curve"]
@@ -14475,7 +14475,7 @@ is_abstract = false
 
 [[entity.polyline.own_attrs]]
 name = "points"
-ty = "LIST OF cartesian_point"
+ty = "LIST [2:?] OF cartesian_point"
 
 [entity.position_tolerance]
 parents = ["geometric_tolerance"]
@@ -14615,7 +14615,7 @@ is_abstract = false
 
 [[entity.prescribed_path.own_attrs]]
 name = "controlling_joints"
-ty = "OPTIONAL SET OF kinematic_joint"
+ty = "OPTIONAL SET [1:6] OF kinematic_joint"
 
 [entity.presentation_area]
 parents = ["presentation_representation"]
@@ -14635,7 +14635,7 @@ ty = "text"
 
 [[entity.presentation_layer_assignment.own_attrs]]
 name = "assigned_items"
-ty = "SET OF layered_item"
+ty = "SET [1:?] OF layered_item"
 
 [entity.presentation_representation]
 parents = ["representation"]
@@ -14663,7 +14663,7 @@ is_abstract = false
 
 [[entity.presentation_style_assignment.own_attrs]]
 name = "styles"
-ty = "SET OF presentation_style_select"
+ty = "SET [1:?] OF presentation_style_select"
 
 [entity.presentation_style_by_context]
 parents = ["presentation_style_assignment"]
@@ -14709,7 +14709,7 @@ is_abstract = false
 
 [[entity.previous_change_element_assignment.own_attrs]]
 name = "items"
-ty = "SET OF change_management_object"
+ty = "SET [1:?] OF change_management_object"
 
 [[entity.previous_change_element_assignment.redeclared_attrs]]
 name = "assigned_group"
@@ -14768,7 +14768,7 @@ is_abstract = false
 
 [[entity.procedural_representation_sequence.own_attrs]]
 name = "elements"
-ty = "LIST OF representation_item"
+ty = "LIST [1:?] OF representation_item"
 
 [[entity.procedural_representation_sequence.own_attrs]]
 name = "suppressed_items"
@@ -14864,7 +14864,7 @@ ty = "OPTIONAL text"
 
 [[entity.product.own_attrs]]
 name = "frame_of_reference"
-ty = "SET OF product_context"
+ty = "SET [1:?] OF product_context"
 
 [entity.product_as_planned]
 parents = ["product_definition_formation"]
@@ -14981,7 +14981,7 @@ is_abstract = false
 
 [[entity.product_concept_feature_category_usage.own_attrs]]
 name = "items"
-ty = "SET OF category_usage_item"
+ty = "SET [1:?] OF category_usage_item"
 
 [entity.product_concept_relationship]
 is_abstract = false
@@ -15174,7 +15174,7 @@ is_abstract = false
 
 [[entity.product_definition_group_assignment.own_attrs]]
 name = "items"
-ty = "SET OF product_definition_or_product_definition_relationship"
+ty = "SET [1:1] OF product_definition_or_product_definition_relationship"
 
 [entity.product_definition_kinematics]
 parents = ["property_definition"]
@@ -15382,7 +15382,7 @@ is_abstract = false
 
 [[entity.product_definition_with_associated_documents.own_attrs]]
 name = "documentation_ids"
-ty = "SET OF document"
+ty = "SET [1:?] OF document"
 
 [entity.product_design_to_individual]
 parents = ["product_relationship"]
@@ -15405,7 +15405,7 @@ is_abstract = false
 
 [[entity.product_group_attribute_assignment.own_attrs]]
 name = "attributes"
-ty = "SET OF attribute_select"
+ty = "SET [1:1] OF attribute_select"
 
 [entity.product_group_attribute_set]
 parents = ["group_assignment"]
@@ -15413,7 +15413,7 @@ is_abstract = false
 
 [[entity.product_group_attribute_set.own_attrs]]
 name = "product_group_attributes"
-ty = "SET OF product_group_attributes"
+ty = "SET [1:1] OF product_group_attributes"
 
 [entity.product_group_attributes]
 parents = ["group"]
@@ -15442,7 +15442,7 @@ is_abstract = false
 
 [[entity.product_group_membership_rules.own_attrs]]
 name = "product_group_rules"
-ty = "SET OF product_group_rules"
+ty = "SET [1:1] OF product_group_rules"
 
 [entity.product_group_purpose]
 parents = ["descriptive_representation_item"]
@@ -15465,7 +15465,7 @@ is_abstract = false
 
 [[entity.product_group_rule_assignment.own_attrs]]
 name = "product_group_rules"
-ty = "SET OF product_group_rule"
+ty = "SET [1:?] OF product_group_rule"
 
 [entity.product_group_rules]
 parents = ["group"]
@@ -15495,7 +15495,7 @@ ty = "label"
 
 [[entity.product_material_composition_relationship.own_attrs]]
 name = "constituent_amount"
-ty = "SET OF characterized_product_composition_value"
+ty = "SET [1:?] OF characterized_product_composition_value"
 
 [[entity.product_material_composition_relationship.own_attrs]]
 name = "composition_basis"
@@ -15521,7 +15521,7 @@ is_abstract = false
 
 [[entity.product_related_product_category.own_attrs]]
 name = "products"
-ty = "SET OF product"
+ty = "SET [1:?] OF product"
 
 [entity.product_relationship]
 is_abstract = false
@@ -15686,7 +15686,7 @@ is_abstract = false
 
 [[entity.qualified_representation_item.own_attrs]]
 name = "qualifiers"
-ty = "SET OF value_qualifier"
+ty = "SET [1:?] OF value_qualifier"
 
 [entity.qualitative_uncertainty]
 parents = ["uncertainty_qualifier"]
@@ -15710,7 +15710,7 @@ is_abstract = true
 
 [[entity.quantifier_expression.own_attrs]]
 name = "variables"
-ty = "LIST OF generic_variable"
+ty = "LIST [1:?] OF generic_variable"
 
 [entity.quasi_uniform_curve]
 parents = ["b_spline_curve"]
@@ -15799,7 +15799,7 @@ is_abstract = false
 
 [[entity.rational_b_spline_curve.own_attrs]]
 name = "weights_data"
-ty = "LIST OF real"
+ty = "LIST [2:?] OF real"
 
 [entity.rational_b_spline_surface]
 parents = ["b_spline_surface"]
@@ -15807,7 +15807,7 @@ is_abstract = false
 
 [[entity.rational_b_spline_surface.own_attrs]]
 name = "weights_data"
-ty = "LIST OF LIST OF real"
+ty = "LIST [2:?] OF LIST [2:?] OF real"
 
 [entity.rational_b_spline_volume]
 parents = ["b_spline_volume"]
@@ -15815,7 +15815,7 @@ is_abstract = false
 
 [[entity.rational_b_spline_volume.own_attrs]]
 name = "weights_data"
-ty = "LIST OF LIST OF LIST OF real"
+ty = "LIST [2:?] OF LIST [2:?] OF LIST [2:?] OF real"
 
 [entity.rational_locally_refined_spline_curve]
 parents = ["locally_refined_spline_curve"]
@@ -15823,7 +15823,7 @@ is_abstract = false
 
 [[entity.rational_locally_refined_spline_curve.own_attrs]]
 name = "weights_data"
-ty = "LIST OF real"
+ty = "LIST [2:?] OF real"
 
 [entity.rational_locally_refined_spline_surface]
 parents = ["locally_refined_spline_surface"]
@@ -15831,7 +15831,7 @@ is_abstract = false
 
 [[entity.rational_locally_refined_spline_surface.own_attrs]]
 name = "weights_data"
-ty = "LIST OF real"
+ty = "LIST [4:?] OF real"
 
 [entity.rational_locally_refined_spline_volume]
 parents = ["locally_refined_spline_volume"]
@@ -15839,7 +15839,7 @@ is_abstract = false
 
 [[entity.rational_locally_refined_spline_volume.own_attrs]]
 name = "weights_data"
-ty = "LIST OF real"
+ty = "LIST [8:?] OF real"
 
 [entity.rational_representation_item]
 parents = [
@@ -15920,7 +15920,7 @@ is_abstract = false
 
 [[entity.real_tuple_literal.own_attrs]]
 name = "lit_value"
-ty = "LIST OF real"
+ty = "LIST [1:?] OF real"
 
 [entity.rectangular_area]
 parents = ["primitive_2d"]
@@ -15954,7 +15954,7 @@ is_abstract = false
 
 [[entity.rectangular_composite_surface.own_attrs]]
 name = "segments"
-ty = "LIST OF LIST OF surface_patch"
+ty = "LIST [1:?] OF LIST [1:?] OF surface_patch"
 
 [entity.rectangular_composite_surface_transition_locator]
 parents = ["founded_item"]
@@ -16047,7 +16047,7 @@ is_abstract = false
 
 [[entity.regular_table_function.own_attrs]]
 name = "increments"
-ty = "LIST OF integer"
+ty = "LIST [1:?] OF integer"
 
 [entity.reindexed_array_function]
 parents = [
@@ -16058,7 +16058,7 @@ is_abstract = false
 
 [[entity.reindexed_array_function.own_attrs]]
 name = "starting_indices"
-ty = "LIST OF integer"
+ty = "LIST [1:?] OF integer"
 
 [entity.reinforcement_orientation_basis]
 parents = ["representation"]
@@ -16147,7 +16147,7 @@ ty = "label"
 
 [[entity.representation.own_attrs]]
 name = "items"
-ty = "SET OF representation_item"
+ty = "SET [1:?] OF representation_item"
 
 [[entity.representation.own_attrs]]
 name = "context_of_items"
@@ -16265,7 +16265,7 @@ is_abstract = false
 
 [[entity.requirement_assigned_object.own_attrs]]
 name = "items"
-ty = "SET OF requirement_assigned_item"
+ty = "SET [1:1] OF requirement_assigned_item"
 
 [entity.requirement_assignment]
 parents = [
@@ -16281,7 +16281,7 @@ is_abstract = false
 
 [[entity.requirement_for_action_resource.own_attrs]]
 name = "resources"
-ty = "SET OF action_resource"
+ty = "SET [1:?] OF action_resource"
 
 [entity.requirement_source]
 parents = ["group"]
@@ -16362,7 +16362,7 @@ is_abstract = false
 
 [[entity.resulting_path.own_attrs]]
 name = "controlling_joints"
-ty = "SET OF kinematic_joint"
+ty = "SET [1:?] OF kinematic_joint"
 
 [entity.retention]
 parents = ["action"]
@@ -16652,7 +16652,7 @@ is_abstract = false
 
 [[entity.rule_superseded_assignment.own_attrs]]
 name = "items"
-ty = "SET OF rule_superseded_item"
+ty = "SET [1:?] OF rule_superseded_item"
 
 [entity.rule_supersedence]
 parents = ["rule_action"]
@@ -16701,7 +16701,7 @@ is_abstract = false
 
 [[entity.satisfied_requirement.own_attrs]]
 name = "items"
-ty = "SET OF product_definition"
+ty = "SET [1:1] OF product_definition"
 
 [entity.satisfies_requirement]
 parents = ["group"]
@@ -16714,7 +16714,7 @@ is_abstract = false
 
 [[entity.satisfying_item.own_attrs]]
 name = "items"
-ty = "SET OF requirement_satisfaction_item"
+ty = "SET [1:1] OF requirement_satisfaction_item"
 
 [entity.scalar_variable]
 parents = ["abstract_variable"]
@@ -16727,11 +16727,11 @@ is_abstract = false
 
 [[entity.scan_3d_model.own_attrs]]
 name = "scanner_info"
-ty = "SET OF scanner_property"
+ty = "SET [1:?] OF scanner_property"
 
 [[entity.scan_3d_model.own_attrs]]
 name = "scanned_points"
-ty = "SET OF scanned_data_item"
+ty = "SET [1:?] OF scanned_data_item"
 
 [entity.scan_data_shape_representation]
 parents = ["shape_representation"]
@@ -17015,7 +17015,7 @@ is_abstract = false
 
 [[entity.shape_criteria_representation_with_accuracy.own_attrs]]
 name = "required_general_accuracy"
-ty = "SET OF shape_measurement_accuracy"
+ty = "SET [1:?] OF shape_measurement_accuracy"
 
 [entity.shape_data_quality_assessment_by_logical_test]
 parents = ["data_quality_assessment_specification"]
@@ -17182,7 +17182,7 @@ is_abstract = false
 
 [[entity.shape_inspection_result_representation_with_accuracy.own_attrs]]
 name = "applied_general_accuracy"
-ty = "SET OF shape_measurement_accuracy"
+ty = "SET [1:?] OF shape_measurement_accuracy"
 
 [entity.shape_measurement_accuracy]
 is_abstract = false
@@ -17226,7 +17226,7 @@ is_abstract = false
 
 [[entity.shell_based_surface_model.own_attrs]]
 name = "sbsm_boundary"
-ty = "SET OF shell"
+ty = "SET [1:?] OF shell"
 
 [entity.shell_based_wireframe_model]
 parents = ["geometric_representation_item"]
@@ -17234,7 +17234,7 @@ is_abstract = false
 
 [[entity.shell_based_wireframe_model.own_attrs]]
 name = "sbwm_boundary"
-ty = "SET OF shell"
+ty = "SET [1:?] OF shell"
 
 [entity.shell_based_wireframe_shape_representation]
 parents = ["shape_representation"]
@@ -17247,7 +17247,7 @@ is_abstract = false
 
 [[entity.shelled_solid.own_attrs]]
 name = "deleted_face_set"
-ty = "SET OF face_surface"
+ty = "SET [1:?] OF face_surface"
 
 [[entity.shelled_solid.own_attrs]]
 name = "thickness"
@@ -17479,7 +17479,7 @@ is_abstract = false
 
 [[entity.simultaneous_constraint_group.own_attrs]]
 name = "constraint_group"
-ty = "SET OF constraint_group_member"
+ty = "SET [2:?] OF constraint_group_member"
 
 [entity.sin_function]
 parents = ["unary_function_call"]
@@ -17511,7 +17511,7 @@ ty = "label"
 
 [[entity.single_texture_style_tessellation_specification.own_attrs]]
 name = "texture_coordinates"
-ty = "LIST OF LIST OF non_negative_real"
+ty = "LIST [1:?] OF LIST [2:2] OF non_negative_real"
 
 [[entity.single_texture_style_tessellation_specification.own_attrs]]
 name = "texture_format"
@@ -17835,7 +17835,7 @@ is_abstract = false
 
 [[entity.solid_with_incomplete_circular_pattern.own_attrs]]
 name = "omitted_instances"
-ty = "SET OF positive_integer"
+ty = "SET [1:?] OF positive_integer"
 
 [entity.solid_with_incomplete_rectangular_pattern]
 parents = ["solid_with_rectangular_pattern"]
@@ -17843,7 +17843,7 @@ is_abstract = false
 
 [[entity.solid_with_incomplete_rectangular_pattern.own_attrs]]
 name = "omitted_instances"
-ty = "SET OF LIST OF positive_integer"
+ty = "SET [1:?] OF LIST [2:2] OF positive_integer"
 
 [entity.solid_with_pocket]
 parents = ["solid_with_depression"]
@@ -17947,11 +17947,11 @@ ty = "positive_length_measure"
 
 [[entity.solid_with_slot.own_attrs]]
 name = "closed_ends"
-ty = "LIST OF logical"
+ty = "LIST [2:2] OF logical"
 
 [[entity.solid_with_slot.own_attrs]]
 name = "end_exit_faces"
-ty = "LIST OF SET OF face_surface"
+ty = "LIST [2:2] OF SET OF face_surface"
 
 [entity.solid_with_spherical_bottom_round_hole]
 parents = ["solid_with_stepped_round_hole"]
@@ -17971,11 +17971,11 @@ ty = "positive_integer"
 
 [[entity.solid_with_stepped_round_hole.own_attrs]]
 name = "segment_radii"
-ty = "LIST OF positive_length_measure"
+ty = "LIST [1:?] OF positive_length_measure"
 
 [[entity.solid_with_stepped_round_hole.own_attrs]]
 name = "segment_depths"
-ty = "LIST OF positive_length_measure"
+ty = "LIST [1:?] OF positive_length_measure"
 
 [entity.solid_with_stepped_round_hole_and_conical_transitions]
 parents = ["solid_with_stepped_round_hole"]
@@ -17983,7 +17983,7 @@ is_abstract = false
 
 [[entity.solid_with_stepped_round_hole_and_conical_transitions.own_attrs]]
 name = "conical_transitions"
-ty = "SET OF conical_stepped_hole_transition"
+ty = "SET [1:?] OF conical_stepped_hole_transition"
 
 [entity.solid_with_straight_slot]
 parents = ["solid_with_slot"]
@@ -18011,7 +18011,7 @@ is_abstract = false
 
 [[entity.solid_with_through_depression.own_attrs]]
 name = "exit_faces"
-ty = "SET OF face_surface"
+ty = "SET [1:?] OF face_surface"
 
 [entity.solid_with_trapezoidal_section_slot]
 parents = ["solid_with_slot"]
@@ -18031,15 +18031,15 @@ is_abstract = false
 
 [[entity.solid_with_variable_radius_edge_blend.own_attrs]]
 name = "point_list"
-ty = "LIST OF point"
+ty = "LIST [2:?] OF point"
 
 [[entity.solid_with_variable_radius_edge_blend.own_attrs]]
 name = "radius_list"
-ty = "LIST OF positive_length_measure"
+ty = "LIST [2:?] OF positive_length_measure"
 
 [[entity.solid_with_variable_radius_edge_blend.own_attrs]]
 name = "edge_function_list"
-ty = "LIST OF blend_radius_variation_type"
+ty = "LIST [1:?] OF blend_radius_variation_type"
 
 [entity.solid_with_wrong_number_of_voids]
 parents = ["erroneous_manifold_solid_brep"]
@@ -18052,7 +18052,7 @@ is_abstract = false
 
 [[entity.source_for_requirement.own_attrs]]
 name = "items"
-ty = "SET OF requirement_source_item"
+ty = "SET [1:1] OF requirement_source_item"
 
 [entity.sourced_requirement]
 parents = ["group_assignment"]
@@ -18060,7 +18060,7 @@ is_abstract = false
 
 [[entity.sourced_requirement.own_attrs]]
 name = "items"
-ty = "SET OF product_definition"
+ty = "SET [1:1] OF product_definition"
 
 [entity.specification_definition]
 parents = ["product_definition"]
@@ -18266,7 +18266,7 @@ is_abstract = false
 
 [[entity.start_request.own_attrs]]
 name = "items"
-ty = "SET OF start_request_item"
+ty = "SET [1:?] OF start_request_item"
 
 [entity.start_work]
 parents = ["action_assignment"]
@@ -18274,7 +18274,7 @@ is_abstract = false
 
 [[entity.start_work.own_attrs]]
 name = "items"
-ty = "SET OF work_item"
+ty = "SET [1:?] OF work_item"
 
 [entity.state_definition_to_state_assignment_relationship]
 parents = ["ascribable_state_relationship"]
@@ -18319,11 +18319,11 @@ ty = "OPTIONAL text"
 
 [[entity.state_observed_relationship.own_attrs]]
 name = "relating_state_observed"
-ty = "SET OF state_observed"
+ty = "SET [1:?] OF state_observed"
 
 [[entity.state_observed_relationship.own_attrs]]
 name = "related_state_observed"
-ty = "SET OF state_observed"
+ty = "SET [1:?] OF state_observed"
 
 [entity.state_observed_role]
 is_abstract = false
@@ -18376,11 +18376,11 @@ ty = "OPTIONAL text"
 
 [[entity.state_type_relationship.own_attrs]]
 name = "relating_state_type"
-ty = "SET OF state_type"
+ty = "SET [1:?] OF state_type"
 
 [[entity.state_type_relationship.own_attrs]]
 name = "related_state_type"
-ty = "SET OF state_type"
+ty = "SET [1:?] OF state_type"
 
 [entity.state_type_role]
 is_abstract = false
@@ -18548,7 +18548,7 @@ ty = "colour_type_enum"
 
 [[entity.styled_tessellated_item_with_colours.own_attrs]]
 name = "colour_values"
-ty = "LIST OF LIST OF unsigned_8_bit_integer"
+ty = "LIST [1:?] OF LIST [3:4] OF unsigned_8_bit_integer"
 
 [[entity.styled_tessellated_item_with_colours.redeclared_attrs]]
 name = "item"
@@ -18604,7 +18604,7 @@ is_abstract = false
 
 [[entity.subsketch.own_attrs]]
 name = "subsketch_elements"
-ty = "SET OF sketch_element_select"
+ty = "SET [1:?] OF sketch_element_select"
 
 [[entity.subsketch.own_attrs]]
 name = "owning_sketch"
@@ -18632,7 +18632,7 @@ is_abstract = false
 
 [[entity.summary_report_request_with_number_of_instances.own_attrs]]
 name = "report_request_type"
-ty = "SET OF summary_report_style_type"
+ty = "SET [1:3] OF summary_report_style_type"
 
 [entity.supplied_part_relationship]
 parents = ["product_definition_relationship"]
@@ -18659,7 +18659,7 @@ ty = "curve"
 
 [[entity.surface_curve.own_attrs]]
 name = "associated_geometry"
-ty = "LIST OF pcurve_or_surface"
+ty = "LIST [1:2] OF pcurve_or_surface"
 
 [[entity.surface_curve.own_attrs]]
 name = "master_representation"
@@ -18711,7 +18711,7 @@ is_abstract = false
 
 [[entity.surface_distance_geometric_constraint.own_attrs]]
 name = "near_points"
-ty = "SET OF near_point_relationship"
+ty = "SET [0:4] OF near_point_relationship"
 
 [entity.surface_of_linear_extrusion]
 parents = ["swept_surface"]
@@ -18795,7 +18795,7 @@ is_abstract = false
 
 [[entity.surface_patch_set.own_attrs]]
 name = "patches"
-ty = "SET OF surface_patch"
+ty = "SET [1:?] OF surface_patch"
 
 [entity.surface_profile_tolerance]
 parents = ["geometric_tolerance"]
@@ -18831,7 +18831,7 @@ ty = "label"
 
 [[entity.surface_side_style.own_attrs]]
 name = "styles"
-ty = "SET OF surface_style_element_select"
+ty = "SET [1:7] OF surface_style_element_select"
 
 [entity.surface_smoothness_geometric_constraint]
 parents = ["explicit_geometric_constraint"]
@@ -18879,7 +18879,7 @@ ty = "curve_or_render"
 
 [[entity.surface_style_parameter_line.own_attrs]]
 name = "direction_counts"
-ty = "SET OF direction_count_select"
+ty = "SET [1:2] OF direction_count_select"
 
 [entity.surface_style_reflectance_ambient]
 is_abstract = false
@@ -18929,7 +18929,7 @@ is_abstract = false
 
 [[entity.surface_style_rendering_with_properties.own_attrs]]
 name = "properties"
-ty = "SET OF rendering_properties_select"
+ty = "SET [1:2] OF rendering_properties_select"
 
 [entity.surface_style_segmentation_curve]
 parents = ["founded_item"]
@@ -19255,11 +19255,11 @@ ty = "tessellated_face"
 
 [[entity.tessellated_connecting_edge.own_attrs]]
 name = "line_strip_face1"
-ty = "LIST OF integer"
+ty = "LIST [2:?] OF integer"
 
 [[entity.tessellated_connecting_edge.own_attrs]]
 name = "line_strip_face2"
-ty = "LIST OF integer"
+ty = "LIST [2:?] OF integer"
 
 [entity.tessellated_curve_set]
 parents = ["tessellated_item"]
@@ -19271,7 +19271,7 @@ ty = "coordinates_list"
 
 [[entity.tessellated_curve_set.own_attrs]]
 name = "line_strips"
-ty = "LIST OF LIST OF integer"
+ty = "LIST [1:?] OF LIST [2:?] OF integer"
 
 [entity.tessellated_edge]
 parents = ["tessellated_structured_item"]
@@ -19287,7 +19287,7 @@ ty = "OPTIONAL edge_or_curve"
 
 [[entity.tessellated_edge.own_attrs]]
 name = "line_strip"
-ty = "LIST OF integer"
+ty = "LIST [2:?] OF integer"
 
 [entity.tessellated_face]
 parents = ["tessellated_structured_item"]
@@ -19303,7 +19303,7 @@ ty = "integer"
 
 [[entity.tessellated_face.own_attrs]]
 name = "normals"
-ty = "LIST OF LIST OF real"
+ty = "LIST OF LIST [3:3] OF real"
 
 [[entity.tessellated_face.own_attrs]]
 name = "geometric_link"
@@ -19315,7 +19315,7 @@ is_abstract = false
 
 [[entity.tessellated_geometric_set.own_attrs]]
 name = "children"
-ty = "SET OF tessellated_item"
+ty = "SET [1:?] OF tessellated_item"
 
 [entity.tessellated_item]
 parents = ["geometric_representation_item"]
@@ -19332,7 +19332,7 @@ ty = "coordinates_list"
 
 [[entity.tessellated_point_set.own_attrs]]
 name = "point_list"
-ty = "LIST OF integer"
+ty = "LIST [1:?] OF integer"
 
 [entity.tessellated_shape_representation]
 parents = ["shape_representation"]
@@ -19345,7 +19345,7 @@ is_abstract = false
 
 [[entity.tessellated_shape_representation_with_accuracy_parameters.own_attrs]]
 name = "tessellation_accuracy_parameters"
-ty = "SET OF tessellation_accuracy_parameter_item"
+ty = "SET [1:?] OF tessellation_accuracy_parameter_item"
 
 [entity.tessellated_shell]
 parents = ["tessellated_item"]
@@ -19353,7 +19353,7 @@ is_abstract = false
 
 [[entity.tessellated_shell.own_attrs]]
 name = "items"
-ty = "SET OF tessellated_structured_item"
+ty = "SET [1:?] OF tessellated_structured_item"
 
 [[entity.tessellated_shell.own_attrs]]
 name = "topological_link"
@@ -19365,7 +19365,7 @@ is_abstract = false
 
 [[entity.tessellated_solid.own_attrs]]
 name = "items"
-ty = "SET OF tessellated_structured_item"
+ty = "SET [1:?] OF tessellated_structured_item"
 
 [[entity.tessellated_solid.own_attrs]]
 name = "geometric_link"
@@ -19390,7 +19390,7 @@ ty = "integer"
 
 [[entity.tessellated_surface_set.own_attrs]]
 name = "normals"
-ty = "LIST OF LIST OF real"
+ty = "LIST OF LIST [3:3] OF real"
 
 [entity.tessellated_vertex]
 parents = ["tessellated_structured_item"]
@@ -19414,7 +19414,7 @@ is_abstract = false
 
 [[entity.tessellated_wire.own_attrs]]
 name = "items"
-ty = "SET OF tessellated_edge_or_vertex"
+ty = "SET [1:?] OF tessellated_edge_or_vertex"
 
 [[entity.tessellated_wire.own_attrs]]
 name = "geometric_model_link"
@@ -19516,7 +19516,7 @@ is_abstract = false
 
 [[entity.text_literal_with_associated_curves.own_attrs]]
 name = "associated_curves"
-ty = "SET OF curve"
+ty = "SET [1:?] OF curve"
 
 [entity.text_literal_with_blanking_box]
 parents = ["text_literal"]
@@ -19572,7 +19572,7 @@ is_abstract = false
 
 [[entity.text_style_with_box_characteristics.own_attrs]]
 name = "characteristics"
-ty = "SET OF box_characteristic_select"
+ty = "SET [1:4] OF box_characteristic_select"
 
 [entity.text_style_with_mirror]
 parents = ["text_style"]
@@ -19763,7 +19763,7 @@ is_abstract = false
 
 [[entity.tolerance_zone.own_attrs]]
 name = "defining_tolerance"
-ty = "SET OF tolerance_zone_target"
+ty = "SET [1:?] OF tolerance_zone_target"
 
 [[entity.tolerance_zone.own_attrs]]
 name = "form"
@@ -19880,7 +19880,7 @@ is_abstract = false
 
 [[entity.track_blended_solid_with_end_conditions.own_attrs]]
 name = "end_conditions"
-ty = "LIST OF blend_end_condition_select"
+ty = "LIST [2:2] OF blend_end_condition_select"
 
 [entity.transformation_with_derived_angle]
 parents = ["item_defined_transformation"]
@@ -19927,7 +19927,7 @@ ty = "LIST OF integer"
 
 [[entity.triangulated_face.own_attrs]]
 name = "triangles"
-ty = "LIST OF LIST OF integer"
+ty = "LIST [1:?] OF LIST [3:3] OF integer"
 
 [entity.triangulated_point_cloud_dataset]
 parents = ["scanned_data_item"]
@@ -19939,7 +19939,7 @@ ty = "point_cloud_set_or_superset"
 
 [[entity.triangulated_point_cloud_dataset.own_attrs]]
 name = "triangles"
-ty = "LIST OF LIST OF integer"
+ty = "LIST [1:?] OF LIST [3:3] OF integer"
 
 [entity.triangulated_surface_set]
 parents = ["tessellated_surface_set"]
@@ -19951,7 +19951,7 @@ ty = "LIST OF integer"
 
 [[entity.triangulated_surface_set.own_attrs]]
 name = "triangles"
-ty = "LIST OF LIST OF integer"
+ty = "LIST [1:?] OF LIST [3:3] OF integer"
 
 [entity.trimmed_curve]
 parents = ["bounded_curve"]
@@ -19963,11 +19963,11 @@ ty = "curve"
 
 [[entity.trimmed_curve.own_attrs]]
 name = "trim_1"
-ty = "SET OF trimming_select"
+ty = "SET [1:2] OF trimming_select"
 
 [[entity.trimmed_curve.own_attrs]]
 name = "trim_2"
-ty = "SET OF trimming_select"
+ty = "SET [1:2] OF trimming_select"
 
 [[entity.trimmed_curve.own_attrs]]
 name = "sense_agreement"
@@ -20052,7 +20052,7 @@ is_abstract = false
 
 [[entity.uncertainty_assigned_representation.own_attrs]]
 name = "uncertainty"
-ty = "SET OF uncertainty_measure_with_unit"
+ty = "SET [1:?] OF uncertainty_measure_with_unit"
 
 [entity.uncertainty_measure_with_unit]
 parents = ["measure_with_unit"]
@@ -20223,7 +20223,7 @@ is_abstract = false
 
 [[entity.user_selected_elements.own_attrs]]
 name = "picked_items"
-ty = "SET OF representation_item"
+ty = "SET [1:?] OF representation_item"
 
 [entity.user_selected_shape_elements]
 parents = ["user_selected_elements"]
@@ -20548,7 +20548,7 @@ is_abstract = false
 
 [[entity.volume_with_parametric_boundary.own_attrs]]
 name = "outer_bound"
-ty = "LIST OF face"
+ty = "LIST [6:6] OF face"
 
 [entity.volume_with_shell]
 parents = ["volume_with_faces"]
@@ -20600,7 +20600,7 @@ is_abstract = false
 
 [[entity.wire_shell.own_attrs]]
 name = "wire_shell_extent"
-ty = "SET OF loop"
+ty = "SET [1:?] OF loop"
 
 [entity.wrong_element_name]
 parents = ["externally_conditioned_data_quality_criterion"]
@@ -20950,7 +20950,7 @@ aliased = "SELECT(closed_shell, open_shell)"
 aliased = "ENUM(rgb8, rgbt8)"
 
 [type.common_datum_list]
-aliased = "LIST OF datum_reference_element"
+aliased = "LIST [2:?] OF datum_reference_element"
 
 [type.compound_inner_area_boundary]
 aliased = "SELECT(set_inner_area_boundary)"
@@ -21349,19 +21349,19 @@ aliased = "ENUM(independent, not_independent, not_tested)"
 aliased = "SELECT(kinematic_link_representation, shape_representation)"
 
 [type.list_item_defined_transformation]
-aliased = "LIST OF item_defined_transformation"
+aliased = "LIST [2:?] OF item_defined_transformation"
 
 [type.list_of_reversible_topology_item]
 aliased = "LIST OF reversible_topology_item"
 
 [type.list_representation_item]
-aliased = "LIST OF representation_item"
+aliased = "LIST [1:?] OF representation_item"
 
 [type.locally_refined_spline_type_enum]
 aliased = "ENUM(analysis_suitable_t_spline, hierarchical_b_spline, lr_b_spline, semi_standard_t_spline, standard_t_spline)"
 
 [type.location_in_aggregate_item]
-aliased = "LIST OF integer_representation_item"
+aliased = "LIST [1:?] OF integer_representation_item"
 
 [type.location_item]
 aliased = "SELECT(assembly_component_usage, document_file, interface_connection, interface_connector_occurrence, interface_definition_connection, organization, organizational_project, organization_type, person, person_and_organization, product, product_definition, product_definition_formation, product_definition_relationship, product_group)"
@@ -21559,10 +21559,10 @@ aliased = "SELECT(planar_box, plane)"
 aliased = "SELECT(direction, point)"
 
 [type.point_and_vector_members]
-aliased = "LIST OF point_and_vector_member"
+aliased = "LIST [2:3] OF point_and_vector_member"
 
 [type.point_array_members]
-aliased = "LIST OF point_and_vector"
+aliased = "LIST [1:?] OF point_and_vector"
 
 [type.point_cloud_set_or_superset]
 aliased = "SELECT(point_cloud_dataset, point_cloud_superdataset)"
@@ -21571,7 +21571,7 @@ aliased = "SELECT(point_cloud_dataset, point_cloud_superdataset)"
 aliased = "SELECT(curve, point, surface)"
 
 [type.point_path_members]
-aliased = "LIST OF point_and_vector"
+aliased = "LIST [1:?] OF point_and_vector"
 
 [type.point_placement_shape_representation_item]
 aliased = "SELECT(axis2_placement_3d, compound_representation_item, mapped_item)"
@@ -21724,16 +21724,16 @@ aliased = "real"
 aliased = "SELECT(action, action_directive, action_method, action_method_relationship, action_property, action_property_representation, applied_action_assignment, applied_action_method_assignment, applied_classification_assignment, applied_description_text_assignment, applied_description_text_assignment_relationship, applied_document_reference, applied_document_usage_constraint_assignment, applied_external_identification_assignment, applied_identification_assignment, assembly_component_usage, assembly_component_usage_substitute, class_system, conditional_effectivity, configuration_design, configuration_effectivity, configured_effectivity_assignment, document, document_file, draughting_model, drawing_revision, envelope, evaluated_characteristic_of_product_as_individual_test_result, evidence, exclusive_product_concept_feature_category, executed_action, externally_defined_general_property, general_property, group, identification_assignment_relationship, interface_connection, interface_connector_as_planned, interface_connector_as_realized, interface_connector_design, interface_connector_occurrence, interface_definition_connection, interface_definition_for, make_from_usage_option, material_designation, mechanical_design_geometric_presentation_representation, organizational_project, package_product_concept_feature, presentation_area, process_plan, product, product_class, product_concept, product_concept_feature, product_concept_feature_category, product_definition, product_definition_formation, product_definition_formation_relationship, product_definition_group_assignment, product_definition_relationship, product_definition_usage, product_design_to_individual, product_design_version_to_individual, product_group, product_group_membership, product_group_relationship, product_identification, product_process_plan, product_relationship, property_definition, property_definition_representation, representation, requirement_assignment, requirement_source, requirement_view_definition_relationship, resource_property, shape_representation, structured_message, validation, verification, versioned_action_request)"
 
 [type.set_inner_area_boundary]
-aliased = "SET OF bounded_primitive_2d"
+aliased = "SET [1:?] OF bounded_primitive_2d"
 
 [type.set_item_defined_transformation]
-aliased = "SET OF item_defined_transformation"
+aliased = "SET [2:?] OF item_defined_transformation"
 
 [type.set_of_reversible_topology_item]
 aliased = "SET OF reversible_topology_item"
 
 [type.set_representation_item]
-aliased = "SET OF representation_item"
+aliased = "SET [1:?] OF representation_item"
 
 [type.shading_curve_method]
 aliased = "ENUM(constant_colour, linear_colour)"
@@ -21811,7 +21811,7 @@ aliased = "SELECT(drawing_revision)"
 aliased = "SELECT(spherical_pair, spherical_pair_with_pin)"
 
 [type.spline_knot_values]
-aliased = "LIST OF real"
+aliased = "LIST [2:?] OF real"
 
 [type.start_request_item]
 aliased = "SELECT(product_definition_formation)"

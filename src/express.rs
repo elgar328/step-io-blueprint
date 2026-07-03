@@ -22,23 +22,40 @@ use serde::{Deserialize, Serialize};
 
 mod supertype_parser;
 
-/// Type of an ATTR or TYPE alias. Bound information (`[1:3]`) and inner
-/// `UNIQUE`/`OPTIONAL` modifiers on aggregations are intentionally dropped
-/// — the exporters care only about the reference / polymorphic structure,
-/// not capacity hints.
+/// Cardinality bounds on an aggregation (`[n:m]`; `?` upper = unbounded).
+/// The EXPRESS bare form (`SET OF x`, no brackets) is `[0:?]`. Non-numeric
+/// bounds (identifiers/expressions) fall back to `[0:?]` — treated as
+/// unknown, never over-constraining.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+pub struct AggBounds {
+    pub lower: u32,
+    pub upper: Option<u32>,
+}
+
+impl AggBounds {
+    pub const UNBOUNDED: AggBounds = AggBounds {
+        lower: 0,
+        upper: None,
+    };
+}
+
+/// Type of an ATTR or TYPE alias. Inner `UNIQUE`/`OPTIONAL` modifiers on
+/// aggregations are intentionally dropped — the exporters care only about
+/// the reference / polymorphic structure. Aggregation cardinality bounds
+/// ARE kept (consumers generate minimum/maximum-length validation).
 #[derive(Debug, Clone, Serialize)]
 pub enum AttrType {
     /// `cartesian_point` — entity name OR TYPE alias name (resolved at
     /// analysis time using `Schema::types`).
     Entity(String),
-    /// `LIST [n:m] OF X` — bounds dropped.
-    List(Box<AttrType>),
-    /// `SET [n:m] OF X` — bounds dropped.
-    Set(Box<AttrType>),
-    /// `BAG [n:m] OF X` — bounds dropped.
-    Bag(Box<AttrType>),
-    /// `ARRAY [n:m] OF X` — bounds dropped.
-    Array(Box<AttrType>),
+    /// `LIST [n:m] OF X`.
+    List(Box<AttrType>, AggBounds),
+    /// `SET [n:m] OF X`.
+    Set(Box<AttrType>, AggBounds),
+    /// `BAG [n:m] OF X`.
+    Bag(Box<AttrType>, AggBounds),
+    /// `ARRAY [n:m] OF X`.
+    Array(Box<AttrType>, AggBounds),
     /// `OPTIONAL X` — preserved because the optionality affects
     /// nullability of cross-references.
     Optional(Box<AttrType>),
@@ -712,13 +729,17 @@ pub fn parse_type_repr(input: &str) -> Result<AttrType, String> {
 
     // Aggregations: LIST/SET/BAG/ARRAY [bound] OF [UNIQUE | OPTIONAL] inner
     for (kw, ctor) in [
-        ("LIST", AttrType::List as fn(Box<AttrType>) -> AttrType),
+        (
+            "LIST",
+            AttrType::List as fn(Box<AttrType>, AggBounds) -> AttrType,
+        ),
         ("SET", AttrType::Set),
         ("BAG", AttrType::Bag),
         ("ARRAY", AttrType::Array),
     ] {
         if let Some(rest) = match_keyword_prefix(trimmed, kw) {
-            let after_bound = strip_bracket_bound(rest).trim_start();
+            let (bounds, after_bound) = take_bracket_bound(rest);
+            let after_bound = after_bound.trim_start();
             let after_of = match_keyword_prefix(after_bound, "OF")
                 .ok_or_else(|| format!("{kw} not followed by OF: {after_bound:?}"))?;
             // Skip optional UNIQUE / OPTIONAL modifier inside aggregation.
@@ -726,7 +747,7 @@ pub fn parse_type_repr(input: &str) -> Result<AttrType, String> {
                 .or_else(|| match_keyword_prefix(after_of.trim_start(), "OPTIONAL"))
                 .unwrap_or(after_of);
             let inner = parse_type_repr(after_mod)?;
-            return Ok(ctor(Box::new(inner)));
+            return Ok(ctor(Box::new(inner), bounds));
         }
     }
 
@@ -780,6 +801,26 @@ pub fn parse_type_repr(input: &str) -> Result<AttrType, String> {
     }
 
     Err(format!("unrecognised type repr: {trimmed:?}"))
+}
+
+/// Take a leading `[n:m]` bound clause: returns the parsed bounds (numeric
+/// `n`/`m`; `?` or non-numeric expressions fall back to unbounded on that
+/// side, with a non-numeric lower treated as 0 — never over-constraining)
+/// plus the remainder. No bracket = the EXPRESS bare form = `[0:?]`.
+fn take_bracket_bound(s: &str) -> (AggBounds, &str) {
+    let t = s.trim_start();
+    if !t.starts_with('[') {
+        return (AggBounds::UNBOUNDED, s);
+    }
+    let rest = strip_bracket_bound(t);
+    let inside = &t[1..t.len() - rest.len() - 1];
+    let bounds = inside
+        .split_once(':')
+        .map_or(AggBounds::UNBOUNDED, |(lo, hi)| AggBounds {
+            lower: lo.trim().parse().unwrap_or(0),
+            upper: hi.trim().parse().ok(),
+        });
+    (bounds, rest)
 }
 
 /// Strip a leading `[...]` bound clause (paren/bracket-aware). Returns the
@@ -892,10 +933,19 @@ mod tests {
         assert_eq!(attrs.len(), 1);
         assert_eq!(attrs[0].name, "coordinates");
         match &attrs[0].ty {
-            AttrType::List(inner) => match inner.as_ref() {
-                AttrType::Entity(n) => assert_eq!(n, "length_measure"),
-                other => panic!("expected Entity inside LIST, got {other:?}"),
-            },
+            AttrType::List(inner, b) => {
+                assert_eq!(
+                    *b,
+                    AggBounds {
+                        lower: 1,
+                        upper: Some(3)
+                    }
+                );
+                match inner.as_ref() {
+                    AttrType::Entity(n) => assert_eq!(n, "length_measure"),
+                    other => panic!("expected Entity inside LIST, got {other:?}"),
+                }
+            }
             other => panic!("expected LIST, got {other:?}"),
         }
     }
@@ -981,10 +1031,14 @@ mod tests {
             let block = format!("ENTITY foo;\n  x : {kw} [1 : 5] OF point;\nEND_ENTITY;");
             let attrs = parse_attrs_for(&block);
             assert_eq!(attrs.len(), 1);
+            let expected = AggBounds {
+                lower: 1,
+                upper: Some(5),
+            };
             let ok = match &attrs[0].ty {
-                AttrType::Set(_) if ctor_check == "SET" => true,
-                AttrType::Bag(_) if ctor_check == "BAG" => true,
-                AttrType::Array(_) if ctor_check == "ARRAY" => true,
+                AttrType::Set(_, bounds) if ctor_check == "SET" => *bounds == expected,
+                AttrType::Bag(_, bounds) if ctor_check == "BAG" => *bounds == expected,
+                AttrType::Array(_, bounds) if ctor_check == "ARRAY" => *bounds == expected,
                 _ => false,
             };
             assert!(ok, "expected {ctor_check} for {kw}, got {:?}", attrs[0].ty);
@@ -1077,7 +1131,7 @@ mod tests {
         process_type_block(block, &mut types, &mut warnings);
         let td = types.get("common_datum_list").expect("parsed");
         match &td.aliased {
-            AttrType::List(inner) => match inner.as_ref() {
+            AttrType::List(inner, _) => match inner.as_ref() {
                 AttrType::Entity(n) => assert_eq!(n, "datum_reference_element"),
                 other => panic!("expected Entity inside LIST, got {other:?}"),
             },

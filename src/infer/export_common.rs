@@ -2,7 +2,7 @@
 //! `profile_export`). Kept here — not in any one exporter — so both share the
 //! schema-faithful classification/signal logic.
 
-use crate::express::{AttrType, Schema};
+use crate::express::{AggBounds, AttrType, Schema};
 
 /// Preference for picking an entity's canonical (ordered) own-attribute
 /// declaration and TYPE aliases in the faithful union. Higher = preferred.
@@ -29,14 +29,27 @@ pub(crate) fn schema_rank(label: &str) -> u8 {
 /// (`real`/`integer`/…); a bare token is an entity or TYPE-alias ref;
 /// `LIST/SET/BAG/ARRAY OF <inner>`, `OPTIONAL <inner>`, `SELECT(a, b)`,
 /// `ENUM(a, b)`. TYPE aliases stay unresolved (faithful; resolving is L2's job).
+/// Bound suffix for an aggregation repr: empty for the unbounded default
+/// (`[0:?]`, including the EXPRESS bare form) so unbounded attrs keep their
+/// historical string; otherwise ` [n:m]` / ` [n:?]`.
+fn bounds_repr(b: AggBounds) -> String {
+    if b == AggBounds::UNBOUNDED {
+        return String::new();
+    }
+    match b.upper {
+        Some(u) => format!(" [{}:{}]", b.lower, u),
+        None => format!(" [{}:?]", b.lower),
+    }
+}
+
 pub(crate) fn ty_repr(ty: &AttrType) -> String {
     match ty {
         AttrType::Primitive(p) => p.to_lowercase(),
         AttrType::Entity(name) => name.clone(),
-        AttrType::List(inner) => format!("LIST OF {}", ty_repr(inner)),
-        AttrType::Set(inner) => format!("SET OF {}", ty_repr(inner)),
-        AttrType::Bag(inner) => format!("BAG OF {}", ty_repr(inner)),
-        AttrType::Array(inner) => format!("ARRAY OF {}", ty_repr(inner)),
+        AttrType::List(inner, b) => format!("LIST{} OF {}", bounds_repr(*b), ty_repr(inner)),
+        AttrType::Set(inner, b) => format!("SET{} OF {}", bounds_repr(*b), ty_repr(inner)),
+        AttrType::Bag(inner, b) => format!("BAG{} OF {}", bounds_repr(*b), ty_repr(inner)),
+        AttrType::Array(inner, b) => format!("ARRAY{} OF {}", bounds_repr(*b), ty_repr(inner)),
         AttrType::Optional(inner) => format!("OPTIONAL {}", ty_repr(inner)),
         AttrType::Select(members) => format!("SELECT({})", members.join(", ")),
         AttrType::Enumeration(members) => format!("ENUM({})", members.join(", ")),
