@@ -23,7 +23,7 @@ cargo test                                # unit tests
 | Command | Output | What it is |
 |---|---|---|
 | `universal_export` | `inferred/universal.toml` | The schema-faithful **union** of all AP schemas (entities, attributes, SELECTs, ENUMs) plus per-entity DERIVE facts. The input the step-io `codegen` generator reads to build the reader/model. |
-| `profile_export` | `profiles/<target>.toml` | One **output profile** per curated target AP (latest IS edition): the legal entity set + ordered attributes for schema-conditioned writing. Targets: `ap203e2`, `ap214e3`, `ap242e2`. |
+| `profile_export` | `profiles/<target>.toml` | One **output profile** per curated target AP (latest IS edition): the legal entity set + ordered attributes for schema-conditioned writing. Currently emits one target, `ap242e2` (step-io's sole output schema); the target table is extensible if more are added. |
 
 Both read the EXPRESS schemas (below). `universal_export` additionally reads the
 frozen `inferred/corpus_usage.toml` to recover real multi-instance (complex)
@@ -54,9 +54,8 @@ LF; schema content is unchanged.
 | `ap242e2.exp` | AP242 Ed 2 | SMRL v8 |
 | `ap242e3.exp` | AP242 Ed 3 (TS) | SMRL v9 |
 
-Cached SMRL release zips (v4–v12) live in `schemas/smrl/`. Only mechanical-CAD
-schemas are used; AP209/210/238/239/240, IFC, ISO 15926, and PDM domains are out
-of scope.
+Only mechanical-CAD schemas are used; AP209/210/238/239/240, IFC, ISO 15926, and
+PDM domains are out of scope.
 
 These `.exp` files are third-party ISO 10303 (STEP) schemas, not covered by this
 repo's license. Full provenance, entity counts, model (MIM/AIM), and
@@ -68,12 +67,12 @@ publication-tier (IS/TS) notes are in [`schemas/NOTICE.md`](schemas/NOTICE.md).
 src/
 ├── main.rs                  CLI dispatch (universal_export / profile_export)
 ├── express.rs               EXPRESS schema parser (.exp → Schema, incl. SUPERTYPE clauses)
-└── infer/
+└── export/
     ├── refgraph.rs          schema-union reference graph (entity parents / abstract / attr conflicts)
-    ├── export_common.rs     shared exporter helpers (ty repr, schema rank, redeclaration signal)
+    ├── common.rs            shared exporter helpers (ty repr, schema rank, redeclaration signal)
     ├── universal_export.rs  → inferred/universal.toml (codegen input)
     └── profile_export.rs    → profiles/<target>.toml (output profiles)
-schemas/                     the six .exp schema files (+ smrl/ cached SMRL release zips, NOTICE.md)
+schemas/                     the six .exp schema files (+ NOTICE.md)
 inferred/                    frozen corpus_usage.toml (input) + universal.toml (output)
 profiles/                    per-target output profiles
 ```

@@ -3,11 +3,9 @@
 //!
 //! The writer needs to know, *per output target*, which entities are legal and
 //! what each entity's attributes are. This stage emits one profile per curated
-//! output target — each the **latest IS edition** of its AP family:
-//!
-//! - `ap214e3`  ← AP214 ed3 (ISO 10303-214:2010 IS)
-//! - `ap242e2`  ← AP242 ed2 (ISO 10303-242:2020 IS)
-//! - `ap203e2`  ← AP203 ed2 (ISO 10303-403 IS)
+//! output target (see [`TARGETS`]). Currently the sole target is `ap242e2`
+//! (AP242 ed2, ISO 10303-242:2020 IS — step-io's only public output schema); the
+//! table is a slice so more IS-edition targets can be added without other change.
 //!
 //! Each profile is built from that target's **single** [`Schema`]
 //! (`schema.entities` verbatim, no union or newest-AP-pick), so an entity's

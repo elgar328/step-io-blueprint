@@ -29,8 +29,7 @@ monolithic-era equivalent) for AP203 Ed 1 and AP214.
 **SMRL version → AP242 edition:** v8 = Ed 2 (2122), v9 = Ed 3 (2140), v10 = Ed 3
 rev (2145), v11/v12 = Ed 4 (2392 / 2407, 2025). AP203 Ed 2 is stable at 1006
 across all versions. The SMRL contains only **modular** APs — it has **no** AP214
-and **no** legacy AP203 `config_control_design`. The cached SMRL release zips
-(v4–v12) live in `schemas/smrl/`.
+and **no** legacy AP203 `config_control_design`.
 
 **Publication tiers:** the AP242 *standard document* (ISO 10303-242) is an
 International Standard for Ed 1 (2014) and Ed 2 (2020); Ed 3 is not a full IS — it

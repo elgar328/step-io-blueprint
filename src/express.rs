@@ -1,5 +1,5 @@
 //! EXPRESS schema parser — extract ENTITY and TYPE definitions from `.exp`
-//! files. Sufficient for AP203 / AP203e2 / AP214e3 / AP242 of stepcode.
+//! files. Sufficient for the AP203 / AP214 / AP242 schemas under `schemas/`.
 //!
 //! Recognises:
 //! - `ENTITY name SUBTYPE OF (...) ATTRS END_ENTITY;` with own ATTR types
