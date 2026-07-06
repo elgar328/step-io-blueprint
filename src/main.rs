@@ -11,8 +11,8 @@ use std::env;
 use std::path::Path;
 use std::process::ExitCode;
 
+mod export;
 mod express;
-mod infer;
 
 fn main() -> ExitCode {
     let args: Vec<String> = env::args().skip(1).collect();
@@ -64,10 +64,10 @@ fn run_universal_export() -> ExitCode {
         Ok(s) => s,
         Err(c) => return c,
     };
-    match infer::universal_export::run(&schemas) {
+    match export::universal_export::run(&schemas) {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {
-            eprintln!("infer universal_export failed:\n{e}");
+            eprintln!("universal_export failed:\n{e}");
             ExitCode::from(2)
         }
     }
@@ -78,10 +78,10 @@ fn run_profile_export() -> ExitCode {
         Ok(s) => s,
         Err(c) => return c,
     };
-    match infer::profile_export::run(&schemas) {
+    match export::profile_export::run(&schemas) {
         Ok(()) => ExitCode::SUCCESS,
         Err(e) => {
-            eprintln!("infer profile_export failed:\n{e}");
+            eprintln!("profile_export failed:\n{e}");
             ExitCode::from(2)
         }
     }
