@@ -18,15 +18,13 @@ use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 
-use serde::{Deserialize, Serialize};
-
 mod supertype_parser;
 
 /// Cardinality bounds on an aggregation (`[n:m]`; `?` upper = unbounded).
 /// The EXPRESS bare form (`SET OF x`, no brackets) is `[0:?]`. Non-numeric
 /// bounds (identifiers/expressions) fall back to `[0:?]` — treated as
 /// unknown, never over-constraining.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct AggBounds {
     pub lower: u32,
     pub upper: Option<u32>,
@@ -43,7 +41,7 @@ impl AggBounds {
 /// aggregations are intentionally dropped — the exporters care only about
 /// the reference / polymorphic structure. Aggregation cardinality bounds
 /// ARE kept (consumers generate minimum/maximum-length validation).
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone)]
 pub enum AttrType {
     /// `cartesian_point` — entity name OR TYPE alias name (resolved at
     /// analysis time using `Schema::types`).
@@ -70,7 +68,7 @@ pub enum AttrType {
     Primitive(String),
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone)]
 pub struct AttrSpec {
     /// Lowercase attribute name.
     pub name: String,
@@ -82,25 +80,22 @@ pub struct AttrSpec {
 /// Part 21 wire). `super_qual` is the supertype of a `SELF\super.attr` form
 /// (the attribute is inherited and re-declared derived); `None` for a plain
 /// own-attr derive. The `:= expression` right-hand side is not retained.
-#[derive(Debug, Clone, PartialEq, Serialize)]
+#[derive(Debug, Clone, PartialEq)]
 pub struct DerivedTarget {
     pub super_qual: Option<String>,
     pub name: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone)]
 pub struct TypeDef {
-    /// Lowercase TYPE alias name.
-    pub name: String,
     /// What the alias resolves to. Transitive resolution (`m2 = m1; m1 =
-    /// REAL;`) happens at analysis time, not here.
+    /// REAL;`) happens at analysis time, not here. The alias name is the key of
+    /// the `types` map that holds this record.
     pub aliased: AttrType,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone)]
 pub struct EntitySchema {
-    /// `cartesian_point`, `shape_aspect`, etc. (lowercase as per EXPRESS).
-    pub name: String,
     /// Direct parents from `SUBTYPE OF (a, b)`, in declaration order.
     /// Multiple inheritance is supported — consumers flatten inheritance by
     /// walking every parent's chain.
@@ -130,8 +125,7 @@ pub struct EntitySchema {
 ///
 /// Anonymous composition nodes (AndOr / And / OneOf appearing inside
 /// another node) are preserved — they have no entity name of their own.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
-#[serde(tag = "kind", rename_all = "snake_case")]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum SupertypeExpr {
     /// Bare entity reference.
     Entity { name: String },
@@ -146,7 +140,7 @@ pub enum SupertypeExpr {
     And { children: Vec<SupertypeExpr> },
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone)]
 pub struct Schema {
     pub source_label: String,
     pub entities: HashMap<String, EntitySchema>,
@@ -329,9 +323,8 @@ fn process_entity_block(
     let derived_attrs = extract_derived(block);
 
     entities.insert(
-        name.clone(),
+        name,
         EntitySchema {
-            name,
             parents,
             own_attrs,
             redeclared_attrs,
@@ -432,7 +425,7 @@ fn process_type_block(
             return;
         }
     };
-    types.insert(name.clone(), TypeDef { name, aliased });
+    types.insert(name, TypeDef { aliased });
 }
 
 fn extract_entity_name(block: &str) -> Option<String> {

@@ -102,26 +102,21 @@ mod tests {
     use super::*;
     use crate::express::{AttrSpec, EntitySchema, Schema, TypeDef};
 
-    fn schema(label: &str, ents: Vec<EntitySchema>, types: Vec<TypeDef>) -> Schema {
-        let mut entities = HashMap::new();
-        for e in ents {
-            entities.insert(e.name.clone(), e);
-        }
-        let mut t = HashMap::new();
-        for td in types {
-            t.insert(td.name.clone(), td);
-        }
+    fn schema(
+        label: &str,
+        ents: Vec<(String, EntitySchema)>,
+        types: Vec<(String, TypeDef)>,
+    ) -> Schema {
         Schema {
             source_label: label.to_string(),
-            entities,
-            types: t,
+            entities: ents.into_iter().collect(),
+            types: types.into_iter().collect(),
             parse_warnings: Vec::new(),
         }
     }
 
-    fn ent(name: &str, parents: &[&str], attrs: Vec<(&str, AttrType)>) -> EntitySchema {
-        EntitySchema {
-            name: name.to_string(),
+    fn ent(name: &str, parents: &[&str], attrs: Vec<(&str, AttrType)>) -> (String, EntitySchema) {
+        let e = EntitySchema {
             parents: parents.iter().map(|s| s.to_string()).collect(),
             own_attrs: attrs
                 .into_iter()
@@ -134,7 +129,8 @@ mod tests {
             is_abstract: false,
             supertype_expr: None,
             derived_attrs: Vec::new(),
-        }
+        };
+        (name.to_string(), e)
     }
 
     #[test]

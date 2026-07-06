@@ -28,21 +28,13 @@ const FILE_CORPUS_USAGE: &str = "corpus_usage.toml";
 /// Per-entity corpus usage record, deserialized from the frozen
 /// `inferred/corpus_usage.toml` (produced externally by step-io-reference-check's
 /// `corpus-usage` bin and copied in). Only `complex_part_count` is read here —
-/// to recover real MI combinations the declaration-only rule misses.
-#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
+/// to recover real MI combinations the declaration-only rule misses; the file's
+/// other columns are ignored on read.
+#[derive(Debug, Clone, Deserialize)]
 pub struct UsageRecord {
-    /// Total occurrences across the corpus (`standalone + complex_part`).
-    pub instance_count: usize,
     /// Occurrences as a part of a complex MI instance (`#N=( ... NAME(...) ... )`).
-    #[serde(default, skip_serializing_if = "is_zero")]
+    #[serde(default)]
     pub complex_part_count: usize,
-    /// Other entity names seen in the same complex-MI block, sorted.
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub co_instantiated_with: Vec<String>,
-}
-
-fn is_zero(n: &usize) -> bool {
-    *n == 0
 }
 
 /// Read the frozen corpus summary (`inferred/corpus_usage.toml`).
