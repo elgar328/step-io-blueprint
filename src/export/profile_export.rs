@@ -60,7 +60,7 @@ const TARGETS: &[Target] = &[Target {
     file_schema: &["AP242_MANAGED_MODEL_BASED_3D_ENGINEERING_MIM_LF { 1 0 10303 442 3 1 4 }"],
     apd_status: "international standard",
     apd_name: "ap242_managed_model_based_3d_engineering_mim_lf",
-    apd_year: 2011,
+    apd_year: 2020,
     apd_desc: "managed model based 3d engineering",
 }];
 
