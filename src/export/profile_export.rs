@@ -25,8 +25,8 @@ use std::fs;
 
 use serde::Serialize;
 
+use crate::export::common::{redeclaration_owner, ty_repr};
 use crate::express::{EntitySchema, Schema, SupertypeExpr};
-use crate::export::common::{redeclaration_has_signal, redeclaration_owner, ty_repr};
 
 const OUT_DIR: &str = "profiles";
 
@@ -214,6 +214,20 @@ fn nearest_legal_supertype(
     None
 }
 
+/// Every redeclaration `e` makes in the target schema, exactly as declared
+/// (aggregate bounds included): the output must follow the target's own
+/// types, so none is filtered out.
+fn profile_redeclarations(schema: &Schema, e: &EntitySchema) -> Vec<ProfileAttr> {
+    e.redeclared_attrs
+        .iter()
+        .map(|a| ProfileAttr {
+            name: a.name.clone(),
+            ty: ty_repr(&a.ty),
+            owner: redeclaration_owner(schema, a),
+        })
+        .collect()
+}
+
 pub fn run(schemas: &[Schema]) -> Result<(), String> {
     fs::create_dir_all(OUT_DIR).map_err(|e| e.to_string())?;
     // Union of every entity across all schemas — a subtype absent from one
@@ -235,9 +249,6 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                     t.label_match, t.out_name
                 )
             })?;
-        // Single-schema `ranked` slice for the SELECT-alias redeclaration check.
-        let ranked = [schema];
-
         let mut entity: BTreeMap<String, ProfileEntity> = BTreeMap::new();
         for (name, e) in &schema.entities {
             let own_attrs: Vec<ProfileAttr> = e
@@ -249,16 +260,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                     owner: None,
                 })
                 .collect();
-            let redeclared_attrs: Vec<ProfileAttr> = e
-                .redeclared_attrs
-                .iter()
-                .filter(|a| redeclaration_has_signal(&a.ty, &ranked))
-                .map(|a| ProfileAttr {
-                    name: a.name.clone(),
-                    ty: ty_repr(&a.ty),
-                    owner: redeclaration_owner(schema, a),
-                })
-                .collect();
+            let redeclared_attrs = profile_redeclarations(schema, e);
             entity.insert(
                 name.clone(),
                 ProfileEntity {
@@ -345,4 +347,38 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
         );
     }
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use std::path::Path;
+
+    use super::*;
+    use crate::express::load_all_schemas;
+
+    #[test]
+    fn the_profile_keeps_every_e2_redeclaration_with_its_bounds() {
+        let schemas = load_all_schemas(Path::new("schemas"));
+        let e2 = schemas
+            .iter()
+            .find(|s| s.source_label == "ap242e2")
+            .unwrap();
+        let red = |entity: &str| profile_redeclarations(e2, &e2.entities[entity]);
+        let sdr = red("shape_definition_representation");
+        assert!(
+            sdr.iter().any(|a| a.name == "definition"
+                && a.ty == "property_definition"
+                && a.owner.as_deref() == Some("property_definition_representation")),
+            "{:?}",
+            sdr.iter().map(|a| (&a.name, &a.ty)).collect::<Vec<_>>()
+        );
+        let address = red("person_and_organization_address");
+        assert!(
+            address
+                .iter()
+                .any(|a| a.name == "people" && a.ty == "SET [1:1] OF person"),
+            "{:?}",
+            address.iter().map(|a| (&a.name, &a.ty)).collect::<Vec<_>>()
+        );
+    }
 }
