@@ -21,7 +21,7 @@ use serde::{Deserialize, Serialize};
 use crate::export::common::{redeclaration_has_signal, redeclaration_owner, schema_rank, ty_repr};
 use crate::export::narrowing::{Judge, union_types, with_element};
 use crate::export::refgraph;
-use crate::express::{AttrType, EntitySchema, Schema, SupertypeExpr};
+use crate::express::{AttrSpec, AttrType, EntitySchema, Schema, SupertypeExpr};
 
 const OUT: &str = "inferred/universal.toml";
 const REPORT: &str = "inferred/narrowing_report.txt";
@@ -41,6 +41,12 @@ struct NarrowingReport {
     non_reference: Vec<String>,
     /// Attributes some edition admits more for than the written schema does.
     narrower_than_union: Vec<String>,
+    /// Declared types widened to the union of editions.
+    widened: Vec<String>,
+    /// Declarations narrower than the union of editions left as they are.
+    not_widened: Vec<String>,
+    /// Attributes mandatory here that some edition declares OPTIONAL.
+    optional_elsewhere: Vec<String>,
 }
 
 impl NarrowingReport {
@@ -63,6 +69,12 @@ impl NarrowingReport {
                 "narrower than the union of editions",
                 &self.narrower_than_union,
             ),
+            ("widened declarations (union of editions)", &self.widened),
+            ("declaration differs, not widened", &self.not_widened),
+            (
+                "optional in some edition, mandatory here",
+                &self.optional_elsewhere,
+            ),
         ] {
             out.push_str(&format!("\n## {title}: {}\n", lines.len()));
             for l in lines {
@@ -73,12 +85,14 @@ impl NarrowingReport {
         fs::create_dir_all("inferred").map_err(|e| e.to_string())?;
         fs::write(REPORT, out).map_err(|e| e.to_string())?;
         eprintln!(
-            "wrote {REPORT}: {} emitted, {} kept not union-safe, {} rejected, {} non-reference, {} narrower than union",
+            "wrote {REPORT}: {} emitted, {} kept not union-safe, {} rejected, {} non-reference, {} narrower than union, {} widened, {} not widened",
             self.emitted.len(),
             self.kept_unsafe.len(),
             self.rejected.len(),
             self.non_reference.len(),
-            self.narrower_than_union.len()
+            self.narrower_than_union.len(),
+            self.widened.len(),
+            self.not_widened.len()
         );
         Ok(())
     }
@@ -317,9 +331,27 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                 .map(|(k, e)| (k.as_str(), e))
         })
         .collect();
-    let (select_members, other_aliased) = union_types(&ranked);
+    let (mut select_members, other_aliased) = union_types(&ranked);
+    // Declared types every edition does not agree on are widened to cover
+    // them all; a SELECT is made up where no declared type does.
+    let widening = Judge::new(schemas, &decls, &select_members, &other_aliased).widen(&decls);
+    for (n, members) in &widening.synthetic {
+        select_members.insert(n.clone(), members.clone());
+    }
+    let declared_ty = |entity: &str, a: &'_ AttrSpec| -> AttrType {
+        widening
+            .widened
+            .get(&(entity.to_string(), a.name.clone()))
+            .cloned()
+            .unwrap_or_else(|| a.ty.clone())
+    };
     let judge = Judge::new(schemas, &decls, &select_members, &other_aliased);
-    let mut report = NarrowingReport::default();
+    let mut report = NarrowingReport {
+        widened: widening.widened_report.clone(),
+        not_widened: widening.not_widened.clone(),
+        optional_elsewhere: widening.optional_elsewhere.clone(),
+        ..NarrowingReport::default()
+    };
     // (entity, attribute) → (owner, redeclared type) for every redeclaration
     // written.
     let mut applied: BTreeMap<(String, String), (String, AttrType)> = BTreeMap::new();
@@ -335,7 +367,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                     .iter()
                     .map(|a| UnivAttr {
                         name: a.name.clone(),
-                        ty: ty_repr(&a.ty),
+                        ty: ty_repr(&declared_ty(name, a)),
                         owner: None,
                         union_safe: None,
                     })
@@ -368,15 +400,17 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                         .push(format!("{slot} : {}", ty_repr(&a.ty)));
                     None
                 } else if verdict.union_safe {
-                    let base = owner
-                        .as_deref()
-                        .and_then(|o| decls.get(o))
-                        .and_then(|o| o.own_attrs.iter().find(|x| x.name == a.name));
-                    match base.and_then(|b| with_element(&b.ty, &a.ty)) {
+                    let base = owner.as_deref().and_then(|o| {
+                        decls
+                            .get(o)
+                            .and_then(|d| d.own_attrs.iter().find(|x| x.name == a.name))
+                            .map(|b| declared_ty(o, b))
+                    });
+                    match base.as_ref().and_then(|b| with_element(b, &a.ty)) {
                         Some(t) => {
                             report.emitted.push(format!(
                                 "{slot} : {} -> {}",
-                                base.map(|b| ty_repr(&b.ty)).unwrap_or_default(),
+                                base.as_ref().map(ty_repr).unwrap_or_default(),
                                 ty_repr(&t)
                             ));
                             Some(t)
@@ -479,7 +513,8 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
         let chain = universal_ancestors(&decls, name);
         for x in &chain {
             for a in &decls[x].own_attrs {
-                let mut tys: Vec<&AttrType> = vec![&a.ty];
+                let declared = declared_ty(x, a);
+                let mut tys: Vec<&AttrType> = vec![&declared];
                 for y in &chain {
                     if let Some((o, t)) = applied.get(&(y.to_string(), a.name.clone()))
                         && o == x
@@ -509,7 +544,8 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
     let header = "# Generated by `universal_export` — schema-faithful codegen input.\n\
                   # DO NOT hand-edit. Faithful schema-union of the source AP schemas + per-entity\n\
                   # `derives` (raw DERIVE targets: \"super.attr\" or \"attr\"); codegen marks\n\
-                  # derived/derivable `*` slots from these. Names/own_attrs prefer newest AP.\n\
+                  # derived/derivable `*` slots from these. Names/own_attrs prefer newest AP;\n\
+                  # a declared type editions disagree on is widened to cover them all.\n\
                   # `schemas` = source APs declaring the entity, chronological (membership data).\n\n";
     fs::create_dir_all("inferred").map_err(|e| e.to_string())?;
     fs::write(OUT, format!("{header}{body}")).map_err(|e| e.to_string())?;

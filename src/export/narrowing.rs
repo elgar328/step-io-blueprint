@@ -10,7 +10,7 @@
 
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 
-use crate::export::common::{attr_owner, redeclaration_owner};
+use crate::export::common::{attr_owner, redeclaration_owner, schema_rank, ty_repr};
 use crate::express::{AttrSpec, AttrType, EntitySchema, Schema};
 
 /// The names a type admits.
@@ -147,6 +147,11 @@ impl<'a> View<'a> {
             AttrType::Enumeration(_) => std::iter::once("=enumeration".to_string()).collect(),
             AttrType::Primitive(p) => std::iter::once(format!("={p}")).collect(),
         }
+    }
+
+    /// What the type or entity `name` admits.
+    fn admits_name_fresh(&self, name: &'a str) -> Admits {
+        self.admits_name(name, &mut HashSet::new())
     }
 
     fn admits_name(&self, name: &'a str, seen: &mut HashSet<&'a str>) -> Admits {
@@ -332,6 +337,176 @@ impl<'a> Judge<'a> {
             }
         }
         extra.into_iter().collect()
+    }
+
+    /// The declared attribute types the universal schema must widen so that
+    /// each admits what every edition declares for it, and the SELECTs to add
+    /// for the widenings no declared type covers. `decls` is the declaration
+    /// written for each entity (the newest edition's).
+    pub(crate) fn widen(&self, decls: &BTreeMap<&'a str, &'a EntitySchema>) -> Widening {
+        let mut editions: Vec<&(&'a Schema, View<'a>)> = self.schemas.iter().collect();
+        editions.sort_by_key(|(s, _)| std::cmp::Reverse(schema_rank(&s.source_label)));
+        let mut out = Widening::default();
+        for (&name, decl) in decls {
+            for a in &decl.own_attrs {
+                let slot = format!("{name}.{}", a.name);
+                let mut declared: Vec<(&'a Schema, &View<'a>, &'a AttrType)> = Vec::new();
+                let mut owner_differs = None;
+                let mut union = Admits::new();
+                for (s, view) in &editions {
+                    let Some(e) = s.entities.get(name) else {
+                        continue;
+                    };
+                    match e.own_attrs.iter().find(|x| x.name == a.name) {
+                        Some(x) => declared.push((s, view, &x.ty)),
+                        None => {
+                            // Another entity declares it in this edition:
+                            // count what it admits, but do not widen.
+                            if let Some(o) = attr_owner(s, name, &a.name)
+                                && let Some(x) =
+                                    s.entities[&o].own_attrs.iter().find(|x| x.name == a.name)
+                            {
+                                union.extend(view.admits(&x.ty));
+                                owner_differs =
+                                    Some(format!("declared by {o} in {}", s.source_label));
+                            }
+                        }
+                    }
+                }
+                if !matches!(a.ty, AttrType::Optional(_))
+                    && let Some((s, _, _)) = declared
+                        .iter()
+                        .find(|(_, _, t)| matches!(t, AttrType::Optional(_)))
+                {
+                    out.optional_elsewhere
+                        .push(format!("{slot} : OPTIONAL in {}", s.source_label));
+                }
+                for (_, view, t) in &declared {
+                    union.extend(view.admits(t));
+                }
+                let allowed = self.universal.admits(&a.ty);
+                if union.is_subset(&allowed) {
+                    continue;
+                }
+                let not = |why: String| format!("{slot} : {why}");
+                if let Some(why) = owner_differs {
+                    out.not_widened.push(not(format!("owner differs ({why})")));
+                    continue;
+                }
+                if union.iter().any(|n| n.starts_with('=')) {
+                    out.not_widened
+                        .push(not("non-reference declaration differs".into()));
+                    continue;
+                }
+                let mut names: Vec<&'a str> = Vec::new();
+                for (_, _, t) in &declared {
+                    match element(t) {
+                        AttrType::Entity(n) => {
+                            if !names.contains(&n.as_str()) {
+                                names.push(n);
+                            }
+                        }
+                        other => {
+                            out.not_widened
+                                .push(not(format!("inline element type {other:?}")));
+                            names.clear();
+                            break;
+                        }
+                    }
+                }
+                if names.is_empty() {
+                    continue;
+                }
+                if names.len() == 1 {
+                    out.not_widened.push(not(format!(
+                        "hierarchy differs (every edition declares {})",
+                        names[0]
+                    )));
+                    continue;
+                }
+                let admits_of = |n: &'a str| self.universal.admits_name_fresh(n);
+                let covering = names.iter().find(|n| union.is_subset(&admits_of(n)));
+                let target = match covering {
+                    Some(n) => n.to_string(),
+                    None => {
+                        // Keep the names no other name already covers.
+                        let sets: Vec<Admits> = names.iter().map(|n| admits_of(n)).collect();
+                        let kept: Vec<usize> = (0..names.len())
+                            .filter(|&i| {
+                                !sets.iter().enumerate().any(|(j, other)| {
+                                    j != i
+                                        && sets[i].is_subset(other)
+                                        && (sets[i] != *other || j < i)
+                                })
+                            })
+                            .collect();
+                        let covered: Admits =
+                            kept.iter().flat_map(|&i| sets[i].iter().cloned()).collect();
+                        let members: Vec<String> =
+                            kept.iter().map(|&i| names[i].to_string()).collect();
+                        if !union.is_subset(&covered) {
+                            out.not_widened.push(not("no union covers it".into()));
+                            continue;
+                        }
+                        let synth = members.join("_or_");
+                        let taken = self.universal.selects.contains_key(synth.as_str())
+                            || self.universal.aliases.contains_key(synth.as_str())
+                            || self.universal.parents.contains_key(synth.as_str());
+                        let same = out.synthetic.get(&synth).is_some_and(|m| *m == members);
+                        if taken || (out.synthetic.contains_key(&synth) && !same) {
+                            out.not_widened
+                                .push(not(format!("name {synth} already taken")));
+                            continue;
+                        }
+                        out.synthetic.insert(synth.clone(), members);
+                        synth
+                    }
+                };
+                match with_element(&a.ty, &AttrType::Entity(target.clone())) {
+                    Some(t) => {
+                        out.widened_report.push(format!(
+                            "{slot} : {} -> {}",
+                            ty_repr(&a.ty),
+                            ty_repr(&t)
+                        ));
+                        out.widened.insert((name.to_string(), a.name.clone()), t);
+                    }
+                    None => out
+                        .not_widened
+                        .push(not(format!("aggregates nest differently ({target})"))),
+                }
+            }
+        }
+        out
+    }
+}
+
+/// Declarations the universal schema widens to the union of editions
+/// (`Judge::widen`), and what it reports about them.
+#[derive(Default)]
+pub(crate) struct Widening {
+    /// (entity, attribute) → the widened declared type.
+    pub(crate) widened: BTreeMap<(String, String), AttrType>,
+    /// SELECTs made up for widenings no declared type covers: name → members.
+    pub(crate) synthetic: BTreeMap<String, Vec<String>>,
+    /// `entity.attr : old -> new` per widening.
+    pub(crate) widened_report: Vec<String>,
+    /// Declarations narrower than the union that are not widened, with why.
+    pub(crate) not_widened: Vec<String>,
+    /// Attributes mandatory here that some edition declares OPTIONAL.
+    pub(crate) optional_elsewhere: Vec<String>,
+}
+
+/// The innermost element of an attribute type, past `OPTIONAL` and
+/// aggregates.
+fn element(t: &AttrType) -> &AttrType {
+    match t {
+        AttrType::Optional(inner)
+        | AttrType::List(inner, _)
+        | AttrType::Set(inner, _)
+        | AttrType::Bag(inner, _)
+        | AttrType::Array(inner, _) => element(inner),
+        other => other,
     }
 }
 
@@ -575,6 +750,41 @@ mod tests {
             });
         }
 
+        /// Declarations AP203/AP214 make wider than AP242's are widened to
+        /// cover every edition.
+        #[test]
+        fn declarations_older_editions_widen_are_widened() {
+            with_judge(|judge, _, decls| {
+                let w = judge.widen(decls);
+                let ty = |e: &str, a: &str| {
+                    w.widened
+                        .get(&(e.to_string(), a.to_string()))
+                        .map(ty_repr)
+                        .unwrap_or_else(|| panic!("{e}.{a} should be widened"))
+                };
+                assert_eq!(
+                    ty("geometric_tolerance", "magnitude"),
+                    "OPTIONAL measure_with_unit"
+                );
+                assert_eq!(
+                    ty("geometric_tolerance_with_defined_unit", "unit_size"),
+                    "measure_with_unit"
+                );
+                assert_eq!(
+                    ty("projected_zone_definition", "projected_length"),
+                    "measure_with_unit"
+                );
+                assert_eq!(
+                    ty("styled_item", "item"),
+                    "styled_item_target_or_representation_item"
+                );
+                assert_eq!(
+                    w.synthetic["styled_item_target_or_representation_item"],
+                    ["styled_item_target", "representation_item"]
+                );
+            });
+        }
+
         /// AP242 e1 narrowed a tessellated shape representation's items to
         /// tessellated items; e2 dropped that, so it must not apply on read.
         #[test]
@@ -612,5 +822,106 @@ mod tests {
             other => panic!("{other:?}"),
         }
         assert!(with_element(&e("item"), &set(e("point"), 1)).is_none());
+    }
+
+    /// `holder.target` declared as `newer` in ap242e2 and `older` in ap214e3,
+    /// over item ← point and an unrelated `rep`, plus a SELECT `sel(point,
+    /// rep)`; widened as the universal export widens it.
+    fn widen_target(newer: AttrType, older: AttrType) -> Widening {
+        let entities = |ty: AttrType| {
+            vec![
+                ("item", ent(&[], vec![], vec![])),
+                ("point", ent(&["item"], vec![], vec![])),
+                ("rep", ent(&[], vec![], vec![])),
+                ("holder", ent(&[], vec![attr("target", ty, None)], vec![])),
+            ]
+        };
+        let mut schemas = vec![
+            schema("ap242e2", entities(newer)),
+            schema("ap214e3", entities(older)),
+        ];
+        schemas[0].types.insert(
+            "sel".into(),
+            TypeDef {
+                aliased: AttrType::Select(vec!["point".into(), "rep".into()]),
+            },
+        );
+        let decls: BTreeMap<&str, &EntitySchema> = schemas[0]
+            .entities
+            .iter()
+            .map(|(n, e)| (n.as_str(), e))
+            .collect();
+        let ranked: Vec<&Schema> = schemas.iter().collect();
+        let (selects, aliases) = union_types(&ranked);
+        Judge::new(&schemas, &decls, &selects, &aliases).widen(&decls)
+    }
+
+    fn widened_target(w: &Widening) -> Option<String> {
+        w.widened
+            .get(&("holder".to_string(), "target".to_string()))
+            .map(ty_repr)
+    }
+
+    #[test]
+    fn an_older_declaration_that_covers_the_union_is_used() {
+        let w = widen_target(AttrType::Optional(Box::new(e("point"))), e("item"));
+        assert_eq!(widened_target(&w).as_deref(), Some("OPTIONAL item"));
+        assert!(w.synthetic.is_empty());
+    }
+
+    #[test]
+    fn declarations_neither_covers_get_a_select_of_both() {
+        let w = widen_target(e("sel"), e("item"));
+        assert_eq!(widened_target(&w).as_deref(), Some("sel_or_item"));
+        assert_eq!(w.synthetic["sel_or_item"], ["sel", "item"]);
+    }
+
+    #[test]
+    fn agreeing_declarations_are_left_alone() {
+        let w = widen_target(e("item"), e("point"));
+        assert!(w.widened.is_empty() && w.not_widened.is_empty());
+    }
+
+    #[test]
+    fn a_differing_scalar_is_reported_not_widened() {
+        let w = widen_target(
+            AttrType::Primitive("STRING".into()),
+            AttrType::Primitive("INTEGER".into()),
+        );
+        assert!(w.widened.is_empty());
+        assert!(w.not_widened[0].contains("non-reference"));
+    }
+
+    #[test]
+    fn an_attribute_another_edition_declares_elsewhere_is_reported() {
+        // ap214e3 declares `target` on a supertype of `holder` instead.
+        let older = vec![
+            ("item", ent(&[], vec![], vec![])),
+            ("point", ent(&["item"], vec![], vec![])),
+            (
+                "base",
+                ent(&[], vec![attr("target", e("item"), None)], vec![]),
+            ),
+            ("holder", ent(&["base"], vec![], vec![])),
+        ];
+        let newer = vec![
+            ("item", ent(&[], vec![], vec![])),
+            ("point", ent(&["item"], vec![], vec![])),
+            (
+                "holder",
+                ent(&[], vec![attr("target", e("point"), None)], vec![]),
+            ),
+        ];
+        let schemas = vec![schema("ap242e2", newer), schema("ap214e3", older)];
+        let decls: BTreeMap<&str, &EntitySchema> = schemas[0]
+            .entities
+            .iter()
+            .map(|(n, e)| (n.as_str(), e))
+            .collect();
+        let ranked: Vec<&Schema> = schemas.iter().collect();
+        let (selects, aliases) = union_types(&ranked);
+        let w = Judge::new(&schemas, &decls, &selects, &aliases).widen(&decls);
+        assert!(w.widened.is_empty());
+        assert!(w.not_widened[0].contains("owner differs"));
     }
 }
