@@ -19,7 +19,7 @@ use std::path::Path;
 use serde::{Deserialize, Serialize};
 
 use crate::express::{AttrType, Schema, SupertypeExpr};
-use crate::export::common::{redeclaration_has_signal, schema_rank, ty_repr};
+use crate::export::common::{redeclaration_has_signal, redeclaration_owner, schema_rank, ty_repr};
 use crate::export::refgraph;
 
 const OUT: &str = "inferred/universal.toml";
@@ -93,6 +93,9 @@ fn collect_combinable(expr: &SupertypeExpr, in_andor: bool, out: &mut BTreeSet<S
 struct UnivAttr {
     name: String,
     ty: String,
+    /// For a redeclaration, the entity that declares the attribute.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    owner: Option<String>,
 }
 
 /// One faithful entity declaration. Field order matters for toml: all
@@ -218,7 +221,8 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
     let mut entity: BTreeMap<String, UnivEntity> = BTreeMap::new();
     for name in unified.entity_parents.keys() {
         // own_attrs, parents, and derives all come from the SAME newest-AP decl.
-        let decl = ranked.iter().find_map(|s| s.entities.get(name));
+        let decl_schema = ranked.iter().find(|s| s.entities.contains_key(name));
+        let decl = decl_schema.and_then(|s| s.entities.get(name));
         let own_attrs: Vec<UnivAttr> = decl
             .map(|e| {
                 e.own_attrs
@@ -226,6 +230,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                     .map(|a| UnivAttr {
                         name: a.name.clone(),
                         ty: ty_repr(&a.ty),
+                        owner: None,
                     })
                     .collect()
             })
@@ -239,6 +244,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                     .map(|a| UnivAttr {
                         name: a.name.clone(),
                         ty: ty_repr(&a.ty),
+                        owner: decl_schema.and_then(|s| redeclaration_owner(s, a)),
                     })
                     .collect()
             })

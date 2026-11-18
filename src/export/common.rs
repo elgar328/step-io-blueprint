@@ -2,7 +2,9 @@
 //! `profile_export`). Kept here — not in any one exporter — so both share the
 //! schema-faithful classification/signal logic.
 
-use crate::express::{AggBounds, AttrType, Schema};
+use std::collections::HashSet;
+
+use crate::express::{AggBounds, AttrSpec, AttrType, Schema};
 
 /// Preference for picking an entity's canonical (ordered) own-attribute
 /// declaration and TYPE aliases in the faithful union. Higher = preferred.
@@ -71,5 +73,83 @@ pub(crate) fn redeclaration_has_signal(ty: &AttrType, ranked: &[&Schema]) -> boo
             .find_map(|s| s.types.get(name))
             .is_some_and(|td| matches!(td.aliased, AttrType::Select(_))),
         _ => false,
+    }
+}
+
+/// The entity in `schema` that declares `attr` as its own, searched from `from`
+/// up through its supertypes (`from` first). `None` if none declares it.
+pub(crate) fn attr_owner(schema: &Schema, from: &str, attr: &str) -> Option<String> {
+    let mut stack = vec![from.to_string()];
+    let mut seen = HashSet::new();
+    while let Some(name) = stack.pop() {
+        if !seen.insert(name.clone()) {
+            continue;
+        }
+        let Some(e) = schema.entities.get(&name) else {
+            continue;
+        };
+        if e.own_attrs.iter().any(|a| a.name == attr) {
+            return Some(name);
+        }
+        stack.extend(e.parents.iter().rev().cloned());
+    }
+    None
+}
+
+/// The owner of a redeclared attribute `a` of an entity in `schema`: the
+/// entity declaring the attribute, found from the redeclaration's
+/// `SELF\super` qualifier.
+pub(crate) fn redeclaration_owner(schema: &Schema, a: &AttrSpec) -> Option<String> {
+    attr_owner(schema, a.super_qual.as_deref()?, &a.name)
+}
+
+#[cfg(test)]
+mod tests {
+    use std::collections::HashMap;
+
+    use super::*;
+    use crate::express::EntitySchema;
+
+    fn ent(parents: &[&str], own: &[&str]) -> EntitySchema {
+        EntitySchema {
+            parents: parents.iter().map(|s| s.to_string()).collect(),
+            own_attrs: own
+                .iter()
+                .map(|n| AttrSpec {
+                    name: n.to_string(),
+                    ty: AttrType::Entity("thing".into()),
+                    super_qual: None,
+                })
+                .collect(),
+            redeclared_attrs: Vec::new(),
+            is_abstract: false,
+            supertype_expr: None,
+            derived_attrs: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn owner_found_through_an_intermediate_qualifier() {
+        let mut entities = HashMap::new();
+        entities.insert("a".to_string(), ent(&[], &["x"]));
+        entities.insert("b".to_string(), ent(&["a"], &["y"]));
+        entities.insert("c".to_string(), ent(&["b"], &[]));
+        let schema = Schema {
+            source_label: "test".into(),
+            entities,
+            types: HashMap::new(),
+            parse_warnings: Vec::new(),
+        };
+        let redeclared = AttrSpec {
+            name: "x".into(),
+            ty: AttrType::Entity("narrow".into()),
+            super_qual: Some("b".into()),
+        };
+        assert_eq!(
+            redeclaration_owner(&schema, &redeclared).as_deref(),
+            Some("a")
+        );
+        assert_eq!(attr_owner(&schema, "c", "y").as_deref(), Some("b"));
+        assert_eq!(attr_owner(&schema, "c", "z"), None);
     }
 }

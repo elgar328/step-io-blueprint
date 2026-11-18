@@ -26,7 +26,7 @@ use std::fs;
 use serde::Serialize;
 
 use crate::express::{EntitySchema, Schema, SupertypeExpr};
-use crate::export::common::{redeclaration_has_signal, ty_repr};
+use crate::export::common::{redeclaration_has_signal, redeclaration_owner, ty_repr};
 
 const OUT_DIR: &str = "profiles";
 
@@ -68,6 +68,9 @@ const TARGETS: &[Target] = &[Target {
 struct ProfileAttr {
     name: String,
     ty: String,
+    /// For a redeclaration, the entity that declares the attribute.
+    #[serde(skip_serializing_if = "Option::is_none")]
+    owner: Option<String>,
 }
 
 /// One legal entity in a target's output profile (own attrs + parents;
@@ -243,6 +246,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                 .map(|a| ProfileAttr {
                     name: a.name.clone(),
                     ty: ty_repr(&a.ty),
+                    owner: None,
                 })
                 .collect();
             let redeclared_attrs: Vec<ProfileAttr> = e
@@ -252,6 +256,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                 .map(|a| ProfileAttr {
                     name: a.name.clone(),
                     ty: ty_repr(&a.ty),
+                    owner: redeclaration_owner(schema, a),
                 })
                 .collect();
             entity.insert(

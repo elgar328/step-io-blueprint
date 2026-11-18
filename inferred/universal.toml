@@ -1327,10 +1327,12 @@ own_attrs = []
 [[entity.angle_direction_reference.redeclared_attrs]]
 name = "relating_representation_item"
 ty = "orientation_basis_select"
+owner = "representation_item_relationship"
 
 [[entity.angle_direction_reference.redeclared_attrs]]
 name = "related_representation_item"
 ty = "angle_direction_reference_select"
+owner = "representation_item_relationship"
 
 [entity.angle_geometric_constraint]
 parents = ["explicit_geometric_constraint"]
@@ -1414,6 +1416,7 @@ own_attrs = []
 [[entity.annotation_curve_occurrence.redeclared_attrs]]
 name = "item"
 ty = "curve_or_curve_set"
+owner = "styled_item"
 
 [entity.annotation_fill_area]
 parents = ["geometric_representation_item"]
@@ -1562,6 +1565,7 @@ ty = "OPTIONAL SET [1:?] OF annotation_plane_element"
 [[entity.annotation_plane.redeclared_attrs]]
 name = "item"
 ty = "plane_or_planar_box"
+owner = "styled_item"
 
 [entity.annotation_point_occurrence]
 parents = ["annotation_occurrence"]
@@ -1615,6 +1619,7 @@ own_attrs = []
 [[entity.annotation_symbol_occurrence.redeclared_attrs]]
 name = "item"
 ty = "annotation_symbol_occurrence_item"
+owner = "styled_item"
 
 [entity.annotation_text]
 parents = ["mapped_item"]
@@ -1632,6 +1637,7 @@ own_attrs = []
 [[entity.annotation_text.redeclared_attrs]]
 name = "mapping_target"
 ty = "axis2_placement"
+owner = "mapped_item"
 
 [entity.annotation_text_character]
 parents = ["mapped_item"]
@@ -1652,6 +1658,7 @@ ty = "text_alignment"
 [[entity.annotation_text_character.redeclared_attrs]]
 name = "mapping_target"
 ty = "axis2_placement"
+owner = "mapped_item"
 
 [entity.annotation_text_occurrence]
 parents = ["annotation_occurrence"]
@@ -1669,6 +1676,7 @@ own_attrs = []
 [[entity.annotation_text_occurrence.redeclared_attrs]]
 name = "item"
 ty = "annotation_text_occurrence_item"
+owner = "styled_item"
 
 [entity.annotation_to_annotation_leader_line]
 parents = ["annotation_placeholder_leader_line"]
@@ -4021,10 +4029,12 @@ own_attrs = []
 [[entity.boolean_result_2d.redeclared_attrs]]
 name = "first_operand"
 ty = "boolean_operand_2d"
+owner = "boolean_result"
 
 [[entity.boolean_result_2d.redeclared_attrs]]
 name = "second_operand"
 ty = "boolean_operand_2d"
+owner = "boolean_result"
 
 [entity.boolean_variable]
 parents = [
@@ -7075,6 +7085,7 @@ own_attrs = []
 [[entity.constructive_geometry_representation_relationship.redeclared_attrs]]
 name = "rep_1"
 ty = "constructive_geometry_representation_or_shape_representation"
+owner = "representation_relationship"
 
 [entity.contact_feature]
 parents = ["shape_aspect"]
@@ -7724,6 +7735,7 @@ own_attrs = []
 [[entity.csg_primitive_solid_2d.redeclared_attrs]]
 name = "tree_root_expression"
 ty = "bounded_primitive_2d"
+owner = "csg_solid"
 
 [entity.csg_shape_representation]
 parents = ["shape_representation"]
@@ -7768,6 +7780,7 @@ own_attrs = []
 [[entity.csg_solid_2d.redeclared_attrs]]
 name = "tree_root_expression"
 ty = "csg_select_2d"
+owner = "csg_solid"
 
 [entity.cubic_bezier_tessellated_edge]
 parents = ["tessellated_edge"]
@@ -7851,6 +7864,7 @@ ty = "SET [1:?] OF change_management_object"
 [[entity.current_change_element_assignment.redeclared_attrs]]
 name = "assigned_group"
 ty = "current_element_assignment_select"
+owner = "group_assignment"
 
 [entity.curve]
 parents = ["geometric_representation_item"]
@@ -10969,14 +10983,17 @@ own_attrs = []
 [[entity.draughting_model_item_association.redeclared_attrs]]
 name = "definition"
 ty = "draughting_model_item_definition"
+owner = "item_identified_representation_usage"
 
 [[entity.draughting_model_item_association.redeclared_attrs]]
 name = "used_representation"
 ty = "annotation_representation_select"
+owner = "item_identified_representation_usage"
 
 [[entity.draughting_model_item_association.redeclared_attrs]]
 name = "identified_item"
 ty = "draughting_model_item_association_select"
+owner = "item_identified_representation_usage"
 
 [entity.draughting_model_item_association_with_placeholder]
 parents = ["draughting_model_item_association"]
@@ -10994,6 +11011,7 @@ ty = "annotation_placeholder_occurrence"
 [[entity.draughting_model_item_association_with_placeholder.redeclared_attrs]]
 name = "definition"
 ty = "draughting_model_item_definition"
+owner = "item_identified_representation_usage"
 
 [entity.draughting_pre_defined_colour]
 parents = ["pre_defined_colour"]
@@ -14750,14 +14768,17 @@ own_attrs = []
 [[entity.geometric_item_specific_usage.redeclared_attrs]]
 name = "definition"
 ty = "geometric_item_specific_usage_select"
+owner = "item_identified_representation_usage"
 
 [[entity.geometric_item_specific_usage.redeclared_attrs]]
 name = "used_representation"
 ty = "shape_model"
+owner = "item_identified_representation_usage"
 
 [[entity.geometric_item_specific_usage.redeclared_attrs]]
 name = "identified_item"
 ty = "geometric_model_item"
+owner = "item_identified_representation_usage"
 
 [entity.geometric_model_element_relationship]
 parents = [
@@ -15058,10 +15079,12 @@ own_attrs = []
 [[entity.geometry_to_topology_item_association.redeclared_attrs]]
 name = "transform_item_1"
 ty = "geometry_association_item_select"
+owner = "item_defined_transformation"
 
 [[entity.geometry_to_topology_item_association.redeclared_attrs]]
 name = "transform_item_2"
 ty = "topology_association_item_select"
+owner = "item_defined_transformation"
 
 [entity.geometry_to_topology_model_association]
 parents = [
@@ -16268,6 +16291,7 @@ own_attrs = []
 [[entity.int_literal.redeclared_attrs]]
 name = "the_value"
 ty = "integer"
+owner = "literal_number"
 
 [entity.int_numeric_variable]
 parents = ["numeric_variable"]
@@ -16963,10 +16987,12 @@ ty = "kinematic_joint"
 [[entity.kinematic_pair.redeclared_attrs]]
 name = "transform_item_1"
 ty = "rigid_placement"
+owner = "item_defined_transformation"
 
 [[entity.kinematic_pair.redeclared_attrs]]
 name = "transform_item_2"
 ty = "rigid_placement"
+owner = "item_defined_transformation"
 
 [entity.kinematic_path]
 parents = ["geometric_representation_item"]
@@ -17088,6 +17114,7 @@ ty = "kinematic_link"
 [[entity.kinematic_property_topology_representation.redeclared_attrs]]
 name = "used_representation"
 ty = "kinematic_topology_representation_select"
+owner = "property_definition_representation"
 
 [entity.kinematic_structure]
 is_abstract = false
@@ -17630,6 +17657,7 @@ own_attrs = []
 [[entity.link_motion_relationship.redeclared_attrs]]
 name = "rep_1"
 ty = "link_or_shape_representation"
+owner = "representation_relationship"
 
 [entity.link_motion_representation_along_path]
 parents = ["representation"]
@@ -17656,6 +17684,7 @@ own_attrs = []
 [[entity.link_motion_transformation.redeclared_attrs]]
 name = "transform_item_1"
 ty = "rigid_placement"
+owner = "item_defined_transformation"
 
 [entity.listed_complex_number_data]
 parents = [
@@ -19058,10 +19087,12 @@ own_attrs = []
 [[entity.mechanical_design_and_draughting_relationship.redeclared_attrs]]
 name = "rep_1"
 ty = "mechanical_design_and_draughting_relationship_select"
+owner = "representation_relationship"
 
 [[entity.mechanical_design_and_draughting_relationship.redeclared_attrs]]
 name = "rep_2"
 ty = "mechanical_design_and_draughting_relationship_select"
+owner = "representation_relationship"
 
 [entity.mechanical_design_geometric_presentation_area]
 parents = ["presentation_area"]
@@ -19914,6 +19945,7 @@ own_attrs = []
 [[entity.near_point_relationship.redeclared_attrs]]
 name = "relating_representation_item"
 ty = "curve_or_surface_constraint_element"
+owner = "representation_item_relationship"
 
 [entity.nearly_degenerate_geometry]
 parents = ["inapt_geometry"]
@@ -23274,6 +23306,7 @@ ty = "SET [1:?] OF change_management_object"
 [[entity.previous_change_element_assignment.redeclared_attrs]]
 name = "assigned_group"
 ty = "previous_element_assignment_select"
+owner = "group_assignment"
 
 [entity.primitive_2d]
 parents = ["geometric_representation_item"]
@@ -23304,6 +23337,7 @@ own_attrs = []
 [[entity.primitive_2d_with_inner_boundary.redeclared_attrs]]
 name = "item_element"
 ty = "compound_inner_area_boundary"
+owner = "compound_representation_item"
 
 [entity.prismatic_pair]
 parents = ["low_order_kinematic_pair"]
@@ -24317,6 +24351,7 @@ ty = "product_definition_occurrence_or_reference"
 [[entity.product_definition_specified_occurrence.redeclared_attrs]]
 name = "definition"
 ty = "product_definition_occurrence_or_reference"
+owner = "product_definition_occurrence"
 
 [entity.product_definition_substitute]
 is_abstract = false
@@ -25342,6 +25377,7 @@ own_attrs = []
 [[entity.real_literal.redeclared_attrs]]
 name = "the_value"
 ty = "real"
+owner = "literal_number"
 
 [entity.real_numeric_variable]
 parents = ["numeric_variable"]
@@ -29358,6 +29394,7 @@ ty = "spatial_rotation"
 [[entity.spherical_pair_value.redeclared_attrs]]
 name = "applies_to_pair"
 ty = "spherical_pair_select"
+owner = "pair_value"
 
 [entity.spherical_pair_with_pin]
 parents = ["low_order_kinematic_pair"]
@@ -30087,6 +30124,7 @@ ty = "LIST [1:?] OF LIST [3:4] OF unsigned_8_bit_integer"
 [[entity.styled_tessellated_item_with_colours.redeclared_attrs]]
 name = "item"
 ty = "tessellated_surface_item"
+owner = "styled_item"
 
 [entity.su_parameters]
 parents = ["geometric_representation_item"]
@@ -31019,6 +31057,7 @@ own_attrs = []
 [[entity.symbol_representation_map.redeclared_attrs]]
 name = "mapping_origin"
 ty = "axis2_placement"
+owner = "representation_map"
 
 [entity.symbol_style]
 parents = ["founded_item"]
@@ -32319,10 +32358,12 @@ own_attrs = []
 [[entity.topology_to_geometry_item_association.redeclared_attrs]]
 name = "transform_item_1"
 ty = "topology_association_item_select"
+owner = "item_defined_transformation"
 
 [[entity.topology_to_geometry_item_association.redeclared_attrs]]
 name = "transform_item_2"
 ty = "geometry_association_item_select"
+owner = "item_defined_transformation"
 
 [entity.topology_to_geometry_model_association]
 parents = [
@@ -32455,6 +32496,7 @@ own_attrs = []
 [[entity.transformation_with_derived_angle.redeclared_attrs]]
 name = "transform_item_1"
 ty = "angle_direction_reference_with_a2p3d_select"
+owner = "item_defined_transformation"
 
 [entity.transition_feature]
 parents = ["shape_aspect"]

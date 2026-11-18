@@ -123,6 +123,7 @@ mod tests {
                 .map(|(n, ty)| AttrSpec {
                     name: n.to_string(),
                     ty,
+                    super_qual: None,
                 })
                 .collect(),
             redeclared_attrs: Vec::new(),

@@ -74,6 +74,10 @@ pub struct AttrSpec {
     pub name: String,
     /// Right-hand side of the colon, parsed.
     pub ty: AttrType,
+    /// For a `SELF\super.attr` redeclaration, the lowercase `super` it names
+    /// (not necessarily the entity that declares `attr`); `None` for an own
+    /// attribute.
+    pub super_qual: Option<String>,
 }
 
 /// One `DERIVE` target: an attribute the entity computes (rendered `*` on the
@@ -451,18 +455,17 @@ fn extract_parents(block: &str) -> Vec<String> {
         .collect()
 }
 
-/// `SELF\supertype.attr` redeclaration → returns the lowercase `attr`
-/// name. EXPRESS standard form is a single `\` followed by
-/// `supertype.attr`; we take the token after the last `.` and require it
-/// to be a valid identifier. `None` for any non-redeclaration names_part.
-fn parse_self_redeclaration(names_part: &str) -> Option<String> {
+/// `SELF\supertype.attr` redeclaration → the lowercase `(supertype, attr)`.
+/// EXPRESS standard form is a single `\` followed by `supertype.attr`; both
+/// parts must be valid identifiers. `None` for any non-redeclaration
+/// names_part.
+fn parse_self_redeclaration(names_part: &str) -> Option<(String, String)> {
     let lower = names_part.trim().to_lowercase();
-    if !lower.starts_with("self\\") {
-        return None;
-    }
-    let attr = lower.rsplit('.').next()?.trim();
-    if is_valid_identifier(attr) {
-        Some(attr.to_string())
+    let rest = lower.strip_prefix("self\\")?;
+    let (qual, attr) = rest.rsplit_once('.')?;
+    let (qual, attr) = (qual.trim(), attr.trim());
+    if is_valid_identifier(qual) && is_valid_identifier(attr) {
+        Some((qual.to_string(), attr.to_string()))
     } else {
         None
     }
@@ -520,21 +523,26 @@ fn extract_attrs(
             Ok(t) => t,
             Err(e) => {
                 let label = redeclared_name
-                    .clone()
-                    .unwrap_or_else(|| format!("{names:?}"));
+                    .as_ref()
+                    .map_or_else(|| format!("{names:?}"), |(_, a)| a.clone());
                 warnings.push(format!(
                     "{entity_name}: ATTR type parse failed for {label} ({e}) — type was {type_part:?}"
                 ));
                 continue;
             }
         };
-        if let Some(name) = redeclared_name {
-            redeclared.push(AttrSpec { name, ty });
+        if let Some((qual, name)) = redeclared_name {
+            redeclared.push(AttrSpec {
+                name,
+                ty,
+                super_qual: Some(qual),
+            });
         } else {
             for n in names {
                 own.push(AttrSpec {
                     name: n,
                     ty: ty.clone(),
+                    super_qual: None,
                 });
             }
         }
