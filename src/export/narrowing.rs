@@ -11,7 +11,7 @@
 use std::collections::{BTreeMap, BTreeSet, HashMap, HashSet};
 
 use crate::export::common::{attr_owner, redeclaration_owner, schema_rank, ty_repr};
-use crate::express::{AttrSpec, AttrType, EntitySchema, Schema};
+use crate::express::{AggBounds, AttrSpec, AttrType, EntitySchema, Schema};
 
 /// The names a type admits.
 type Admits = BTreeSet<String>;
@@ -381,6 +381,18 @@ impl<'a> Judge<'a> {
                     out.optional_elsewhere
                         .push(format!("{slot} : OPTIONAL in {}", s.source_label));
                 }
+                let written = aggregate_shape(&a.ty);
+                if let Some((s, _, t)) = declared
+                    .iter()
+                    .find(|(_, _, t)| !aggregates_cover(&written, &aggregate_shape(t)))
+                {
+                    out.aggregate_elsewhere.push(format!(
+                        "{slot} : {} in {}, {} here",
+                        ty_repr(t),
+                        s.source_label,
+                        ty_repr(&a.ty)
+                    ));
+                }
                 for (_, view, t) in &declared {
                     union.extend(view.admits(t));
                 }
@@ -462,19 +474,10 @@ impl<'a> Judge<'a> {
                         synth
                     }
                 };
-                match with_element(&a.ty, &AttrType::Entity(target.clone())) {
-                    Some(t) => {
-                        out.widened_report.push(format!(
-                            "{slot} : {} -> {}",
-                            ty_repr(&a.ty),
-                            ty_repr(&t)
-                        ));
-                        out.widened.insert((name.to_string(), a.name.clone()), t);
-                    }
-                    None => out
-                        .not_widened
-                        .push(not(format!("aggregates nest differently ({target})"))),
-                }
+                let t = replace_element(&a.ty, &AttrType::Entity(target));
+                out.widened_report
+                    .push(format!("{slot} : {} -> {}", ty_repr(&a.ty), ty_repr(&t)));
+                out.widened.insert((name.to_string(), a.name.clone()), t);
             }
         }
         out
@@ -495,6 +498,69 @@ pub(crate) struct Widening {
     pub(crate) not_widened: Vec<String>,
     /// Attributes mandatory here that some edition declares OPTIONAL.
     pub(crate) optional_elsewhere: Vec<String>,
+    /// Attributes some edition declares with other aggregates or bounds.
+    pub(crate) aggregate_elsewhere: Vec<String>,
+}
+
+/// `t` with its innermost element replaced by `element`, under the same
+/// `OPTIONAL` and aggregates.
+fn replace_element(t: &AttrType, element: &AttrType) -> AttrType {
+    let inner = |i: &AttrType| Box::new(replace_element(i, element));
+    match t {
+        AttrType::Optional(i) => AttrType::Optional(inner(i)),
+        AttrType::List(i, b) => AttrType::List(inner(i), *b),
+        AttrType::Set(i, b) => AttrType::Set(inner(i), *b),
+        AttrType::Bag(i, b) => AttrType::Bag(inner(i), *b),
+        AttrType::Array(i, b) => AttrType::Array(inner(i), *b),
+        _ => element.clone(),
+    }
+}
+
+/// The aggregates around an attribute type's element, outermost first, past
+/// `OPTIONAL`: each kind (`LIST`, `SET`, …) with its bounds.
+fn aggregate_shape(t: &AttrType) -> Vec<(&'static str, AggBounds)> {
+    let mut out = Vec::new();
+    let mut t = t;
+    loop {
+        t = match t {
+            AttrType::Optional(i) => i,
+            AttrType::List(i, b) => {
+                out.push(("LIST", *b));
+                i
+            }
+            AttrType::Set(i, b) => {
+                out.push(("SET", *b));
+                i
+            }
+            AttrType::Bag(i, b) => {
+                out.push(("BAG", *b));
+                i
+            }
+            AttrType::Array(i, b) => {
+                out.push(("ARRAY", *b));
+                i
+            }
+            _ => return out,
+        };
+    }
+}
+
+/// Whether aggregates `written` take every value `other` does: the same
+/// kinds, each with bounds at least as wide.
+fn aggregates_cover(
+    written: &[(&'static str, AggBounds)],
+    other: &[(&'static str, AggBounds)],
+) -> bool {
+    written.len() == other.len()
+        && written.iter().zip(other).all(|((wk, wb), (ok, ob))| {
+            wk == ok
+                && wb.lower <= ob.lower
+                && match (wb.upper, ob.upper) {
+                    (None, _) => true,
+                    (Some(_), None) => false,
+                    (Some(w), Some(o)) => w >= o,
+                }
+        })
 }
 
 /// The innermost element of an attribute type, past `OPTIONAL` and
@@ -874,6 +940,31 @@ mod tests {
         let w = widen_target(e("sel"), e("item"));
         assert_eq!(widened_target(&w).as_deref(), Some("sel_or_item"));
         assert_eq!(w.synthetic["sel_or_item"], ["sel", "item"]);
+    }
+
+    #[test]
+    fn an_aggregate_is_widened_by_its_element() {
+        let set = |inner: AttrType| {
+            AttrType::Set(
+                Box::new(inner),
+                AggBounds {
+                    lower: 1,
+                    upper: None,
+                },
+            )
+        };
+        let w = widen_target(set(e("point")), set(e("item")));
+        assert_eq!(widened_target(&w).as_deref(), Some("SET [1:?] OF item"));
+        assert!(w.aggregate_elsewhere.is_empty());
+    }
+
+    #[test]
+    fn an_aggregate_in_another_edition_is_reported() {
+        let w = widen_target(
+            e("point"),
+            AttrType::List(Box::new(e("point")), AggBounds::UNBOUNDED),
+        );
+        assert!(w.aggregate_elsewhere[0].contains("ap214e3"));
     }
 
     #[test]

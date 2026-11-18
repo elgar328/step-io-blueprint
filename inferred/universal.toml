@@ -20418,7 +20418,7 @@ schemas = [
 
 [[entity.mating_material_items.own_attrs]]
 name = "items"
-ty = "SET [1:?] OF product_definition"
+ty = "SET [1:?] OF product_definition_or_assembly_component_usage"
 
 [[entity.mating_material_items.redeclared_attrs]]
 name = "assigned_group"

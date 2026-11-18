@@ -47,6 +47,8 @@ struct NarrowingReport {
     not_widened: Vec<String>,
     /// Attributes mandatory here that some edition declares OPTIONAL.
     optional_elsewhere: Vec<String>,
+    /// Attributes some edition declares with other aggregates or bounds.
+    aggregate_elsewhere: Vec<String>,
 }
 
 impl NarrowingReport {
@@ -74,6 +76,10 @@ impl NarrowingReport {
             (
                 "optional in some edition, mandatory here",
                 &self.optional_elsewhere,
+            ),
+            (
+                "other aggregates or bounds in some edition",
+                &self.aggregate_elsewhere,
             ),
         ] {
             out.push_str(&format!("\n## {title}: {}\n", lines.len()));
@@ -350,6 +356,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
         widened: widening.widened_report.clone(),
         not_widened: widening.not_widened.clone(),
         optional_elsewhere: widening.optional_elsewhere.clone(),
+        aggregate_elsewhere: widening.aggregate_elsewhere.clone(),
         ..NarrowingReport::default()
     };
     // (entity, attribute) → (owner, redeclared type) for every redeclaration

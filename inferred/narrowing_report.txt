@@ -477,7 +477,7 @@ a3m_equivalence_criterion_for_shape.detected_difference_types : LIST [1:?] OF a3
 a3m_equivalence_criterion_for_shape.accuracy_types : LIST OF a3ms_accuracy_type_name
 cubic_bezier_tessellated_edge.line_strip : LIST [4:?] OF integer
 
-## narrower than the union of editions: 58
+## narrower than the union of editions: 57
 abstract_variable.definition : also admitted by some edition: ["add_element", "additive_manufacturing_build_plate_relationship", "additive_manufacturing_setup_relationship", "additive_manufacturing_setup_workpiece_relationship"] …
 application_context.application : also admitted by some edition: ["=text"]
 applied_attribute_classification_assignment.items : also admitted by some edition: ["applied_usage_right"]
@@ -501,7 +501,6 @@ homokinetic_pair.transform_item_1 : also admitted by some edition: ["advanced_fa
 homokinetic_pair.transform_item_2 : also admitted by some edition: ["advanced_face", "angular_dimension", "annotation_curve_occurrence", "annotation_fill_area"] …
 kinematic_pair.transform_item_1 : also admitted by some edition: ["advanced_face", "angular_dimension", "annotation_curve_occurrence", "annotation_fill_area"] …
 kinematic_pair.transform_item_2 : also admitted by some edition: ["advanced_face", "angular_dimension", "annotation_curve_occurrence", "annotation_fill_area"] …
-mating_material_items.items : also admitted by some edition: ["additive_manufacturing_build_plate_relationship", "additive_manufacturing_setup_relationship", "additive_manufacturing_setup_workpiece_relationship", "additive_manufacturing_support_structure_geometry_relationship"] …
 planar_curve_pair.transform_item_1 : also admitted by some edition: ["advanced_face", "angular_dimension", "annotation_curve_occurrence", "annotation_fill_area"] …
 planar_curve_pair.transform_item_2 : also admitted by some edition: ["advanced_face", "angular_dimension", "annotation_curve_occurrence", "annotation_fill_area"] …
 planar_pair.transform_item_1 : also admitted by some edition: ["advanced_face", "angular_dimension", "annotation_curve_occurrence", "annotation_fill_area"] …
@@ -537,16 +536,17 @@ unconstrained_pair.transform_item_2 : also admitted by some edition: ["advanced_
 universal_pair.transform_item_1 : also admitted by some edition: ["advanced_face", "angular_dimension", "annotation_curve_occurrence", "annotation_fill_area"] …
 universal_pair.transform_item_2 : also admitted by some edition: ["advanced_face", "angular_dimension", "annotation_curve_occurrence", "annotation_fill_area"] …
 
-## widened declarations (union of editions): 7
+## widened declarations (union of editions): 8
 geometric_tolerance.magnitude : OPTIONAL length_measure_with_unit -> OPTIONAL measure_with_unit
 geometric_tolerance_with_defined_unit.unit_size : length_or_plane_angle_measure_with_unit_select -> measure_with_unit
 kinematic_analysis_result.analysed_mechanism : mechanism_representation -> mechanism_representation_or_mechanism
 kinematic_control.controlled_mechanism : mechanism_representation -> mechanism_representation_or_mechanism
+mating_material_items.items : SET [1:?] OF product_definition -> SET [1:?] OF product_definition_or_assembly_component_usage
 projected_zone_definition.projected_length : length_measure_with_unit -> measure_with_unit
 runout_zone_orientation.angle : plane_angle_measure_with_unit -> measure_with_unit
 styled_item.item : styled_item_target -> styled_item_target_or_representation_item
 
-## declaration differs, not widened: 9
+## declaration differs, not widened: 8
 application_context.application : non-reference declaration differs
 applied_attribute_classification_assignment.items : hierarchy differs (every edition declares attribute_classification_item)
 applied_organization_assignment.items : hierarchy differs (every edition declares organization_item)
@@ -555,8 +555,10 @@ applied_security_classification_assignment.items : hierarchy differs (every edit
 applied_time_interval_assignment.items : hierarchy differs (every edition declares time_interval_item)
 coordinated_universal_time_offset.hour_offset : non-reference declaration differs
 coordinated_universal_time_offset.minute_offset : non-reference declaration differs
-mating_material_items.items : aggregates nest differently (product_definition_or_assembly_component_usage)
 
 ## optional in some edition, mandatory here: 2
 counterdrill_hole_definition.counterdrill_angle_tolerance : OPTIONAL in ap242e3
 countersink_hole_definition.countersink_angle_tolerance : OPTIONAL in ap242e3
+
+## other aggregates or bounds in some edition: 1
+kinematic_control.contained_kinematic_programs : SET [1:?] OF kinematic_analysis_definition in ap214e3, kinematic_analysis_definition here
