@@ -22,7 +22,7 @@ cargo test                                # unit tests
 
 | Command | Output | What it is |
 |---|---|---|
-| `universal_export` | `inferred/universal.toml` | The schema-faithful **union** of all AP schemas (entities, attributes, SELECTs, ENUMs) plus per-entity DERIVE facts. The input the step-io `codegen` generator reads to build the reader/model. |
+| `universal_export` | `inferred/universal.toml`, `inferred/narrowing_report.txt` | The schema-faithful **union** of all AP schemas (entities, attributes, SELECTs, ENUMs) plus per-entity DERIVE facts. The input the step-io `codegen` generator reads to build the reader/model. A reference redeclaration (`SELF\super.attr : narrower;`) is written only when every edition's type for that attribute falls inside it, so the union never rejects input some edition allows; the report lists what was written, rejected, and where the union is narrower than some edition. |
 | `profile_export` | `profiles/<target>.toml` | One **output profile** per curated target AP (latest IS edition): the legal entity set + ordered attributes for schema-conditioned writing. Currently emits one target, `ap242e2` (step-io's sole output schema); the target table is extensible if more are added. |
 
 Both read the EXPRESS schemas (below). `universal_export` additionally reads the

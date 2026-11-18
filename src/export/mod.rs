@@ -3,6 +3,7 @@
 //! shared substrate (`common`, `refgraph`) they build on.
 
 pub mod common;
+pub mod narrowing;
 pub mod profile_export;
 pub mod refgraph;
 pub mod universal_export;
