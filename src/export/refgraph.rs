@@ -130,6 +130,7 @@ mod tests {
             is_abstract: false,
             supertype_expr: None,
             derived_attrs: Vec::new(),
+            where_rules: Vec::new(),
         };
         (name.to_string(), e)
     }

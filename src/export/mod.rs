@@ -7,3 +7,4 @@ pub mod narrowing;
 pub mod profile_export;
 pub mod refgraph;
 pub mod universal_export;
+pub mod where_types;

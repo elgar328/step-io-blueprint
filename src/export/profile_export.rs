@@ -26,9 +26,12 @@ use std::fs;
 use serde::Serialize;
 
 use crate::export::common::{redeclaration_owner, ty_repr};
+use crate::export::where_types::{self, Count};
 use crate::express::{EntitySchema, Schema, SupertypeExpr};
 
 const OUT_DIR: &str = "profiles";
+/// What became of each `TYPEOF`-mentioning `WHERE` rule of the target.
+const WHERE_REPORT: &str = "inferred/where_type_report.txt";
 
 /// A curated output target. `label_match` is matched against
 /// [`Schema::source_label`] with `starts_with` (labels are the clean schema file
@@ -85,6 +88,29 @@ struct ProfileEntity {
     own_attrs: Vec<ProfileAttr>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
     redeclared_attrs: Vec<ProfileAttr>,
+    /// Inherited like redeclarations: they hold for every subtype.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    type_rules: Vec<ProfileTypeRule>,
+}
+
+/// An attribute type restriction a `WHERE` rule makes: the attribute (or
+/// each element of it) may reference only `admits`.
+#[derive(Serialize)]
+struct ProfileTypeRule {
+    name: String,
+    /// The entity declaring the attribute.
+    owner: String,
+    /// The rule label.
+    rule: String,
+    /// The single type a positive rule names, else `<entity>_<attr>`.
+    type_name: String,
+    admits: Vec<String>,
+    /// How many of `names` the value's `TYPEOF` holds: `at_least_one`,
+    /// `exactly_one` or `zero`.
+    count: &'static str,
+    /// The type names the rule lists; a complex value's `TYPEOF` is the
+    /// union over its parts.
+    names: Vec<String>,
 }
 
 #[derive(Serialize)]
@@ -249,6 +275,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                     t.label_match, t.out_name
                 )
             })?;
+        let mut where_types = where_types::analyze(schema);
         let mut entity: BTreeMap<String, ProfileEntity> = BTreeMap::new();
         for (name, e) in &schema.entities {
             let own_attrs: Vec<ProfileAttr> = e
@@ -261,6 +288,25 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                 })
                 .collect();
             let redeclared_attrs = profile_redeclarations(schema, e);
+            let type_rules = where_types
+                .rules
+                .remove(name)
+                .unwrap_or_default()
+                .into_iter()
+                .map(|r| ProfileTypeRule {
+                    name: r.attr,
+                    owner: r.owner,
+                    rule: r.rule,
+                    type_name: r.type_name,
+                    admits: r.admits,
+                    count: match r.count {
+                        Count::AtLeastOne => "at_least_one",
+                        Count::ExactlyOne => "exactly_one",
+                        Count::Zero => "zero",
+                    },
+                    names: r.names,
+                })
+                .collect();
             entity.insert(
                 name.clone(),
                 ProfileEntity {
@@ -268,6 +314,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                     is_abstract: e.is_abstract,
                     own_attrs,
                     redeclared_attrs,
+                    type_rules,
                 },
             );
         }
@@ -331,12 +378,23 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
              # Presence = legal in this target; absence = illegal (step-io project drops).\n\
              # own_attrs + parents only (step-io flattens inheritance).\n\
              # ty repr: primitives lowercase; bare token = entity/TYPE-alias ref; LIST/SET/BAG/ARRAY OF, OPTIONAL, SELECT(...), ENUM(...).\n\
-             # [[oneof]] = ONEOF exclusivity groups from SUPERTYPE OF clauses; branch = flat name set of one ONEOF child subtree.\n\n",
+             # [[oneof]] = ONEOF exclusivity groups from SUPERTYPE OF clauses; branch = flat name set of one ONEOF child subtree.\n\
+             # type_rules = WHERE rules restricting an attribute's types: the attribute (or each element) references only `admits`, and its TYPEOF (for a complex value, the union over its parts) holds `count` of `names`; inherited by subtypes.\n\n",
             out = t.out_name,
             src = schema.source_label,
         );
         let path = format!("{OUT_DIR}/{}.toml", t.out_name);
         fs::write(&path, format!("{header}{body}")).map_err(|e| e.to_string())?;
+        let mut report = format!(
+            "# WHERE rules of {} that mention TYPEOF: `take` = exported as a type rule, \
+             `skip` = not an attribute type restriction (reason given).\n",
+            schema.source_label
+        );
+        for line in &where_types.report {
+            report.push_str(line);
+            report.push('\n');
+        }
+        fs::write(WHERE_REPORT, report).map_err(|e| e.to_string())?;
         eprintln!(
             "wrote {path}: {} entities, {} type aliases, {} downgrades, {} oneof groups (source {})",
             doc.entity.len(),

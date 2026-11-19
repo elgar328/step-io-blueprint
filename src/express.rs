@@ -120,6 +120,18 @@ pub struct EntitySchema {
     /// `DERIVE` targets (attrs computed → `*` on the wire). Parsed LHS only;
     /// consumed by `universal_export` to mark derived/derivable slots.
     pub derived_attrs: Vec<DerivedTarget>,
+    /// `WHERE` domain rules, in declaration order. Consumed by
+    /// `where_types` (attribute type restrictions for the output profile).
+    pub where_rules: Vec<WhereRule>,
+}
+
+/// One `label: expression;` domain rule of an entity's `WHERE` clause; the
+/// expression is kept verbatim (comments already stripped).
+#[derive(Debug, Clone, PartialEq)]
+pub struct WhereRule {
+    /// Lowercase rule label (`wr1`).
+    pub label: String,
+    pub expr: String,
 }
 
 /// Faithful tree of a SUPERTYPE OF expression. Every shape allowed by
@@ -325,6 +337,7 @@ fn process_entity_block(
     let supertype_expr = extract_supertype_expr(block, &name, warnings);
     let (own_attrs, redeclared_attrs) = extract_attrs(block, &name, warnings);
     let derived_attrs = extract_derived(block);
+    let where_rules = extract_where(block);
 
     entities.insert(
         name,
@@ -335,6 +348,7 @@ fn process_entity_block(
             is_abstract,
             supertype_expr,
             derived_attrs,
+            where_rules,
         },
     );
 }
@@ -622,6 +636,37 @@ fn extract_derived(block: &str) -> Vec<DerivedTarget> {
         }
     }
     out
+}
+
+/// The `WHERE` clause's rules (between the `WHERE` keyword and `UNIQUE` or
+/// `END_ENTITY`), each split at its first top-level `:` into label and
+/// expression.
+fn extract_where(block: &str) -> Vec<WhereRule> {
+    let Some(header_end) = find_top_level_semicolon(block) else {
+        return Vec::new();
+    };
+    let body = &block[header_end + 1..];
+    let Some(start) = regex::Regex::new(r"(?m)^\s*WHERE\b").unwrap().find(body) else {
+        return Vec::new();
+    };
+    let after = &body[start.end()..];
+    let end = regex::Regex::new(r"(?m)^\s*(UNIQUE|END_ENTITY)\b")
+        .unwrap()
+        .find(after)
+        .map(|m| m.start())
+        .unwrap_or(after.len());
+    split_top_level_semicolons(&after[..end])
+        .into_iter()
+        .filter_map(|segment| {
+            let segment = segment.trim();
+            let colon = find_top_level_colon(segment)?;
+            let label = segment[..colon].trim().to_lowercase();
+            is_valid_identifier(&label).then(|| WhereRule {
+                label,
+                expr: segment[colon + 1..].trim().to_string(),
+            })
+        })
+        .collect()
 }
 
 /// Returns byte index of the first top-level (paren-depth 0) `;`.

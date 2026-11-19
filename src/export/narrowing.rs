@@ -14,7 +14,7 @@ use crate::export::common::{attr_owner, redeclaration_owner, schema_rank, ty_rep
 use crate::express::{AggBounds, AttrSpec, AttrType, EntitySchema, Schema};
 
 /// The names a type admits.
-type Admits = BTreeSet<String>;
+pub(crate) type Admits = BTreeSet<String>;
 
 /// The SELECT members of every type name, unioned over `ranked` (newest
 /// first), and the other aliases, newest wins. This is the type table the
@@ -49,7 +49,7 @@ pub(crate) fn union_types(
 
 /// One view of the entity hierarchy and type table: a single edition, or the
 /// universal union.
-struct View<'a> {
+pub(crate) struct View<'a> {
     parents: HashMap<&'a str, &'a [String]>,
     children: HashMap<&'a str, Vec<&'a str>>,
     selects: HashMap<&'a str, &'a [String]>,
@@ -76,7 +76,7 @@ impl<'a> View<'a> {
         }
     }
 
-    fn of_schema(s: &'a Schema) -> Self {
+    pub(crate) fn of_schema(s: &'a Schema) -> Self {
         let parents = s
             .entities
             .iter()
@@ -112,7 +112,7 @@ impl<'a> View<'a> {
     }
 
     /// `name` and every entity above it.
-    fn ancestors(&self, name: &'a str) -> Vec<&'a str> {
+    pub(crate) fn ancestors(&self, name: &'a str) -> Vec<&'a str> {
         let mut out = Vec::new();
         let mut seen = HashSet::new();
         let mut stack = vec![name];
@@ -127,7 +127,7 @@ impl<'a> View<'a> {
         out
     }
 
-    fn admits(&self, ty: &'a AttrType) -> Admits {
+    pub(crate) fn admits(&self, ty: &'a AttrType) -> Admits {
         let mut seen = HashSet::new();
         self.admits_inner(ty, &mut seen)
     }
@@ -634,6 +634,7 @@ mod tests {
             is_abstract: false,
             supertype_expr: None,
             derived_attrs: Vec::new(),
+            where_rules: Vec::new(),
         }
     }
 
