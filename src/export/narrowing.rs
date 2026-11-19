@@ -141,11 +141,22 @@ impl<'a> View<'a> {
             | AttrType::Optional(inner) => self.admits_inner(inner, seen),
             AttrType::Select(members) => members
                 .iter()
-                .flat_map(|m| self.admits_name(m, seen))
+                .flat_map(|m| self.admits_member(m, seen))
                 .collect(),
             AttrType::Entity(name) => self.admits_name(name, seen),
             AttrType::Enumeration(_) => std::iter::once("=enumeration".to_string()).collect(),
             AttrType::Primitive(p) => std::iter::once(format!("={p}")).collect(),
+        }
+    }
+
+    /// What a SELECT member admits: a member whose type is an aggregate holds
+    /// that aggregate as one value, not its elements, so it admits `[]name`.
+    fn admits_member(&self, name: &'a str, seen: &mut HashSet<&'a str>) -> Admits {
+        match self.aliases.get(name) {
+            Some(
+                AttrType::List(..) | AttrType::Set(..) | AttrType::Bag(..) | AttrType::Array(..),
+            ) => std::iter::once(format!("[]{name}")).collect(),
+            _ => self.admits_name(name, seen),
         }
     }
 
@@ -164,7 +175,7 @@ impl<'a> View<'a> {
         if let Some(members) = self.selects.get(name) {
             return members
                 .iter()
-                .flat_map(|m| self.admits_name(m, seen))
+                .flat_map(|m| self.admits_member(m, seen))
                 .collect();
         }
         match self.aliases.get(name) {
@@ -966,6 +977,67 @@ mod tests {
             AttrType::List(Box::new(e("point")), AggBounds::UNBOUNDED),
         );
         assert!(w.aggregate_elsewhere[0].contains("ap214e3"));
+    }
+
+    #[test]
+    fn a_select_member_aggregate_does_not_admit_its_elements() {
+        // `with_set` = SELECT(rep, items) where `items` = SET OF item: a lone
+        // `point` value is not an `items` value, so the older `point`
+        // declaration still widens the newer one.
+        let mut schemas = vec![
+            schema(
+                "ap242e2",
+                vec![
+                    ("item", ent(&[], vec![], vec![])),
+                    ("point", ent(&["item"], vec![], vec![])),
+                    ("rep", ent(&[], vec![], vec![])),
+                    (
+                        "holder",
+                        ent(&[], vec![attr("target", e("with_set"), None)], vec![]),
+                    ),
+                ],
+            ),
+            schema(
+                "ap214e3",
+                vec![
+                    ("item", ent(&[], vec![], vec![])),
+                    ("point", ent(&["item"], vec![], vec![])),
+                    (
+                        "holder",
+                        ent(&[], vec![attr("target", e("point"), None)], vec![]),
+                    ),
+                ],
+            ),
+        ];
+        schemas[0].types.insert(
+            "with_set".into(),
+            TypeDef {
+                aliased: AttrType::Select(vec!["rep".into(), "items".into()]),
+            },
+        );
+        schemas[0].types.insert(
+            "items".into(),
+            TypeDef {
+                aliased: AttrType::Set(Box::new(e("item")), AggBounds::UNBOUNDED),
+            },
+        );
+        let decls: BTreeMap<&str, &EntitySchema> = schemas[0]
+            .entities
+            .iter()
+            .map(|(n, e)| (n.as_str(), e))
+            .collect();
+        let ranked: Vec<&Schema> = schemas.iter().collect();
+        let (selects, aliases) = union_types(&ranked);
+        let judge = Judge::new(&schemas, &decls, &selects, &aliases);
+        let admits = judge
+            .universal
+            .admits(&schemas[0].entities["holder"].own_attrs[0].ty);
+        assert!(
+            admits.contains("[]items") && !admits.contains("point"),
+            "{admits:?}"
+        );
+        let w = judge.widen(&decls);
+        assert_eq!(widened_target(&w).as_deref(), Some("with_set_or_point"));
     }
 
     #[test]
