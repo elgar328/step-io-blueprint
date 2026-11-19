@@ -403,7 +403,22 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                 let owner = redeclaration_owner(ds, a);
                 let verdict = judge.judge(name, a);
                 let slot = format!("{name}.{}", a.name);
-                let ty = if redeclaration_has_signal(&a.ty, &ranked) {
+                let base = owner.as_deref().and_then(|o| {
+                    decls
+                        .get(o)
+                        .and_then(|d| d.own_attrs.iter().find(|x| x.name == a.name))
+                        .map(|b| declared_ty(o, b))
+                });
+                // A SELECT narrowing that is not union-safe is still kept for
+                // the codegen signal it carries, unless both it and the
+                // declared type are entity references: then leaving it out
+                // only widens the read, and the output profile still narrows.
+                let signal = redeclaration_has_signal(&a.ty, &ranked)
+                    && (verdict.union_safe
+                        || !base
+                            .as_ref()
+                            .is_some_and(|b| judge.only_narrows_entities(b, &a.ty)));
+                let ty = if signal {
                     if !verdict.union_safe {
                         report.kept_unsafe.push(format!(
                             "{slot} : {} ({})",
@@ -418,12 +433,6 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                         .push(format!("{slot} : {}", ty_repr(&a.ty)));
                     None
                 } else if verdict.union_safe {
-                    let base = owner.as_deref().and_then(|o| {
-                        decls
-                            .get(o)
-                            .and_then(|d| d.own_attrs.iter().find(|x| x.name == a.name))
-                            .map(|b| declared_ty(o, b))
-                    });
                     match base.as_ref().and_then(|b| with_element(b, &a.ty)) {
                         Some(t) => {
                             report.emitted.push(format!(

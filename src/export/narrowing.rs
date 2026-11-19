@@ -320,6 +320,27 @@ impl<'a> Judge<'a> {
         !a.is_empty() && a.iter().all(|n| !n.starts_with('='))
     }
 
+    /// Whether `redeclared` and the `declared` type it narrows both admit only
+    /// entities, and `redeclared` admits nothing `declared` does not: leaving
+    /// the redeclaration out then reads `declared`, which only widens.
+    pub(crate) fn only_narrows_entities(
+        &self,
+        declared: &'a AttrType,
+        redeclared: &'a AttrType,
+    ) -> bool {
+        let entities = |ty: &'a AttrType| {
+            let a = self.universal.admits(ty);
+            (!a.is_empty()
+                && a.iter()
+                    .all(|n| !n.starts_with('=') && !n.starts_with("[]")))
+            .then_some(a)
+        };
+        match (entities(declared), entities(redeclared)) {
+            (Some(d), Some(r)) => r.is_subset(&d),
+            _ => false,
+        }
+    }
+
     /// The names any edition admits for `attr` on `entity` that the universal
     /// types `tys` (the declared type and the redeclarations applied to it,
     /// all of which hold) do not: where the universal schema is narrower than
@@ -977,6 +998,58 @@ mod tests {
             AttrType::List(Box::new(e("point")), AggBounds::UNBOUNDED),
         );
         assert!(w.aggregate_elsewhere[0].contains("ap214e3"));
+    }
+
+    #[test]
+    fn only_an_entity_narrowing_inside_the_declared_type_only_narrows_entities() {
+        let mut s = schema(
+            "ap242e2",
+            vec![
+                ("item", ent(&[], vec![], vec![])),
+                ("point", ent(&["item"], vec![], vec![])),
+                ("rep", ent(&[], vec![], vec![])),
+            ],
+        );
+        s.types.insert(
+            "points".into(),
+            TypeDef {
+                aliased: AttrType::Select(vec!["point".into()]),
+            },
+        );
+        s.types.insert(
+            "point_or_rep".into(),
+            TypeDef {
+                aliased: AttrType::Select(vec!["point".into(), "rep".into()]),
+            },
+        );
+        s.types.insert(
+            "point_or_set".into(),
+            TypeDef {
+                aliased: AttrType::Select(vec!["point".into(), "items".into()]),
+            },
+        );
+        s.types.insert(
+            "items".into(),
+            TypeDef {
+                aliased: AttrType::Set(Box::new(e("item")), AggBounds::UNBOUNDED),
+            },
+        );
+        let schemas = vec![s];
+        let decls: BTreeMap<&str, &EntitySchema> = schemas[0]
+            .entities
+            .iter()
+            .map(|(n, e)| (n.as_str(), e))
+            .collect();
+        let ranked: Vec<&Schema> = schemas.iter().collect();
+        let (selects, aliases) = union_types(&ranked);
+        let judge = Judge::new(&schemas, &decls, &selects, &aliases);
+        let (item, points, point_or_rep, point_or_set) =
+            (e("item"), e("points"), e("point_or_rep"), e("point_or_set"));
+        assert!(judge.only_narrows_entities(&item, &points));
+        assert!(!judge.only_narrows_entities(&item, &point_or_rep));
+        assert!(!judge.only_narrows_entities(&point_or_set, &points));
+        let text = AttrType::Primitive("STRING".into());
+        assert!(!judge.only_narrows_entities(&text, &points));
     }
 
     #[test]
