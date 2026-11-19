@@ -104,6 +104,7 @@ ty = "LIST OF a3m_accuracy_type_name"
 [entity.a3m_equivalence_criterion_for_assembly]
 parents = ["a3m_equivalence_criterion"]
 is_abstract = true
+is_complex_part = true
 derives = ["a3m_equivalence_criterion.accuracy_types"]
 schemas = [
     "ap242e2",
@@ -124,6 +125,7 @@ own_attrs = []
 [entity.a3m_equivalence_criterion_of_assembly_data_structure]
 parents = ["a3m_equivalence_criterion_for_assembly"]
 is_abstract = true
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.comparing_element_types",
     "a3m_equivalence_criterion.compared_element_types",
@@ -137,6 +139,7 @@ own_attrs = []
 [entity.a3m_equivalence_criterion_of_component_property_difference]
 parents = ["a3m_equivalence_criterion_for_assembly"]
 is_abstract = true
+is_complex_part = true
 derives = ["a3m_equivalence_criterion.measured_data_type"]
 schemas = [
     "ap242e2",
@@ -153,6 +156,7 @@ union_safe = true
 [entity.a3m_equivalence_criterion_of_detailed_assembly_data_content]
 parents = ["a3m_equivalence_criterion_for_assembly"]
 is_abstract = true
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.comparing_element_types",
     "a3m_equivalence_criterion.compared_element_types",
@@ -176,6 +180,7 @@ own_attrs = []
 [entity.a3m_equivalence_criterion_of_representative_assembly_property_value]
 parents = ["a3m_equivalence_criterion_for_assembly"]
 is_abstract = true
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.comparing_element_types",
     "a3m_equivalence_criterion.compared_element_types",
@@ -200,6 +205,7 @@ own_attrs = []
 [entity.a3m_equivalence_criterion_of_shape_data_structure]
 parents = ["a3m_equivalence_criterion_for_shape"]
 is_abstract = true
+is_complex_part = true
 derives = ["a3m_equivalence_criterion.comparing_element_types"]
 schemas = [
     "ap242e2",
@@ -388,6 +394,7 @@ union_safe = true
 [entity.a3ma_length_measure_and_context_dependent_measure_pair]
 parents = ["compound_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -438,6 +445,7 @@ union_safe = true
 [entity.abrupt_change_of_surface_normal]
 parents = ["geometry_with_local_irregularity"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -461,6 +469,7 @@ union_safe = true
 [entity.abs_function]
 parents = ["unary_function_call"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -472,6 +481,7 @@ own_attrs = []
 [entity.absorbed_dose_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -530,6 +540,7 @@ own_attrs = []
 [entity.acceleration_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -541,6 +552,7 @@ own_attrs = []
 [entity.acceleration_unit]
 parents = ["derived_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -552,6 +564,7 @@ own_attrs = []
 [entity.acos_function]
 parents = ["unary_function_call"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -598,6 +611,7 @@ own_attrs = []
 
 [entity.action_assignment]
 is_abstract = true
+is_complex_part = true
 derives = ["role"]
 schemas = [
     "ap203e1",
@@ -1050,6 +1064,7 @@ ty = "OPTIONAL actuated_direction"
 [entity.add_element]
 parents = ["change_element"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -1060,6 +1075,7 @@ own_attrs = []
 [entity.additive_manufacturing_build_plate_relationship]
 parents = ["additive_manufacturing_setup_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -1089,6 +1105,7 @@ own_attrs = []
 [entity.additive_manufacturing_setup_workpiece_relationship]
 parents = ["additive_manufacturing_setup_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -1098,6 +1115,7 @@ own_attrs = []
 [entity.additive_manufacturing_support_structure_geometry_relationship]
 parents = ["additive_manufacturing_setup_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -1228,6 +1246,7 @@ ty = "SET [1:?] OF id_attribute_select"
 [entity.all_around_shape_aspect]
 parents = ["continuous_shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -1283,6 +1302,7 @@ ty = "string"
 [entity.amount_of_substance_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -1308,6 +1328,7 @@ own_attrs = []
 [entity.analysis_assignment]
 parents = ["group"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -1317,6 +1338,7 @@ own_attrs = []
 [entity.analysis_item]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -1335,6 +1357,7 @@ union_safe = true
 [entity.analysis_model]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -1360,6 +1383,7 @@ own_attrs = []
 [entity.and_expression]
 parents = ["multiple_arity_boolean_expression"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -1448,6 +1472,7 @@ own_attrs = []
 [entity.angular_location]
 parents = ["dimensional_location"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -1463,6 +1488,7 @@ ty = "angle_relator"
 [entity.angular_size]
 parents = ["dimensional_size"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -1478,6 +1504,7 @@ ty = "angle_relator"
 [entity.angularity_tolerance]
 parents = ["geometric_tolerance_with_datum_reference"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -1600,6 +1627,7 @@ ty = "annotation_occurrence"
 [entity.annotation_placeholder_leader_line]
 parents = ["geometric_representation_item"]
 is_abstract = true
+is_complex_part = true
 derives = ["model_end"]
 schemas = ["ap242e3"]
 
@@ -1804,6 +1832,7 @@ union_safe = true
 [entity.annotation_to_annotation_leader_line]
 parents = ["annotation_placeholder_leader_line"]
 is_abstract = false
+is_complex_part = true
 derives = ["start_end"]
 schemas = ["ap242e3"]
 own_attrs = []
@@ -1811,6 +1840,7 @@ own_attrs = []
 [entity.annotation_to_model_leader_line]
 parents = ["annotation_placeholder_leader_line"]
 is_abstract = false
+is_complex_part = true
 derives = ["start_end"]
 schemas = ["ap242e3"]
 own_attrs = []
@@ -1840,6 +1870,7 @@ union_safe = true
 [entity.apex]
 parents = ["derived_shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -1852,6 +1883,7 @@ own_attrs = []
 [entity.apll_point]
 parents = ["cartesian_point"]
 is_abstract = false
+is_complex_part = true
 schemas = ["ap242e3"]
 
 [[entity.apll_point.own_attrs]]
@@ -1861,6 +1893,7 @@ ty = "des_apll_point_symbol"
 [entity.apll_point_with_surface]
 parents = ["cartesian_point"]
 is_abstract = false
+is_complex_part = true
 schemas = ["ap242e3"]
 
 [[entity.apll_point_with_surface.own_attrs]]
@@ -1934,6 +1967,7 @@ ty = "application_context"
 [entity.application_defined_function]
 parents = ["maths_function"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -1982,6 +2016,7 @@ ty = "application_context"
 [entity.applied_action_assignment]
 parents = ["action_assignment"]
 is_abstract = false
+is_complex_part = true
 attr_conflicts = ['items: ap203e2: Set(Entity("action_items"), AggBounds { lower: 1, upper: None }) | ap214e3: Set(Entity("action_item"), AggBounds { lower: 1, upper: None })']
 schemas = [
     "ap203e2",
@@ -2045,6 +2080,7 @@ ty = "SET [1:?] OF approval_item"
 [entity.applied_area]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -2555,6 +2591,7 @@ ty = "SET OF time_interval_item"
 [entity.applied_usage_right]
 parents = ["action_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -2707,6 +2744,7 @@ ty = "label"
 [entity.approximation_tolerance]
 parents = ["founded_item"]
 is_abstract = false
+is_complex_part = true
 schemas = ["ap214e3"]
 
 [[entity.approximation_tolerance.own_attrs]]
@@ -2716,6 +2754,7 @@ ty = "tolerance_select"
 [entity.approximation_tolerance_deviation]
 parents = ["founded_item"]
 is_abstract = false
+is_complex_part = true
 schemas = ["ap214e3"]
 
 [[entity.approximation_tolerance_deviation.own_attrs]]
@@ -2733,6 +2772,7 @@ ty = "product_or_presentation_space"
 [entity.approximation_tolerance_parameter]
 parents = ["founded_item"]
 is_abstract = false
+is_complex_part = true
 schemas = ["ap214e3"]
 
 [[entity.approximation_tolerance_parameter.own_attrs]]
@@ -2761,6 +2801,7 @@ ty = "presentation_set"
 [entity.area_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -2774,6 +2815,7 @@ own_attrs = []
 [entity.area_unit]
 parents = ["derived_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -2863,6 +2905,7 @@ ty = "ascribable_state"
 [entity.asin_function]
 parents = ["unary_function_call"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -2874,6 +2917,7 @@ own_attrs = []
 [entity.assembly_bond_definition]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -3013,6 +3057,7 @@ own_attrs = []
 [entity.assembly_shape_constraint_item_relationship]
 parents = ["shape_aspect_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -3038,6 +3083,7 @@ own_attrs = []
 [entity.assembly_shape_joint_item_relationship]
 parents = ["shape_aspect_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -3053,6 +3099,7 @@ union_safe = true
 [entity.assigned_analysis]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -3071,6 +3118,7 @@ union_safe = true
 [entity.assigned_requirement]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -3374,6 +3422,7 @@ own_attrs = []
 [entity.auxiliary_leader_line]
 parents = ["annotation_placeholder_leader_line"]
 is_abstract = false
+is_complex_part = true
 derives = ["free_space_end"]
 schemas = ["ap242e3"]
 
@@ -3384,6 +3433,7 @@ ty = "annotation_to_model_leader_line"
 [entity.axis1_placement]
 parents = ["placement"]
 is_abstract = false
+is_complex_part = true
 derives = ["z"]
 schemas = [
     "ap203e1",
@@ -3401,6 +3451,7 @@ ty = "OPTIONAL direction"
 [entity.axis2_placement_2d]
 parents = ["placement"]
 is_abstract = false
+is_complex_part = true
 derives = ["p"]
 schemas = [
     "ap203e1",
@@ -3418,6 +3469,7 @@ ty = "OPTIONAL direction"
 [entity.axis2_placement_3d]
 parents = ["placement"]
 is_abstract = false
+is_complex_part = true
 derives = ["p"]
 schemas = [
     "ap203e1",
@@ -3849,6 +3901,7 @@ ty = "area_or_view"
 [entity.banded_matrix]
 parents = ["linearized_table_function"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -3873,6 +3926,7 @@ ty = "ordering_type"
 [entity.barring_hole]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -3969,6 +4023,7 @@ union_safe = true
 [entity.bead]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -3980,6 +4035,7 @@ own_attrs = []
 [entity.bead_end]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -3991,6 +4047,7 @@ own_attrs = []
 [entity.between_shape_aspect]
 parents = ["continuous_shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -4199,6 +4256,7 @@ ty = "positive_length_measure"
 [entity.block_volume]
 parents = ["volume"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -4347,6 +4405,7 @@ own_attrs = []
 [entity.boss]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -4358,6 +4417,7 @@ own_attrs = []
 [entity.boss_top]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -4390,6 +4450,7 @@ own_attrs = []
 [entity.bound_variational_parameter]
 parents = ["variational_parameter"]
 is_abstract = false
+is_complex_part = true
 derives = ["variational_parameter.parameter_current_value"]
 schemas = [
     "ap242e1",
@@ -4562,6 +4623,7 @@ own_attrs = []
 [entity.breakdown_element_group_assignment]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -4651,6 +4713,7 @@ own_attrs = []
 [entity.calendar_date]
 parents = ["date"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -4696,6 +4759,7 @@ union_safe = true
 [entity.camera_image_2d_with_scale]
 parents = ["camera_image"]
 is_abstract = false
+is_complex_part = true
 derives = ["scale"]
 schemas = [
     "ap214e3",
@@ -4735,6 +4799,7 @@ own_attrs = []
 [entity.camera_model_d2]
 parents = ["camera_model"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -4789,6 +4854,7 @@ ty = "SET [1:?] OF camera_model_d3_multi_clipping_intersection_select"
 [entity.camera_model_d3_multi_clipping_intersection]
 parents = ["geometric_representation_item"]
 is_abstract = false
+is_complex_part = true
 attr_conflicts = ['shape_clipping: ap203e2: Set(Entity("camera_model_d3_multi_clipping_interection_select"), AggBounds { lower: 2, upper: None }) | ap242e2: Set(Entity("camera_model_d3_multi_clipping_intersection_select"), AggBounds { lower: 2, upper: None }) | ap242e3: Set(Entity("camera_model_d3_multi_clipping_intersection_select"), AggBounds { lower: 2, upper: None })']
 schemas = [
     "ap203e2",
@@ -4804,6 +4870,7 @@ ty = "SET [2:?] OF camera_model_d3_multi_clipping_intersection_select"
 [entity.camera_model_d3_multi_clipping_union]
 parents = ["geometric_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -4868,6 +4935,7 @@ union_safe = true
 [entity.capacitance_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -4891,6 +4959,7 @@ own_attrs = []
 [entity.cartesian_11]
 parents = ["geometric_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -4921,6 +4990,7 @@ ty = "real_interval"
 [entity.cartesian_point]
 parents = ["point"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -4970,6 +5040,7 @@ ty = "OPTIONAL real"
 [entity.cartesian_transformation_operator_2d]
 parents = ["cartesian_transformation_operator"]
 is_abstract = false
+is_complex_part = true
 derives = ["u"]
 schemas = [
     "ap203e2",
@@ -4983,6 +5054,7 @@ own_attrs = []
 [entity.cartesian_transformation_operator_3d]
 parents = ["cartesian_transformation_operator"]
 is_abstract = false
+is_complex_part = true
 derives = ["u"]
 schemas = [
     "ap203e1",
@@ -5129,6 +5201,7 @@ ty = "non_negative_length_measure"
 [entity.celsius_temperature_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -5141,6 +5214,7 @@ own_attrs = []
 [entity.centre_of_symmetry]
 parents = ["derived_shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -5245,6 +5319,7 @@ ty = "LIST [1:?] OF chained_representation_link"
 [entity.chamfer]
 parents = ["transition_feature"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -5256,6 +5331,7 @@ own_attrs = []
 [entity.chamfer_offset]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -5267,6 +5343,7 @@ own_attrs = []
 [entity.change]
 parents = ["action_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -5350,6 +5427,7 @@ union_safe = true
 [entity.change_group]
 parents = ["group"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -5360,6 +5438,7 @@ own_attrs = []
 [entity.change_group_assignment]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -5541,6 +5620,7 @@ own_attrs = []
 [entity.characteristic_type]
 parents = ["group"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -5709,6 +5789,7 @@ own_attrs = []
 [entity.circle]
 parents = ["conic"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -5725,6 +5806,7 @@ ty = "positive_length_measure"
 [entity.circular_area]
 parents = ["primitive_2d"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -5742,6 +5824,7 @@ ty = "positive_length_measure"
 [entity.circular_closed_profile]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -5753,6 +5836,7 @@ own_attrs = []
 [entity.circular_involute]
 parents = ["curve"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -5769,6 +5853,7 @@ ty = "positive_length_measure"
 [entity.circular_path]
 parents = ["path_node"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -5782,6 +5867,7 @@ ty = "cartesian_point"
 [entity.circular_pattern]
 parents = ["replicate_feature"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -5843,6 +5929,7 @@ own_attrs = []
 [entity.class_system]
 parents = ["group"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -5961,6 +6048,7 @@ own_attrs = []
 [entity.closed_path_profile]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -5986,6 +6074,7 @@ own_attrs = []
 [entity.clothoid]
 parents = ["curve"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -6039,6 +6128,7 @@ union_safe = true
 [entity.coaxiality_tolerance]
 parents = ["geometric_tolerance_with_datum_reference"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -6176,6 +6266,7 @@ union_safe = true
 [entity.collection_view_definition]
 parents = ["product_definition"]
 is_abstract = false
+is_complex_part = true
 derives = ["defined_version"]
 schemas = [
     "ap242e2",
@@ -6260,6 +6351,7 @@ own_attrs = []
 [entity.comparison_equal]
 parents = ["comparison_expression"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -6293,6 +6385,7 @@ union_safe = true
 [entity.comparison_greater]
 parents = ["comparison_expression"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -6304,6 +6397,7 @@ own_attrs = []
 [entity.comparison_greater_equal]
 parents = ["comparison_expression"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -6315,6 +6409,7 @@ own_attrs = []
 [entity.comparison_less]
 parents = ["comparison_expression"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -6326,6 +6421,7 @@ own_attrs = []
 [entity.comparison_less_equal]
 parents = ["comparison_expression"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -6337,6 +6433,7 @@ own_attrs = []
 [entity.comparison_not_equal]
 parents = ["comparison_expression"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -6435,6 +6532,7 @@ ty = "real"
 [entity.complex_shelled_solid]
 parents = ["shelled_solid"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -6453,6 +6551,7 @@ ty = "LIST [1:?] OF length_measure"
 [entity.complex_triangulated_face]
 parents = ["tessellated_face"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -6474,6 +6573,7 @@ ty = "LIST OF LIST [3:?] OF integer"
 [entity.complex_triangulated_surface_set]
 parents = ["tessellated_surface_set"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -6576,6 +6676,7 @@ union_safe = true
 [entity.component_mating_constraint_condition]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -6615,12 +6716,14 @@ own_attrs = []
 [entity.composite_assembly_definition]
 parents = ["product_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = ["ap203e2"]
 own_attrs = []
 
 [entity.composite_assembly_sequence_definition]
 parents = ["product_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -6632,6 +6735,7 @@ own_attrs = []
 [entity.composite_assembly_table]
 parents = ["part_laminate_table"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -6865,6 +6969,7 @@ ty = "planar_extent"
 [entity.composite_unit_shape_aspect]
 parents = ["composite_shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -6937,6 +7042,7 @@ union_safe = true
 [entity.concentricity_tolerance]
 parents = ["geometric_tolerance_with_datum_reference"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -7049,6 +7155,7 @@ own_attrs = []
 [entity.conductance_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -7271,6 +7378,7 @@ ty = "SET [1:?] OF configured_effectivity_context_item"
 [entity.conic]
 parents = ["curve"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -7287,6 +7395,7 @@ ty = "axis2_placement"
 [entity.conical_stepped_hole_transition]
 parents = ["geometric_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -7309,6 +7418,7 @@ ty = "positive_length_measure"
 [entity.conical_surface]
 parents = ["elementary_surface"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -7356,6 +7466,7 @@ ty = "connected_edge_set"
 [entity.connected_edge_with_length_set_representation]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 schemas = ["ap242e2"]
 own_attrs = []
 
@@ -7385,6 +7496,7 @@ ty = "SET [1:?] OF face"
 [entity.connected_face_sub_set]
 parents = ["connected_face_set"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -7440,6 +7552,7 @@ parents = [
     "shape_aspect_relationship",
 ]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -7460,6 +7573,7 @@ own_attrs = []
 [entity.connectivity_definition_item_relationship]
 parents = ["shape_aspect_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -7533,6 +7647,7 @@ union_safe = true
 [entity.constructive_geometry_representation]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -7628,6 +7743,7 @@ union_safe = true
 [entity.contact_ratio_representation]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -7651,6 +7767,7 @@ own_attrs = []
 [entity.containing_message]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 derives = ["message_contents_group"]
 schemas = [
     "ap242e2",
@@ -7758,6 +7875,7 @@ ty = "label"
 [entity.continuous_shape_aspect]
 parents = ["composite_shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -7873,6 +7991,7 @@ ty = "measure_with_unit"
 [entity.convex_hexahedron]
 parents = ["faceted_primitive"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -7911,6 +8030,7 @@ ty = "ahead_or_behind"
 [entity.coordinates_list]
 parents = ["tessellated_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -7928,6 +8048,7 @@ ty = "LIST [1:?] OF LIST [3:3] OF real"
 [entity.cos_function]
 parents = ["unary_function_call"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -8181,6 +8302,7 @@ ty = "label"
 [entity.cross_sectional_alternative_shape_element]
 parents = ["cross_sectional_part_shape_element"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -8190,6 +8312,7 @@ own_attrs = []
 [entity.cross_sectional_group_shape_element]
 parents = ["cross_sectional_part_shape_element"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -8199,6 +8322,7 @@ own_attrs = []
 [entity.cross_sectional_group_shape_element_with_lacing]
 parents = ["cross_sectional_group_shape_element"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -8208,6 +8332,7 @@ own_attrs = []
 [entity.cross_sectional_group_shape_element_with_tubular_cover]
 parents = ["cross_sectional_group_shape_element"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -8217,6 +8342,7 @@ own_attrs = []
 [entity.cross_sectional_occurrence_shape_element]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -8226,6 +8352,7 @@ own_attrs = []
 [entity.cross_sectional_part_shape_element]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -8325,6 +8452,7 @@ own_attrs = []
 [entity.cubic_bezier_triangulated_face]
 parents = ["tessellated_face"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -8370,6 +8498,7 @@ own_attrs = []
 [entity.currency_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -8387,6 +8516,7 @@ union_safe = true
 [entity.current_change_element_assignment]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -8420,6 +8550,7 @@ own_attrs = []
 [entity.curve_11]
 parents = ["geometric_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -8429,6 +8560,7 @@ own_attrs = []
 [entity.curve_based_path]
 parents = ["path_node"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -8474,6 +8606,7 @@ ty = "path_parameter_representation"
 [entity.curve_bounded_surface]
 parents = ["bounded_surface"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -8554,6 +8687,7 @@ union_safe = true
 [entity.curve_replica]
 parents = ["curve"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -8574,6 +8708,7 @@ ty = "cartesian_transformation_operator"
 [entity.curve_segment_set]
 parents = ["geometric_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -8587,6 +8722,7 @@ ty = "SET [1:?] OF composite_curve_segment"
 [entity.curve_smoothness_geometric_constraint]
 parents = ["explicit_geometric_constraint"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -8755,6 +8891,7 @@ own_attrs = []
 [entity.curve_with_excessive_segments]
 parents = ["overcomplex_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -8771,6 +8908,7 @@ union_safe = true
 [entity.curve_with_small_curvature_radius]
 parents = ["geometry_with_local_near_degeneracy"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -8821,6 +8959,7 @@ ty = "plane_angle_measure"
 [entity.cylindrical_11]
 parents = ["geometric_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -8878,6 +9017,7 @@ union_safe = true
 [entity.cylindrical_pair_value]
 parents = ["pair_value"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -8928,6 +9068,7 @@ ty = "OPTIONAL plane_angle_measure"
 [entity.cylindrical_point]
 parents = ["cartesian_point"]
 is_abstract = false
+is_complex_part = true
 derives = ["cartesian_point.coordinates"]
 schemas = [
     "ap242e2",
@@ -8949,6 +9090,7 @@ ty = "length_measure"
 [entity.cylindrical_surface]
 parents = ["elementary_surface"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -8965,6 +9107,7 @@ ty = "positive_length_measure"
 [entity.cylindrical_volume]
 parents = ["volume"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -9165,6 +9308,7 @@ ty = "used_equivalence_representation_select"
 [entity.data_equivalence_inspected_element_pair]
 parents = ["representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -9181,6 +9325,7 @@ ty = "SET [1:?] OF inspected_equivalence_element_select"
 [entity.data_equivalence_inspection_criterion_report]
 parents = ["data_equivalence_inspection_report"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -9203,6 +9348,7 @@ own_attrs = []
 [entity.data_equivalence_inspection_instance_report]
 parents = ["data_equivalence_inspection_report"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -9228,6 +9374,7 @@ ty = "data_equivalence_inspected_element_pair"
 [entity.data_equivalence_inspection_report]
 parents = ["representation_item"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -9469,6 +9616,7 @@ ty = "SET [1:2] OF data_quality_inspection_criterion_report_item"
 [entity.data_quality_inspection_criterion_report_item]
 parents = ["representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -9757,6 +9905,7 @@ ty = "label"
 [entity.dated_effectivity]
 parents = ["effectivity"]
 is_abstract = false
+is_complex_part = true
 attr_conflicts = [
     'effectivity_end_date: ap203e1: Optional(Entity("date_and_time")) | ap203e2: Optional(Entity("date_time_or_event_occurrence")) | ap214e3: Optional(Entity("date_time_or_event_occurrence")) | ap242e1: Optional(Entity("date_time_or_event_occurrence")) | ap242e2: Optional(Entity("date_time_or_event_occurrence")) | ap242e3: Optional(Entity("date_time_or_event_occurrence"))',
     'effectivity_start_date: ap203e1: Entity("date_and_time") | ap203e2: Entity("date_time_or_event_occurrence") | ap214e3: Entity("date_time_or_event_occurrence") | ap242e1: Optional(Entity("date_time_or_event_occurrence")) | ap242e2: Optional(Entity("date_time_or_event_occurrence")) | ap242e3: Optional(Entity("date_time_or_event_occurrence"))',
@@ -9842,6 +9991,7 @@ ty = "datum"
 [entity.datum_reference_compartment]
 parents = ["general_datum_reference"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -9852,6 +10002,7 @@ own_attrs = []
 [entity.datum_reference_element]
 parents = ["general_datum_reference"]
 is_abstract = false
+is_complex_part = true
 derives = ["owner"]
 schemas = [
     "ap242e1",
@@ -9936,6 +10087,7 @@ own_attrs = []
 [entity.default_tolerance_table]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -9948,6 +10100,7 @@ own_attrs = []
 [entity.default_tolerance_table_cell]
 parents = ["compound_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -9960,6 +10113,7 @@ own_attrs = []
 [entity.defined_character_glyph]
 parents = ["geometric_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -10000,6 +10154,7 @@ own_attrs = []
 [entity.defined_symbol]
 parents = ["geometric_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -10074,6 +10229,7 @@ union_safe = true
 [entity.definitional_product_definition_usage]
 parents = ["product_definition_usage"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -10159,6 +10315,7 @@ ty = "boolean"
 [entity.delete_element]
 parents = ["change_element"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -10186,6 +10343,7 @@ ty = "text"
 [entity.derived_shape_aspect]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -10311,6 +10469,7 @@ ty = "string"
 [entity.descriptive_representation_item]
 parents = ["representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -10441,6 +10600,7 @@ own_attrs = []
 [entity.different_angle_of_assembly_constraint]
 parents = ["a3m_equivalence_criterion_of_detailed_assembly_data_content"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.measured_data_type",
     "a3m_equivalence_criterion.detected_difference_types",
@@ -10460,6 +10620,7 @@ union_safe = true
 [entity.different_assembly_centroid]
 parents = ["a3m_equivalence_criterion_of_representative_assembly_property_value"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.measured_data_type",
     "a3m_equivalence_criterion.detected_difference_types",
@@ -10479,6 +10640,7 @@ union_safe = true
 [entity.different_assembly_centroid_using_notional_solid]
 parents = ["a3m_equivalence_criterion_of_representative_assembly_property_value"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.measured_data_type",
     "a3m_equivalence_criterion.detected_difference_types",
@@ -10498,6 +10660,7 @@ union_safe = true
 [entity.different_assembly_constraint_type]
 parents = ["a3m_equivalence_criterion_of_detailed_assembly_data_content"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.measured_data_type",
     "a3m_equivalence_criterion.detected_difference_types",
@@ -10517,6 +10680,7 @@ union_safe = true
 [entity.different_assembly_volume]
 parents = ["a3m_equivalence_criterion_of_representative_assembly_property_value"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.measured_data_type",
     "a3m_equivalence_criterion.detected_difference_types",
@@ -10586,6 +10750,7 @@ union_safe = true
 [entity.different_component_identification_via_multi_level_reference]
 parents = ["a3m_equivalence_criterion_of_assembly_data_structure"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.measured_data_type",
     "a3m_equivalence_criterion.detected_difference_types",
@@ -10605,6 +10770,7 @@ union_safe = true
 [entity.different_component_shape]
 parents = ["a3m_equivalence_criterion_of_component_property_difference"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.comparing_element_types",
     "a3m_equivalence_criterion.compared_element_types",
@@ -10619,6 +10785,7 @@ own_attrs = []
 [entity.different_component_type]
 parents = ["a3m_equivalence_criterion_of_detailed_assembly_data_content"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.measured_data_type",
     "a3m_equivalence_criterion.detected_difference_types",
@@ -10663,6 +10830,7 @@ union_safe = true
 [entity.different_length_of_assembly_constraint]
 parents = ["a3m_equivalence_criterion_of_detailed_assembly_data_content"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.measured_data_type",
     "a3m_equivalence_criterion.detected_difference_types",
@@ -10682,6 +10850,7 @@ union_safe = true
 [entity.different_number_of_closed_shell]
 parents = ["a3m_equivalence_criterion_of_representative_shape_property_value"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.compared_element_types",
     "a3m_equivalence_criterion.measured_data_type",
@@ -10703,6 +10872,7 @@ union_safe = true
 [entity.different_number_of_components]
 parents = ["a3m_equivalence_criterion_of_representative_assembly_property_value"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.measured_data_type",
     "a3m_equivalence_criterion.detected_difference_types",
@@ -10722,6 +10892,7 @@ union_safe = true
 [entity.different_number_of_geometric_elements]
 parents = ["a3m_equivalence_criterion_of_representative_shape_property_value"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.compared_element_types",
     "a3m_equivalence_criterion.measured_data_type",
@@ -10743,6 +10914,7 @@ union_safe = true
 [entity.different_number_of_geometric_elements_wireframe_model]
 parents = ["a3m_equivalence_criterion_of_representative_shape_property_value"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.compared_element_types",
     "a3m_equivalence_criterion.measured_data_type",
@@ -10764,6 +10936,7 @@ union_safe = true
 [entity.different_number_of_topological_elements]
 parents = ["a3m_equivalence_criterion_of_representative_shape_property_value"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.compared_element_types",
     "a3m_equivalence_criterion.measured_data_type",
@@ -10785,6 +10958,7 @@ union_safe = true
 [entity.different_number_of_topological_elements_wireframe_model]
 parents = ["a3m_equivalence_criterion_of_representative_shape_property_value"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.compared_element_types",
     "a3m_equivalence_criterion.measured_data_type",
@@ -10806,6 +10980,7 @@ union_safe = true
 [entity.different_placement_of_component]
 parents = ["a3m_equivalence_criterion_of_detailed_assembly_data_content"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.measured_data_type",
     "a3m_equivalence_criterion.detected_difference_types",
@@ -10940,6 +11115,7 @@ own_attrs = []
 [entity.dimension_curve]
 parents = ["annotation_curve_occurrence"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -11109,6 +11285,7 @@ ty = "real"
 [entity.dimensional_location]
 parents = ["shape_aspect_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -11124,6 +11301,7 @@ parents = [
     "dimensional_location",
 ]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -11134,6 +11312,7 @@ own_attrs = []
 [entity.dimensional_location_with_path]
 parents = ["dimensional_location"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -11172,6 +11351,7 @@ parents = [
     "dimensional_size",
 ]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -11182,6 +11362,7 @@ own_attrs = []
 [entity.dimensional_size_with_path]
 parents = ["dimensional_size"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -11227,6 +11408,7 @@ ty = "directed_action"
 [entity.directed_angle]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -11238,6 +11420,7 @@ own_attrs = []
 [entity.directed_dimensional_location]
 parents = ["dimensional_location"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -11250,6 +11433,7 @@ own_attrs = []
 [entity.directed_tolerance_zone]
 parents = ["tolerance_zone_with_datum"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -11302,6 +11486,7 @@ own_attrs = []
 [entity.disconnected_face_set]
 parents = ["erroneous_topology"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -11318,6 +11503,7 @@ union_safe = true
 [entity.discontinuous_geometry]
 parents = ["inapt_geometry"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -11328,6 +11514,7 @@ own_attrs = []
 [entity.div_expression]
 parents = ["binary_numeric_expression"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -11384,6 +11571,7 @@ own_attrs = []
 [entity.document_identifier]
 parents = ["group"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -11395,6 +11583,7 @@ own_attrs = []
 [entity.document_identifier_assignment]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -11607,6 +11796,7 @@ ty = "identifier"
 [entity.dose_equivalent_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -11630,6 +11820,7 @@ own_attrs = []
 [entity.double_offset_shelled_solid]
 parents = ["shelled_solid"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -11644,6 +11835,7 @@ ty = "length_measure"
 [entity.draped_defined_transformation]
 parents = ["transformation_with_derived_angle"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -12039,6 +12231,7 @@ ty = "identifier"
 [entity.dupin_cyclide_surface]
 parents = ["elementary_surface"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -12059,6 +12252,7 @@ ty = "length_measure"
 [entity.eccentric_cone]
 parents = ["geometric_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -12096,6 +12290,7 @@ ty = "real"
 [entity.eccentric_conical_volume]
 parents = ["volume"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -12153,6 +12348,7 @@ ty = "vertex"
 [entity.edge_based_topological_representation_with_length_constraint]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 derives = ["single_set"]
 schemas = ["ap242e3"]
 own_attrs = []
@@ -12279,6 +12475,7 @@ own_attrs = []
 [entity.edge_round]
 parents = ["transition_feature"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -12290,6 +12487,7 @@ own_attrs = []
 [entity.edge_with_excessive_segments]
 parents = ["overcomplex_topology_and_geometry_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -12306,6 +12504,7 @@ union_safe = true
 [entity.edge_with_length]
 parents = ["edge"]
 is_abstract = false
+is_complex_part = true
 schemas = ["ap242e2"]
 
 [[entity.edge_with_length.own_attrs]]
@@ -12414,6 +12613,7 @@ ty = "effectivity"
 [entity.electric_charge_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -12437,6 +12637,7 @@ own_attrs = []
 [entity.electric_current_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -12462,6 +12663,7 @@ own_attrs = []
 [entity.electric_potential_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -12555,6 +12757,7 @@ ty = "axis2_placement_3d"
 [entity.ellipse]
 parents = ["conic"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -12601,6 +12804,7 @@ ty = "positive_length_measure"
 [entity.ellipsoid_volume]
 parents = ["volume"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -12625,6 +12829,7 @@ ty = "positive_length_measure"
 [entity.elliptic_area]
 parents = ["primitive_2d"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -12646,6 +12851,7 @@ ty = "positive_length_measure"
 [entity.energy_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -12669,6 +12875,7 @@ own_attrs = []
 [entity.entirely_narrow_face]
 parents = ["topology_related_to_nearly_degenerate_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -12688,6 +12895,7 @@ union_safe = true
 [entity.entirely_narrow_solid]
 parents = ["inapt_manifold_solid_brep"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -12707,6 +12915,7 @@ union_safe = true
 [entity.entirely_narrow_surface]
 parents = ["nearly_degenerate_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -12738,6 +12947,7 @@ own_attrs = []
 [entity.enum_reference_prefix]
 parents = ["descriptive_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -12791,6 +13001,7 @@ ty = "variable_semantics"
 [entity.equal_parameter_constraint]
 parents = ["defined_constraint"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -12813,6 +13024,7 @@ union_safe = true
 [entity.equals_expression]
 parents = ["binary_boolean_expression"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -12856,6 +13068,7 @@ ty = "equivalence_measured_value_select"
 [entity.erroneous_b_spline_curve_definition]
 parents = ["erroneous_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -12872,6 +13085,7 @@ union_safe = true
 [entity.erroneous_b_spline_surface_definition]
 parents = ["erroneous_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -12888,6 +13102,7 @@ union_safe = true
 [entity.erroneous_data]
 parents = ["shape_data_quality_criterion"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -12898,6 +13113,7 @@ own_attrs = []
 [entity.erroneous_geometry]
 parents = ["erroneous_data"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -12908,6 +13124,7 @@ own_attrs = []
 [entity.erroneous_manifold_solid_brep]
 parents = ["erroneous_data"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -12918,6 +13135,7 @@ own_attrs = []
 [entity.erroneous_topology]
 parents = ["erroneous_data"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -12928,6 +13146,7 @@ own_attrs = []
 [entity.erroneous_topology_and_geometry_relationship]
 parents = ["erroneous_data"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -12981,6 +13200,7 @@ ty = "cartesian_point"
 [entity.evaluation_product_definition]
 parents = ["product_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -13101,6 +13321,7 @@ ty = "OPTIONAL text"
 [entity.evidence]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -13135,6 +13356,7 @@ own_attrs = []
 [entity.excessively_high_degree_curve]
 parents = ["overcomplex_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -13151,6 +13373,7 @@ union_safe = true
 [entity.excessively_high_degree_surface]
 parents = ["overcomplex_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -13194,6 +13417,7 @@ own_attrs = []
 [entity.exp_function]
 parents = ["unary_function_call"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -13458,6 +13682,7 @@ parents = [
     "numeric_expression",
 ]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -13471,6 +13696,7 @@ parents = [
     "string_expression",
 ]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -13514,6 +13740,7 @@ ty = "maths_space"
 [entity.extension]
 parents = ["derived_shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -13937,6 +14164,7 @@ own_attrs = []
 [entity.externally_defined_picture_representation_item]
 parents = ["picture_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -14110,6 +14338,7 @@ ty = "measured_value_select"
 [entity.extreme_patch_width_variation]
 parents = ["geometry_with_local_irregularity"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -14126,6 +14355,7 @@ union_safe = true
 [entity.extruded_area_solid]
 parents = ["swept_area_solid"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -14165,6 +14395,7 @@ ty = "positive_length_measure"
 [entity.extruded_face_solid_with_draft_angle]
 parents = ["extruded_face_solid_with_trim_conditions"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -14179,6 +14410,7 @@ ty = "plane_angle_measure"
 [entity.extruded_face_solid_with_multiple_draft_angles]
 parents = ["extruded_face_solid_with_trim_conditions"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -14347,6 +14579,7 @@ ty = "boolean"
 [entity.face_surface_with_excessive_patches_in_one_direction]
 parents = ["overcomplex_topology_and_geometry_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -14429,6 +14662,7 @@ own_attrs = []
 [entity.feature_component_relationship]
 parents = ["shape_aspect_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -14463,6 +14697,7 @@ own_attrs = []
 [entity.feature_for_datum_target_relationship]
 parents = ["shape_aspect_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -14479,6 +14714,7 @@ union_safe = true
 [entity.feature_in_panel]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -14490,6 +14726,7 @@ own_attrs = []
 [entity.feature_pattern]
 parents = ["replicate_feature"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -14578,6 +14815,7 @@ ty = "plane_angle_measure"
 [entity.fill_area_style_tile_coloured_region]
 parents = ["geometric_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -14596,6 +14834,7 @@ ty = "colour"
 [entity.fill_area_style_tile_curve_with_style]
 parents = ["geometric_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -14650,6 +14889,7 @@ ty = "positive_ratio_measure"
 [entity.fillet]
 parents = ["transition_feature"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -14793,6 +15033,7 @@ union_safe = true
 [entity.fixed_instance_attribute_set]
 parents = ["variational_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -14806,6 +15047,7 @@ ty = "SET [1:?] OF instance_attribute_reference"
 [entity.fixed_reference_swept_surface]
 parents = ["swept_surface"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -14822,6 +15064,7 @@ ty = "direction"
 [entity.flat_face]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -14857,6 +15100,7 @@ own_attrs = []
 [entity.force_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -14941,6 +15185,7 @@ own_attrs = []
 [entity.founded_kinematic_path]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "paths",
     "founding",
@@ -14963,6 +15208,7 @@ union_safe = true
 [entity.free_edge]
 parents = ["inapt_topology"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -14979,6 +15225,7 @@ union_safe = true
 [entity.free_form_assignment]
 parents = ["free_form_constraint"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -14989,6 +15236,7 @@ own_attrs = []
 [entity.free_form_constraint]
 parents = ["explicit_constraint"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -15014,6 +15262,7 @@ union_safe = true
 [entity.free_form_relation]
 parents = ["free_form_constraint"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -15060,6 +15309,7 @@ own_attrs = []
 [entity.frequency_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -15097,6 +15347,7 @@ ty = "SET [1:?] OF change_management_object"
 [entity.fully_constrained_pair]
 parents = ["low_order_kinematic_pair"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "low_order_kinematic_pair.t_x",
     "low_order_kinematic_pair.t_y",
@@ -15116,6 +15367,7 @@ own_attrs = []
 [entity.func]
 parents = ["compound_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -15220,6 +15472,7 @@ ty = "OPTIONAL text"
 [entity.g1_discontinuity_between_adjacent_faces]
 parents = ["non_smooth_geometry_transition_across_edge"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -15236,6 +15489,7 @@ union_safe = true
 [entity.g1_discontinuous_curve]
 parents = ["discontinuous_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -15252,6 +15506,7 @@ union_safe = true
 [entity.g1_discontinuous_surface]
 parents = ["discontinuous_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -15268,6 +15523,7 @@ union_safe = true
 [entity.g2_discontinuity_between_adjacent_faces]
 parents = ["non_smooth_geometry_transition_across_edge"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -15291,6 +15547,7 @@ union_safe = true
 [entity.g2_discontinuous_curve]
 parents = ["discontinuous_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -15314,6 +15571,7 @@ union_safe = true
 [entity.g2_discontinuous_surface]
 parents = ["discontinuous_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -15337,6 +15595,7 @@ union_safe = true
 [entity.gap_between_adjacent_edges_in_loop]
 parents = ["geometric_gap_in_topology"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -15353,6 +15612,7 @@ union_safe = true
 [entity.gap_between_edge_and_base_surface]
 parents = ["geometric_gap_in_topology"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -15369,6 +15629,7 @@ union_safe = true
 [entity.gap_between_faces_related_to_an_edge]
 parents = ["geometric_gap_in_topology"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -15385,6 +15646,7 @@ union_safe = true
 [entity.gap_between_pcurves_related_to_an_edge]
 parents = ["geometric_gap_in_topology"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -15401,6 +15663,7 @@ union_safe = true
 [entity.gap_between_vertex_and_base_surface]
 parents = ["geometric_gap_in_topology"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -15417,6 +15680,7 @@ union_safe = true
 [entity.gap_between_vertex_and_edge]
 parents = ["geometric_gap_in_topology"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -15433,6 +15697,7 @@ union_safe = true
 [entity.gear]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -15494,6 +15759,7 @@ union_safe = true
 [entity.gear_pair_value]
 parents = ["pair_value"]
 is_abstract = false
+is_complex_part = true
 derives = ["actual_rotation_2"]
 schemas = [
     "ap214e3",
@@ -15790,6 +16056,7 @@ own_attrs = []
 [entity.geometric_alignment]
 parents = ["derived_shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -15802,6 +16069,7 @@ own_attrs = []
 [entity.geometric_contact]
 parents = ["derived_shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -15826,6 +16094,7 @@ own_attrs = []
 [entity.geometric_gap_in_topology]
 parents = ["inapt_topology_and_geometry_relationship"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -15836,6 +16105,7 @@ own_attrs = []
 [entity.geometric_intersection]
 parents = ["derived_shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -15923,6 +16193,7 @@ ty = "dimension_count"
 [entity.geometric_representation_context_with_parameter]
 parents = ["geometric_representation_context"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -16216,6 +16487,7 @@ union_safe = true
 [entity.geometry_with_local_irregularity]
 parents = ["inapt_geometry"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -16226,6 +16498,7 @@ own_attrs = []
 [entity.geometry_with_local_near_degeneracy]
 parents = ["inapt_geometry"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -16425,6 +16698,7 @@ ty = "boolean"
 [entity.hardness_representation]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -16457,6 +16731,7 @@ own_attrs = []
 [entity.hexahedron_volume]
 parents = ["volume"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -16492,6 +16767,7 @@ own_attrs = []
 [entity.high_degree_axi_symmetric_surface]
 parents = ["overcomplex_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -16511,6 +16787,7 @@ union_safe = true
 [entity.high_degree_conic]
 parents = ["overcomplex_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -16530,6 +16807,7 @@ union_safe = true
 [entity.high_degree_linear_curve]
 parents = ["overcomplex_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -16549,6 +16827,7 @@ union_safe = true
 [entity.high_degree_planar_surface]
 parents = ["overcomplex_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -16579,6 +16858,7 @@ own_attrs = []
 [entity.hole_bottom]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -16590,6 +16870,7 @@ own_attrs = []
 [entity.hole_in_panel]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -16637,6 +16918,7 @@ own_attrs = []
 [entity.hyperbola]
 parents = ["conic"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -16748,6 +17030,7 @@ ty = "SET [1:?] OF idrm_marked_item"
 [entity.illuminance_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -16794,6 +17077,7 @@ union_safe = true
 [entity.implicit_intersection_curve]
 parents = ["implicit_planar_curve"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -16807,6 +17091,7 @@ ty = "surface"
 [entity.implicit_model_intersection_curve]
 parents = ["implicit_planar_curve"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -16842,6 +17127,7 @@ ty = "curve"
 [entity.implicit_planar_intersection_point]
 parents = ["implicit_point_on_plane"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -16855,6 +17141,7 @@ ty = "curve"
 [entity.implicit_planar_projection_point]
 parents = ["implicit_point_on_plane"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -16894,6 +17181,7 @@ ty = "cartesian_point"
 [entity.implicit_projected_curve]
 parents = ["implicit_planar_curve"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -16911,6 +17199,7 @@ ty = "direction"
 [entity.implicit_silhouette_curve]
 parents = ["implicit_planar_curve"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -17008,6 +17297,7 @@ ty = "tuple_space"
 [entity.in_zone]
 parents = ["group"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -17039,6 +17329,7 @@ own_attrs = []
 [entity.inapt_data]
 parents = ["shape_data_quality_criterion"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -17049,6 +17340,7 @@ own_attrs = []
 [entity.inapt_geometry]
 parents = ["inapt_data"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -17059,6 +17351,7 @@ own_attrs = []
 [entity.inapt_manifold_solid_brep]
 parents = ["inapt_data"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -17069,6 +17362,7 @@ own_attrs = []
 [entity.inapt_topology]
 parents = ["inapt_data"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -17079,6 +17373,7 @@ own_attrs = []
 [entity.inapt_topology_and_geometry_relationship]
 parents = ["inapt_data"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -17154,6 +17449,7 @@ own_attrs = []
 [entity.inconsistent_adjacent_face_normals]
 parents = ["erroneous_topology"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -17170,6 +17466,7 @@ union_safe = true
 [entity.inconsistent_curve_transition_code]
 parents = ["erroneous_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -17201,6 +17498,7 @@ union_safe = true
 [entity.inconsistent_edge_and_curve_directions]
 parents = ["erroneous_topology_and_geometry_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -17231,6 +17529,7 @@ own_attrs = []
 [entity.inconsistent_face_and_closed_shell_normals]
 parents = ["erroneous_topology_and_geometry_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -17247,6 +17546,7 @@ union_safe = true
 [entity.inconsistent_face_and_surface_normals]
 parents = ["erroneous_topology_and_geometry_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -17263,6 +17563,7 @@ union_safe = true
 [entity.inconsistent_surface_transition_code]
 parents = ["erroneous_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -17343,6 +17644,7 @@ own_attrs = []
 [entity.indistinct_curve_knots]
 parents = ["geometry_with_local_near_degeneracy"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -17359,6 +17661,7 @@ union_safe = true
 [entity.indistinct_surface_knots]
 parents = ["geometry_with_local_near_degeneracy"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -17375,6 +17678,7 @@ union_safe = true
 [entity.inductance_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -17484,6 +17788,7 @@ parents = [
     "shape_aspect",
 ]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -17527,6 +17832,7 @@ own_attrs = []
 [entity.int_value_function]
 parents = ["value_function"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -17538,6 +17844,7 @@ own_attrs = []
 [entity.integer_defined_function]
 parents = ["numeric_defined_function"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -17652,6 +17959,7 @@ own_attrs = []
 [entity.interface_connector_definition]
 parents = ["product_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -17715,6 +18023,7 @@ union_safe = true
 [entity.interface_connector_occurrence]
 parents = ["group"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -17776,6 +18085,7 @@ own_attrs = []
 [entity.interface_specification_definition]
 parents = ["product_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -17851,6 +18161,7 @@ ty = "interpolation_type"
 [entity.interpolated_configuration_sequence]
 parents = ["geometric_representation_item"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "n_segments",
     "closed_interpolation",
@@ -17870,6 +18181,7 @@ ty = "LIST [2:?] OF interpolated_configuration_segment"
 [entity.intersecting_connected_face_sets]
 parents = ["topology_related_to_self_intersecting_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -17889,6 +18201,7 @@ union_safe = true
 [entity.intersecting_loops_in_face]
 parents = ["erroneous_topology_and_geometry_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -17908,6 +18221,7 @@ union_safe = true
 [entity.intersecting_shells_in_solid]
 parents = ["erroneous_manifold_solid_brep"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -17977,6 +18291,7 @@ ty = "SET [1:?] OF invisible_item"
 [entity.iso4217_currency]
 parents = ["currency"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -18072,6 +18387,7 @@ union_safe = true
 [entity.joggle]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -18083,6 +18399,7 @@ own_attrs = []
 [entity.joggle_termination]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -18150,6 +18467,7 @@ ty = "kinematic_analysis_definition"
 [entity.kinematic_frame_background_representation]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 schemas = ["ap214e3"]
 own_attrs = []
 
@@ -18194,12 +18512,14 @@ ty = "rigid_placement"
 [entity.kinematic_ground_representation]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 schemas = ["ap214e3"]
 own_attrs = []
 
 [entity.kinematic_joint]
 parents = ["edge"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -18349,6 +18669,7 @@ ty = "parameter_value"
 [entity.kinematic_path_defined_by_curves]
 parents = ["kinematic_path"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -18365,6 +18686,7 @@ union_safe = true
 [entity.kinematic_path_defined_by_nodes]
 parents = ["kinematic_path"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -18402,6 +18724,7 @@ ty = "transition_code"
 [entity.kinematic_property_definition]
 parents = ["property_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = ["ap214e3"]
 
 [[entity.kinematic_property_definition.own_attrs]]
@@ -18428,6 +18751,7 @@ union_safe = true
 [entity.kinematic_property_mechanism_representation]
 parents = ["kinematic_property_definition_representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -18454,6 +18778,7 @@ own_attrs = []
 [entity.kinematic_property_topology_representation]
 parents = ["kinematic_property_definition_representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -18579,6 +18904,7 @@ own_attrs = []
 [entity.laid_defined_transformation]
 parents = ["transformation_with_derived_angle"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -18612,6 +18938,7 @@ own_attrs = []
 [entity.language]
 parents = ["group"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -18735,6 +19062,7 @@ own_attrs = []
 [entity.light_source]
 parents = ["geometric_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -18750,6 +19078,7 @@ ty = "colour"
 [entity.light_source_ambient]
 parents = ["light_source"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -18762,6 +19091,7 @@ own_attrs = []
 [entity.light_source_directional]
 parents = ["light_source"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -18777,6 +19107,7 @@ ty = "direction"
 [entity.light_source_positional]
 parents = ["light_source"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -18800,6 +19131,7 @@ ty = "real"
 [entity.light_source_spot]
 parents = ["light_source"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -18835,6 +19167,7 @@ ty = "positive_plane_angle_measure"
 [entity.like_expression]
 parents = ["comparison_expression"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -18872,6 +19205,7 @@ ty = "text"
 [entity.line]
 parents = ["curve"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -18931,6 +19265,7 @@ union_safe = true
 [entity.linear_array_placement_group_component]
 parents = ["array_placement_group"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -18954,6 +19289,7 @@ own_attrs = []
 [entity.linear_flexible_and_pinion_pair]
 parents = ["low_order_kinematic_pair_with_motion_coupling"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -18967,6 +19303,7 @@ ty = "length_measure"
 [entity.linear_flexible_and_planar_curve_pair]
 parents = ["high_order_kinematic_pair"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -18984,6 +19321,7 @@ ty = "boolean"
 [entity.linear_flexible_link_representation]
 parents = ["kinematic_link_representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -18994,6 +19332,7 @@ own_attrs = []
 [entity.linear_path]
 parents = ["path_node"]
 is_abstract = false
+is_complex_part = true
 derives = ["kinematic_path_segment.transition"]
 schemas = [
     "ap242e1",
@@ -19005,6 +19344,7 @@ own_attrs = []
 [entity.linear_profile]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -19272,6 +19612,7 @@ ty = "number"
 [entity.local_b_spline]
 parents = ["representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -19518,6 +19859,7 @@ ty = "location_role"
 [entity.location_in_aggregate_representation_item]
 parents = ["compound_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -19639,6 +19981,7 @@ own_attrs = []
 [entity.locator]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -19650,6 +19993,7 @@ own_attrs = []
 [entity.log10_function]
 parents = ["unary_function_call"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -19661,6 +20005,7 @@ own_attrs = []
 [entity.log2_function]
 parents = ["unary_function_call"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -19672,6 +20017,7 @@ own_attrs = []
 [entity.log_function]
 parents = ["unary_function_call"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -19739,6 +20085,7 @@ own_attrs = []
 [entity.lot_effectivity]
 parents = ["effectivity"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -19793,6 +20140,7 @@ ty = "boolean"
 [entity.low_order_kinematic_pair_value]
 parents = ["pair_value"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -19843,6 +20191,7 @@ own_attrs = []
 [entity.low_order_kinematic_pair_with_range]
 parents = ["low_order_kinematic_pair"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -19900,6 +20249,7 @@ ty = "OPTIONAL length_measure"
 [entity.luminous_flux_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -19923,6 +20273,7 @@ own_attrs = []
 [entity.luminous_intensity_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -19958,6 +20309,7 @@ own_attrs = []
 [entity.magnetic_flux_density_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -19981,6 +20333,7 @@ own_attrs = []
 [entity.magnetic_flux_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -20015,6 +20368,7 @@ own_attrs = []
 [entity.make_from_usage_option]
 parents = ["product_definition_usage"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -20103,6 +20457,7 @@ ty = "representation_item"
 [entity.marking]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -20113,6 +20468,7 @@ own_attrs = []
 [entity.mass_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -20210,6 +20566,7 @@ ty = "characterized_material_property"
 [entity.material_property]
 parents = ["property_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -20395,6 +20752,7 @@ parents = [
     "group",
 ]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -20410,6 +20768,7 @@ union_safe = true
 [entity.mating_material_items]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 attr_conflicts = ['items: ap242e2: Set(Entity("product_definition"), AggBounds { lower: 1, upper: None }) | ap242e3: Set(Entity("product_definition_or_assembly_component_usage"), AggBounds { lower: 1, upper: None })']
 schemas = [
     "ap242e2",
@@ -20429,6 +20788,7 @@ union_safe = true
 [entity.maximum_function]
 parents = ["multiple_arity_function_call"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -20552,6 +20912,7 @@ own_attrs = []
 [entity.mechanical_design_geometric_presentation_representation]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -20564,6 +20925,7 @@ own_attrs = []
 [entity.mechanical_design_presentation_representation_with_draughting]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -20609,6 +20971,7 @@ own_attrs = []
 [entity.mechanical_design_shaded_presentation_representation]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -20680,6 +21043,7 @@ union_safe = true
 [entity.mechanism_state_representation]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 derives = ["representation.context_of_items"]
 schemas = [
     "ap242e1",
@@ -20700,6 +21064,7 @@ union_safe = true
 [entity.message_contents_assignment]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 derives = ["message_contents_group"]
 schemas = [
     "ap242e2",
@@ -20719,6 +21084,7 @@ union_safe = true
 [entity.message_contents_group]
 parents = ["group"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -20785,6 +21151,7 @@ union_safe = true
 [entity.minimum_function]
 parents = ["multiple_arity_function_call"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -20796,6 +21163,7 @@ own_attrs = []
 [entity.minus_expression]
 parents = ["binary_numeric_expression"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -20807,6 +21175,7 @@ own_attrs = []
 [entity.minus_function]
 parents = ["unary_function_call"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -20896,6 +21265,7 @@ union_safe = true
 [entity.mismatch_of_component]
 parents = ["a3m_equivalence_criterion_of_assembly_data_structure"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.measured_data_type",
     "a3m_equivalence_criterion.detected_difference_types",
@@ -20915,6 +21285,7 @@ union_safe = true
 [entity.mismatch_of_edges]
 parents = ["a3m_equivalence_criterion_of_shape_data_structure"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.compared_element_types",
     "a3m_equivalence_criterion.measured_data_type",
@@ -20936,6 +21307,7 @@ union_safe = true
 [entity.mismatch_of_faces]
 parents = ["a3m_equivalence_criterion_of_shape_data_structure"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.compared_element_types",
     "a3m_equivalence_criterion.measured_data_type",
@@ -20957,6 +21329,7 @@ union_safe = true
 [entity.mismatch_of_point_cloud_and_related_geometry]
 parents = ["a3m_equivalence_criterion_of_detailed_shape_data_content"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.comparing_element_types",
     "a3m_equivalence_criterion.compared_element_types",
@@ -20979,6 +21352,7 @@ union_safe = true
 [entity.mismatch_of_points]
 parents = ["a3m_equivalence_criterion_of_detailed_shape_data_content"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.comparing_element_types",
     "a3m_equivalence_criterion.compared_element_types",
@@ -21001,6 +21375,7 @@ union_safe = true
 [entity.mismatch_of_underlying_edge_geometry]
 parents = ["a3m_equivalence_criterion_of_detailed_shape_data_content"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.comparing_element_types",
     "a3m_equivalence_criterion.compared_element_types",
@@ -21023,6 +21398,7 @@ union_safe = true
 [entity.mismatch_of_underlying_face_geometry]
 parents = ["a3m_equivalence_criterion_of_detailed_shape_data_content"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.comparing_element_types",
     "a3m_equivalence_criterion.compared_element_types",
@@ -21045,6 +21421,7 @@ union_safe = true
 [entity.missing_assembly_constraint]
 parents = ["a3m_equivalence_criterion_of_assembly_data_structure"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.measured_data_type",
     "a3m_equivalence_criterion.detected_difference_types",
@@ -21064,6 +21441,7 @@ union_safe = true
 [entity.missing_component]
 parents = ["a3m_equivalence_criterion_of_assembly_data_structure"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.measured_data_type",
     "a3m_equivalence_criterion.detected_difference_types",
@@ -21083,6 +21461,7 @@ union_safe = true
 [entity.missing_edge]
 parents = ["a3m_equivalence_criterion_of_shape_data_structure"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.compared_element_types",
     "a3m_equivalence_criterion.measured_data_type",
@@ -21104,6 +21483,7 @@ union_safe = true
 [entity.missing_face]
 parents = ["a3m_equivalence_criterion_of_shape_data_structure"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "a3m_equivalence_criterion.compared_element_types",
     "a3m_equivalence_criterion.measured_data_type",
@@ -21125,6 +21505,7 @@ union_safe = true
 [entity.mod_expression]
 parents = ["binary_numeric_expression"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -21174,6 +21555,7 @@ ty = "limit_condition"
 [entity.modified_pattern]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -21219,6 +21601,7 @@ ty = "axis2_placement_3d"
 [entity.modify_element]
 parents = ["change_element"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -21229,6 +21612,7 @@ own_attrs = []
 [entity.moments_of_inertia_representation]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -21267,6 +21651,7 @@ union_safe = true
 [entity.mult_expression]
 parents = ["multiple_arity_numeric_expression"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -21337,6 +21722,7 @@ union_safe = true
 [entity.multiple_arity_function_call]
 parents = ["multiple_arity_numeric_expression"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -21386,6 +21772,7 @@ union_safe = true
 [entity.multiply_defined_cartesian_points]
 parents = ["multiply_defined_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -21402,6 +21789,7 @@ union_safe = true
 [entity.multiply_defined_curves]
 parents = ["multiply_defined_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -21418,6 +21806,7 @@ union_safe = true
 [entity.multiply_defined_directions]
 parents = ["multiply_defined_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -21434,6 +21823,7 @@ union_safe = true
 [entity.multiply_defined_edges]
 parents = ["topology_related_to_multiply_defined_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -21450,6 +21840,7 @@ union_safe = true
 [entity.multiply_defined_faces]
 parents = ["topology_related_to_multiply_defined_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -21466,6 +21857,7 @@ union_safe = true
 [entity.multiply_defined_geometry]
 parents = ["inapt_geometry"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -21476,6 +21868,7 @@ own_attrs = []
 [entity.multiply_defined_placements]
 parents = ["multiply_defined_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -21495,6 +21888,7 @@ union_safe = true
 [entity.multiply_defined_solids]
 parents = ["inapt_manifold_solid_brep"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -21511,6 +21905,7 @@ union_safe = true
 [entity.multiply_defined_surfaces]
 parents = ["multiply_defined_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -21527,6 +21922,7 @@ union_safe = true
 [entity.multiply_defined_vertices]
 parents = ["topology_related_to_multiply_defined_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -21603,6 +21999,7 @@ own_attrs = []
 [entity.narrow_surface_patch]
 parents = ["geometry_with_local_near_degeneracy"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -21645,6 +22042,7 @@ union_safe = true
 [entity.nearly_degenerate_geometry]
 parents = ["inapt_geometry"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -21655,6 +22053,7 @@ own_attrs = []
 [entity.nearly_degenerate_surface_boundary]
 parents = ["geometry_with_local_near_degeneracy"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -21671,6 +22070,7 @@ union_safe = true
 [entity.nearly_degenerate_surface_patch]
 parents = ["geometry_with_local_near_degeneracy"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -21722,6 +22122,7 @@ own_attrs = []
 [entity.ngon_closed_profile]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -21766,6 +22167,7 @@ own_attrs = []
 [entity.non_manifold_at_edge]
 parents = ["inapt_topology"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -21782,6 +22184,7 @@ union_safe = true
 [entity.non_manifold_at_vertex]
 parents = ["inapt_topology"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -21822,6 +22225,7 @@ own_attrs = []
 [entity.non_smooth_geometry_transition_across_edge]
 parents = ["inapt_topology_and_geometry_relationship"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -21842,6 +22246,7 @@ own_attrs = []
 [entity.not_expression]
 parents = ["unary_boolean_expression"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -21859,6 +22264,7 @@ union_safe = true
 [entity.null_representation_item]
 parents = ["representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -21935,6 +22341,7 @@ ty = "OPTIONAL text"
 [entity.odd_function]
 parents = ["unary_boolean_expression"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -21952,6 +22359,7 @@ union_safe = true
 [entity.offset_curve_2d]
 parents = ["curve"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -21975,6 +22383,7 @@ ty = "logical"
 [entity.offset_curve_3d]
 parents = ["curve"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -22003,6 +22412,7 @@ ty = "direction"
 [entity.offset_surface]
 parents = ["surface"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -22043,6 +22453,7 @@ ty = "vector"
 [entity.open_closed_shell]
 parents = ["erroneous_topology"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -22059,6 +22470,7 @@ union_safe = true
 [entity.open_edge_loop]
 parents = ["erroneous_topology"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -22075,6 +22487,7 @@ union_safe = true
 [entity.open_path]
 parents = ["path"]
 is_abstract = false
+is_complex_part = true
 derives = ["ne"]
 schemas = [
     "ap242e2",
@@ -22085,6 +22498,7 @@ own_attrs = []
 [entity.open_path_profile]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -22110,6 +22524,7 @@ own_attrs = []
 [entity.or_expression]
 parents = ["multiple_arity_boolean_expression"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -22121,6 +22536,7 @@ own_attrs = []
 [entity.ordinal_date]
 parents = ["date"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -22458,6 +22874,7 @@ ty = "boolean"
 [entity.oriented_face]
 parents = ["face"]
 is_abstract = false
+is_complex_part = true
 derives = ["face.bounds"]
 schemas = [
     "ap203e1",
@@ -22518,6 +22935,7 @@ ty = "boolean"
 [entity.oriented_path]
 parents = ["path"]
 is_abstract = false
+is_complex_part = true
 derives = ["path.edge_list"]
 schemas = [
     "ap203e1",
@@ -22539,6 +22957,7 @@ ty = "boolean"
 [entity.oriented_surface]
 parents = ["surface"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -22554,6 +22973,7 @@ ty = "boolean"
 [entity.oriented_tolerance_zone]
 parents = ["tolerance_zone_with_datum"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -22584,6 +23004,7 @@ own_attrs = []
 [entity.outer_round]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -22594,6 +23015,7 @@ own_attrs = []
 [entity.outside_profile]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -22620,6 +23042,7 @@ ty = "styled_item"
 [entity.over_used_vertex]
 parents = ["inapt_topology"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -22636,6 +23059,7 @@ union_safe = true
 [entity.overcomplex_geometry]
 parents = ["inapt_geometry"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -22646,6 +23070,7 @@ own_attrs = []
 [entity.overcomplex_topology_and_geometry_relationship]
 parents = ["inapt_topology_and_geometry_relationship"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -22656,6 +23081,7 @@ own_attrs = []
 [entity.overlapping_geometry]
 parents = ["inapt_geometry"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -22723,6 +23149,7 @@ union_safe = true
 [entity.pair_value]
 parents = ["geometric_representation_item"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -22737,6 +23164,7 @@ ty = "kinematic_pair"
 [entity.parabola]
 parents = ["conic"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -22830,6 +23258,7 @@ union_safe = true
 [entity.parallel_offset]
 parents = ["derived_shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -22898,6 +23327,7 @@ own_attrs = []
 [entity.part_laminate_table]
 parents = ["laminate_table"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -22909,6 +23339,7 @@ own_attrs = []
 [entity.partial_circular_profile]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -22982,6 +23413,7 @@ own_attrs = []
 [entity.partly_overlapping_curves]
 parents = ["overlapping_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -23001,6 +23433,7 @@ union_safe = true
 [entity.partly_overlapping_edges]
 parents = ["topology_related_to_overlapping_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -23020,6 +23453,7 @@ union_safe = true
 [entity.partly_overlapping_faces]
 parents = ["topology_related_to_overlapping_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -23039,6 +23473,7 @@ union_safe = true
 [entity.partly_overlapping_solids]
 parents = ["inapt_manifold_solid_brep"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -23058,6 +23493,7 @@ union_safe = true
 [entity.partly_overlapping_surfaces]
 parents = ["overlapping_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -23108,6 +23544,7 @@ own_attrs = []
 [entity.path_feature_component]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -23119,6 +23556,7 @@ own_attrs = []
 [entity.path_node]
 parents = ["kinematic_path_segment"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -23181,6 +23619,7 @@ own_attrs = []
 [entity.pattern_offset_membership]
 parents = ["feature_component_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -23192,6 +23631,7 @@ own_attrs = []
 [entity.pattern_omit_membership]
 parents = ["feature_component_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -23238,6 +23678,7 @@ ty = "non_negative_length_measure"
 [entity.percentage_laminate_definition]
 parents = ["product_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = ["ap203e2"]
 own_attrs = []
 
@@ -23256,6 +23697,7 @@ own_attrs = []
 [entity.percentage_ply_definition]
 parents = ["product_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = ["ap203e2"]
 own_attrs = []
 
@@ -23299,6 +23741,7 @@ union_safe = true
 [entity.perpendicular_to]
 parents = ["derived_shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -23520,6 +23963,7 @@ own_attrs = []
 [entity.physical_component_interface_terminal]
 parents = ["physical_component_feature"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -23606,6 +24050,7 @@ own_attrs = []
 [entity.placed_feature]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -23769,6 +24214,7 @@ union_safe = true
 [entity.planar_pair_value]
 parents = ["pair_value"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -23843,6 +24289,7 @@ own_attrs = []
 [entity.plane]
 parents = ["elementary_surface"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -23920,6 +24367,7 @@ own_attrs = []
 [entity.plus_expression]
 parents = ["multiple_arity_numeric_expression"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -23965,12 +24413,14 @@ union_safe = true
 [entity.ply_laminate_definition]
 parents = ["product_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = ["ap203e2"]
 own_attrs = []
 
 [entity.ply_laminate_sequence_definition]
 parents = ["product_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -23982,6 +24432,7 @@ own_attrs = []
 [entity.ply_laminate_table]
 parents = ["part_laminate_table"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -24028,6 +24479,7 @@ ty = "characterized_object"
 [entity.pocket]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -24039,6 +24491,7 @@ own_attrs = []
 [entity.pocket_bottom]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -24174,6 +24627,7 @@ ty = "LIST [1:?] OF LIST [3:3] OF real"
 [entity.point_cloud_superdataset]
 parents = ["scanned_data_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -24213,6 +24667,7 @@ union_safe = true
 [entity.point_in_volume]
 parents = ["point"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -24347,6 +24802,7 @@ union_safe = true
 [entity.point_on_planar_curve_pair_value]
 parents = ["pair_value"]
 is_abstract = false
+is_complex_part = true
 derives = ["actual_orientation"]
 schemas = [
     "ap214e3",
@@ -24490,6 +24946,7 @@ union_safe = true
 [entity.point_on_surface_pair_value]
 parents = ["pair_value"]
 is_abstract = false
+is_complex_part = true
 derives = ["actual_orientation"]
 schemas = [
     "ap214e3",
@@ -24556,6 +25013,7 @@ parents = [
     "geometric_representation_item",
 ]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -24585,6 +25043,7 @@ own_attrs = []
 [entity.point_replica]
 parents = ["point"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -24638,6 +25097,7 @@ ty = "OPTIONAL colour"
 [entity.point_to_point_path]
 parents = ["path_node"]
 is_abstract = false
+is_complex_part = true
 derives = ["kinematic_path_segment.transition"]
 schemas = [
     "ap242e1",
@@ -24649,6 +25109,7 @@ own_attrs = []
 [entity.polar_11]
 parents = ["geometric_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -24697,6 +25158,7 @@ ty = "finite_real_interval"
 [entity.polar_point]
 parents = ["cartesian_point"]
 is_abstract = false
+is_complex_part = true
 derives = ["cartesian_point.coordinates"]
 schemas = [
     "ap242e2",
@@ -24734,6 +25196,7 @@ ty = "LIST [3:?] OF cartesian_point"
 [entity.polygonal_area]
 parents = ["primitive_2d"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -24747,6 +25210,7 @@ ty = "LIST [3:?] OF cartesian_point"
 [entity.polyline]
 parents = ["bounded_curve"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -24776,6 +25240,7 @@ own_attrs = []
 [entity.positioned_sketch]
 parents = ["geometric_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -24814,6 +25279,7 @@ own_attrs = []
 [entity.power_expression]
 parents = ["binary_numeric_expression"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -24825,6 +25291,7 @@ own_attrs = []
 [entity.power_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -25058,6 +25525,7 @@ ty = "integer"
 [entity.predefined_picture_representation_item]
 parents = ["picture_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -25069,6 +25537,7 @@ own_attrs = []
 [entity.prescribed_path]
 parents = ["link_motion_representation_along_path"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -25241,6 +25710,7 @@ ty = "presented_item"
 [entity.pressure_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -25264,6 +25734,7 @@ own_attrs = []
 [entity.previous_change_element_assignment]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -25355,6 +25826,7 @@ union_safe = true
 [entity.prismatic_pair_value]
 parents = ["pair_value"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -25765,6 +26237,7 @@ own_attrs = []
 [entity.product_concept_feature_category_usage]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -26072,6 +26545,7 @@ ty = "source"
 [entity.product_definition_group_assignment]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -26092,6 +26566,7 @@ union_safe = true
 [entity.product_definition_kinematics]
 parents = ["property_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -26233,6 +26708,7 @@ parents = [
     "product_definition",
 ]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -26280,6 +26756,7 @@ ty = "product_definition_or_reference"
 [entity.product_definition_relationship_kinematics]
 parents = ["property_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -26478,6 +26955,7 @@ own_attrs = []
 [entity.product_group]
 parents = ["group"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -26487,6 +26965,7 @@ own_attrs = []
 [entity.product_group_attribute_assignment]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -26505,6 +26984,7 @@ union_safe = true
 [entity.product_group_attribute_set]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -26523,6 +27003,7 @@ union_safe = true
 [entity.product_group_attributes]
 parents = ["group"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -26532,6 +27013,7 @@ own_attrs = []
 [entity.product_group_context]
 parents = ["descriptive_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -26557,6 +27039,7 @@ ty = "product_select"
 [entity.product_group_membership_rules]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -26575,6 +27058,7 @@ union_safe = true
 [entity.product_group_purpose]
 parents = ["descriptive_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -26594,6 +27078,7 @@ own_attrs = []
 [entity.product_group_rule]
 parents = ["descriptive_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -26603,6 +27088,7 @@ own_attrs = []
 [entity.product_group_rule_assignment]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -26621,6 +27107,7 @@ union_safe = true
 [entity.product_group_rules]
 parents = ["group"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -26785,6 +27272,7 @@ own_attrs = []
 [entity.profile_floor]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -26830,6 +27318,7 @@ ty = "length_measure_with_unit"
 [entity.projection_curve]
 parents = ["annotation_curve_occurrence"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -26961,6 +27450,7 @@ ty = "identifier"
 [entity.protrusion]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -26971,6 +27461,7 @@ own_attrs = []
 [entity.pyramid_volume]
 parents = ["volume"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -27130,6 +27621,7 @@ union_safe = true
 [entity.rack_and_pinion_pair_value]
 parents = ["pair_value"]
 is_abstract = false
+is_complex_part = true
 derives = ["actual_rotation"]
 schemas = [
     "ap214e3",
@@ -27169,6 +27661,7 @@ ty = "OPTIONAL length_measure"
 [entity.radioactivity_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -27225,6 +27718,7 @@ parents = [
     "descriptive_representation_item",
 ]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -27387,6 +27881,7 @@ union_safe = true
 [entity.real_defined_function]
 parents = ["numeric_defined_function"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -27500,6 +27995,7 @@ ty = "LIST [1:?] OF real"
 [entity.rectangular_area]
 parents = ["primitive_2d"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -27521,6 +28017,7 @@ ty = "positive_length_measure"
 [entity.rectangular_array_placement_group_component]
 parents = ["array_placement_group"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -27531,6 +28028,7 @@ own_attrs = []
 [entity.rectangular_closed_profile]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -27542,6 +28040,7 @@ own_attrs = []
 [entity.rectangular_composite_surface]
 parents = ["bounded_surface"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "n_u",
     "n_v",
@@ -27588,6 +28087,7 @@ ty = "integer"
 [entity.rectangular_pattern]
 parents = ["replicate_feature"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -27625,6 +28125,7 @@ ty = "positive_length_measure"
 [entity.rectangular_trimmed_surface]
 parents = ["bounded_surface"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -27681,6 +28182,7 @@ ty = "limit_condition"
 [entity.regular_table_function]
 parents = ["linearized_table_function"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -27752,6 +28254,7 @@ ty = "time_measure_with_unit"
 [entity.removal_volume]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -27765,6 +28268,7 @@ parents = [
     "representation_item",
 ]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -27825,6 +28329,7 @@ ty = "parameter_value"
 [entity.replicate_feature]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -27986,6 +28491,7 @@ ty = "representation"
 [entity.representation_proxy_item]
 parents = ["representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -28076,6 +28582,7 @@ own_attrs = []
 [entity.requirement_assigned_object]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -28126,6 +28633,7 @@ ty = "SET [1:?] OF action_resource"
 [entity.requirement_source]
 parents = ["group"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -28149,6 +28657,7 @@ own_attrs = []
 [entity.resistance_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -28255,6 +28764,7 @@ union_safe = true
 [entity.resulting_path]
 parents = ["link_motion_representation_along_path"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -28321,6 +28831,7 @@ union_safe = true
 [entity.revolute_pair_value]
 parents = ["pair_value"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -28359,6 +28870,7 @@ ty = "OPTIONAL plane_angle_measure"
 [entity.revolved_area_solid]
 parents = ["swept_area_solid"]
 is_abstract = false
+is_complex_part = true
 derives = ["axis_line"]
 schemas = [
     "ap203e2",
@@ -28419,6 +28931,7 @@ ty = "trim_condition_select"
 [entity.revolved_profile]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -28443,12 +28956,14 @@ ty = "positive_length_measure"
 [entity.rib]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = ["ap214e3"]
 own_attrs = []
 
 [entity.rib_top]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -28459,6 +28974,7 @@ own_attrs = []
 [entity.rib_top_floor]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -28581,6 +29097,7 @@ union_safe = true
 [entity.rigid_link_representation]
 parents = ["kinematic_link_representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -28632,6 +29149,7 @@ own_attrs = []
 [entity.rolling_curve_pair_value]
 parents = ["pair_value"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -28664,6 +29182,7 @@ own_attrs = []
 [entity.rolling_surface_pair_value]
 parents = ["pair_value"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -28719,6 +29238,7 @@ own_attrs = []
 [entity.rounded_end]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -28729,6 +29249,7 @@ own_attrs = []
 [entity.rounded_u_profile]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -28771,6 +29292,7 @@ union_safe = true
 [entity.row_value]
 parents = ["compound_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -28866,6 +29388,7 @@ own_attrs = []
 [entity.rule_superseded_assignment]
 parents = ["action_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -28965,6 +29488,7 @@ ty = "SET OF same_as_item"
 [entity.satisfied_requirement]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -28985,6 +29509,7 @@ union_safe = true
 [entity.satisfies_requirement]
 parents = ["group"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -28996,6 +29521,7 @@ own_attrs = []
 [entity.satisfying_item]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -29028,6 +29554,7 @@ own_attrs = []
 [entity.scan_3d_model]
 parents = ["scanned_data_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -29143,6 +29670,7 @@ union_safe = true
 [entity.screw_pair_value]
 parents = ["pair_value"]
 is_abstract = false
+is_complex_part = true
 derives = ["actual_translation"]
 schemas = [
     "ap214e3",
@@ -29182,6 +29710,7 @@ ty = "OPTIONAL plane_angle_measure"
 [entity.sculptured_solid]
 parents = ["modified_solid"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -29318,6 +29847,7 @@ ty = "maths_space_or_function"
 [entity.self_intersecting_curve]
 parents = ["self_intersecting_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -29341,6 +29871,7 @@ union_safe = true
 [entity.self_intersecting_geometry]
 parents = ["inapt_geometry"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -29351,6 +29882,7 @@ own_attrs = []
 [entity.self_intersecting_loop]
 parents = ["topology_related_to_self_intersecting_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -29374,6 +29906,7 @@ union_safe = true
 [entity.self_intersecting_shell]
 parents = ["topology_related_to_self_intersecting_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -29397,6 +29930,7 @@ union_safe = true
 [entity.self_intersecting_surface]
 parents = ["self_intersecting_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -29420,6 +29954,7 @@ union_safe = true
 [entity.serial_numbered_effectivity]
 parents = ["effectivity"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -29490,6 +30025,7 @@ ty = "logical"
 [entity.shape_aspect_associativity]
 parents = ["shape_aspect_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -29502,6 +30038,7 @@ own_attrs = []
 [entity.shape_aspect_deriving_relationship]
 parents = ["shape_aspect_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -29573,6 +30110,7 @@ ty = "representation_relationship"
 [entity.shape_aspect_transition]
 parents = ["shape_aspect_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = ["ap214e3"]
 own_attrs = []
 
@@ -29764,6 +30302,7 @@ own_attrs = []
 [entity.shape_data_quality_lower_value_limit]
 parents = ["shape_data_quality_value_limit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -29774,6 +30313,7 @@ own_attrs = []
 [entity.shape_data_quality_upper_value_limit]
 parents = ["shape_data_quality_value_limit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -29798,6 +30338,7 @@ own_attrs = []
 [entity.shape_data_quality_value_range]
 parents = ["compound_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -29808,6 +30349,7 @@ own_attrs = []
 [entity.shape_defining_relationship]
 parents = ["shape_aspect_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -30085,6 +30627,7 @@ own_attrs = []
 [entity.shelled_solid]
 parents = ["modified_solid"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -30103,6 +30646,7 @@ ty = "length_measure"
 [entity.short_length_curve]
 parents = ["nearly_degenerate_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -30119,6 +30663,7 @@ union_safe = true
 [entity.short_length_curve_segment]
 parents = ["geometry_with_local_near_degeneracy"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -30135,6 +30680,7 @@ union_safe = true
 [entity.short_length_edge]
 parents = ["topology_related_to_nearly_degenerate_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -30552,6 +31098,7 @@ own_attrs = []
 [entity.simultaneous_constraint_group]
 parents = ["variational_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -30565,6 +31112,7 @@ ty = "SET [2:?] OF constraint_group_member"
 [entity.sin_function]
 parents = ["unary_function_call"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -30604,6 +31152,7 @@ own_attrs = []
 [entity.single_property_is_definition]
 parents = ["property_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -30645,6 +31194,7 @@ ty = "boolean"
 [entity.skew_line_distance_geometric_constraint]
 parents = ["explicit_geometric_constraint"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -30695,6 +31245,7 @@ own_attrs = []
 [entity.sliding_curve_pair_value]
 parents = ["pair_value"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -30731,6 +31282,7 @@ own_attrs = []
 [entity.sliding_surface_pair_value]
 parents = ["pair_value"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -30759,6 +31311,7 @@ union_safe = true
 [entity.slot]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -30770,6 +31323,7 @@ own_attrs = []
 [entity.slot_end]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -30781,6 +31335,7 @@ own_attrs = []
 [entity.small_area_face]
 parents = ["topology_related_to_nearly_degenerate_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -30797,6 +31352,7 @@ union_safe = true
 [entity.small_area_surface]
 parents = ["nearly_degenerate_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -30813,6 +31369,7 @@ union_safe = true
 [entity.small_area_surface_patch]
 parents = ["geometry_with_local_near_degeneracy"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -30829,6 +31386,7 @@ union_safe = true
 [entity.small_volume_solid]
 parents = ["inapt_manifold_solid_brep"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -30881,6 +31439,7 @@ ty = "data_quality_definition_representation_relationship"
 [entity.solid_angle_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -30934,6 +31493,7 @@ own_attrs = []
 [entity.solid_replica]
 parents = ["solid_model"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -30953,6 +31513,7 @@ ty = "cartesian_transformation_operator_3d"
 [entity.solid_with_angle_based_chamfer]
 parents = ["solid_with_chamfered_edges"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -30987,6 +31548,7 @@ own_attrs = []
 [entity.solid_with_circular_pattern]
 parents = ["solid_with_shape_element_pattern"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -31013,6 +31575,7 @@ ty = "point"
 [entity.solid_with_circular_pocket]
 parents = ["solid_with_pocket"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -31027,6 +31590,7 @@ ty = "positive_length_measure"
 [entity.solid_with_circular_protrusion]
 parents = ["solid_with_protrusion"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -31105,6 +31669,7 @@ ty = "positive_length_measure"
 [entity.solid_with_double_offset_chamfer]
 parents = ["solid_with_chamfered_edges"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -31123,6 +31688,7 @@ ty = "positive_length_measure"
 [entity.solid_with_excessive_number_of_voids]
 parents = ["inapt_manifold_solid_brep"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -31154,6 +31720,7 @@ ty = "non_negative_length_measure"
 [entity.solid_with_general_pocket]
 parents = ["solid_with_pocket"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -31172,6 +31739,7 @@ ty = "point"
 [entity.solid_with_general_protrusion]
 parents = ["solid_with_protrusion"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -31233,6 +31801,7 @@ own_attrs = []
 [entity.solid_with_incomplete_circular_pattern]
 parents = ["solid_with_circular_pattern"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -31247,6 +31816,7 @@ ty = "SET [1:?] OF positive_integer"
 [entity.solid_with_incomplete_rectangular_pattern]
 parents = ["solid_with_rectangular_pattern"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -31280,6 +31850,7 @@ ty = "plane_angle_measure"
 [entity.solid_with_protrusion]
 parents = ["modified_solid_with_placed_configuration"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -31298,6 +31869,7 @@ ty = "plane_angle_measure"
 [entity.solid_with_rectangular_pattern]
 parents = ["solid_with_shape_element_pattern"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -31324,6 +31896,7 @@ ty = "length_measure"
 [entity.solid_with_rectangular_pocket]
 parents = ["solid_with_pocket"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -31346,6 +31919,7 @@ ty = "non_negative_length_measure"
 [entity.solid_with_rectangular_protrusion]
 parents = ["solid_with_protrusion"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -31368,6 +31942,7 @@ ty = "non_negative_length_measure"
 [entity.solid_with_shape_element_pattern]
 parents = ["modified_solid_with_placed_configuration"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -31382,6 +31957,7 @@ ty = "modified_solid_with_placed_configuration"
 [entity.solid_with_single_offset_chamfer]
 parents = ["solid_with_chamfered_edges"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -31564,6 +32140,7 @@ ty = "LIST [1:?] OF blend_radius_variation_type"
 [entity.solid_with_wrong_number_of_voids]
 parents = ["erroneous_manifold_solid_brep"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -31580,6 +32157,7 @@ union_safe = true
 [entity.source_for_requirement]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -31600,6 +32178,7 @@ union_safe = true
 [entity.sourced_requirement]
 parents = ["group_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -31620,6 +32199,7 @@ union_safe = true
 [entity.specification_definition]
 parents = ["product_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -31672,6 +32252,7 @@ ty = "point"
 [entity.spherical_cap]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -31738,6 +32319,7 @@ union_safe = true
 [entity.spherical_pair_value]
 parents = ["pair_value"]
 is_abstract = false
+is_complex_part = true
 derives = ["actual_orientation"]
 schemas = [
     "ap214e3",
@@ -31838,6 +32420,7 @@ ty = "OPTIONAL plane_angle_measure"
 [entity.spherical_point]
 parents = ["cartesian_point"]
 is_abstract = false
+is_complex_part = true
 derives = ["cartesian_point.coordinates"]
 schemas = [
     "ap242e2",
@@ -31859,6 +32442,7 @@ ty = "plane_angle_measure"
 [entity.spherical_surface]
 parents = ["elementary_surface"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -31875,6 +32459,7 @@ ty = "positive_length_measure"
 [entity.spherical_volume]
 parents = ["volume"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -31969,6 +32554,7 @@ own_attrs = []
 [entity.square_root_function]
 parents = ["unary_function_call"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -31980,6 +32566,7 @@ own_attrs = []
 [entity.square_u_profile]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -31991,6 +32578,7 @@ own_attrs = []
 [entity.standard_table_function]
 parents = ["linearized_table_function"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -32034,6 +32622,7 @@ ty = "SET [1:?] OF start_request_item"
 [entity.start_work]
 parents = ["action_assignment"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -32292,6 +32881,7 @@ own_attrs = []
 [entity.steep_angle_between_adjacent_edges]
 parents = ["steep_geometry_transition_across_edge"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -32308,6 +32898,7 @@ union_safe = true
 [entity.steep_angle_between_adjacent_faces]
 parents = ["steep_geometry_transition_across_edge"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -32324,6 +32915,7 @@ union_safe = true
 [entity.steep_geometry_transition_across_edge]
 parents = ["inapt_topology_and_geometry_relationship"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -32334,6 +32926,7 @@ own_attrs = []
 [entity.step]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -32453,6 +33046,7 @@ own_attrs = []
 [entity.structured_text_composition]
 parents = ["compound_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -32464,6 +33058,7 @@ own_attrs = []
 [entity.structured_text_representation]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -32560,6 +33155,7 @@ ty = "plane_angle_measure"
 [entity.subedge]
 parents = ["edge"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -32575,6 +33171,7 @@ ty = "edge"
 [entity.subface]
 parents = ["face"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -32590,6 +33187,7 @@ ty = "face"
 [entity.subpath]
 parents = ["path"]
 is_abstract = false
+is_complex_part = true
 schemas = ["ap242e3"]
 
 [[entity.subpath.own_attrs]]
@@ -32758,6 +33356,7 @@ ty = "surface"
 [entity.surface_curve_swept_surface]
 parents = ["swept_surface"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -32814,6 +33413,7 @@ union_safe = true
 [entity.surface_of_linear_extrusion]
 parents = ["swept_surface"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -32830,6 +33430,7 @@ ty = "vector"
 [entity.surface_of_revolution]
 parents = ["swept_surface"]
 is_abstract = false
+is_complex_part = true
 derives = ["axis_line"]
 schemas = [
     "ap203e1",
@@ -32957,6 +33558,7 @@ ty = "boolean"
 [entity.surface_patch_set]
 parents = ["geometric_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -32997,6 +33599,7 @@ ty = "colour"
 [entity.surface_replica]
 parents = ["surface"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -33037,6 +33640,7 @@ ty = "SET [1:7] OF surface_style_element_select"
 [entity.surface_smoothness_geometric_constraint]
 parents = ["explicit_geometric_constraint"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -33284,6 +33888,7 @@ ty = "surface_side_style_select"
 [entity.surface_texture_representation]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -33296,6 +33901,7 @@ own_attrs = []
 [entity.surface_with_excessive_patches_in_one_direction]
 parents = ["overcomplex_geometry"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -33312,6 +33918,7 @@ union_safe = true
 [entity.surface_with_small_curvature_radius]
 parents = ["geometry_with_local_near_degeneracy"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -33356,6 +33963,7 @@ ty = "curve_bounded_surface"
 [entity.swept_curve_surface_geometric_constraint]
 parents = ["explicit_geometric_constraint"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -33378,6 +33986,7 @@ union_safe = true
 [entity.swept_disk_solid]
 parents = ["solid_model"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -33425,6 +34034,7 @@ ty = "face_surface"
 [entity.swept_point_curve_geometric_constraint]
 parents = ["explicit_geometric_constraint"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -33447,6 +34057,7 @@ union_safe = true
 [entity.swept_surface]
 parents = ["surface"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -33463,6 +34074,7 @@ ty = "curve"
 [entity.symbol]
 parents = ["representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -33546,6 +34158,7 @@ ty = "symbol_style_select"
 [entity.symbol_target]
 parents = ["geometric_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -33607,6 +34220,7 @@ ty = "ordering_type"
 [entity.symmetric_shape_aspect]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -33619,6 +34233,7 @@ own_attrs = []
 [entity.symmetry_geometric_constraint]
 parents = ["explicit_geometric_constraint"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -33638,6 +34253,7 @@ union_safe = true
 [entity.symmetry_tolerance]
 parents = ["geometric_tolerance_with_datum_reference"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -33682,6 +34298,7 @@ own_attrs = []
 [entity.tactile_appearance_representation]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -33706,6 +34323,7 @@ own_attrs = []
 [entity.tagged_text_item]
 parents = ["descriptive_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -33717,6 +34335,7 @@ own_attrs = []
 [entity.tan_function]
 parents = ["unary_function_call"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -33728,6 +34347,7 @@ own_attrs = []
 [entity.tangent]
 parents = ["derived_shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -33784,6 +34404,7 @@ union_safe = true
 [entity.taper]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -33795,6 +34416,7 @@ own_attrs = []
 [entity.tee_profile]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -33842,6 +34464,7 @@ ty = "annotation_curve_occurrence"
 [entity.tessellated_annotation_occurrence]
 parents = ["annotation_occurrence"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -33858,6 +34481,7 @@ union_safe = true
 [entity.tessellated_connecting_edge]
 parents = ["tessellated_edge"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -33887,6 +34511,7 @@ ty = "LIST [2:?] OF integer"
 [entity.tessellated_curve_set]
 parents = ["tessellated_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -33926,6 +34551,7 @@ ty = "LIST [2:?] OF integer"
 [entity.tessellated_face]
 parents = ["tessellated_structured_item"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -33976,6 +34602,7 @@ own_attrs = []
 [entity.tessellated_point_set]
 parents = ["tessellated_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -34017,6 +34644,7 @@ ty = "SET [1:?] OF tessellation_accuracy_parameter_item"
 [entity.tessellated_shell]
 parents = ["tessellated_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -34034,6 +34662,7 @@ ty = "OPTIONAL connected_face_set"
 [entity.tessellated_solid]
 parents = ["tessellated_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -34062,6 +34691,7 @@ own_attrs = []
 [entity.tessellated_surface_set]
 parents = ["tessellated_item"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -34083,6 +34713,7 @@ ty = "LIST OF LIST [3:3] OF real"
 [entity.tessellated_vertex]
 parents = ["tessellated_structured_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -34104,6 +34735,7 @@ ty = "integer"
 [entity.tessellated_wire]
 parents = ["tessellated_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -34121,6 +34753,7 @@ ty = "OPTIONAL path_or_composite_curve"
 [entity.tetrahedron]
 parents = ["faceted_primitive"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -34131,6 +34764,7 @@ own_attrs = []
 [entity.tetrahedron_volume]
 parents = ["volume"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -34310,6 +34944,7 @@ ty = "planar_extent"
 [entity.text_string_representation]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -34441,6 +35076,7 @@ own_attrs = []
 [entity.thermal_resistance_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -34452,6 +35088,7 @@ own_attrs = []
 [entity.thermal_resistance_unit]
 parents = ["derived_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -34463,6 +35100,7 @@ own_attrs = []
 [entity.thermodynamic_temperature_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -34488,6 +35126,7 @@ own_attrs = []
 [entity.thickened_face_solid]
 parents = ["solid_model"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -34510,6 +35149,7 @@ ty = "length_measure"
 [entity.thickness_laminate_definition]
 parents = ["product_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = ["ap203e2"]
 own_attrs = []
 
@@ -34528,6 +35168,7 @@ own_attrs = []
 [entity.thread]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -34539,6 +35180,7 @@ own_attrs = []
 [entity.thread_runout]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -34591,6 +35233,7 @@ ty = "time_interval_role"
 [entity.time_interval_based_effectivity]
 parents = ["effectivity"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -34673,6 +35316,7 @@ ty = "OPTIONAL time_measure_with_unit"
 [entity.time_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -34805,6 +35449,7 @@ own_attrs = []
 [entity.topology_related_to_multiply_defined_geometry]
 parents = ["inapt_topology_and_geometry_relationship"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -34815,6 +35460,7 @@ own_attrs = []
 [entity.topology_related_to_nearly_degenerate_geometry]
 parents = ["inapt_topology_and_geometry_relationship"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -34825,6 +35471,7 @@ own_attrs = []
 [entity.topology_related_to_overlapping_geometry]
 parents = ["inapt_topology_and_geometry_relationship"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -34835,6 +35482,7 @@ own_attrs = []
 [entity.topology_related_to_self_intersecting_geometry]
 parents = ["inapt_topology_and_geometry_relationship"]
 is_abstract = true
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -34902,6 +35550,7 @@ ty = "positive_length_measure"
 [entity.toroidal_volume]
 parents = ["volume"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -34946,6 +35595,7 @@ ty = "positive_length_measure"
 [entity.total_runout_tolerance]
 parents = ["geometric_tolerance_with_datum_reference"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -35010,6 +35660,7 @@ union_safe = true
 [entity.transition_feature]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -35052,6 +35703,7 @@ ty = "ordering_type"
 [entity.triangulated_face]
 parents = ["tessellated_face"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -35069,6 +35721,7 @@ ty = "LIST [1:?] OF LIST [3:3] OF integer"
 [entity.triangulated_point_cloud_dataset]
 parents = ["scanned_data_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -35085,6 +35738,7 @@ ty = "LIST [1:?] OF LIST [3:3] OF integer"
 [entity.triangulated_surface_set]
 parents = ["tessellated_surface_set"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -35102,6 +35756,7 @@ ty = "LIST [1:?] OF LIST [3:3] OF integer"
 [entity.trimmed_curve]
 parents = ["bounded_curve"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -35134,6 +35789,7 @@ ty = "trimming_preference"
 [entity.turned_knurl]
 parents = ["feature_definition"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -35144,6 +35800,7 @@ own_attrs = []
 [entity.twisted_cross_sectional_group_shape_element]
 parents = ["cross_sectional_group_shape_element"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -35259,6 +35916,7 @@ own_attrs = []
 [entity.unbound_variational_parameter]
 parents = ["variational_parameter"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -35280,6 +35938,7 @@ own_attrs = []
 [entity.uncertainty_assigned_representation]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -35295,6 +35954,7 @@ ty = "SET [1:?] OF uncertainty_measure_with_unit"
 [entity.uncertainty_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 attr_conflicts = ['description: ap203e1: Entity("text") | ap203e2: Optional(Entity("text")) | ap214e3: Optional(Entity("text")) | ap242e1: Optional(Entity("text")) | ap242e2: Optional(Entity("text")) | ap242e3: Optional(Entity("text"))']
 schemas = [
     "ap203e1",
@@ -35334,6 +35994,7 @@ ty = "text"
 [entity.unconstrained_pair]
 parents = ["low_order_kinematic_pair"]
 is_abstract = false
+is_complex_part = true
 derives = [
     "low_order_kinematic_pair.t_x",
     "low_order_kinematic_pair.t_y",
@@ -35353,6 +36014,7 @@ own_attrs = []
 [entity.unconstrained_pair_value]
 parents = ["pair_value"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -35422,6 +36084,7 @@ ty = "positive_integer"
 [entity.uniform_resource_identifier]
 parents = ["descriptive_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -35509,6 +36172,7 @@ union_safe = true
 [entity.universal_pair_value]
 parents = ["pair_value"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -35559,6 +36223,7 @@ ty = "OPTIONAL plane_angle_measure"
 [entity.unused_patches]
 parents = ["overcomplex_topology_and_geometry_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -35614,6 +36279,7 @@ union_safe = true
 [entity.user_defined_11]
 parents = ["representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -35695,6 +36361,7 @@ own_attrs = []
 [entity.validation]
 parents = ["group"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -35768,6 +36435,7 @@ union_safe = true
 [entity.value_range]
 parents = ["compound_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -35875,6 +36543,7 @@ ty = "maths_value"
 [entity.variational_representation]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -35934,6 +36603,7 @@ own_attrs = []
 [entity.vee_profile]
 parents = ["shape_aspect"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -35945,6 +36615,7 @@ own_attrs = []
 [entity.velocity_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -35956,6 +36627,7 @@ own_attrs = []
 [entity.velocity_unit]
 parents = ["derived_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -35967,6 +36639,7 @@ own_attrs = []
 [entity.verification]
 parents = ["group"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -36072,6 +36745,7 @@ own_attrs = []
 [entity.vertex_loop]
 parents = ["loop"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -36122,6 +36796,7 @@ ty = "point"
 [entity.vertex_shell]
 parents = ["topological_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -36185,6 +36860,7 @@ ty = "planar_box"
 [entity.visual_appearance_representation]
 parents = ["representation"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap214e3",
@@ -36208,6 +36884,7 @@ own_attrs = []
 [entity.volume_measure_with_unit]
 parents = ["measure_with_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -36221,6 +36898,7 @@ own_attrs = []
 [entity.volume_unit]
 parents = ["derived_unit"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -36250,6 +36928,7 @@ ty = "volume"
 [entity.volume_with_parametric_boundary]
 parents = ["volume_with_faces"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -36262,6 +36941,7 @@ ty = "LIST [6:6] OF face"
 [entity.volume_with_shell]
 parents = ["volume_with_faces"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -36274,6 +36954,7 @@ ty = "closed_shell"
 [entity.wedge_volume]
 parents = ["volume"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e2",
     "ap242e3",
@@ -36302,6 +36983,7 @@ ty = "length_measure"
 [entity.week_of_year_and_day_date]
 parents = ["date"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -36321,6 +37003,7 @@ ty = "OPTIONAL day_in_week_number"
 [entity.wire_shell]
 parents = ["topological_representation_item"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e1",
     "ap203e2",
@@ -36347,6 +37030,7 @@ own_attrs = []
 [entity.wrongly_oriented_void]
 parents = ["erroneous_manifold_solid_brep"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -36363,6 +37047,7 @@ union_safe = true
 [entity.wrongly_placed_loop]
 parents = ["erroneous_topology_and_geometry_relationship"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -36379,6 +37064,7 @@ union_safe = true
 [entity.wrongly_placed_void]
 parents = ["erroneous_manifold_solid_brep"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",
@@ -36395,6 +37081,7 @@ union_safe = true
 [entity.xor_expression]
 parents = ["binary_boolean_expression"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap214e3",
     "ap242e1",
@@ -36412,6 +37099,7 @@ union_safe = true
 [entity.year_month]
 parents = ["date"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap203e2",
     "ap242e1",
@@ -36426,6 +37114,7 @@ ty = "month_in_year_number"
 [entity.zero_surface_normal]
 parents = ["geometry_with_local_irregularity"]
 is_abstract = false
+is_complex_part = true
 schemas = [
     "ap242e1",
     "ap242e2",

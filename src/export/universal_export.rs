@@ -168,6 +168,48 @@ fn is_false(b: &bool) -> bool {
     !*b
 }
 
+/// The entities `schema` lets share a complex record with another, as EXPRESS
+/// reads its SUPERTYPE clauses: subtypes inside an ANDOR/AND combine;
+/// subtypes a clause does not name are ANDORed with it, so they and every
+/// subtype it names combine (a supertype with no clause names none); and the
+/// subtypes of an entity that combines combine too.
+fn combinable_in(schema: &Schema) -> BTreeSet<String> {
+    let mut children: BTreeMap<&str, Vec<&str>> = BTreeMap::new();
+    for (name, decl) in &schema.entities {
+        for p in &decl.parents {
+            children.entry(p.as_str()).or_default().push(name.as_str());
+        }
+    }
+    let mut combinable = BTreeSet::new();
+    for (name, decl) in &schema.entities {
+        let mut named = BTreeSet::new();
+        if let Some(expr) = &decl.supertype_expr {
+            collect_combinable(expr, false, &mut combinable);
+            collect_combinable(expr, true, &mut named);
+        }
+        let implicit: Vec<&str> = children
+            .get(name.as_str())
+            .into_iter()
+            .flatten()
+            .copied()
+            .filter(|k| !named.contains(*k))
+            .collect();
+        if !implicit.is_empty() {
+            combinable.extend(implicit.iter().map(|k| k.to_string()));
+            combinable.extend(named);
+        }
+    }
+    let mut stack: Vec<String> = combinable.iter().cloned().collect();
+    while let Some(n) = stack.pop() {
+        for k in children.get(n.as_str()).into_iter().flatten() {
+            if combinable.insert(k.to_string()) {
+                stack.push(k.to_string());
+            }
+        }
+    }
+    combinable
+}
+
 /// Collect entity names that appear inside an `AndOr`/`And` node (recursively).
 /// These are the multiple-inheritance-combinable leaves — a top-level `OneOf`
 /// (mutually exclusive subtypes, no ANDOR) is NOT combinable, so entities are
@@ -266,39 +308,10 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
     let mut chrono: Vec<&Schema> = schemas.iter().collect();
     chrono.sort_by_key(|s| chrono_rank(&s.source_label));
 
-    // complex-part set = entities inside any AndOr/And node (combinable leaves)
-    // plus their transitive supertypes (which also appear in the complex record).
-    let mut combinable: BTreeSet<String> = BTreeSet::new();
-    for name in unified.entity_parents.keys() {
-        if let Some(expr) = ranked
-            .iter()
-            .find_map(|s| s.entities.get(name))
-            .and_then(|e| e.supertype_expr.as_ref())
-        {
-            collect_combinable(expr, false, &mut combinable);
-        }
-    }
-    // Implicit combinability: a bare supertype (declares NO `SUPERTYPE OF`
-    // clause) does not ONEOF-restrict its subtypes, so they may co-occur in a
-    // Part21 complex record (e.g. representation_context's geometric/parametric/
-    // global subtypes form the context complex). Mark such subtypes combinable.
-    let mut children: BTreeMap<String, Vec<String>> = BTreeMap::new();
-    for name in unified.entity_parents.keys() {
-        if let Some(decl) = ranked.iter().find_map(|s| s.entities.get(name)) {
-            for p in &decl.parents {
-                children.entry(p.clone()).or_default().push(name.clone());
-            }
-        }
-    }
-    for name in unified.entity_parents.keys() {
-        let bare = ranked
-            .iter()
-            .find_map(|s| s.entities.get(name))
-            .is_some_and(|e| e.supertype_expr.is_none());
-        if bare && let Some(kids) = children.get(name) {
-            combinable.extend(kids.iter().cloned());
-        }
-    }
+    // complex-part set = the entities any edition lets share a complex record
+    // with another, plus their transitive supertypes (which also appear in the
+    // complex record).
+    let mut combinable: BTreeSet<String> = ranked.iter().flat_map(|s| combinable_in(s)).collect();
     // Corpus-augmented: entities observed as complex-record parts in the corpus
     // (complex_part_count > 0) are genuine combinable leaves, even when the
     // EXPRESS declaration only ONEOF-restricts them (no enclosing AndOr). This
@@ -318,10 +331,8 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
         if !is_complex_part.insert(n.clone()) {
             continue;
         }
-        if let Some(decl) = ranked.iter().find_map(|s| s.entities.get(&n)) {
-            for p in &decl.parents {
-                stack.push(p.clone());
-            }
+        for decl in ranked.iter().filter_map(|s| s.entities.get(&n)) {
+            stack.extend(decl.parents.iter().cloned());
         }
     }
 
@@ -567,4 +578,27 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
         doc.type_aliases.len()
     );
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use std::path::Path;
+
+    use super::*;
+    use crate::express::load_all_schemas;
+
+    #[test]
+    fn the_subtypes_of_an_entity_that_combines_combine() {
+        let schemas = load_all_schemas(Path::new("schemas"));
+        let e3 = schemas
+            .iter()
+            .find(|s| s.source_label == "ap242e3")
+            .unwrap();
+        let c = combinable_in(e3);
+        // feature_definition's ONEOF names round_hole but not barring_hole,
+        // which is ANDORed with it; round_hole's ONEOF names basic_round_hole.
+        assert!(c.contains("round_hole") && c.contains("barring_hole"));
+        assert!(c.contains("basic_round_hole"));
+        assert!(!c.contains("application_context"));
+    }
 }
