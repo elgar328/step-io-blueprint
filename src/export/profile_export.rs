@@ -111,6 +111,12 @@ struct ProfileTypeRule {
     /// The type names the rule lists; a complex value's `TYPEOF` is the
     /// union over its parts.
     names: Vec<String>,
+    /// The rule holds only where SELF's `TYPEOF` holds all of these.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    when_self: Vec<String>,
+    /// The rule does not hold where SELF's `TYPEOF` holds any of these.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    unless_self: Vec<String>,
 }
 
 #[derive(Serialize)]
@@ -305,6 +311,8 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                         Count::Zero => "zero",
                     },
                     names: r.names,
+                    when_self: r.when_self,
+                    unless_self: r.unless_self,
                 })
                 .collect();
             entity.insert(
@@ -379,7 +387,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
              # own_attrs + parents only (step-io flattens inheritance).\n\
              # ty repr: primitives lowercase; bare token = entity/TYPE-alias ref; LIST/SET/BAG/ARRAY OF, OPTIONAL, SELECT(...), ENUM(...).\n\
              # [[oneof]] = ONEOF exclusivity groups from SUPERTYPE OF clauses; branch = flat name set of one ONEOF child subtree.\n\
-             # type_rules = WHERE rules restricting an attribute's types: the attribute (or each element) references only `admits`, and its TYPEOF (for a complex value, the union over its parts) holds `count` of `names`; inherited by subtypes.\n\n",
+             # type_rules = WHERE rules restricting an attribute's types: the attribute (or each element) references only `admits`, and its TYPEOF (for a complex value, the union over its parts) holds `count` of `names`; inherited by subtypes; where `when_self` is given, only for an instance whose TYPEOF holds all of it, and where `unless_self` is, not for one whose TYPEOF holds any of it.\n\n",
             out = t.out_name,
             src = schema.source_label,
         );

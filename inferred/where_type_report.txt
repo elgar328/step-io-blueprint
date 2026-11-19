@@ -72,7 +72,7 @@ skip    bead.wr5: references to the instance
 skip    bead.wr6: references to the instance
 skip    bead.wr7: references to the instance
 skip    bead_end.wr1: attribute path
-skip    bead_end.wr3: conditional
+skip    bead_end.wr3: conditional (exclusive or)
 skip    bead_end.wr4: conditional
 skip    bead_end.wr5: conditional
 skip    bead_end.wr6: conditional
@@ -150,16 +150,16 @@ skip    comparison_expression.wr1: conditional
 skip    component_definition.wr5: restricts SELF
 skip    composite_assembly_sequence_definition.wr1: references to the instance
 take    composite_curve_segment.wr1: composite_curve_segment.parent_curve AtLeastOne ["bounded_curve"] -> 17 entities
-skip    composite_hole.wr1: conditional
-skip    composite_hole.wr2: conditional
-skip    composite_hole.wr3: conditional
+skip    composite_hole.wr1: conditional (exclusive or)
+skip    composite_hole.wr2: conditional (exclusive or)
+skip    composite_hole.wr3: conditional (exclusive or)
 skip    composite_sheet_representation.wr1: restricts SELF
-skip    compound_feature.wr1: conditional
-skip    compound_feature.wr2: conditional
-skip    compound_feature.wr3: conditional
-skip    compound_feature.wr4: conditional
-skip    compound_feature.wr5: conditional
-skip    compound_feature.wr6: conditional
+skip    compound_feature.wr1: conditional (exclusive or)
+skip    compound_feature.wr2: conditional (exclusive or)
+skip    compound_feature.wr3: conditional (exclusive or)
+skip    compound_feature.wr4: conditional (exclusive or)
+skip    compound_feature.wr5: conditional (exclusive or)
+skip    compound_feature.wr6: conditional (exclusive or)
 take    compound_shape_representation.wr1: representation.context_of_items AtLeastOne ["geometric_representation_context"] -> 3 entities
 take    compound_shape_representation.wr2: representation.items ExactlyOne each ["edge_based_wireframe_model", "face_based_surface_model", "mapped_item", "axis2_placement_3d"] -> 17 entities
 skip    compound_shape_representation.wr3: query form
@@ -245,7 +245,7 @@ skip    data_quality_inspection_report.wr1: references to the instance
 skip    data_quality_inspection_result.wr1: references to the instance
 skip    data_quality_inspection_result_representation.wr1: query form
 skip    data_quality_measurement_requirement.wr1: references to the instance
-skip    datum.wr1: conditional
+skip    datum.wr1: conditional (exclusive or)
 skip    datum.wr2: attribute path
 skip    datum_feature.wr1: attribute path
 skip    datum_target.wr1: attribute path
@@ -272,9 +272,9 @@ skip    different_surface_normal.wr1: attribute path
 skip    different_surface_normal.wr2: indexed element
 skip    different_volume.wr1: attribute path
 skip    different_volume.wr2: indexed element
-skip    dimension_callout.wr1: conditional
-skip    dimension_callout.wr2: conditional
-skip    dimension_callout.wr3: conditional
+skip    dimension_callout.wr1: conditional (exclusive or)
+skip    dimension_callout.wr2: conditional (exclusive or)
+skip    dimension_callout.wr3: conditional (exclusive or)
 take    dimension_callout_component_relationship.wr2: draughting_callout_relationship.relating_draughting_callout AtLeastOne ["structured_dimension_callout"] -> 1 entities
 take    dimension_callout_component_relationship.wr3: draughting_callout_relationship.related_draughting_callout Zero ["leader_directed_callout", "projection_directed_callout", "dimension_curve_directed_callout", "structured_dimension_callout"] -> 7 entities
 skip    dimension_callout_component_relationship.wr5: query form
@@ -307,7 +307,7 @@ skip    draughting_annotation_occurrence.wr3: conditional
 skip    draughting_annotation_occurrence.wr4: conditional
 skip    draughting_annotation_occurrence.wr5: conditional
 skip    draughting_annotation_occurrence.wr6: conditional
-skip    draughting_annotation_occurrence.wr7: conditional
+take    draughting_annotation_occurrence.wr7: styled_item.item ExactlyOne ["composite_text", "text_literal"] -> 12 entities when SELF is ["annotation_text_occurrence"]
 skip    draughting_annotation_occurrence.wr8: conditional
 skip    draughting_annotation_occurrence.wr9: conditional
 skip    draughting_annotation_occurrence.wr10: conditional
@@ -605,7 +605,7 @@ skip    joggle.wr11: attribute path
 skip    joggle.wr12: attribute path
 skip    joggle.wr13: attribute path
 skip    joggle_termination.wr1: attribute path
-skip    joggle_termination.wr3: conditional
+skip    joggle_termination.wr3: conditional (exclusive or)
 skip    joggle_termination.wr4: conditional
 skip    joggle_termination.wr5: conditional
 skip    joggle_termination.wr6: conditional
@@ -913,11 +913,11 @@ skip    procedural_solid_representation_sequence.wr1: restricts SELF
 skip    process_plan.wr1: references to the instance
 skip    process_plan.wr2: references to the instance
 skip    product_concept_feature_category.wr1: references to the instance
-skip    product_definition_occurrence.wr1: conditional
+skip    product_definition_occurrence.wr1: conditional (exclusive or)
 skip    product_definition_occurrence.wr3: conditional
 take    product_definition_shape.wr1: property_definition.definition AtLeastOne ["characterized_product_definition", "characterized_object"] -> 161 entities
 skip    product_identification.wr1: references to the instance
-skip    product_identification.wr2: conditional
+skip    product_identification.wr2: conditional (exclusive or)
 skip    product_process_plan.wr1: references to the instance
 skip    product_process_plan.wr2: references to the instance
 skip    product_process_plan.wr3: references to the instance
@@ -997,11 +997,11 @@ skip    rib_top_floor.wr3: references to the instance
 skip    rib_top_floor.wr4: conditional
 skip    rib_top_floor.wr5: conditional
 skip    rib_top_floor.wr6: conditional
-skip    round_hole.wr1: conditional
-skip    round_hole.wr2: conditional
-skip    round_hole.wr3: conditional
-skip    round_hole.wr4: conditional
-skip    round_hole.wr5: conditional
+skip    round_hole.wr1: conditional (exclusive or)
+skip    round_hole.wr2: conditional (exclusive or)
+skip    round_hole.wr3: conditional (exclusive or)
+skip    round_hole.wr4: conditional (exclusive or)
+skip    round_hole.wr5: conditional (exclusive or)
 skip    rounded_end.wr1: references to the instance
 skip    rounded_end.wr2: references to the instance
 skip    rounded_end.wr3: references to the instance
@@ -1083,7 +1083,7 @@ skip    solid_with_general_protrusion.wr1: attribute path
 skip    solid_with_groove.wr1: restricts SELF
 skip    solid_with_slot.wr1: restricts SELF
 skip    solid_with_stepped_round_hole.wr1: restricts SELF
-skip    solid_with_stepped_round_hole_and_conical_transitions.wr2: conditional
+skip    solid_with_stepped_round_hole_and_conical_transitions.wr2: conditional (exclusive or)
 skip    solid_with_through_depression.wr1: restricts SELF
 take    specified_higher_usage_occurrence.wr5: specified_higher_usage_occurrence.upper_usage ExactlyOne ["next_assembly_usage_occurrence", "specified_higher_usage_occurrence"] -> 6 entities
 skip    spherical_cap.wr1: references to the instance
@@ -1120,8 +1120,8 @@ skip    structured_dimension_callout.wr6: conditional
 skip    structured_dimension_callout.wr7: conditional
 skip    styled_item.wr1: conditional
 take    styled_item.wr2: styled_item.item Zero ["styled_item"] -> 593 entities
-skip    styled_item.wr3: conditional
-skip    subsketch.wr1: conditional
+take    styled_item.wr3: styled_item.item AtLeastOne ["mapped_item", "geometric_representation_item"] -> 443 entities unless SELF is ["context_dependent_over_riding_styled_item"]
+skip    subsketch.wr1: conditional (exclusive or)
 skip    substring_expression.wr1: not an explicit attribute
 skip    substring_expression.wr1: not an explicit attribute
 skip    substring_expression.wr1: not an explicit attribute
@@ -1135,8 +1135,8 @@ skip    surface_distance_geometric_constraint.wr1: conditional
 skip    surface_pair.wr3: not an explicit attribute
 take    surface_patch.wr1: surface_patch.parent_surface Zero ["curve_bounded_surface"] -> 11 entities
 skip    surface_side_style.wr1: query form
-skip    surface_style_parameter_line.wr1: conditional
-skip    surface_style_rendering_with_properties.wr1: conditional
+skip    surface_style_parameter_line.wr1: conditional (exclusive or)
+skip    surface_style_rendering_with_properties.wr1: conditional (exclusive or)
 take    surface_texture_representation.wr1: representation.items ExactlyOne each ["measure_representation_item", "value_range", "descriptive_representation_item"] -> 13 entities
 skip    surface_texture_representation.wr2: query form
 skip    surface_texture_representation.wr2: query form

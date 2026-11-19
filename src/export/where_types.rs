@@ -7,10 +7,12 @@
 //! follow them, so each is resolved here to the closed set of entities it
 //! admits: `TYPEOF` of an entity instance is the entity, its supertypes and
 //! every SELECT any of them belongs to (nested SELECTs included), and the
-//! rule counts how many listed names that set holds. Conditional,
-//! indexed-element, path and existence rules are not attribute type
-//! restrictions and are reported, not exported. Reading is never held to
-//! these rules.
+//! rule counts how many listed names that set holds. A rule may also hold
+//! only for some instances, by SELF's type: `.. OR 'X' IN TYPEOF(SELF)`
+//! lifts it from an X, `NOT ('X' IN TYPEOF(SELF)) OR ..` holds it for an X
+//! only. Other conditional, indexed-element, path and existence rules are
+//! not attribute type restrictions and are reported, not exported. Reading
+//! is never held to these rules.
 
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 
@@ -67,6 +69,10 @@ pub(crate) struct TypeRule {
     /// their members). `admits` settles simple values; a complex value's
     /// `TYPEOF` is the union over its parts, so the count is over that union.
     pub names: Vec<String>,
+    /// The rule holds only where SELF's `TYPEOF` holds all of these.
+    pub when_self: Vec<String>,
+    /// The rule does not hold where SELF's `TYPEOF` holds any of these.
+    pub unless_self: Vec<String>,
 }
 
 /// The type restrictions of every entity of a schema, and a line per
@@ -262,6 +268,36 @@ fn term(t: &str) -> Option<Cond> {
     None
 }
 
+/// SELF's type conditions on a disjunction, with the rest of it: a term
+/// `'X' IN TYPEOF(SELF)` lifts the rest from an X (`unless`), a term
+/// `NOT ('X' IN TYPEOF(SELF))` holds it for an X only (`when`).
+struct SelfCondition {
+    when: Vec<String>,
+    unless: Vec<String>,
+    rest: String,
+}
+
+fn self_condition(body: &str) -> Option<SelfCondition> {
+    let is_self = |t: &str| {
+        re!(r"^'([a-z0-9_]+)' in typeof\(self\)$")
+            .captures(strip_parens(t))
+            .map(|c| c[1].to_string())
+    };
+    let (mut when, mut unless, mut rest) = (Vec::new(), Vec::new(), Vec::new());
+    for t in split_top(body, "or") {
+        if let Some(x) = is_self(t) {
+            unless.push(x);
+        } else if let Some(x) = strip_not(t).and_then(is_self) {
+            when.push(x);
+        } else {
+            rest.push(t);
+        }
+    }
+    let rest = rest.join(" or ");
+    (!(when.is_empty() && unless.is_empty()) && !rest.is_empty() && !rest.contains("typeof(self)"))
+        .then_some(SelfCondition { when, unless, rest })
+}
+
 /// Why a rule mentioning `TYPEOF` restricts no attribute type.
 fn why_not(t: &str) -> &'static str {
     let args: Vec<String> = re!(r"typeof\(([^()]*)\)")
@@ -399,19 +435,40 @@ pub(crate) fn analyze(schema: &Schema) -> WhereTypes {
             }
             let at = format!("{entity}.{}", w.label);
             let body = strip_parens(&expr);
+            let mut on_self = None;
             let conjuncts = if split_top(body, "xor").len() > 1 {
-                report.push(format!("skip    {at}: conditional"));
+                report.push(format!("skip    {at}: conditional (exclusive or)"));
                 continue;
             } else if split_top(body, "or").len() > 1 {
-                if term(body).is_none() {
+                if term(body).is_some() {
+                    vec![body.to_string()]
+                } else if let Some(c) = self_condition(body).filter(|c| term(&c.rest).is_some()) {
+                    let rest = c.rest.clone();
+                    on_self = Some(c);
+                    vec![rest]
+                } else {
                     report.push(format!("skip    {at}: conditional"));
                     continue;
                 }
-                vec![body]
             } else {
                 split_top(body, "and")
+                    .into_iter()
+                    .map(str::to_string)
+                    .collect()
             };
-            for c in conjuncts {
+            let (when_self, unless_self) =
+                on_self.map_or((Vec::new(), Vec::new()), |c| (c.when, c.unless));
+            if let Some(n) = when_self
+                .iter()
+                .chain(&unless_self)
+                .find(|n| !schema.entities.contains_key(n.as_str()))
+            {
+                report.push(format!(
+                    "skip    {at}: SELF's condition names a non-entity {n:?}"
+                ));
+                continue;
+            }
+            for c in &conjuncts {
                 if !c.contains("typeof(") {
                     continue;
                 }
@@ -465,8 +522,15 @@ pub(crate) fn analyze(schema: &Schema) -> WhereTypes {
                     (Count::AtLeastOne | Count::ExactlyOne, [one]) => one.clone(),
                     _ => format!("{entity}_{attr}"),
                 };
+                let mut on = String::new();
+                if !when_self.is_empty() {
+                    on += &format!(" when SELF is {when_self:?}");
+                }
+                if !unless_self.is_empty() {
+                    on += &format!(" unless SELF is {unless_self:?}");
+                }
                 report.push(format!(
-                    "take    {at}: {owner}.{attr} {:?}{} {:?} -> {} entities",
+                    "take    {at}: {owner}.{attr} {:?}{} {:?} -> {} entities{on}",
                     cond.count,
                     if cond.elementwise { " each" } else { "" },
                     cond.names,
@@ -480,6 +544,8 @@ pub(crate) fn analyze(schema: &Schema) -> WhereTypes {
                     admits,
                     count: cond.count,
                     names: cond.names,
+                    when_self: when_self.clone(),
+                    unless_self: unless_self.clone(),
                 });
             }
         }
@@ -624,5 +690,44 @@ mod tests {
                 .any(|r| r.attr == "items"),
             "wr2 asks for one tessellated item, not that every item is one"
         );
+    }
+
+    #[test]
+    fn a_condition_on_self_is_kept_with_the_rule() {
+        let w = e2_rules();
+        let by_label = |e: &str, l: &str| w.rules[e].iter().find(|r| r.rule == l).unwrap();
+        let styled = by_label("styled_item", "wr3");
+        assert_eq!(styled.attr, "item");
+        assert_eq!(
+            styled.unless_self,
+            ["context_dependent_over_riding_styled_item"]
+        );
+        assert!(styled.when_self.is_empty());
+        assert!(admits(styled, "mapped_item") && admits(styled, "cartesian_point"));
+        assert!(!admits(styled, "closed_shell") && !admits(styled, "shape_representation"));
+        let text = by_label("draughting_annotation_occurrence", "wr7");
+        assert_eq!(text.when_self, ["annotation_text_occurrence"]);
+        assert_eq!(text.count, Count::ExactlyOne);
+        assert!(admits(text, "text_literal") && !admits(text, "annotation_text"));
+        assert!(
+            w.report
+                .iter()
+                .any(|l| l
+                    == "skip    product_definition_occurrence.wr1: conditional (exclusive or)")
+        );
+    }
+
+    #[test]
+    fn a_self_condition_needs_another_term() {
+        let c = self_condition(&normalize(
+            "(NOT ('A' IN TYPEOF(SELF))) OR ('B' IN TYPEOF(SELF.x)) OR ('C' IN TYPEOF(SELF))",
+        ))
+        .expect("a condition on SELF and one on SELF.x");
+        assert_eq!((c.when, c.unless), (vec!["a".into()], vec!["c".into()]));
+        assert_eq!(c.rest, "'b' in typeof(self.x)");
+        assert!(
+            self_condition(&normalize("('A' IN TYPEOF(SELF)) OR ('B' IN TYPEOF(SELF))")).is_none()
+        );
+        assert!(self_condition(&normalize("('A' IN TYPEOF(x)) OR ('B' IN TYPEOF(y))")).is_none());
     }
 }
