@@ -24,17 +24,23 @@ monolithic-era equivalent) for AP203 Ed 1 and AP214.
 | `ap214e3.exp` | AP214 Ed 3 (2010, IS) | AIM | 915 | MBx-IF [^legacy] |
 | `ap242e1.exp` | AP242 Ed 1 (2014, IS) | MIM | 1726 | MBx-IF [^ed1] |
 | `ap242e2.exp` | AP242 Ed 2 (2020, IS) | MIM | 2122 | **SMRL v8** |
-| `ap242e3.exp` | AP242 Ed 3 (2022, TS) | MIM | 2140 | **SMRL v9** |
+| `ap242e3.exp` | AP242 Ed 3 (2022, IS, withdrawn) | MIM | 2140 | **SMRL v9** |
+| `ap242e4.exp` | AP242 Ed 4 (2025, IS) | MIM | 2407 | **SMRL v12** / ISO/TS 10303-442 ed 7 [^ed4] |
 
 **SMRL version → AP242 edition:** v8 = Ed 2 (2122), v9 = Ed 3 (2140), v10 = Ed 3
-rev (2145), v11/v12 = Ed 4 (2392 / 2407, 2025). AP203 Ed 2 is stable at 1006
+rev (2145), v11 = a revision between Ed 3 and Ed 4 (N11273, 2392), v12 = Ed 4
+(N11521, 2407, 2025). AP203 Ed 2 is stable at 1006
 across all versions. The SMRL contains only **modular** APs — it has **no** AP214
 and **no** legacy AP203 `config_control_design`.
 
 **Publication tiers:** the AP242 *standard document* (ISO 10303-242) is an
-International Standard for Ed 1 (2014) and Ed 2 (2020); Ed 3 is not a full IS — it
-is published as a Technical Specification (ISO/TS 10303-442:2022), not a draft.
-The EXPRESS *schema files* are all distributed under the TS-442 umbrella.
+International Standard in every edition: Ed 1 (2014), Ed 2 (2020), Ed 3 (2022,
+since withdrawn) and Ed 4 (2025). Its EXPRESS *schema files* are distributed
+with the module Technical Specification ISO/TS 10303-442.
+
+[^ed4]: Also published on its own, byte for byte the same, at
+`standards.iso.org/iso/ts/10303/-442/ed-7/tech/express/mim_lf.exp`. This file is
+that download unchanged (it already has LF line endings).
 
 [^legacy]: Legacy non-modular AP (AIM long form), absent from the SMRL, so sourced
 from its original distributor. AP214 is superseded by AP242.

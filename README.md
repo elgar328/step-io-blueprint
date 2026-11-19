@@ -23,7 +23,7 @@ cargo test                                # unit tests
 | Command | Output | What it is |
 |---|---|---|
 | `universal_export` | `inferred/universal.toml`, `inferred/narrowing_report.txt` | The schema-faithful **union** of all AP schemas (entities, attributes, SELECTs, ENUMs) plus per-entity DERIVE facts. The input the step-io `codegen` generator reads to build the reader/model. A reference redeclaration (`SELF\super.attr : narrower;`) is written only when every edition's type for that attribute falls inside it, so the union never rejects input some edition allows; the report lists what was written, rejected, and where the union is narrower than some edition. |
-| `profile_export` | `profiles/<target>.toml` | One **output profile** per curated target AP (latest IS edition): the legal entity set + ordered attributes for schema-conditioned writing. Currently emits one target, `ap242e2` (step-io's sole output schema); the target table is extensible if more are added. |
+| `profile_export` | `profiles/<target>.toml` | One **output profile** per curated target AP (latest IS edition): the legal entity set + ordered attributes for schema-conditioned writing. Currently emits one target, `ap242e4` (step-io's sole output schema); the target table is extensible if more are added. |
 
 Both read the EXPRESS schemas (below). `universal_export` additionally reads the
 frozen `inferred/corpus_usage.toml` to recover real multi-instance (complex)
@@ -38,8 +38,8 @@ and copied in only when the corpus itself changes (rare).
 
 ## Schemas
 
-Six EXPRESS schemas are read as a union: AP203 (Ed 1–2), AP214 (Ed 3), and
-AP242 (Ed 1–3). The authoritative free source is the ISO **SMRL** (STEP Module &
+Seven EXPRESS schemas are read as a union: AP203 (Ed 1–2), AP214 (Ed 3), and
+AP242 (Ed 1–4). The authoritative free source is the ISO **SMRL** (STEP Module &
 Resource Library); legacy non-modular schemas the SMRL does not carry come from
 [MBx-IF](https://www.mbx-if.org/home/mbx/resources/express-schemas/) /
 [STEPCode](https://github.com/stepcode/stepcode). Line endings are normalized to
@@ -52,7 +52,8 @@ LF; schema content is unchanged.
 | `ap214e3.exp` | AP214 Ed 3 | MBx-IF |
 | `ap242e1.exp` | AP242 Ed 1 | MBx-IF |
 | `ap242e2.exp` | AP242 Ed 2 | SMRL v8 |
-| `ap242e3.exp` | AP242 Ed 3 (TS) | SMRL v9 |
+| `ap242e3.exp` | AP242 Ed 3 | SMRL v9 |
+| `ap242e4.exp` | AP242 Ed 4 | SMRL v12 |
 
 Only mechanical-CAD schemas are used; AP209/210/238/239/240, IFC, ISO 15926, and
 PDM domains are out of scope.
@@ -72,7 +73,7 @@ src/
     ├── common.rs            shared exporter helpers (ty repr, schema rank, redeclaration signal)
     ├── universal_export.rs  → inferred/universal.toml (codegen input)
     └── profile_export.rs    → profiles/<target>.toml (output profiles)
-schemas/                     the six .exp schema files (+ NOTICE.md)
+schemas/                     the seven .exp schema files (+ NOTICE.md)
 inferred/                    frozen corpus_usage.toml (input) + universal.toml (output)
 profiles/                    per-target output profiles
 ```

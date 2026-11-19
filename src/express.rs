@@ -1185,7 +1185,7 @@ mod tests {
         }
     }
 
-    /// Smoke test against the real 4 schemas in `schemas/`. Verifies that
+    /// Smoke test against the real schemas in `schemas/`. Verifies that
     /// parsing completes for every file and that entity / type counts
     /// land in plausible ranges, with no parser warnings.
     #[test]
@@ -1193,8 +1193,8 @@ mod tests {
         let schemas = load_all_schemas(Path::new("schemas"));
         assert_eq!(
             schemas.len(),
-            6,
-            "expected 6 schemas, got {}",
+            7,
+            "expected 7 schemas, got {}",
             schemas.len()
         );
 
@@ -1202,7 +1202,9 @@ mod tests {
             .iter()
             .map(|s| (s.source_label.as_str(), s))
             .collect();
-        for label in ["ap203e1", "ap203e2", "ap214e3", "ap242e1"] {
+        for label in [
+            "ap203e1", "ap203e2", "ap214e3", "ap242e1", "ap242e2", "ap242e3", "ap242e4",
+        ] {
             let s = by_label
                 .get(label)
                 .unwrap_or_else(|| panic!("missing schema {label}"));

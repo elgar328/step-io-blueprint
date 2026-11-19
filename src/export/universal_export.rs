@@ -266,7 +266,7 @@ struct UnivEntity {
     #[serde(skip_serializing_if = "Vec::is_empty")]
     derives: Vec<String>,
     /// Source AP schemas whose EXPRESS declares this entity, chronological
-    /// (ap203e1 → ap242e3). Never empty. Membership data for coverage docs.
+    /// (ap203e1 → ap242e4). Never empty. Membership data for coverage docs.
     schemas: Vec<String>,
     own_attrs: Vec<UnivAttr>,
     #[serde(skip_serializing_if = "Vec::is_empty")]
@@ -292,8 +292,8 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
     let mut ranked: Vec<&Schema> = schemas.iter().collect();
     ranked.sort_by_key(|s| std::cmp::Reverse(schema_rank(&s.source_label)));
     // Chronological (publication-order) view for the per-entity membership
-    // list. NOT schema_rank: that is newest-wins *preference* order, which
-    // puts ap242e2 (the IS edition) above ap242e3.
+    // list. Kept apart from schema_rank, the preference order, though the two
+    // agree while the output target is the newest edition.
     fn chrono_rank(label: &str) -> u8 {
         match label {
             "ap203e1" => 1,
@@ -302,6 +302,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
             "ap242e1" => 4,
             "ap242e2" => 5,
             "ap242e3" => 6,
+            "ap242e4" => 7,
             _ => 0,
         }
     }

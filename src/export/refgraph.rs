@@ -163,12 +163,12 @@ mod tests {
 
     #[test]
     fn real_schemas_build_without_panic() {
-        // Smoke: union of all 6 schemas should produce a non-trivial graph
+        // Smoke: union of all 7 schemas should produce a non-trivial graph
         // with no panics.
         use crate::express::load_all_schemas;
         use std::path::Path;
         let schemas = load_all_schemas(Path::new("schemas"));
-        assert_eq!(schemas.len(), 6);
+        assert_eq!(schemas.len(), 7);
         let g = build(&schemas);
         assert!(
             g.entity_parents.len() >= 700,

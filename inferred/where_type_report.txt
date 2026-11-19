@@ -1,33 +1,36 @@
-# WHERE rules of ap242e2 that mention TYPEOF: `take` = exported as a type rule, `skip` = not an attribute type restriction (reason given).
+# WHERE rules of ap242e4 that mention TYPEOF: `take` = exported as a type rule, `skip` = not an attribute type restriction (reason given).
+skip    a3m_data_quality_criteria_representation.wr1: query form
+skip    a3m_data_quality_inspection_result_representation.wr1: query form
 skip    a3m_equivalence_criteria_representation.wr1: query form
 skip    a3m_equivalence_criterion.wr2: references to the instance
 skip    a3m_equivalence_criterion.wr3: references to the instance
-take    a3m_equivalence_inspection_result_representation_for_assembly.wr1: representation.items Zero each ["a3ms_equivalence_inspection_result"] -> 784 entities
-take    a3m_equivalence_inspection_result_representation_for_shape.wr1: representation.items Zero each ["a3ma_equivalence_inspection_result"] -> 784 entities
-take    a3ma_length_measure_and_context_dependent_measure_pair.wr1: compound_representation_item.item_element AtLeastOne ["list_representation_item"] -> 0 entities, list_representation_item of 785 entities
+take    a3m_equivalence_inspection_result_representation_for_assembly.wr1: representation.items Zero each ["a3ms_equivalence_inspection_result"] -> 877 entities
+take    a3m_equivalence_inspection_result_representation_for_shape.wr1: representation.items Zero each ["a3ma_equivalence_inspection_result"] -> 877 entities
+skip    a3m_pmi_data_quality_inspection_result.wr4: references to the instance
+take    a3ma_length_measure_and_context_dependent_measure_pair.wr1: compound_representation_item.item_element AtLeastOne ["list_representation_item"] -> 0 entities, list_representation_item of 878 entities
 skip    a3ma_length_measure_and_context_dependent_measure_pair.wr3: indexed element
+skip    a3ma_length_measure_and_context_dependent_measure_pair.wr3: attribute path
+skip    a3ma_length_measure_and_context_dependent_measure_pair.wr4: indexed element
 skip    a3ma_length_measure_and_context_dependent_measure_pair.wr4: attribute path
-skip    a3ma_length_measure_and_context_dependent_measure_pair.wr5: indexed element
-skip    a3ma_length_measure_and_context_dependent_measure_pair.wr6: attribute path
+skip    abrupt_normal_change_of_adjacent_faces.wr1: attribute path
+skip    abrupt_normal_change_of_adjacent_triangles.wr1: attribute path
 take    absorbed_dose_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["absorbed_dose_unit"] -> 2 entities
 take    acceleration_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["acceleration_unit"] -> 1 entities
-take    advanced_brep_shape_representation.wr1: representation.items ExactlyOne each ["manifold_solid_brep", "faceted_brep", "mapped_item", "axis2_placement_3d"] -> 17 entities
+skip    advanced_brep_shape_representation.wr1: query form
 skip    advanced_brep_shape_representation.wr2: query form
-skip    advanced_brep_shape_representation.wr3: query form
-skip    advanced_brep_shape_representation.wr4: attribute path
-skip    advanced_brep_shape_representation.wr5: query form
-skip    advanced_brep_shape_representation.wr6: attribute path
-take    advanced_face.wr1: face_surface.face_geometry ExactlyOne ["elementary_surface", "b_spline_surface", "swept_surface"] -> 19 entities
+skip    advanced_brep_shape_representation.wr3: attribute path
+skip    advanced_brep_shape_representation.wr4: query form
+skip    advanced_brep_shape_representation.wr5: attribute path
+skip    advanced_face.wr1: attribute path
 skip    advanced_face.wr2: attribute path
 skip    advanced_face.wr3: attribute path
 skip    advanced_face.wr4: attribute path
-skip    advanced_face.wr5: attribute path
-skip    advanced_face.wr6: conditional
+skip    advanced_face.wr5: conditional
+skip    advanced_face.wr6: attribute path
 skip    advanced_face.wr7: attribute path
 skip    advanced_face.wr8: attribute path
 skip    advanced_face.wr9: attribute path
-skip    advanced_face.wr10: attribute path
-skip    advanced_face.wr10: attribute path
+skip    advanced_face.wr9: attribute path
 take    amount_of_substance_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["amount_of_substance_unit"] -> 1 entities
 skip    angle_direction_reference.wr1: conditional
 skip    angle_geometric_constraint.wr1: conditional
@@ -45,6 +48,12 @@ skip    annotation_text.wr1: attribute path
 skip    annotation_text.wr2: restricts SELF
 skip    annotation_text_character.wr1: attribute path
 skip    annotation_text_character.wr2: restricts SELF
+skip    annotation_to_annotation_leader_line.wr1: not an explicit attribute
+skip    annotation_to_annotation_leader_line.wr1: not an explicit attribute
+skip    annotation_to_model_leader_line.wr1: not an explicit attribute
+skip    annotation_to_model_leader_line.wr2: not an explicit attribute
+skip    apll_point.wr1: restricts SELF
+skip    apll_point_with_surface.wr1: restricts SELF
 take    applied_area.wr1: shape_aspect.of_shape AtLeastOne ["product_definition_shape"] -> 11 entities
 skip    applied_area.wr2: references to the instance
 skip    applied_area.wr3: references to the instance
@@ -52,8 +61,10 @@ skip    applied_area.wr4: references to the instance
 skip    applied_area.wr5: references to the instance
 skip    applied_area.wr6: references to the instance
 skip    applied_area.wr7: references to the instance
-take    applied_ineffectivity_assignment.wr1: effectivity_assignment.assigned_effectivity Zero ["lot_effectivity", "serial_numbered_effectivity", "product_definition_effectivity"] -> 4 entities
+take    applied_ineffectivity_assignment.wr1: effectivity_assignment.assigned_effectivity Zero ["lot_effectivity", "serial_numbered_effectivity", "product_definition_effectivity"] -> 6 entities
 take    area_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["area_unit"] -> 1 entities
+skip    auxiliary_leader_line.wr2: not an explicit attribute
+skip    auxiliary_leader_line.wr3: not an explicit attribute
 skip    b_spline_curve.wr1: restricts SELF
 skip    b_spline_surface.wr1: restricts SELF
 skip    b_spline_volume.wr1: restricts SELF
@@ -63,6 +74,12 @@ skip    barring_hole.wr3: attribute path
 skip    barring_hole.wr3: attribute path
 skip    barring_hole.wr4: attribute path
 skip    barring_hole.wr5: attribute path
+skip    basic_round_hole.wr2: query form
+skip    basic_round_hole.wr3: attribute path
+skip    basic_round_hole.wr4: attribute path
+skip    basic_round_hole.wr5: conditional
+skip    basic_round_hole.wr6: conditional
+skip    basic_round_hole_occurrence.wr1: attribute path
 skip    bead.wr1: attribute path
 skip    bead.wr1: attribute path
 skip    bead.wr2: attribute path
@@ -99,15 +116,16 @@ skip    boss_top.wr9: references to the instance
 take    bound_parameter_environment.wr1: environment.syntactic_representation AtLeastOne ["bound_variational_parameter"] -> 1 entities
 take    bound_parameter_environment.wr1: environment.semantics AtLeastOne ["instance_attribute_reference"] -> 1 entities
 skip    bound_variational_parameter.wr1: not an explicit attribute
+skip    bounded_curve_with_length.wr1: restricts SELF
 skip    bounded_pcurve.wr1: indexed element
-take    bounded_surface_curve.wr1: surface_curve.curve_3d AtLeastOne ["bounded_curve"] -> 17 entities
+take    bounded_surface_curve.wr1: surface_curve.curve_3d AtLeastOne ["bounded_curve"] -> 18 entities
 skip    box_domain.wr1: references to the instance
 skip    camera_image.wr1: restricts SELF
 skip    camera_image_2d_with_scale.wr1: attribute path
 skip    camera_image_3d_with_scale.wr1: attribute path
 skip    camera_image_3d_with_scale.wr6: attribute path
 skip    camera_image_3d_with_scale.wr6: attribute path
-take    camera_usage.wr1: representation_map.mapped_representation Zero ["presentation_representation"] -> 108 entities
+take    camera_usage.wr1: representation_map.mapped_representation Zero ["presentation_representation"] -> 115 entities
 take    capacitance_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["capacitance_unit"] -> 2 entities
 skip    cartesian_11.wr1: restricts SELF
 take    celsius_temperature_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["thermodynamic_temperature_unit"] -> 1 entities
@@ -135,7 +153,7 @@ skip    circular_pattern.wr5: references to the instance
 skip    circular_pattern.wr6: references to the instance
 skip    circular_pattern.wr7: references to the instance
 skip    circular_pattern.wr8: references to the instance
-take    class_usage_effectivity_context_assignment.wr2: class_usage_effectivity_context_assignment.items AtLeastOne each ["product_definition"] -> 37 entities
+take    class_usage_effectivity_context_assignment.wr2: class_usage_effectivity_context_assignment.items AtLeastOne each ["product_definition"] -> 79 entities
 take    class_usage_effectivity_context_assignment.wr3: effectivity_context_assignment.assigned_effectivity_assignment AtLeastOne ["applied_effectivity_assignment"] -> 1 entities
 skip    class_usage_effectivity_context_assignment.wr3: attribute path
 skip    class_usage_effectivity_context_assignment.wr3: attribute path
@@ -144,16 +162,17 @@ skip    closed_path_profile.wr2: references to the instance
 skip    closed_path_profile.wr3: references to the instance
 skip    closed_path_profile.wr4: references to the instance
 skip    closed_path_profile.wr5: references to the instance
-take    coaxial_geometric_constraint.wr1: explicit_constraint.reference_elements Zero each ["point", "plane", "spherical_surface", "sphere"] -> 766 entities
+take    coaxial_geometric_constraint.wr1: explicit_constraint.reference_elements Zero each ["point", "plane", "spherical_surface", "sphere"] -> 854 entities
 skip    common_datum.wr2: attribute path
 skip    comparison_expression.wr1: conditional
 skip    component_definition.wr5: restricts SELF
 skip    composite_assembly_sequence_definition.wr1: references to the instance
-take    composite_curve_segment.wr1: composite_curve_segment.parent_curve AtLeastOne ["bounded_curve"] -> 17 entities
+take    composite_curve_segment.wr1: composite_curve_segment.parent_curve AtLeastOne ["bounded_curve"] -> 18 entities
 skip    composite_hole.wr1: conditional (exclusive or)
 skip    composite_hole.wr2: conditional (exclusive or)
 skip    composite_hole.wr3: conditional (exclusive or)
 skip    composite_sheet_representation.wr1: restricts SELF
+skip    composite_unit_shape_aspect.wr1: restricts SELF
 skip    compound_feature.wr1: conditional (exclusive or)
 skip    compound_feature.wr2: conditional (exclusive or)
 skip    compound_feature.wr3: conditional (exclusive or)
@@ -166,17 +185,16 @@ skip    compound_shape_representation.wr3: query form
 skip    compound_shape_representation.wr4: attribute path
 take    conductance_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["conductance_unit"] -> 2 entities
 take    configuration_effectivity.wr1: product_definition_effectivity.usage AtLeastOne ["product_definition_usage"] -> 13 entities
-take    configured_effectivity_assignment.wr1: effectivity_assignment.assigned_effectivity ExactlyOne ["effectivity"] -> 8 entities
+take    configured_effectivity_assignment.wr1: effectivity_assignment.assigned_effectivity ExactlyOne ["effectivity"] -> 10 entities
 skip    configured_effectivity_assignment.wr3: query form
 skip    configured_effectivity_assignment.wr5: conditional
 skip    configured_effectivity_assignment.wr6: conditional
 skip    configured_effectivity_assignment.wr8: references to the instance
-skip    connected_edge_with_length_set_representation.wr1: query form
 skip    constrained_kinematic_motion_representation.wr1: attribute path
 skip    constrained_kinematic_motion_representation.wr1: attribute path
 take    constrained_kinematic_motion_representation.wr4: representation_relationship_with_transformation.transformation_operator AtLeastOne ["kinematic_pair"] -> 43 entities
 take    constructive_geometry_representation.wr1: representation.context_of_items AtLeastOne ["geometric_representation_context"] -> 3 entities
-take    constructive_geometry_representation.wr2: representation.items ExactlyOne each ["placement", "curve", "edge", "face", "point", "surface", "connected_face_set", "connected_edge_set", "vertex_point"] -> 109 entities
+take    constructive_geometry_representation.wr2: representation.items ExactlyOne each ["axis2_placement_2d", "axis2_placement_3d", "b_spline_surface", "bounded_surface", "cartesian_point", "circle", "conic", "conical_surface", "curve", "curve_bounded_surface", "curve_replica", "cylindrical_surface", "degenerate_pcurve", "elementary_surface", "ellipse", "hyperbola", "line", "offset_curve_2d", "offset_curve_3d", "offset_surface", "parabola", "pcurve", "placement", "plane", "point", "point_on_curve", "point_on_surface", "point_replica", "rectangular_composite_surface", "rectangular_trimmed_surface", "spherical_surface", "surface", "surface_curve", "surface_of_linear_extrusion", "surface_of_revolution", "surface_replica", "swept_surface", "toroidal_surface", "edge_curve", "face_surface", "vertex_point", "connected_face_set", "connected_edge_set"] -> 49 entities
 skip    constructive_geometry_representation_relationship.wr1: attribute path
 skip    constructive_geometry_representation_relationship.wr2: restricts SELF
 skip    contact_ratio_representation.wr1: query form
@@ -208,10 +226,9 @@ skip    countersink_hole_definition.wr9: conditional
 skip    countersink_hole_occurrence.wr1: attribute path
 skip    csg_2d_shape_representation.wr2: attribute path
 skip    csg_2d_shape_representation.wr3: attribute path
-take    csg_shape_representation.wr2: representation.items ExactlyOne each ["csg_solid", "mapped_item", "axis2_placement_3d", "solid_replica", "revolved_face_solid", "extruded_face_solid"] -> 25 entities
+skip    csg_shape_representation.wr2: attribute path
 skip    csg_shape_representation.wr3: attribute path
-skip    csg_shape_representation.wr4: attribute path
-skip    csg_shape_representation.wr5: query form
+skip    csg_shape_representation.wr4: query form
 skip    curve_11.wr1: restricts SELF
 skip    curve_based_path_with_orientation.wr1: other form
 skip    curve_bounded_surface.wr1: conditional
@@ -248,11 +265,13 @@ skip    data_quality_measurement_requirement.wr1: references to the instance
 skip    datum.wr1: conditional (exclusive or)
 skip    datum.wr2: attribute path
 skip    datum_feature.wr1: attribute path
-skip    datum_target.wr1: attribute path
+skip    datum_system_for_composite_group_element.wr1: attribute path
+skip    datum_system_for_composite_group_element.wr2: attribute path
 take    default_tolerance_table.wr1: representation.items AtLeastOne each ["default_tolerance_table_cell"] -> 1 entities
 skip    default_tolerance_table_cell.wr1: references to the instance
 take    definitional_representation.wr1: representation.context_of_items AtLeastOne ["parametric_representation_context"] -> 2 entities
 skip    degenerate_pcurve.wr2: indexed element
+skip    dependent_product_definition_exchange_context.wr1: restricts SELF
 skip    different_angle_of_assembly_constraint.wr1: attribute path
 skip    different_assembly_centroid.wr1: attribute path
 skip    different_assembly_centroid_using_notional_solid.wr1: attribute path
@@ -292,10 +311,12 @@ take    dimension_pair.wr3: draughting_callout_relationship.related_draughting_c
 skip    dimension_text_associativity.wr1: attribute path
 take    dimension_text_associativity.wr2: mapped_item.mapping_target AtLeastOne ["draughting_callout"] -> 18 entities
 skip    dimension_text_associativity.wr3: references to the instance
+skip    dimensional_location_with_normal_constraint.wr1: other form
 skip    directed_angle.wr1: attribute path
 skip    directed_angle.wr2: attribute path
 skip    directed_angle.wr3: attribute path
 skip    directed_angle.wr5: attribute path
+skip    direction_feature_tolerance_zone.wr2: not an explicit attribute
 take    direction_shape_representation.wr2: representation.items AtLeastOne each ["direction"] -> 1 entities
 skip    document_product_equivalence.wr2: conditional
 skip    document_product_equivalence.wr3: conditional
@@ -322,6 +343,7 @@ skip    draughting_annotation_occurrence.wr18: indexed element
 skip    draughting_annotation_occurrence.wr19: indexed element
 skip    draughting_annotation_occurrence.wr20: indexed element
 skip    draughting_callout.wr1: conditional
+skip    draughting_callout.wr2: query form
 skip    draughting_elements.wr1: references to the instance
 skip    draughting_elements.wr2: conditional
 skip    draughting_elements.wr3: references to the instance
@@ -332,13 +354,19 @@ skip    draughting_model.wr2: attribute path
 skip    draughting_subfigure_representation.wr1: query form
 skip    draughting_subfigure_representation.wr2: references to the instance
 skip    draughting_symbol_representation.wr1: query form
-take    draughting_symbol_representation.wr2: representation.items Zero each ["annotation_subfigure_occurrence"] -> 784 entities
+take    draughting_symbol_representation.wr2: representation.items Zero each ["annotation_subfigure_occurrence"] -> 877 entities
 skip    draughting_symbol_representation.wr3: references to the instance
 skip    drawing_sheet_revision.wr1: attribute path
 take    drawing_sheet_revision_sequence.wr2: representation_relationship.rep_1 AtLeastOne ["drawing_sheet_revision"] -> 1 entities
 take    drawing_sheet_revision_sequence.wr3: representation_relationship.rep_2 AtLeastOne ["drawing_sheet_revision"] -> 1 entities
 take    drawing_sheet_revision_usage.wr1: area_in_set.area AtLeastOne ["drawing_sheet_revision"] -> 1 entities
 take    drawing_sheet_revision_usage.wr1: area_in_set.in_set AtLeastOne ["drawing_revision"] -> 1 entities
+skip    edge_based_topological_representation_with_length_constraint.wr1: query form
+skip    edge_based_topological_representation_with_length_constraint.wr2: conditional (exclusive or)
+skip    edge_based_topological_representation_with_length_constraint.wr3: conditional (exclusive or)
+skip    edge_based_topological_representation_with_length_constraint.wr4: conditional (exclusive or)
+skip    edge_based_topological_representation_with_length_constraint.wr5: query form
+skip    edge_based_topological_representation_with_length_constraint.wr6: attribute path
 take    edge_based_wireframe_shape_representation.wr1: representation.items ExactlyOne each ["edge_based_wireframe_model", "mapped_item", "axis2_placement_3d"] -> 16 entities
 skip    edge_based_wireframe_shape_representation.wr2: query form
 skip    edge_based_wireframe_shape_representation.wr3: query form
@@ -347,6 +375,8 @@ skip    edge_based_wireframe_shape_representation.wr5: attribute path
 skip    edge_based_wireframe_shape_representation.wr6: query form
 skip    edge_based_wireframe_shape_representation.wr7: query form
 skip    edge_based_wireframe_shape_representation.wr8: attribute path
+skip    edge_bounded_curve_with_length.wr1: attribute path
+skip    edge_bounded_curve_with_length.wr2: attribute path
 skip    edge_round.wr1: conditional
 skip    edge_round.wr2: conditional
 skip    edge_round.wr3: conditional
@@ -359,28 +389,26 @@ skip    edge_with_excessive_segments.wr1: attribute path
 take    electric_charge_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["electric_charge_unit"] -> 2 entities
 take    electric_current_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["electric_current_unit"] -> 1 entities
 take    electric_potential_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["electric_potential_unit"] -> 2 entities
-take    elementary_brep_shape_representation.wr1: representation.items ExactlyOne each ["manifold_solid_brep", "faceted_brep", "mapped_item", "axis2_placement_3d"] -> 17 entities
+skip    elementary_brep_shape_representation.wr1: query form
 skip    elementary_brep_shape_representation.wr2: query form
-skip    elementary_brep_shape_representation.wr3: query form
+skip    elementary_brep_shape_representation.wr3: attribute path
 skip    elementary_brep_shape_representation.wr4: attribute path
 skip    elementary_brep_shape_representation.wr5: attribute path
 skip    elementary_brep_shape_representation.wr6: attribute path
 skip    elementary_brep_shape_representation.wr7: attribute path
 skip    elementary_brep_shape_representation.wr8: attribute path
-skip    elementary_brep_shape_representation.wr9: attribute path
-skip    elementary_brep_shape_representation.wr10: query form
+skip    elementary_brep_shape_representation.wr9: query form
+skip    elementary_brep_shape_representation.wr10: attribute path
 skip    elementary_brep_shape_representation.wr11: attribute path
-skip    elementary_brep_shape_representation.wr12: attribute path
 take    energy_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["energy_unit"] -> 2 entities
 skip    excessively_high_degree_curve.wr1: attribute path
 skip    excessively_high_degree_surface.wr1: attribute path
 skip    explicit_composite_hole.wr1: query form
-take    explicit_procedural_geometric_representation_item_relationship.wr1: representation_item_relationship.related_representation_item Zero ["procedural_shape_representation_sequence"] -> 783 entities
-take    explicit_procedural_representation_item_relationship.wr1: representation_item_relationship.related_representation_item Zero ["procedural_representation_sequence"] -> 782 entities
-take    explicit_procedural_representation_relationship.wr1: representation_relationship.rep_2 Zero ["procedural_representation"] -> 115 entities
-take    explicit_procedural_representation_relationship.wr1: representation_relationship.rep_2 Zero ["variational_representation"] -> 116 entities
+take    explicit_procedural_geometric_representation_item_relationship.wr1: representation_item_relationship.related_representation_item Zero ["procedural_shape_representation_sequence"] -> 876 entities
+take    explicit_procedural_representation_item_relationship.wr1: representation_item_relationship.related_representation_item Zero ["procedural_representation_sequence"] -> 875 entities
+take    explicit_procedural_representation_relationship.wr1: representation_relationship.rep_2 Zero ["procedural_representation"] -> 122 entities
+take    explicit_procedural_representation_relationship.wr1: representation_relationship.rep_2 Zero ["variational_representation"] -> 123 entities
 skip    explicit_round_hole.wr1: query form
-skip    explicit_round_hole.wr2: attribute path
 skip    explicit_round_hole.wr3: attribute path
 skip    explicit_round_hole.wr4: conditional
 skip    explicit_round_hole.wr5: conditional
@@ -427,14 +455,14 @@ take    face_shape_representation.wr2: representation.items AtLeastOne each ["fa
 take    face_shape_representation_relationship.wr1: representation_relationship.rep_1 AtLeastOne ["face_shape_representation"] -> 1 entities
 take    face_shape_representation_relationship.wr2: representation_relationship.rep_2 AtLeastOne ["face_shape_representation"] -> 1 entities
 take    face_surface.wr1: face_surface.face_geometry Zero ["oriented_surface"] -> 28 entities
+skip    face_surface_shape_aspect.wr1: attribute path
 skip    face_surface_with_excessive_patches_in_one_direction.wr1: attribute path
-take    faceted_brep_shape_representation.wr1: representation.items ExactlyOne each ["faceted_brep", "mapped_item", "axis2_placement_3d"] -> 16 entities
-skip    faceted_brep_shape_representation.wr2: query form
-skip    faceted_brep_shape_representation.wr3: attribute path
-skip    faceted_brep_shape_representation.wr4: query form
-skip    faceted_brep_shape_representation.wr5: attribute path
-skip    faceted_brep_shape_representation.wr6: query form
-skip    faceted_brep_shape_representation.wr7: attribute path
+skip    faceted_brep_shape_representation.wr1: query form
+skip    faceted_brep_shape_representation.wr2: attribute path
+skip    faceted_brep_shape_representation.wr3: query form
+skip    faceted_brep_shape_representation.wr4: attribute path
+skip    faceted_brep_shape_representation.wr5: query form
+skip    faceted_brep_shape_representation.wr6: attribute path
 skip    feature_component_relationship.wr1: conditional
 skip    feature_in_panel.wr2: attribute path
 skip    feature_in_panel.wr3: attribute path
@@ -473,7 +501,7 @@ skip    format_function.wr1: other form
 skip    format_function.wr1: other form
 skip    free_edge.wr5: indexed element
 take    free_form_relation.wr1: free_form_constraint.constraining_expression AtLeastOne ["boolean_expression"] -> 25 entities
-take    free_kinematic_motion_representation.wr1: representation_relationship_with_transformation.transformation_operator AtLeastOne ["item_defined_transformation"] -> 48 entities
+take    free_kinematic_motion_representation.wr1: representation_relationship_with_transformation.transformation_operator AtLeastOne ["item_defined_transformation"] -> 50 entities
 skip    free_kinematic_motion_representation.wr2: attribute path
 skip    free_kinematic_motion_representation.wr2: attribute path
 take    frequency_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["frequency_unit"] -> 2 entities
@@ -520,7 +548,7 @@ skip    general_feature.wr5: references to the instance
 skip    general_material_property.wr1: references to the instance
 skip    general_property_association.wr1: conditional
 skip    general_property_association.wr2: conditional
-take    geometric_curve_set.wr1: geometric_set.elements AtLeastOne each ["curve", "point"] -> 54 entities
+take    geometric_curve_set.wr1: geometric_set.elements AtLeastOne each ["curve", "point"] -> 61 entities
 skip    geometric_representation_item.wr1: references to the instance
 skip    geometric_tolerance.wr3: conditional
 skip    geometric_tolerance_relationship.wr1: conditional
@@ -531,6 +559,8 @@ skip    geometric_tolerance_with_defined_area_unit.wr4: conditional
 skip    geometric_tolerance_with_defined_area_unit.wr5: conditional
 skip    geometric_tolerance_with_defined_unit.wr1: attribute path
 skip    geometric_tolerance_with_modifiers.wr1: conditional
+skip    geometric_tolerance_with_modifiers.wr2: conditional
+skip    geometric_tolerance_with_modifiers.wr3: conditional
 take    geometrically_bounded_2d_wireframe_representation.wr2: representation.items ExactlyOne each ["geometric_curve_set", "axis2_placement_2d", "mapped_item"] -> 16 entities
 skip    geometrically_bounded_2d_wireframe_representation.wr3: query form
 skip    geometrically_bounded_2d_wireframe_representation.wr4: attribute path
@@ -551,6 +581,8 @@ skip    geometrically_bounded_wireframe_shape_representation.wr4: query form
 skip    geometrically_bounded_wireframe_shape_representation.wr5: attribute path
 skip    geometrically_bounded_wireframe_shape_representation.wr6: query form
 skip    geometrically_bounded_wireframe_shape_representation.wr7: attribute path
+skip    geometry_to_topology_model_association.wr1: not an explicit attribute
+skip    geometry_to_topology_model_association.wr2: restricts SELF
 skip    gps_filter.wr1: conditional
 skip    hardness_representation.wr1: query form
 skip    hardness_representation.wr6: references to the instance
@@ -576,11 +608,15 @@ skip    hole_bottom.wr15: conditional
 skip    hole_bottom.wr16: conditional
 skip    hole_in_panel.wr1: references to the instance
 take    illuminance_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["illuminance_unit"] -> 2 entities
-take    implicit_planar_curve.wr1: implicit_planar_curve.computed_representation Zero ["implicit_planar_curve", "curve_replica"] -> 32 entities
-take    implicit_point_on_plane.wr2: implicit_point_on_plane.computed_representation Zero ["implicit_point_on_plane", "point_replica"] -> 4 entities
+take    implicit_planar_curve.wr1: implicit_planar_curve.computed_representation Zero ["implicit_planar_curve", "curve_replica"] -> 35 entities
+take    implicit_point_on_plane.wr2: implicit_point_on_plane.computed_representation Zero ["implicit_point_on_plane", "point_replica"] -> 6 entities
 skip    included_text_block.wr1: attribute path
 skip    inclusion_product_concept_feature.wr1: restricts SELF
 skip    inclusion_product_concept_feature.wr2: references to the instance
+skip    inconsistent_angle_between_annotation_value_and_shape.wr1: attribute path
+skip    inconsistent_length_between_annotation_value_and_shape.wr1: attribute path
+skip    inconsistent_triangle_normal_and_normal_at_vertex.wr1: attribute path
+take    independent_limits_of_linear_dimensional_size_characteristic_representation.wr1: dimensional_characteristic_representation.dimension Zero ["angular_size", "dimensional_size_with_path"] -> 9 entities
 skip    index_expression.wr1: not an explicit attribute
 skip    index_expression.wr1: not an explicit attribute
 skip    indistinct_curve_knots.wr1: attribute path
@@ -612,7 +648,9 @@ skip    joggle_termination.wr6: conditional
 skip    joggle_termination.wr7: references to the instance
 skip    kinematic_link_representation_association.wr1: conditional
 skip    kinematic_path.wr1: references to the instance
-take    kinematic_topology_structure.wr1: representation.items Zero each ["oriented_edge"] -> 782 entities
+take    kinematic_topology_structure.wr1: representation.items Zero each ["oriented_edge"] -> 876 entities
+skip    large_aspect_ratio_triangle.wr1: attribute path
+skip    large_number_of_triangles.wr1: attribute path
 skip    leader_curve.wr1: references to the instance
 skip    leader_directed_callout.wr1: query form
 skip    leader_directed_dimension.wr1: query form
@@ -620,6 +658,7 @@ take    leader_terminator.wr1: terminator_symbol.annotated_curve AtLeastOne ["le
 take    length_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["length_unit"] -> 1 entities
 skip    like_expression.wr1: indexed element
 skip    like_expression.wr1: indexed element
+skip    line_on_plane_pcurve.wr1: indexed element
 skip    linear_flexible_and_pinion_pair.wr1: not an explicit attribute
 skip    linear_flexible_and_planar_curve_pair.wr2: not an explicit attribute
 skip    linear_profile.wr1: attribute path
@@ -627,7 +666,7 @@ skip    linear_profile.wr2: references to the instance
 skip    linear_profile.wr3: references to the instance
 skip    linear_profile.wr4: references to the instance
 skip    linear_profile.wr5: references to the instance
-take    location_shape_representation.wr2: representation.items AtLeastOne each ["point"] -> 16 entities
+take    location_shape_representation.wr2: representation.items AtLeastOne each ["point"] -> 21 entities
 skip    locator.wr1: attribute path
 skip    locator.wr2: attribute path
 skip    locator.wr3: attribute path
@@ -641,24 +680,23 @@ take    luminous_intensity_measure_with_unit.wr1: measure_with_unit.unit_compone
 take    magnetic_flux_density_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["magnetic_flux_density_unit"] -> 2 entities
 take    magnetic_flux_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["magnetic_flux_unit"] -> 2 entities
 skip    make_from_usage_option.wr1: conditional
-take    manifold_subsurface_shape_representation.wr1: representation.items ExactlyOne each ["connected_face_sub_set", "mapped_item", "axis2_placement_3d"] -> 16 entities
-skip    manifold_subsurface_shape_representation.wr2: query form
-skip    manifold_subsurface_shape_representation.wr3: attribute path
-skip    manifold_subsurface_shape_representation.wr4: query form
-skip    manifold_subsurface_shape_representation.wr5: attribute path
-skip    manifold_subsurface_shape_representation.wr6: query form
+skip    manifold_subsurface_shape_representation.wr1: query form
+skip    manifold_subsurface_shape_representation.wr2: attribute path
+skip    manifold_subsurface_shape_representation.wr3: query form
+skip    manifold_subsurface_shape_representation.wr4: attribute path
+skip    manifold_subsurface_shape_representation.wr5: query form
+skip    manifold_subsurface_shape_representation.wr6: attribute path
 skip    manifold_subsurface_shape_representation.wr7: attribute path
 skip    manifold_subsurface_shape_representation.wr8: attribute path
 skip    manifold_subsurface_shape_representation.wr9: attribute path
 skip    manifold_subsurface_shape_representation.wr10: attribute path
 skip    manifold_subsurface_shape_representation.wr11: attribute path
-skip    manifold_subsurface_shape_representation.wr12: attribute path
-take    manifold_surface_shape_representation.wr1: representation.items ExactlyOne each ["shell_based_surface_model", "mapped_item", "axis2_placement_3d"] -> 16 entities
-skip    manifold_surface_shape_representation.wr2: query form
-skip    manifold_surface_shape_representation.wr3: attribute path
+skip    manifold_surface_shape_representation.wr1: query form
+skip    manifold_surface_shape_representation.wr2: attribute path
+skip    manifold_surface_shape_representation.wr3: query form
 skip    manifold_surface_shape_representation.wr4: query form
 skip    manifold_surface_shape_representation.wr5: query form
-skip    manifold_surface_shape_representation.wr6: query form
+skip    manifold_surface_shape_representation.wr6: attribute path
 skip    manifold_surface_shape_representation.wr7: attribute path
 skip    manifold_surface_shape_representation.wr8: attribute path
 skip    manifold_surface_shape_representation.wr9: attribute path
@@ -666,7 +704,6 @@ skip    manifold_surface_shape_representation.wr10: attribute path
 skip    manifold_surface_shape_representation.wr11: attribute path
 skip    manifold_surface_shape_representation.wr12: attribute path
 skip    manifold_surface_shape_representation.wr13: attribute path
-skip    manifold_surface_shape_representation.wr14: attribute path
 skip    marking.wr1: references to the instance
 skip    marking.wr2: references to the instance
 skip    marking.wr3: references to the instance
@@ -691,12 +728,11 @@ skip    mechanical_design_geometric_presentation_representation.wr4: attribute p
 skip    mechanical_design_geometric_presentation_representation.wr5: attribute path
 skip    mechanical_design_geometric_presentation_representation.wr6: attribute path
 skip    mechanical_design_geometric_presentation_representation.wr7: attribute path
-skip    mechanical_design_geometric_presentation_representation.wr8: query form
+skip    mechanical_design_geometric_presentation_representation.wr8: attribute path
 skip    mechanical_design_geometric_presentation_representation.wr9: attribute path
 skip    mechanical_design_geometric_presentation_representation.wr10: attribute path
 skip    mechanical_design_geometric_presentation_representation.wr11: attribute path
 skip    mechanical_design_geometric_presentation_representation.wr12: attribute path
-skip    mechanical_design_geometric_presentation_representation.wr13: attribute path
 skip    mechanical_design_shaded_presentation_area.wr1: attribute path
 skip    mechanical_design_shaded_presentation_area.wr2: attribute path
 skip    mechanical_design_shaded_presentation_area.wr3: references to the instance
@@ -745,6 +781,7 @@ skip    multiply_defined_surfaces.wr1: attribute path
 skip    multiply_defined_vertices.wr1: attribute path
 skip    nearly_degenerate_surface_boundary.wr1: attribute path
 skip    nearly_degenerate_surface_patch.wr1: attribute path
+skip    nearly_overlapping_triangles.wr1: attribute path
 skip    neutral_sketch_representation.wr1: query form
 skip    ngon_closed_profile.wr1: attribute path
 skip    ngon_closed_profile.wr2: references to the instance
@@ -754,11 +791,12 @@ skip    ngon_closed_profile.wr5: references to the instance
 skip    ngon_closed_profile.wr6: references to the instance
 skip    ngon_closed_profile.wr7: references to the instance
 skip    ngon_closed_profile.wr8: references to the instance
-take    non_manifold_surface_shape_representation.wr1: representation.items ExactlyOne each ["face_based_surface_model", "mapped_item", "axis2_placement_3d"] -> 16 entities
-skip    non_manifold_surface_shape_representation.wr2: query form
-skip    non_manifold_surface_shape_representation.wr3: attribute path
+skip    non_homogeneous_triangle_size.wr1: attribute path
+skip    non_manifold_surface_shape_representation.wr1: query form
+skip    non_manifold_surface_shape_representation.wr2: attribute path
+skip    non_manifold_surface_shape_representation.wr3: query form
 skip    non_manifold_surface_shape_representation.wr4: query form
-skip    non_manifold_surface_shape_representation.wr5: query form
+skip    non_manifold_surface_shape_representation.wr5: attribute path
 skip    non_manifold_surface_shape_representation.wr6: attribute path
 skip    non_manifold_surface_shape_representation.wr7: attribute path
 skip    non_manifold_surface_shape_representation.wr8: attribute path
@@ -767,7 +805,6 @@ skip    non_manifold_surface_shape_representation.wr10: attribute path
 skip    non_manifold_surface_shape_representation.wr11: attribute path
 skip    non_manifold_surface_shape_representation.wr12: attribute path
 skip    non_manifold_surface_shape_representation.wr13: attribute path
-skip    non_manifold_surface_shape_representation.wr14: attribute path
 skip    numeric_variable.wr1: restricts SELF
 skip    open_path_profile.wr1: attribute path
 skip    open_path_profile.wr2: references to the instance
@@ -775,11 +812,11 @@ skip    open_path_profile.wr3: references to the instance
 skip    open_path_profile.wr4: references to the instance
 skip    open_path_profile.wr5: references to the instance
 skip    open_path_profile.wr6: references to the instance
-take    oriented_closed_shell.wr1: oriented_closed_shell.closed_shell_element Zero ["oriented_closed_shell"] -> 1 entities
-take    oriented_edge.wr1: oriented_edge.edge_element Zero ["oriented_edge"] -> 5 entities
-take    oriented_face.wr1: oriented_face.face_element Zero ["oriented_face"] -> 4 entities
-take    oriented_open_shell.wr1: oriented_open_shell.open_shell_element Zero ["oriented_open_shell"] -> 2 entities
-take    oriented_path.wr1: oriented_path.path_element Zero ["oriented_path"] -> 4 entities
+take    oriented_closed_shell.wr1: oriented_closed_shell.closed_shell_element Zero ["oriented_closed_shell"] -> 2 entities
+take    oriented_edge.wr1: oriented_edge.edge_element Zero ["oriented_edge"] -> 6 entities
+take    oriented_face.wr1: oriented_face.face_element Zero ["oriented_face"] -> 5 entities
+take    oriented_open_shell.wr1: oriented_open_shell.open_shell_element Zero ["oriented_open_shell"] -> 3 entities
+take    oriented_path.wr1: oriented_path.path_element Zero ["oriented_path"] -> 5 entities
 skip    outer_round.wr1: conditional
 skip    outer_round.wr2: conditional
 skip    outer_round.wr4: conditional
@@ -817,7 +854,7 @@ skip    partly_overlapping_edges.wr1: attribute path
 skip    partly_overlapping_faces.wr1: attribute path
 skip    partly_overlapping_solids.wr1: attribute path
 skip    partly_overlapping_surfaces.wr1: attribute path
-take    path_area_with_parameters.wr1: mapped_item.mapping_target AtLeastOne ["curve"] -> 38 entities
+take    path_area_with_parameters.wr1: mapped_item.mapping_target AtLeastOne ["curve"] -> 41 entities
 skip    path_area_with_parameters.wr2: attribute path
 skip    path_feature_component.wr1: attribute path
 skip    path_feature_component.wr3: conditional
@@ -913,9 +950,9 @@ skip    procedural_solid_representation_sequence.wr1: restricts SELF
 skip    process_plan.wr1: references to the instance
 skip    process_plan.wr2: references to the instance
 skip    product_concept_feature_category.wr1: references to the instance
-skip    product_definition_occurrence.wr1: conditional (exclusive or)
+take    product_definition_occurrence.wr1: product_definition_occurrence.definition Zero ["product_definition_occurrence", "product_definition_occurrence_reference"] -> 81 entities unless SELF is ["product_definition_specified_occurrence"]
 skip    product_definition_occurrence.wr3: conditional
-take    product_definition_shape.wr1: property_definition.definition AtLeastOne ["characterized_product_definition", "characterized_object"] -> 161 entities
+take    product_definition_shape.wr1: property_definition.definition AtLeastOne ["characterized_product_definition", "characterized_object"] -> 210 entities
 skip    product_identification.wr1: references to the instance
 skip    product_identification.wr2: conditional (exclusive or)
 skip    product_process_plan.wr1: references to the instance
@@ -1022,8 +1059,8 @@ skip    scanned_data_item.wr1: references to the instance
 skip    screw_pair.wr1: not an explicit attribute
 skip    seam_curve.wr3: indexed element
 skip    seam_curve.wr4: indexed element
-take    seam_edge.wr1: oriented_edge.edge_element AtLeastOne ["edge_curve"] -> 1 entities
-skip    seam_edge.wr1: attribute path
+skip    self_intersecting_triangulated_face.wr1: attribute path
+skip    self_intersecting_triangulated_shell_or_solid.wr1: attribute path
 skip    shape_aspect_relationship_representation_association.wr1: attribute path
 skip    shape_aspect_relationship_representation_association.wr1: attribute path
 skip    shape_data_quality_criteria_representation.wr1: query form
@@ -1031,11 +1068,12 @@ skip    shape_data_quality_criterion.wr2: references to the instance
 skip    shape_data_quality_criterion.wr3: references to the instance
 skip    shape_data_quality_inspection_result_representation.wr1: query form
 take    shape_data_quality_inspection_result_representation.wr2: representation.context_of_items AtLeastOne ["geometric_representation_context"] -> 3 entities
-take    shape_data_quality_value_range.wr1: compound_representation_item.item_element AtLeastOne ["set_representation_item"] -> 0 entities, set_representation_item of 785 entities
+take    shape_data_quality_value_range.wr1: compound_representation_item.item_element AtLeastOne ["set_representation_item"] -> 0 entities, set_representation_item of 878 entities
 skip    shape_data_quality_value_range.wr1: query form
 skip    shape_data_quality_value_range.wr3: conditional
 skip    shape_definition_representation.wr1: conditional
 skip    shape_representation_relationship.wr1: other form
+skip    sharp_triangle_vertex.wr1: attribute path
 take    shell_based_wireframe_shape_representation.wr1: representation.items ExactlyOne each ["shell_based_wireframe_model", "mapped_item", "axis2_placement_3d"] -> 16 entities
 skip    shell_based_wireframe_shape_representation.wr2: query form
 skip    shell_based_wireframe_shape_representation.wr3: attribute path
@@ -1048,13 +1086,15 @@ skip    shell_based_wireframe_shape_representation.wr9: query form
 skip    shell_based_wireframe_shape_representation.wr10: attribute path
 skip    shell_based_wireframe_shape_representation.wr11: query form
 skip    shell_based_wireframe_shape_representation.wr12: attribute path
+skip    short_height_triangle.wr1: attribute path
 skip    short_length_curve.wr1: attribute path
 skip    short_length_curve_segment.wr1: attribute path
 skip    short_length_edge.wr1: attribute path
+skip    short_triangle_edge.wr1: attribute path
 skip    si_unit.wr1: conditional
 skip    simultaneous_constraint_group.wr1: references to the instance
 skip    simultaneous_constraint_group.wr3: query form
-take    single_area_csg_2d_shape_representation.wr1: representation.items Zero each ["mapped_item"] -> 771 entities
+take    single_area_csg_2d_shape_representation.wr1: representation.items Zero each ["mapped_item"] -> 864 entities
 skip    single_area_csg_2d_shape_representation.wr2: query form
 skip    single_boundary_csg_2d_shape_representation.wr1: attribute path
 skip    slot.wr1: references to the instance
@@ -1075,6 +1115,7 @@ skip    slot_end.wr10: references to the instance
 skip    small_area_face.wr1: attribute path
 skip    small_area_surface.wr1: attribute path
 skip    small_area_surface_patch.wr1: attribute path
+skip    small_triangulated_shell.wr1: attribute path
 skip    small_volume_solid.wr1: attribute path
 take    solid_angle_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["solid_angle_unit"] -> 1 entities
 skip    solid_with_excessive_number_of_voids.wr1: attribute path
@@ -1119,8 +1160,9 @@ skip    structured_dimension_callout.wr5: references to the instance
 skip    structured_dimension_callout.wr6: conditional
 skip    structured_dimension_callout.wr7: conditional
 skip    styled_item.wr1: conditional
-take    styled_item.wr2: styled_item.item Zero ["styled_item"] -> 593 entities
-take    styled_item.wr3: styled_item.item AtLeastOne ["mapped_item", "geometric_representation_item"] -> 443 entities unless SELF is ["context_dependent_over_riding_styled_item"]
+take    styled_item.wr2: styled_item.item Zero ["styled_item"] -> 620 entities, set_representation_item of 878 entities
+take    styled_item.wr3: styled_item.item AtLeastOne ["mapped_item", "geometric_representation_item"] -> 466 entities, set_representation_item of 466 entities
+skip    subpath.wr2: other form
 skip    subsketch.wr1: conditional (exclusive or)
 skip    substring_expression.wr1: not an explicit attribute
 skip    substring_expression.wr1: not an explicit attribute
@@ -1128,12 +1170,13 @@ skip    substring_expression.wr1: not an explicit attribute
 take    surface_condition_callout.wr1: draughting_callout.contents ExactlyOne each ["annotation_curve_occurrence", "annotation_symbol_occurrence", "annotation_text_occurrence"] -> 10 entities
 skip    surface_curve.wr2: conditional
 skip    surface_curve.wr3: conditional
-take    surface_curve.wr4: surface_curve.curve_3d Zero ["pcurve"] -> 36 entities
+take    surface_curve.wr4: surface_curve.curve_3d Zero ["pcurve"] -> 37 entities
 skip    surface_curve_swept_area_solid.wr1: conditional
 skip    surface_curve_swept_surface.wr1: conditional
 skip    surface_distance_geometric_constraint.wr1: conditional
 skip    surface_pair.wr3: not an explicit attribute
 take    surface_patch.wr1: surface_patch.parent_surface Zero ["curve_bounded_surface"] -> 11 entities
+skip    surface_shape_aspect.wr1: attribute path
 skip    surface_side_style.wr1: query form
 skip    surface_style_parameter_line.wr1: conditional (exclusive or)
 skip    surface_style_rendering_with_properties.wr1: conditional (exclusive or)
@@ -1175,17 +1218,52 @@ skip    tee_profile.wr12: references to the instance
 skip    tee_profile.wr13: references to the instance
 skip    tee_profile.wr14: references to the instance
 skip    tee_profile.wr15: references to the instance
+skip    tessellated_brep_shape_representation.wr1: query form
+skip    tessellated_brep_shape_representation.wr2: query form
+skip    tessellated_brep_shape_representation.wr3: attribute path
+skip    tessellated_brep_shape_representation.wr4: attribute path
+skip    tessellated_brep_shape_representation.wr5: attribute path
+skip    tessellated_brep_shape_representation.wr6: query form
+skip    tessellated_brep_shape_representation.wr7: attribute path
+take    tessellated_closed_shell.wr1: connected_face_set.cfs_faces AtLeastOne each ["tessellated_face_surface"] -> 1 entities
+skip    tessellated_closed_shell.wr2: attribute path
+skip    tessellated_closed_shell.wr3: attribute path
 skip    tessellated_connecting_edge.wr3: other form
 skip    tessellated_connecting_edge.wr4: other form
+skip    tessellated_constructive_geometry_representation_relationship.wr1: attribute path
+skip    tessellated_constructive_geometry_representation_relationship.wr2: restricts SELF
+skip    tessellated_edge_curve.wr1: conditional
+skip    tessellated_edge_curve.wr2: restricts SELF
+take    tessellated_edge_curve.wr3: edge.edge_start AtLeastOne ["tessellated_vertex_point"] -> 1 entities
+take    tessellated_edge_curve.wr3: edge.edge_end AtLeastOne ["tessellated_vertex_point"] -> 1 entities
+take    tessellated_edge_curve.wr4: subedge.parent_edge AtLeastOne ["tessellated_edge_curve"] -> 1 entities when SELF is ["subedge"]
+skip    tessellated_face_surface.wr1: conditional
+skip    tessellated_face_surface.wr2: restricts SELF
+take    tessellated_face_surface.wr3: subface.parent_face AtLeastOne ["tessellated_face_surface"] -> 1 entities when SELF is ["subface"]
 skip    tessellated_item.wr1: references to the instance
+skip    tessellated_manifold_subsurface_shape_representation.wr1: query form
+skip    tessellated_manifold_subsurface_shape_representation.wr2: attribute path
+skip    tessellated_manifold_subsurface_shape_representation.wr3: query form
+skip    tessellated_manifold_subsurface_shape_representation.wr4: attribute path
+skip    tessellated_manifold_subsurface_shape_representation.wr5: attribute path
+skip    tessellated_manifold_subsurface_shape_representation.wr6: attribute path
+skip    tessellated_manifold_surface_shape_representation.wr1: query form
+skip    tessellated_manifold_surface_shape_representation.wr2: attribute path
+skip    tessellated_manifold_surface_shape_representation.wr3: query form
+take    tessellated_open_shell.wr1: connected_face_set.cfs_faces AtLeastOne each ["tessellated_face_surface"] -> 1 entities
+skip    tessellated_open_shell.wr2: attribute path
+skip    tessellated_open_shell.wr3: attribute path
 take    tessellated_shape_representation.wr1: representation.context_of_items AtLeastOne ["global_unit_assigned_context"] -> 1 entities
 skip    tessellated_shape_representation.wr2: query form
+skip    tessellated_vertex_point.wr2: restricts SELF
 skip    text_string_representation.wr1: query form
 skip    text_string_representation.wr2: query form
 skip    text_style_with_box_characteristics.wr1: query form
 take    thermal_resistance_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["thermal_resistance_unit"] -> 1 entities
 take    thermodynamic_temperature_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["thermodynamic_temperature_unit"] -> 1 entities
 skip    thickened_face_solid.wr1: other form
+skip    thin_slit_in_triangulated_shell_or_solid.wr1: attribute path
+skip    thin_thickness_of_triangulated_shell_or_solid.wr1: attribute path
 skip    thread.wr1: references to the instance
 skip    thread.wr2: references to the instance
 skip    thread.wr3: references to the instance
@@ -1210,6 +1288,8 @@ skip    thread_runout.wr5: references to the instance
 skip    thread_runout.wr6: references to the instance
 skip    thread_runout.wr7: references to the instance
 take    time_measure_with_unit.wr1: measure_with_unit.unit_component AtLeastOne ["time_unit"] -> 1 entities
+skip    topology_to_geometry_model_association.wr1: not an explicit attribute
+skip    topology_to_geometry_model_association.wr2: restricts SELF
 skip    track_blended_solid_with_end_conditions.wr1: restricts SELF
 skip    track_blended_solid_with_end_conditions.wr2: indexed element
 skip    track_blended_solid_with_end_conditions.wr3: indexed element
@@ -1218,6 +1298,8 @@ skip    transition_feature.wr1: attribute path
 skip    transition_feature.wr2: restricts SELF
 skip    trimmed_curve.wr1: conditional
 skip    trimmed_curve.wr2: conditional
+take    tsdq_inspection_representation_item_relationship.wr1: representation_item_relationship.relating_representation_item ExactlyOne ["adjacent_triangle_pair", "adjacent_triangulated_face_pair", "representative_triangle", "tessellated_connecting_edge", "tessellated_shell", "tessellated_solid", "triangle_edge", "triangulated_face", "triangle_vertex"] -> 9 entities
+take    tsdq_location_of_extreme_value_representation_item_relationship.wr1: representation_item_relationship.relating_representation_item ExactlyOne ["representative_triangle", "tessellated_shell", "triangle_edge", "triangulated_face", "triangle_vertex"] -> 5 entities
 skip    turned_knurl.wr2: references to the instance
 skip    turned_knurl.wr3: references to the instance
 skip    turned_knurl.wr4: references to the instance
@@ -1234,7 +1316,7 @@ take    unbound_parameter_environment.wr1: environment.semantics AtLeastOne ["un
 skip    unbound_variational_parameter.wr1: not an explicit attribute
 skip    unequally_disposed_geometric_tolerance.wr1: attribute path
 skip    unused_patches.wr1: attribute path
-take    value_range.wr1: compound_representation_item.item_element AtLeastOne ["set_representation_item"] -> 0 entities, set_representation_item of 785 entities
+take    value_range.wr1: compound_representation_item.item_element AtLeastOne ["set_representation_item"] -> 0 entities, set_representation_item of 878 entities
 skip    value_representation_item.wr1: references to the instance
 skip    variational_current_representation_relationship.wr1: query form
 skip    variational_current_representation_relationship.wr3: attribute path

@@ -3,8 +3,8 @@
 //!
 //! The writer needs to know, *per output target*, which entities are legal and
 //! what each entity's attributes are. This stage emits one profile per curated
-//! output target (see [`TARGETS`]). Currently the sole target is `ap242e2`
-//! (AP242 ed2, ISO 10303-242:2020 IS — step-io's only public output schema); the
+//! output target (see [`TARGETS`]). Currently the sole target is `ap242e4`
+//! (AP242 ed4, ISO 10303-242:2025 IS — step-io's only public output schema); the
 //! table is a slice so more IS-edition targets can be added without other change.
 //!
 //! Each profile is built from that target's **single** [`Schema`]
@@ -16,7 +16,7 @@
 //!
 //! `[meta]` (FILE_SCHEMA descriptor + APPLICATION_PROTOCOL_DEFINITION) is not
 //! derivable from the `.exp` (those are Part21 header constructs), so it is
-//! hard-supplied per target from corpus-verified IS values (see [`TARGETS`]).
+//! hand-supplied per target (see [`TARGETS`]).
 //! `attr_conflicts` is intentionally omitted — it is a cross-schema-disagreement
 //! signal with no meaning inside a single-schema profile.
 
@@ -35,14 +35,14 @@ const WHERE_REPORT: &str = "inferred/where_type_report.txt";
 
 /// A curated output target. `label_match` is matched against
 /// [`Schema::source_label`] with `starts_with` (labels are the clean schema file
-/// stems, e.g. `ap242e2`). FILE_SCHEMA / APD values are corpus-verified IS,
-/// latest-edition descriptors (the `.exp` carries no Part21 header data).
+/// stems, e.g. `ap242e4`). FILE_SCHEMA / APD values are hand-supplied IS
+/// descriptors (the `.exp` carries no Part21 header data).
 struct Target {
     /// Output file name (`profiles/<out_name>.toml`).
     out_name: &'static str,
     /// `source_label` prefix identifying the source schema (unique per target).
     label_match: &'static str,
-    /// `FILE_SCHEMA` descriptor strings (AP203 ed1 needs two; the e2 long forms
+    /// `FILE_SCHEMA` descriptor strings (AP203 ed1 needs two; the long forms
     /// are single).
     file_schema: &'static [&'static str],
     /// `APPLICATION_PROTOCOL_DEFINITION(status, application, year, …)`.
@@ -50,20 +50,21 @@ struct Target {
     apd_name: &'static str,
     apd_year: i64,
     /// `APPLICATION_CONTEXT.application` description string (the AC the APD
-    /// references; distinct from `apd_name`). Corpus-verified per target.
+    /// references; distinct from `apd_name`).
     apd_desc: &'static str,
 }
 
-/// The single curated output target: AP242 ed2, the only public output schema
-/// (step-io reads AP203/AP214/AP242 but always writes AP242 ed2). FILE_SCHEMA /
-/// APD values verified against the corpus (NIST = AP242e2).
+/// The single curated output target: AP242 ed4, the only public output schema
+/// (step-io reads AP203/AP214/AP242 but always writes AP242 ed4). The
+/// FILE_SCHEMA version is that of the ISO/TS 10303-442 edition holding ed4's
+/// schema (ed7, 2025); the APD year is ed4's.
 const TARGETS: &[Target] = &[Target {
-    out_name: "ap242e2",
-    label_match: "ap242e2",
-    file_schema: &["AP242_MANAGED_MODEL_BASED_3D_ENGINEERING_MIM_LF { 1 0 10303 442 3 1 4 }"],
+    out_name: "ap242e4",
+    label_match: "ap242e4",
+    file_schema: &["AP242_MANAGED_MODEL_BASED_3D_ENGINEERING_MIM_LF { 1 0 10303 442 7 1 4 }"],
     apd_status: "international standard",
     apd_name: "ap242_managed_model_based_3d_engineering_mim_lf",
-    apd_year: 2020,
+    apd_year: 2025,
     apd_desc: "managed model based 3d engineering",
 }];
 
@@ -442,13 +443,13 @@ mod tests {
     use crate::express::load_all_schemas;
 
     #[test]
-    fn the_profile_keeps_every_e2_redeclaration_with_its_bounds() {
+    fn the_profile_keeps_every_target_redeclaration_with_its_bounds() {
         let schemas = load_all_schemas(Path::new("schemas"));
-        let e2 = schemas
+        let target = schemas
             .iter()
-            .find(|s| s.source_label == "ap242e2")
+            .find(|s| s.source_label == TARGETS[0].label_match)
             .unwrap();
-        let red = |entity: &str| profile_redeclarations(e2, &e2.entities[entity]);
+        let red = |entity: &str| profile_redeclarations(target, &target.entities[entity]);
         let sdr = red("shape_definition_representation");
         assert!(
             sdr.iter().any(|a| a.name == "definition"

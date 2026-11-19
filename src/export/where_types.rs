@@ -972,4 +972,42 @@ mod tests {
             w.report
         );
     }
+
+    #[test]
+    fn e4_styled_items_admit_a_set_of_mapped_and_geometric_items() {
+        let schemas = load_all_schemas(Path::new("schemas"));
+        let e4 = schemas
+            .iter()
+            .find(|s| s.source_label == "ap242e4")
+            .unwrap();
+        let w = analyze(e4);
+        let wr = |label: &str| {
+            w.rules["styled_item"]
+                .iter()
+                .find(|r| r.rule == label)
+                .unwrap_or_else(|| panic!("no styled_item.{label}"))
+        };
+        let wr3 = wr("wr3");
+        assert!(wr3.unless_self.is_empty() && wr3.when_self.is_empty());
+        assert!(admits(wr3, "mapped_item") && admits(wr3, "cartesian_point"));
+        assert!(!admits(wr3, "representation"));
+        let [set] = wr3.aggregates.as_slice() else {
+            panic!("{:?}", wr3.aggregates)
+        };
+        assert_eq!(set.type_name, "set_representation_item");
+        assert!(set.admits.iter().any(|e| e == "mapped_item"));
+        assert!(
+            !set.admits
+                .iter()
+                .any(|e| e == "descriptive_representation_item")
+        );
+        let wr2 = wr("wr2");
+        assert_eq!(wr2.aggregates.len(), 1);
+        assert!(
+            wr2.aggregates[0]
+                .admits
+                .iter()
+                .any(|e| e == "descriptive_representation_item")
+        );
+    }
 }
