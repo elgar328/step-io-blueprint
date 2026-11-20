@@ -4,7 +4,7 @@ skip    a3m_equivalence_criterion.wr2: references to the instance
 skip    a3m_equivalence_criterion.wr3: references to the instance
 take    a3m_equivalence_inspection_result_representation_for_assembly.wr1: representation.items Zero each ["a3ms_equivalence_inspection_result"] -> 784 entities
 take    a3m_equivalence_inspection_result_representation_for_shape.wr1: representation.items Zero each ["a3ma_equivalence_inspection_result"] -> 784 entities
-skip    a3ma_length_measure_and_context_dependent_measure_pair.wr1: names types that are neither entities nor SELECTs ["list_representation_item"]
+take    a3ma_length_measure_and_context_dependent_measure_pair.wr1: compound_representation_item.item_element AtLeastOne ["list_representation_item"] -> 0 entities, list_representation_item of 785 entities
 skip    a3ma_length_measure_and_context_dependent_measure_pair.wr3: indexed element
 skip    a3ma_length_measure_and_context_dependent_measure_pair.wr4: attribute path
 skip    a3ma_length_measure_and_context_dependent_measure_pair.wr5: indexed element
@@ -1031,7 +1031,7 @@ skip    shape_data_quality_criterion.wr2: references to the instance
 skip    shape_data_quality_criterion.wr3: references to the instance
 skip    shape_data_quality_inspection_result_representation.wr1: query form
 take    shape_data_quality_inspection_result_representation.wr2: representation.context_of_items AtLeastOne ["geometric_representation_context"] -> 3 entities
-skip    shape_data_quality_value_range.wr1: names types that are neither entities nor SELECTs ["set_representation_item"]
+take    shape_data_quality_value_range.wr1: compound_representation_item.item_element AtLeastOne ["set_representation_item"] -> 0 entities, set_representation_item of 785 entities
 skip    shape_data_quality_value_range.wr1: query form
 skip    shape_data_quality_value_range.wr3: conditional
 skip    shape_definition_representation.wr1: conditional
@@ -1150,7 +1150,7 @@ skip    swept_face_solid.wr1: attribute path
 skip    symbol_representation_map.wr1: not an explicit attribute
 take    symmetry_geometric_constraint.wr2: symmetry_geometric_constraint.mirror_element Zero ["direction", "vector"] -> 2 entities
 skip    symmetry_geometric_constraint.wr3: other form
-skip    table_representation_item.wr1: item_element is not shaped as the rule reads it
+take    table_representation_item.wr1: compound_representation_item.item_element AtLeastOne [] -> 0 entities, list_representation_item of 1 entities, set_representation_item of 1 entities
 take    tactile_appearance_representation.wr1: representation.items ExactlyOne each ["measure_representation_item", "value_range"] -> 5 entities
 skip    tactile_appearance_representation.wr3: references to the instance
 skip    taper.wr1: attribute path
@@ -1234,7 +1234,7 @@ take    unbound_parameter_environment.wr1: environment.semantics AtLeastOne ["un
 skip    unbound_variational_parameter.wr1: not an explicit attribute
 skip    unequally_disposed_geometric_tolerance.wr1: attribute path
 skip    unused_patches.wr1: attribute path
-skip    value_range.wr1: names types that are neither entities nor SELECTs ["set_representation_item"]
+take    value_range.wr1: compound_representation_item.item_element AtLeastOne ["set_representation_item"] -> 0 entities, set_representation_item of 785 entities
 skip    value_representation_item.wr1: references to the instance
 skip    variational_current_representation_relationship.wr1: query form
 skip    variational_current_representation_relationship.wr3: attribute path

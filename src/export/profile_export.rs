@@ -117,6 +117,17 @@ struct ProfileTypeRule {
     /// The rule does not hold where SELF's `TYPEOF` holds any of these.
     #[serde(skip_serializing_if = "Vec::is_empty")]
     unless_self: Vec<String>,
+    /// The aggregate-typed SELECT members the rule admits (none if absent).
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    aggregates: Vec<ProfileAggregate>,
+}
+
+/// An aggregate-typed SELECT member a type rule admits.
+#[derive(Serialize)]
+struct ProfileAggregate {
+    type_name: String,
+    /// The entities each element may reference.
+    admits: Vec<String>,
 }
 
 #[derive(Serialize)]
@@ -313,6 +324,14 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                     names: r.names,
                     when_self: r.when_self,
                     unless_self: r.unless_self,
+                    aggregates: r
+                        .aggregates
+                        .into_iter()
+                        .map(|a| ProfileAggregate {
+                            type_name: a.type_name,
+                            admits: a.admits,
+                        })
+                        .collect(),
                 })
                 .collect();
             entity.insert(
@@ -387,7 +406,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
              # own_attrs + parents only (step-io flattens inheritance).\n\
              # ty repr: primitives lowercase; bare token = entity/TYPE-alias ref; LIST/SET/BAG/ARRAY OF, OPTIONAL, SELECT(...), ENUM(...).\n\
              # [[oneof]] = ONEOF exclusivity groups from SUPERTYPE OF clauses; branch = flat name set of one ONEOF child subtree.\n\
-             # type_rules = WHERE rules restricting an attribute's types: the attribute (or each element) references only `admits`, and its TYPEOF (for a complex value, the union over its parts) holds `count` of `names`; inherited by subtypes; where `when_self` is given, only for an instance whose TYPEOF holds all of it, and where `unless_self` is, not for one whose TYPEOF holds any of it.\n\n",
+             # type_rules = WHERE rules restricting an attribute's types: the attribute (or each element) references only `admits`, and its TYPEOF (for a complex value, the union over its parts) holds `count` of `names`; inherited by subtypes; where `when_self` is given, only for an instance whose TYPEOF holds all of it, and where `unless_self` is, not for one whose TYPEOF holds any of it; `aggregates` = the aggregate-typed SELECT members (a value that is one aggregate, whose TYPEOF is that type and the SELECTs holding it) the rule admits, each with the entities its elements may reference — an aggregate member not listed is not admitted.\n\n",
             out = t.out_name,
             src = schema.source_label,
         );

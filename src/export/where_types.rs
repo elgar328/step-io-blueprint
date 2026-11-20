@@ -10,9 +10,14 @@
 //! rule counts how many listed names that set holds. A rule may also hold
 //! only for some instances, by SELF's type: `.. OR 'X' IN TYPEOF(SELF)`
 //! lifts it from an X, `NOT ('X' IN TYPEOF(SELF)) OR ..` holds it for an X
-//! only. Other conditional, indexed-element, path and existence rules are
-//! not attribute type restrictions and are reported, not exported. Reading
-//! is never held to these rules.
+//! only. A SELECT member that is an aggregate type holds one aggregate value,
+//! whose `TYPEOF` is that type and the SELECTs holding it: a rule may name
+//! that type, admit the value as a whole, or restrict its elements through
+//! `'T' IN TYPEOF(a) AND SIZEOF(QUERY(x <* a | ..)) = 0`; a query over a
+//! SELECT of aggregates only restricts the elements of whichever it holds.
+//! Other conditional, indexed-element, path and existence rules are not
+//! attribute type restrictions and are reported, not exported. Reading is
+//! never held to these rules.
 
 use std::collections::{BTreeMap, BTreeSet, HashMap};
 
@@ -47,6 +52,9 @@ struct Cond {
     count: Count,
     /// The restriction holds for every element of the aggregate `arg`.
     elementwise: bool,
+    /// Further, `arg` may be a value of each of these aggregate types whose
+    /// every element holds the given count of the given names.
+    sets: Vec<(String, Vec<String>, Count)>,
 }
 
 /// One attribute type restriction a `WHERE` rule makes.
@@ -73,6 +81,18 @@ pub(crate) struct TypeRule {
     pub when_self: Vec<String>,
     /// The rule does not hold where SELF's `TYPEOF` holds any of these.
     pub unless_self: Vec<String>,
+    /// The aggregate types among the attribute's SELECT members the rule
+    /// admits, each with the entities its elements may reference; an
+    /// aggregate member not listed is not admitted.
+    pub aggregates: Vec<AggregateMember>,
+}
+
+/// An aggregate-typed SELECT member a rule admits.
+#[derive(Debug, Clone)]
+pub(crate) struct AggregateMember {
+    pub type_name: String,
+    /// The entities each element may reference; sorted.
+    pub admits: Vec<String>,
 }
 
 /// The type restrictions of every entity of a schema, and a line per
@@ -167,7 +187,7 @@ fn names_of(list: &str) -> Vec<String> {
 /// The negation of `c`, where it is again a restriction: not of an
 /// element-wise one (that says some element fails, not how each must be).
 fn negate(c: Cond) -> Option<Cond> {
-    if c.elementwise {
+    if c.elementwise || !c.sets.is_empty() {
         return None;
     }
     let count = match c.count {
@@ -198,9 +218,31 @@ fn not_equal(t: &str) -> Option<String> {
 fn term(t: &str) -> Option<Cond> {
     let t = strip_parens(t);
     let ors = split_top(t, "or");
-    // `AND` binds tighter: a conjunction is several restrictions, not one.
-    if ors.len() == 1 && split_top(t, "and").len() > 1 {
-        return None;
+    // `AND` binds tighter: a conjunction is several restrictions, not one,
+    // except `'T' IN TYPEOF(a) AND SIZEOF(QUERY(x <* a | ..)) = 0`: `a` is a
+    // value of the aggregate type T whose every element holds a restriction.
+    let ands = split_top(t, "and");
+    if ors.len() == 1 && ands.len() > 1 {
+        let [is_t, each] = ands.as_slice() else {
+            return None;
+        };
+        let (is_t, each) = (term(is_t)?, term(each)?);
+        let [t_name] = is_t.names.as_slice() else {
+            return None;
+        };
+        let fits = is_t.count == Count::AtLeastOne
+            && !is_t.elementwise
+            && is_t.sets.is_empty()
+            && each.elementwise
+            && each.sets.is_empty()
+            && each.arg == is_t.arg;
+        return fits.then(|| Cond {
+            arg: is_t.arg.clone(),
+            names: Vec::new(),
+            count: Count::AtLeastOne,
+            elementwise: false,
+            sets: vec![(t_name.clone(), each.names, each.count)],
+        });
     }
     if ors.len() > 1 {
         let parts: Vec<Cond> = ors.iter().map(|o| term(o)).collect::<Option<_>>()?;
@@ -213,6 +255,7 @@ fn term(t: &str) -> Option<Cond> {
             names: parts.iter().flat_map(|p| p.names.clone()).collect(),
             count: Count::AtLeastOne,
             elementwise: first.elementwise,
+            sets: parts.iter().flat_map(|p| p.sets.clone()).collect(),
         });
     }
     if let Some(rest) = strip_not(t) {
@@ -226,6 +269,7 @@ fn term(t: &str) -> Option<Cond> {
         names,
         count,
         elementwise: false,
+        sets: Vec::new(),
     };
     if let Some(c) = re!(r"^'([a-z0-9_]+)' in typeof\(([^()]*)\)$").captures(t) {
         return Some(cond(&c[2], vec![c[1].to_string()], Count::AtLeastOne));
@@ -329,7 +373,8 @@ fn simple_self(arg: &str) -> bool {
 struct Resolver<'a> {
     schema: &'a Schema,
     view: View<'a>,
-    /// TYPEOF of every entity.
+    /// TYPEOF of an instance of every entity, and of a value of every
+    /// aggregate type.
     typeof_: HashMap<&'a str, BTreeSet<&'a str>>,
 }
 
@@ -344,9 +389,20 @@ impl<'a> Resolver<'a> {
                 _ => None,
             })
             .collect();
+        let aggregates = schema.types.iter().filter_map(|(n, td)| {
+            matches!(
+                td.aliased,
+                AttrType::List(..) | AttrType::Set(..) | AttrType::Bag(..) | AttrType::Array(..)
+            )
+            .then_some(n.as_str())
+        });
         let mut typeof_ = HashMap::new();
-        for name in schema.entities.keys() {
-            let mut set: BTreeSet<&str> = view.ancestors(name).into_iter().collect();
+        for name in schema.entities.keys().map(String::as_str).chain(aggregates) {
+            let mut set: BTreeSet<&str> = if schema.entities.contains_key(name) {
+                view.ancestors(name).into_iter().collect()
+            } else {
+                BTreeSet::from([name])
+            };
             loop {
                 let before = set.len();
                 for (s, members) in &selects {
@@ -358,7 +414,7 @@ impl<'a> Resolver<'a> {
                     break;
                 }
             }
-            typeof_.insert(name.as_str(), set);
+            typeof_.insert(name, set);
         }
         Self {
             schema,
@@ -472,7 +528,7 @@ pub(crate) fn analyze(schema: &Schema) -> WhereTypes {
                 if !c.contains("typeof(") {
                     continue;
                 }
-                let Some(cond) = term(c) else {
+                let Some(mut cond) = term(c) else {
                     report.push(format!("skip    {at}: {}", why_not(c)));
                     continue;
                 };
@@ -484,6 +540,23 @@ pub(crate) fn analyze(schema: &Schema) -> WhereTypes {
                     }
                 };
                 let declared = r.declared(&owner, &attr);
+                if cond.elementwise && !r.is_aggregate(declared) {
+                    let members: Option<Vec<String>> = r
+                        .view
+                        .admits(declared)
+                        .iter()
+                        .map(|n| n.strip_prefix("[]").map(str::to_string))
+                        .collect();
+                    if let Some(members) = members.filter(|m| !m.is_empty()) {
+                        let names = std::mem::take(&mut cond.names);
+                        cond.sets = members
+                            .into_iter()
+                            .map(|t| (t, names.clone(), cond.count))
+                            .collect();
+                        cond.count = Count::AtLeastOne;
+                        cond.elementwise = false;
+                    }
+                }
                 if r.is_aggregate(declared) != cond.elementwise {
                     report.push(format!(
                         "skip    {at}: {attr} is not shaped as the rule reads it"
@@ -495,9 +568,15 @@ pub(crate) fn analyze(schema: &Schema) -> WhereTypes {
                     report.push(format!("skip    {at}: {attr} holds non-entity values"));
                     continue;
                 }
+                let members: Vec<&str> = declared_admits
+                    .iter()
+                    .filter_map(|n| n.strip_prefix("[]"))
+                    .collect();
                 let not_entity: Vec<&String> = cond
                     .names
                     .iter()
+                    .filter(|n| !members.contains(&n.as_str()))
+                    .chain(cond.sets.iter().flat_map(|(_, names, _)| names))
                     .filter(|n| {
                         !schema.entities.contains_key(n.as_str())
                             && !schema
@@ -509,6 +588,53 @@ pub(crate) fn analyze(schema: &Schema) -> WhereTypes {
                 if !not_entity.is_empty() {
                     report.push(format!(
                         "skip    {at}: names types that are neither entities nor SELECTs {not_entity:?}"
+                    ));
+                    continue;
+                }
+                if let Some((t, ..)) = cond
+                    .sets
+                    .iter()
+                    .find(|(t, ..)| !members.contains(&t.as_str()))
+                {
+                    report.push(format!(
+                        "skip    {at}: {t} is not an aggregate type {attr} holds"
+                    ));
+                    continue;
+                }
+                let mut aggregates = Vec::new();
+                let mut unfit = None;
+                for t in members {
+                    let element = match &schema.types[t].aliased {
+                        AttrType::List(inner, _)
+                        | AttrType::Set(inner, _)
+                        | AttrType::Bag(inner, _)
+                        | AttrType::Array(inner, _) => inner,
+                        _ => unreachable!("an aggregate member"),
+                    };
+                    let elements = r.view.admits(element);
+                    if elements
+                        .iter()
+                        .any(|n| n.starts_with('=') || n.starts_with("[]"))
+                    {
+                        unfit = Some(t);
+                        break;
+                    }
+                    let mut admits: Vec<String> = elements.into_iter().collect();
+                    if !r.holds(t, &cond.names, cond.count) {
+                        let Some((_, names, count)) = cond.sets.iter().find(|(n, ..)| n == t)
+                        else {
+                            continue;
+                        };
+                        admits.retain(|e| r.holds(e, names, *count));
+                    }
+                    aggregates.push(AggregateMember {
+                        type_name: t.to_string(),
+                        admits,
+                    });
+                }
+                if let Some(t) = unfit {
+                    report.push(format!(
+                        "skip    {at}: the elements of {t} are not all entities"
                     ));
                     continue;
                 }
@@ -529,6 +655,9 @@ pub(crate) fn analyze(schema: &Schema) -> WhereTypes {
                 if !unless_self.is_empty() {
                     on += &format!(" unless SELF is {unless_self:?}");
                 }
+                for a in &aggregates {
+                    on += &format!(", {} of {} entities", a.type_name, a.admits.len());
+                }
                 report.push(format!(
                     "take    {at}: {owner}.{attr} {:?}{} {:?} -> {} entities{on}",
                     cond.count,
@@ -546,6 +675,7 @@ pub(crate) fn analyze(schema: &Schema) -> WhereTypes {
                     names: cond.names,
                     when_self: when_self.clone(),
                     unless_self: unless_self.clone(),
+                    aggregates,
                 });
             }
         }
@@ -729,5 +859,117 @@ mod tests {
             self_condition(&normalize("('A' IN TYPEOF(SELF)) OR ('B' IN TYPEOF(SELF))")).is_none()
         );
         assert!(self_condition(&normalize("('A' IN TYPEOF(x)) OR ('B' IN TYPEOF(y))")).is_none());
+    }
+
+    /// A schema whose `holder.t` is SELECT(item, items), `items` being a SET
+    /// OF base, under the given `WHERE` rules.
+    fn aggregate_rules(rules: &str) -> WhereTypes {
+        let text = format!(
+            "SCHEMA s;\n\
+             TYPE target = SELECT (item, items); END_TYPE;\n\
+             TYPE items = SET [1:?] OF base; END_TYPE;\n\
+             ENTITY base; END_ENTITY;\n\
+             ENTITY item SUBTYPE OF (base); END_ENTITY;\n\
+             ENTITY other SUBTYPE OF (base); END_ENTITY;\n\
+             ENTITY holder;\n  t : target;\nWHERE\n{rules}\nEND_ENTITY;\n\
+             END_SCHEMA;\n"
+        );
+        let dir = std::env::temp_dir().join(format!("where_types_{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        static NEXT: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+        let n = NEXT.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        let path = dir.join(format!("s{n}.exp"));
+        std::fs::write(&path, text).unwrap();
+        let schema = crate::express::parse_express_file(&path).unwrap();
+        std::fs::remove_file(&path).unwrap();
+        analyze(&schema)
+    }
+
+    fn members(r: &TypeRule) -> Vec<(&str, Vec<&str>)> {
+        r.aggregates
+            .iter()
+            .map(|a| {
+                (
+                    a.type_name.as_str(),
+                    a.admits.iter().map(String::as_str).collect(),
+                )
+            })
+            .collect()
+    }
+
+    #[test]
+    fn an_aggregate_member_with_an_element_rule_admits_those_elements() {
+        let w = aggregate_rules(
+            "  WR1: ('S.ITEM' IN TYPEOF(t)) OR (('S.ITEMS' IN TYPEOF(t)) AND \
+             (SIZEOF(QUERY(x <* t | NOT ('S.ITEM' IN TYPEOF(x)))) = 0));",
+        );
+        let r = rule(&w, "holder", "t");
+        assert_eq!(r.admits, ["item"]);
+        assert_eq!(members(r), [("items", vec!["item"])]);
+    }
+
+    #[test]
+    fn a_rule_an_aggregate_value_holds_admits_every_element() {
+        let w = aggregate_rules("  WR1: NOT ('S.OTHER' IN TYPEOF(t));");
+        let r = rule(&w, "holder", "t");
+        assert_eq!(members(r), [("items", vec!["base", "item", "other"])]);
+        let w = aggregate_rules("  WR1: 'S.ITEM' IN TYPEOF(t);");
+        assert!(rule(&w, "holder", "t").aggregates.is_empty());
+    }
+
+    #[test]
+    fn a_rule_naming_an_aggregate_type_admits_only_its_values() {
+        let w = aggregate_rules("  WR1: 'S.ITEMS' IN TYPEOF(t);");
+        let r = rule(&w, "holder", "t");
+        assert!(r.admits.is_empty());
+        assert_eq!(members(r), [("items", vec!["base", "item", "other"])]);
+    }
+
+    #[test]
+    fn a_query_over_a_select_of_aggregates_restricts_their_elements() {
+        let schemas = load_all_schemas(Path::new("schemas"));
+        let e2 = schemas
+            .iter()
+            .find(|s| s.source_label == "ap242e2")
+            .unwrap();
+        let w = analyze(e2);
+        let table = rule(&w, "table_representation_item", "item_element");
+        assert!(table.admits.is_empty());
+        let names: Vec<&str> = table
+            .aggregates
+            .iter()
+            .map(|a| a.type_name.as_str())
+            .collect();
+        assert_eq!(
+            names,
+            ["list_representation_item", "set_representation_item"]
+        );
+        assert!(
+            table
+                .aggregates
+                .iter()
+                .all(|a| a.admits == ["row_representation_item"])
+        );
+        let range = rule(&w, "value_range", "item_element");
+        let [set] = range.aggregates.as_slice() else {
+            panic!("{:?}", range.aggregates)
+        };
+        assert_eq!(set.type_name, "set_representation_item");
+    }
+
+    #[test]
+    fn an_element_rule_on_a_type_the_attribute_does_not_hold_is_skipped() {
+        let w = aggregate_rules(
+            "  WR1: ('S.ITEM' IN TYPEOF(t)) OR (('S.OTHER' IN TYPEOF(t)) AND \
+             (SIZEOF(QUERY(x <* t | NOT ('S.ITEM' IN TYPEOF(x)))) = 0));",
+        );
+        assert!(!w.rules.contains_key("holder"));
+        assert!(
+            w.report
+                .iter()
+                .any(|l| l == "skip    holder.wr1: other is not an aggregate type t holds"),
+            "{:?}",
+            w.report
+        );
     }
 }
