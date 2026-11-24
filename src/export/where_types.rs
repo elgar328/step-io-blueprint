@@ -15,6 +15,10 @@
 //! that type, admit the value as a whole, or restrict its elements through
 //! `'T' IN TYPEOF(a) AND SIZEOF(QUERY(x <* a | ..)) = 0`; a query over a
 //! SELECT of aggregates only restricts the elements of whichever it holds.
+//! Asking for exactly one of a list that names a type with one supertype
+//! (or SELECT holding it) leaves that type out; naming it with two more
+//! would leave out what one already does, so such a list is read as asking
+//! for at least one.
 //! Other conditional, indexed-element, path and existence rules are not
 //! attribute type restrictions and are reported, not exported. Reading is
 //! never held to these rules.
@@ -466,6 +470,20 @@ impl<'a> Resolver<'a> {
         }
     }
 
+    /// A listed name with two other listed names in its `TYPEOF`, which an
+    /// exactly-one count would leave out without it.
+    fn redundant<'n>(&self, names: &'n [String]) -> Option<(&'n str, Vec<&'n str>)> {
+        names.iter().find_map(|sub| {
+            let t = self.typeof_.get(sub.as_str())?;
+            let sups: Vec<&str> = names
+                .iter()
+                .filter(|sup| sup != &sub && t.contains(sup.as_str()))
+                .map(String::as_str)
+                .collect();
+            (sups.len() >= 2).then_some((sub.as_str(), sups))
+        })
+    }
+
     fn holds(&self, entity: &str, names: &[String], count: Count) -> bool {
         let t = &self.typeof_[entity];
         let n = names.iter().filter(|n| t.contains(n.as_str())).count();
@@ -539,6 +557,21 @@ pub(crate) fn analyze(schema: &Schema) -> WhereTypes {
                         continue;
                     }
                 };
+                let mut on = String::new();
+                if cond.count == Count::ExactlyOne
+                    && let Some((sub, sups)) = r.redundant(&cond.names)
+                {
+                    cond.count = Count::AtLeastOne;
+                    on += &format!(" (exactly one read as at least one: {sub} is a {sups:?})");
+                }
+                for (_, names, count) in &mut cond.sets {
+                    if *count == Count::ExactlyOne
+                        && let Some((sub, sups)) = r.redundant(names)
+                    {
+                        *count = Count::AtLeastOne;
+                        on += &format!(" (exactly one read as at least one: {sub} is a {sups:?})");
+                    }
+                }
                 let declared = r.declared(&owner, &attr);
                 if cond.elementwise && !r.is_aggregate(declared) {
                     let members: Option<Vec<String>> = r
@@ -648,7 +681,6 @@ pub(crate) fn analyze(schema: &Schema) -> WhereTypes {
                     (Count::AtLeastOne | Count::ExactlyOne, [one]) => one.clone(),
                     _ => format!("{entity}_{attr}"),
                 };
-                let mut on = String::new();
                 if !when_self.is_empty() {
                     on += &format!(" when SELF is {when_self:?}");
                 }
@@ -970,6 +1002,30 @@ mod tests {
                 .any(|l| l == "skip    holder.wr1: other is not an aggregate type t holds"),
             "{:?}",
             w.report
+        );
+    }
+
+    #[test]
+    fn exactly_one_of_a_type_and_two_supertypes_reads_as_at_least_one() {
+        let schemas = load_all_schemas(Path::new("schemas"));
+        let e4 = schemas
+            .iter()
+            .find(|s| s.source_label == "ap242e4")
+            .unwrap();
+        let w = analyze(e4);
+        let cgr = rule(&w, "constructive_geometry_representation", "items");
+        assert_eq!(cgr.count, Count::AtLeastOne);
+        assert!(admits(cgr, "cartesian_point") && admits(cgr, "plane") && admits(cgr, "line"));
+        assert!(admits(cgr, "edge_curve") && !admits(cgr, "oriented_edge"));
+        assert!(!admits(cgr, "mapped_item"));
+        assert_eq!(
+            e2_rules().rules["constructive_geometry_representation"]
+                .iter()
+                .find(|r| r.attr == "items")
+                .unwrap()
+                .count,
+            Count::ExactlyOne,
+            "edition 2 lists no type with two of its supertypes"
         );
     }
 
