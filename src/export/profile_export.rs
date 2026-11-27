@@ -25,9 +25,9 @@ use std::fs;
 
 use serde::Serialize;
 
-use crate::export::common::{redeclaration_owner, ty_repr};
+use crate::export::common::{oneof_groups, redeclaration_owner, ty_repr};
 use crate::export::where_types::{self, Count};
-use crate::express::{EntitySchema, Schema, SupertypeExpr};
+use crate::express::{EntitySchema, Schema};
 
 const OUT_DIR: &str = "profiles";
 /// What became of each `TYPEOF`-mentioning `WHERE` rule of the target.
@@ -182,55 +182,6 @@ struct ProfileToml {
     type_aliases: BTreeMap<String, ProfileTypeDef>,
 }
 
-/// Collect every entity name in `expr`'s subtree, pre-order, deduplicated.
-fn subtree_entity_names(expr: &SupertypeExpr, out: &mut Vec<String>) {
-    match expr {
-        SupertypeExpr::Entity { name } => {
-            if !out.contains(name) {
-                out.push(name.clone());
-            }
-        }
-        SupertypeExpr::OneOf { children }
-        | SupertypeExpr::AndOr { children }
-        | SupertypeExpr::And { children } => {
-            for c in children {
-                subtree_entity_names(c, out);
-            }
-        }
-    }
-}
-
-/// Collect every ONEOF group in `expr`, pre-order — one [`ProfileOneof`] per
-/// ONEOF node (an entity's clause may carry several, e.g. `named_unit`'s
-/// kind × basis pair). Branches are flattened to name sets; nested ONEOFs
-/// (none in the current schemas) would still surface as their own group.
-fn collect_oneof_groups(owner: &str, expr: &SupertypeExpr, out: &mut Vec<ProfileOneof>) {
-    if let SupertypeExpr::OneOf { children } = expr {
-        let branches = children
-            .iter()
-            .map(|c| {
-                let mut names = Vec::new();
-                subtree_entity_names(c, &mut names);
-                names
-            })
-            .collect();
-        out.push(ProfileOneof {
-            supertype: owner.to_string(),
-            branches,
-        });
-    }
-    match expr {
-        SupertypeExpr::Entity { .. } => {}
-        SupertypeExpr::OneOf { children }
-        | SupertypeExpr::AndOr { children }
-        | SupertypeExpr::And { children } => {
-            for c in children {
-                collect_oneof_groups(owner, c, out);
-            }
-        }
-    }
-}
-
 /// Walk `e`'s parent chain to the nearest ancestor present in `target`,
 /// requiring every hop to be **rename-safe**: exactly one parent and no own /
 /// redeclared attributes (a pure WHERE-constraint subtype, e.g. `design_context`
@@ -354,7 +305,10 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
         ents.sort_by_key(|(n, _)| n.as_str());
         for (name, e) in ents {
             if let Some(expr) = &e.supertype_expr {
-                collect_oneof_groups(name, expr, &mut oneof);
+                oneof.extend(oneof_groups(expr).into_iter().map(|branches| ProfileOneof {
+                    supertype: name.clone(),
+                    branches,
+                }));
             }
         }
 

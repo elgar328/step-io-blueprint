@@ -4,7 +4,7 @@
 
 use std::collections::HashSet;
 
-use crate::express::{AggBounds, AttrSpec, AttrType, Schema};
+use crate::express::{AggBounds, AttrSpec, AttrType, Schema, SupertypeExpr};
 
 /// Preference for picking an entity's canonical (ordered) own-attribute
 /// declaration and TYPE aliases in the faithful union. Higher = preferred.
@@ -100,6 +100,71 @@ pub(crate) fn attr_owner(schema: &Schema, from: &str, attr: &str) -> Option<Stri
 /// `SELF\super` qualifier.
 pub(crate) fn redeclaration_owner(schema: &Schema, a: &AttrSpec) -> Option<String> {
     attr_owner(schema, a.super_qual.as_deref()?, &a.name)
+}
+
+/// Collect every entity name in `expr`'s subtree, pre-order, deduplicated.
+fn subtree_entity_names(expr: &SupertypeExpr, out: &mut Vec<String>) {
+    match expr {
+        SupertypeExpr::Entity { name } => {
+            if !out.contains(name) {
+                out.push(name.clone());
+            }
+        }
+        SupertypeExpr::OneOf { children }
+        | SupertypeExpr::AndOr { children }
+        | SupertypeExpr::And { children } => {
+            for c in children {
+                subtree_entity_names(c, out);
+            }
+        }
+    }
+}
+
+/// Every ONEOF group in `expr`, pre-order, as its branches — one group per
+/// ONEOF node (an entity's clause may carry several, e.g. `named_unit`'s
+/// kind × basis pair). Each branch is the flat name set of one ONEOF child's
+/// subtree; nested ONEOFs (none in the current schemas) would still surface
+/// as their own group.
+pub(crate) fn oneof_groups(expr: &SupertypeExpr) -> Vec<Vec<Vec<String>>> {
+    let mut out = Vec::new();
+    collect_oneof_groups(expr, &mut out);
+    out
+}
+
+fn collect_oneof_groups(expr: &SupertypeExpr, out: &mut Vec<Vec<Vec<String>>>) {
+    if let SupertypeExpr::OneOf { children } = expr {
+        out.push(
+            children
+                .iter()
+                .map(|c| {
+                    let mut names = Vec::new();
+                    subtree_entity_names(c, &mut names);
+                    names
+                })
+                .collect(),
+        );
+    }
+    match expr {
+        SupertypeExpr::Entity { .. } => {}
+        SupertypeExpr::OneOf { children }
+        | SupertypeExpr::AndOr { children }
+        | SupertypeExpr::And { children } => {
+            for c in children {
+                collect_oneof_groups(c, out);
+            }
+        }
+    }
+}
+
+/// Whether `expr` holds an `AND`: subtypes an instance must combine.
+pub(crate) fn has_and(expr: &SupertypeExpr) -> bool {
+    match expr {
+        SupertypeExpr::Entity { .. } => false,
+        SupertypeExpr::And { .. } => true,
+        SupertypeExpr::OneOf { children } | SupertypeExpr::AndOr { children } => {
+            children.iter().any(has_and)
+        }
+    }
 }
 
 #[cfg(test)]

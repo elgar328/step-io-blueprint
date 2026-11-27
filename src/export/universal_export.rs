@@ -18,7 +18,9 @@ use std::path::Path;
 
 use serde::{Deserialize, Serialize};
 
-use crate::export::common::{redeclaration_has_signal, redeclaration_owner, schema_rank, ty_repr};
+use crate::export::common::{
+    has_and, oneof_groups, redeclaration_has_signal, redeclaration_owner, schema_rank, ty_repr,
+};
 use crate::export::narrowing::{Judge, union_types, with_element};
 use crate::export::refgraph;
 use crate::express::{AttrSpec, AttrType, EntitySchema, Schema, SupertypeExpr};
@@ -254,7 +256,19 @@ struct UnivAttr {
 struct UnivEntity {
     #[serde(skip_serializing_if = "Vec::is_empty")]
     parents: Vec<String>,
+    /// Each edition's parents, where editions declare different ones
+    /// (sorted, in order of first declaration).
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    edition_parents: Vec<Vec<String>>,
+    /// True if any edition declares it `ABSTRACT`.
     is_abstract: bool,
+    /// True if every edition declaring it declares it `ABSTRACT`.
+    #[serde(skip_serializing_if = "is_false")]
+    abstract_everywhere: bool,
+    /// True if some edition's `SUPERTYPE OF` clause for it holds an `AND`:
+    /// subtypes an instance must combine.
+    #[serde(skip_serializing_if = "is_false")]
+    supertype_has_and: bool,
     /// True if this entity can appear as a part of a Part21 complex (multiple-
     /// inheritance) record: it is an ANDOR/AND-combinable leaf or a transitive
     /// supertype of one. codegen gives it a part-bag variant (dual-appearance).
@@ -278,8 +292,80 @@ struct UnivTypeDef {
     aliased: String,
 }
 
+/// One ONEOF exclusivity group, as the editions in `editions` declare it: a
+/// complex instance may draw parts from at most one branch, each the flat
+/// name set of one ONEOF child's subtree.
+#[derive(Serialize)]
+struct UnivOneof {
+    /// Entity whose `SUPERTYPE OF` clause declares the group.
+    supertype: String,
+    branches: Vec<Vec<String>>,
+    /// The editions declaring it so, chronological.
+    editions: Vec<String>,
+}
+
+/// What the editions declaring an entity say of it, each its own way.
+struct EditionFacts {
+    edition_parents: Vec<Vec<String>>,
+    abstract_everywhere: bool,
+    supertype_has_and: bool,
+}
+
+/// [`EditionFacts`] of `name` over `chrono`, the editions in publication
+/// order.
+fn edition_facts(chrono: &[&Schema], name: &str) -> EditionFacts {
+    let decls: Vec<&EntitySchema> = chrono.iter().filter_map(|s| s.entities.get(name)).collect();
+    let mut edition_parents: Vec<Vec<String>> = Vec::new();
+    for e in &decls {
+        let mut ps = e.parents.clone();
+        ps.sort();
+        if !edition_parents.contains(&ps) {
+            edition_parents.push(ps);
+        }
+    }
+    if edition_parents.len() < 2 {
+        edition_parents.clear();
+    }
+    EditionFacts {
+        edition_parents,
+        abstract_everywhere: !decls.is_empty() && decls.iter().all(|e| e.is_abstract),
+        supertype_has_and: decls
+            .iter()
+            .any(|e| e.supertype_expr.as_ref().is_some_and(has_and)),
+    }
+}
+
+/// Every edition's ONEOF groups, each with the editions declaring it
+/// (chronological, as `chrono` lists them), ordered by group.
+fn edition_oneofs(chrono: &[&Schema]) -> Vec<UnivOneof> {
+    let mut groups: BTreeMap<(String, Vec<Vec<String>>), Vec<String>> = BTreeMap::new();
+    for sch in chrono {
+        for (name, e) in &sch.entities {
+            if let Some(expr) = &e.supertype_expr {
+                for branches in oneof_groups(expr) {
+                    let eds = groups.entry((name.clone(), branches)).or_default();
+                    if !eds.contains(&sch.source_label) {
+                        eds.push(sch.source_label.clone());
+                    }
+                }
+            }
+        }
+    }
+    groups
+        .into_iter()
+        .map(|((supertype, branches), editions)| UnivOneof {
+            supertype,
+            branches,
+            editions,
+        })
+        .collect()
+}
+
 #[derive(Serialize)]
 struct UniversalToml {
+    /// ONEOF groups of every edition.
+    #[serde(skip_serializing_if = "Vec::is_empty")]
+    oneof: Vec<UnivOneof>,
     entity: BTreeMap<String, UnivEntity>,
     #[serde(rename = "type", skip_serializing_if = "BTreeMap::is_empty")]
     type_aliases: BTreeMap<String, UnivTypeDef>,
@@ -496,12 +582,20 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
             .filter(|s| s.entities.contains_key(name))
             .map(|s| s.source_label.clone())
             .collect();
+        let EditionFacts {
+            edition_parents,
+            abstract_everywhere,
+            supertype_has_and,
+        } = edition_facts(&chrono, name);
 
         entity.insert(
             name.clone(),
             UnivEntity {
                 parents,
+                edition_parents,
                 is_abstract: unified.abstract_entities.contains(name),
+                abstract_everywhere,
+                supertype_has_and,
                 is_complex_part: is_complex_part.contains(name),
                 attr_conflicts,
                 derives,
@@ -565,6 +659,7 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
     report.write()?;
 
     let doc = UniversalToml {
+        oneof: edition_oneofs(&chrono),
         entity,
         type_aliases,
     };
@@ -574,7 +669,11 @@ pub fn run(schemas: &[Schema]) -> Result<(), String> {
                   # `derives` (raw DERIVE targets: \"super.attr\" or \"attr\"); codegen marks\n\
                   # derived/derivable `*` slots from these. Names/own_attrs prefer newest AP;\n\
                   # a declared type editions disagree on is widened to cover them all.\n\
-                  # `schemas` = source APs declaring the entity, chronological (membership data).\n\n";
+                  # `schemas` = source APs declaring the entity, chronological (membership data).\n\
+                  # `edition_parents` = each edition's parents where they differ; `abstract_everywhere`\n\
+                  # = ABSTRACT in every edition declaring it (`is_abstract`: in any); `supertype_has_and`\n\
+                  # = some edition's SUPERTYPE OF holds an AND. [[oneof]] = every edition's ONEOF groups\n\
+                  # (branch = flat name set of one ONEOF child subtree), with the editions declaring each.\n\n";
     fs::create_dir_all("inferred").map_err(|e| e.to_string())?;
     fs::write(OUT, format!("{header}{body}")).map_err(|e| e.to_string())?;
     let with_derives = doc
@@ -596,6 +695,61 @@ mod tests {
 
     use super::*;
     use crate::express::load_all_schemas;
+
+    /// The editions in publication order, as `run` takes them.
+    fn chrono(schemas: &[Schema]) -> Vec<&Schema> {
+        let order = [
+            "ap203e1", "ap203e2", "ap214e3", "ap242e1", "ap242e2", "ap242e3", "ap242e4",
+        ];
+        let mut c: Vec<&Schema> = schemas.iter().collect();
+        c.sort_by_key(|s| order.iter().position(|l| *l == s.source_label));
+        c
+    }
+
+    #[test]
+    fn edition_facts_tell_what_every_edition_agrees_on() {
+        let schemas = load_all_schemas(Path::new("schemas"));
+        let chrono = chrono(&schemas);
+        // area_unit is a named_unit in ap203e1, a derived_unit after it.
+        let area = edition_facts(&chrono, "area_unit");
+        assert_eq!(
+            area.edition_parents,
+            [vec!["named_unit"], vec!["derived_unit"]]
+        );
+        assert!(
+            edition_facts(&chrono, "length_unit")
+                .edition_parents
+                .is_empty()
+        );
+        // founded_item is ABSTRACT in ap242e3 and e4 only, camera_model in
+        // every edition declaring it, representation_item in none;
+        // solid_with_slot ANDs its slot shape with its end kinds.
+        assert!(!edition_facts(&chrono, "founded_item").abstract_everywhere);
+        assert!(edition_facts(&chrono, "camera_model").abstract_everywhere);
+        assert!(!edition_facts(&chrono, "representation_item").abstract_everywhere);
+        assert!(edition_facts(&chrono, "solid_with_slot").supertype_has_and);
+        assert!(!edition_facts(&chrono, "named_unit").supertype_has_and);
+    }
+
+    #[test]
+    fn oneof_groups_name_the_editions_declaring_them() {
+        let schemas = load_all_schemas(Path::new("schemas"));
+        let oneofs = edition_oneofs(&chrono(&schemas));
+        let of = |owner: &str| -> Vec<&UnivOneof> {
+            oneofs.iter().filter(|g| g.supertype == owner).collect()
+        };
+        let action = of("action_assignment");
+        assert_eq!(action.len(), 1);
+        assert_eq!(action[0].editions, ["ap242e2", "ap242e3", "ap242e4"]);
+        // named_unit's basis group is the same in every edition; its kind
+        // group gains units over the editions.
+        let named = of("named_unit");
+        let basis = ["si_unit", "conversion_based_unit", "context_dependent_unit"];
+        let everywhere: Vec<_> = named.iter().filter(|g| g.editions.len() == 7).collect();
+        assert_eq!(everywhere.len(), 1);
+        assert_eq!(everywhere[0].branches, basis.map(|b| vec![b.to_string()]));
+        assert!(named.len() > 2);
+    }
 
     #[test]
     fn the_subtypes_of_an_entity_that_combines_combine() {
